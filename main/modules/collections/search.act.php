@@ -39,7 +39,7 @@ ob_start();
 $searchModules =& Services::getService("RepositorySearchModules");
 $searchArray = array();
 
-$repositories =& $repositoryManager->getDigitalRepositories();
+$repositories =& $repositoryManager->getRepositories();
 while ($repositories->hasNext()) {
 	$repository =& $repositories->next();
 	$searchTypes =& $repository->getSearchTypes();

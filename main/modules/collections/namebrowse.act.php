@@ -30,7 +30,7 @@ $actionRows->addComponent($introText);
 
 // Get the Repositoriess
 $repositoryManager =& Services::getService("Repository");
-$allRepositories =& $repositoryManager->getDigitalRepositories();
+$allRepositories =& $repositoryManager->getRepositories();
 
 // put the drs into an array and order them.
 // @todo, do authorization checking
