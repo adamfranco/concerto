@@ -6,7 +6,7 @@ define("MYPATH",str_replace($_SERVER['DOCUMENT_ROOT'], "", dirname(__FILE__)));
 define("MYURL",str_replace($_SERVER['DOCUMENT_ROOT'], "", dirname(__FILE__))."/index.php");
 
 define("OKI_VERSION", 2);
-
+define("LOAD_AUTHENTICATION", false);
 
 /******************************************************************************
  * Include Harmoni - required
@@ -50,7 +50,7 @@ require_once "config/harmoni.inc.php";
 
 $harmoni->execute();
 
-// printpre($_SESSION);
+// printpre($_SERVER);
 // debug::output(session_id());
 // Debug::printAll();
 

@@ -1,9 +1,11 @@
 <?
 // :: Version: $Id$
 
+require_once(HARMONI."/oki2/shared/ConfigurationPropertiesType.class.php");
+
 
 // :: set up the $harmoni object :: 
-	$harmoni->config->set("useAuthentication",true);
+	$harmoni->config->set("useAuthentication",false);
 	$harmoni->config->set("defaultModule","home");
 	$harmoni->config->set("defaultAction","welcome");
 	$harmoni->config->set("charset","utf-8");
@@ -37,52 +39,86 @@
 	Services::startService("Id", $dbID, $dbName);
 	Services::startService("Agent", $dbID, $dbName);
 
-// :: Set up the Authentication and Login Handlers ::
-	$harmoni->LoginHandler->setFailedLoginAction("auth.fail_redirect");
-	$harmoni->LoginHandler->addNoAuthActions("auth.logout",
-											"auth.fail",
-											"auth.login",
-											"language.change",
-											"window.screen",
-											"home.welcome",
-											"collections.main",
-											"collections.namebrowse",
-											"collections.typebrowse"
-											);
+// :: Start the AuthenticationManager OSID Impl.
+	Services::startService("AuthN");
 	
-	//printpre($GLOBALS);
+	$authNManager =& Services::getService("AuthN");
+	$configuration =& new HarmoniProperties(new ConfigurationPropertiesType);
+	$tokenCollectors = array(
+//		serialize(new Type ("Authentication", "Middlebury College", "Concerto DB")) 
+//			=> new BasicFormNamePassTokenCollector,
+		serialize(new Type ("Authentication", "Middlebury College", "Concerto DB")) 
+			=> new FormActionNamePassTokenCollector(MYURL."/auth/username_password_form/".implode("/",$harmoni->pathInfoParts)),
+	);
+	$configuration->addProperty('token_collectors', $tokenCollectors);
+	$authNManager->assignConfiguration($configuration);
 	
-	Services::startService("AuthN", $dbID, $dbName);
+// :: Start and configure the AuthenticationMethodManager
+	Services::startService("AuthNMethods");
+	$authNMethodManager =& Services::getService("AuthNMethods");
 	
-	#########################
-	# HANDLE AUTHENTICATION #
-	# A) authenticated      #
-	# B) not authenticated  #
-	# C) attempting log in  #
-	#########################
+	// set up a Database Authentication Method
+	require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/SQLDatabaseAuthNMethod.class.php");
+	require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/SQLDatabaseMD5UsernamePasswordAuthNTokens.class.php");
+	$authType =& new Type ("Authentication", "Middlebury College", "Concerto DB");
+	$configuration =& new HarmoniProperties(new ConfigurationPropertiesType);
+	$configuration->addProperty('tokens_class', $arg0 = 'SQLDatabaseMD5UsernamePasswordAuthNTokens');
+	$configuration->addProperty('database_id', $dbID);
+	$configuration->addProperty('authentication_table', $arg2 = 'auth_db_user');
+	$configuration->addProperty('username_field', $arg3 = 'username');
+	$configuration->addProperty('password_field', $arg4 = 'password');
+	$propertiesFields = array(
+		'username' => 'username',
+		'name'=> 'display_name',
+	);
+	$configuration->addProperty('properties_fields', $propertiesFields);
+	unset($arg0, $arg1, $arg2, $arg3, $arg4, $propertiesFields);
 	
-	Services::startService("Authentication");
-	Services::startService("AgentInformation");
-	Services::startService("DBHandler");
 	
-	// :: get all the services we need ::
-	$authHandler =& Services::getService("Authentication");
+	$authNMethodManager->addAuthNMethodWithType(
+		new SQLDatabaseAuthNMethod($configuration),
+		$authType);
 	
-	// :: set up the DBAuthenticationMethod options ::
-	$options =& new DBMethodOptions;
-	$options->set("databaseIndex",$dbID);
-	$options->set("tableName", "adam_concerto.auth_db_user");
-	$options->set("usernameField", "username");
-	$options->set("passwordField", "password");
-	$options->set("passwordFieldEncrypted", TRUE);
-	$options->set("passwordFieldEncryptionType", "databaseMD5");
-	$options->set("agentInformationFields", array("username" => "username", "display_name" => "display_name"));
+	// set up LDAPAuthentication Method
+	require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/LDAPAuthNMethod.class.php");
+	require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/LDAPAuthNTokens.class.php");	
+	$authType =& new Type ("Authentication", "Middlebury College", "Middlebury LDAP");
+	$configuration =& new HarmoniProperties(new ConfigurationPropertiesType);
+	$configuration->addProperty('tokens_class', $arg0 = 'LDAPAuthNTokens');
+	$configuration->addProperty("LDAPHost", $arg1 = "ad.middlebury.edu");
+	$configuration->addProperty("baseDN", $arg2 = "cn=users,dc=middlebury,dc=edu");
+	$configuration->addProperty("bindDN", $arg3 = "juser");
+	$configuration->addProperty("bindDNPassword", $arg4 = "poi987");
+	$propertiesFields = array (
+		'username' => 'samaccountname',
+		'name' =>  'displayname',
+		'first name' =>  'givenname',
+		'last name' =>  'sn',
+		'department' =>  'department',
+		'email' =>  'mail',
+	);
+	$configuration->addProperty('properties_fields', $propertiesFields);
+	$loginFields = array (
+		'samaccountname', 
+		'mail',
+		'cn',
+	);
+	$configuration->addProperty('login_fields', $loginFields);
+	unset($arg0, $arg1, $arg2, $arg3, $arg4, $propertiesFields, $loginFields);
 	
-	// :: create the DBAuthenticationMethod with the above options ::
-	$dbAuthMethod =& new DBAuthenticationMethod($options);
+	$authNMethodManager->addAuthNMethodWithType(
+		new LDAPAuthNMethod($configuration),
+		$authType);
 	
-	// :: add it to the handler ::
-	$authHandler->addMethod("dbAuth",0,$dbAuthMethod);
+
+// :: Agent-Token Mapping Manager ::
+	Services::startService("AgentTokenMapping");
+	$mappingManager =& Services::getService("AgentTokenMapping");
+	
+	// Configure the mapping manager
+	$configuration =& new HarmoniProperties(new ConfigurationPropertiesType);
+	$configuration->addProperty('database_id', $dbID);
+	$mappingManager->assignConfiguration($configuration);
 
 
 // :: Layout and Theme Setup ::
