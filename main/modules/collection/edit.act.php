@@ -150,6 +150,8 @@ if ($wizard->isSaveRequested() || $_REQUEST['create_schema']) {
 		// been added to the set and we can do checking to make sure that 
 		// the specified positions are valid.
 		$positions = array();
+		$existingStructures = array();
+		$numStructures = 0;
 		
 		// Go through each InfoStructure
 		while ($infoStructures->hasNext()) {
@@ -162,6 +164,10 @@ if ($wizard->isSaveRequested() || $_REQUEST['create_schema']) {
 					$set->addItem($infoStructureId);
 				if ($position = $properties["schema_".$infoStructureId->getIdString()."_position"]->getValue())
 					$positions[$position-1] =& $infoStructureId;
+				
+				// Store some info so that we can check that all structures are valid.
+				$existingStructures[] = $infoStructureId->getIdString();
+				$numStructures++;
 			}
 			// Otherwise, remove the ID from the set.
 			else {
@@ -179,6 +185,17 @@ if ($wizard->isSaveRequested() || $_REQUEST['create_schema']) {
 				$set->moveToPosition($positions[$position], $countPositions-1);
 			} else {
 				$set->moveToPosition($positions[$position], $position);
+			}
+		}
+		
+		// Remove any infoStructures from the set that may have been removed/
+		// made-not-availible by some other application.
+		if ($numStructures != $set->count()) {
+			$set->reset();
+			while($set->hasNext()) {
+				$id =& $set->next();
+				if (!in_array($id->getIdString(), $existingStructures))
+					$set->removeItem($id);
 			}
 		}
 		

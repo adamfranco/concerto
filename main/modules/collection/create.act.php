@@ -119,7 +119,7 @@ if ($wizard->isSaveRequested()) {
 	$wizard = NULL;
 	unset ($_SESSION['create_collection_wizard']);
 	unset ($wizard);
-	header(header("Location: ".MYURL."/collections/main/"));
+	header("Location: ".MYURL."/collections/main/");
 }
 
 $wizardLayout =& $wizard->getLayout($harmoni);

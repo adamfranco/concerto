@@ -63,8 +63,8 @@ class AssetPrinter {
 // 			}
 		}
 		
-		if ($actionString != "asset.edit") {
-			$links[] = "<a href='".MYURL."/asset/edit/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>";
+		if ($actionString != "asset.editview") {
+			$links[] = "<a href='".MYURL."/asset/editview/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>";
 			$links[count($links) - 1] .= _("edit")."</a>";
 		} else {
 			$links[] = _("edit");
