@@ -17,9 +17,12 @@
 	function callback_action(&$harmoni) {
 		return $harmoni->pathInfoParts[0] . "." . $harmoni->pathInfoParts[1];
 	}
-	$harmoni->setActionCallbackFunction("callback_action");
-	$harmoni->ActionHandler->setActionsType(ACTIONS_FLATFILES,".act.php");
-	$harmoni->ActionHandler->setModulesLocation(realpath(MYDIR."/main/modules"),MODULES_FOLDERS);
+	$harmoni->setActionCallbackFunction( "callback_action" );
+	$harmoni->ActionHandler->setModulesLocation( realpath(MYDIR."/main/modules"), MODULES_FOLDERS );
+	$harmoni->ActionHandler->setActionsType( ACTIONS_FLATFILES, ".act.php" );
+	$harmoni->ActionHandler->addModulesLocation( realpath(POLYPHONY."/main/modules"), MODULES_FOLDERS );
+	$harmoni->ActionHandler->setActionsTypeForLocation( realpath(POLYPHONY."/main/modules"), ACTIONS_FLATFILES, ".act.php" );
+	
 
 // :: Set up the database connection ::
 	$dbHandler=&Services::requireService("DBHandler");

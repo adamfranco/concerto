@@ -12,7 +12,8 @@ modules
    |				$harmoni->forward("window", "xxxxxx");
    |			methods.
    |
-   |-- login - 	This module contains actions for logging in/out and failed login.
+   |-- auth - 	This module contains actions for logging in/out and failed login.
+   |			The auth module is located in the Polyphony package.
    |			
    |-- home - 	Location of "top level" actions that provide a starting point for
    |			the user.

@@ -12,6 +12,11 @@ define("MYURL",str_replace($_SERVER['DOCUMENT_ROOT'], "", dirname(__FILE__))."/i
 require_once "../harmoni/harmoni.inc.php";
 
 /******************************************************************************
+ * Include Polyphony
+ ******************************************************************************/
+require_once "../polyphony/polyphony.inc.php";
+
+/******************************************************************************
  * Include our libraries
  ******************************************************************************/
 require_once "main/library/ConcertoMenuGenerator.class.php";
