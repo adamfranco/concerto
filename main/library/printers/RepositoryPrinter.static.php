@@ -40,7 +40,7 @@ class RepositoryPrinter {
 			throwError(new Error("You must define an id for AZ_ADD_CHILDREN", "concerto.collection", true));
 		
 		$authZ =& Services::getService("AuthZ");
-		$shared =& Services::getService("Shared");
+		$idManager =& Services::getService("Id");
 		$repositoryId =& $repository->getId();
 		
 		$links = array();
@@ -50,7 +50,7 @@ class RepositoryPrinter {
 		
 		$actionString = $harmoni->getCurrentAction();
 		
-		if ($authZ->isUserAuthorized($shared->getId(AZ_ACCESS), $repositoryId)) {
+		if ($authZ->isUserAuthorized($idManager->getId(AZ_ACCESS), $repositoryId)) {
 			if ($actionString != "collection.browse") {
 				$links[] = "<a href='".MYURL."/collection/browse/".$repositoryId->getIdString()."/'>";
 				$links[count($links) - 1] .= _("browse")."</a>";
@@ -73,12 +73,12 @@ class RepositoryPrinter {
 			}
 		}
 		
-		if ($authZ->isUserAuthorized($shared->getId(AZ_EDIT), $repositoryId)) {
+		if ($authZ->isUserAuthorized($idManager->getId(AZ_EDIT), $repositoryId)) {
 			$links[] = "<a href='".MYURL."/collection/edit/".$repositoryId->getIdString()."/'>";
 			$links[count($links) - 1] .= _("edit")."</a>";
 		}
 	 	
-	 	if ($authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $repositoryId)) {
+	 	if ($authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $repositoryId)) {
 			$links[] = "<a href='".MYURL."/asset/add/".$repositoryId->getIdString()."/".implode("/",$harmoni->pathInfoParts)."'>";
 			$links[count($links) - 1] .= _("add asset")."</a>";
 		}
