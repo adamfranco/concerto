@@ -1,0 +1,15 @@
+/**
+ * System requirement and setup notes.
+ * 
+ * @package concerto.doc
+ * @version $Id$
+ * @date $Date$
+ * @copyright 2004 Middlebury College
+ */
+
+"MySQL server has gone away" Errors:
+If Concerto stores its files in a MySQL database, then the 
+	max_allowed_packet
+option on the server needs to be raised above its default limit of 1MB.
+Note that Concerto base64 encodes file data to make it binary-safe, at the expense
+of a ~33% increase in storage size.
