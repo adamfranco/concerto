@@ -21,7 +21,7 @@
 	$harmoni->ActionHandler->setModulesLocation( realpath(MYDIR."/main/modules"), MODULES_FOLDERS );
 	$harmoni->ActionHandler->setActionsType( ACTIONS_FLATFILES, ".act.php" );
 	$harmoni->ActionHandler->addModulesLocation( realpath(POLYPHONY."/main/modules"), MODULES_FOLDERS );
-	$harmoni->ActionHandler->setActionsTypeForLocation( realpath(POLYPHONY."/main/modules"), ACTIONS_FLATFILES, ".act.php" );
+	$harmoni->ActionHandler->setActionsTypeForModulesLocation( realpath(POLYPHONY."/main/modules"), ACTIONS_FLATFILES, ".act.php" );
 	
 
 // :: Set up the database connection ::
@@ -87,8 +87,10 @@
 
 
 // :: Set up language directories ::
-	Services::startService('Lang', MYDIR.'/main/languages', 'concerto');
+	Services::startService('Lang');
 	$langLoc =& Services::getService ('Lang');
+	$langLoc->addApplication('concerto', MYDIR.'/main/languages');
+	$langLoc->addApplication('polyphony', POLYPHONY.'/main/languages');
 //	$langLoc->setLanguage("es_ES");
 //	$langLoc->setLanguage("en_US");
 	$languages =& $langLoc->getLanguages();
