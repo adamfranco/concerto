@@ -47,7 +47,7 @@ print "\n<table border='1'>";
 print "\n<th>"._("Order")."</th>";
 print "\n<th>"._("DisplayName")."</th>";
 print "\n<th>"._("Description")."</th>";
-print "\n<th>"._("IsManditory?")."</th>";
+print "\n<th>"._("IsMandatory?")."</th>";
 print "\n<th>"._("IsRepeatable?")."</th>";
 print "\n<th>"._("IsPopulatedByDR?")."</th>";
 print "\n</tr>";
@@ -68,7 +68,7 @@ foreach (array_keys($partArray) as $key) {
 	print "\n<td>".($key+1)."</td>";
 	print "\n<td><strong>".$infoPart->getDisplayName()."</strong></td>";
 	print "\n<td><em>".$infoPart->getDescription()."</em></td>";
-	print "\n<td>".(($infoPart->isManditory())?"TRUE":"FALSE")."</td>";
+	print "\n<td>".(($infoPart->isMandatory())?"TRUE":"FALSE")."</td>";
 	print "\n<td>".(($infoPart->isRepeatable())?"TRUE":"FALSE")."</td>";
 	print "\n<td>".(($infoPart->isPopulatedByDR())?"TRUE":"FALSE")."</td>";
 	print "\n</tr>";

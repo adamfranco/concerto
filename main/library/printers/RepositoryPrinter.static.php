@@ -62,7 +62,7 @@ class RepositoryPrinter {
 	 	$links[] = "<a href='".MYURL."/collection/edit/".$repositoryId->getIdString()."/'>";
 	 	$links[count($links) - 1] .= _("edit")."</a>";
 	 	
-	 	$links[] = "<a href='".MYURL."/asset/add/".$repositoryId->getIdString()."/'>";
+	 	$links[] = "<a href='".MYURL."/asset/add/".$repositoryId->getIdString()."/".implode("/",$harmoni->pathInfoParts)."'>";
 	 	$links[count($links) - 1] .= _("add asset")."</a>";
 		
 		print  implode("\n\t | ", $links);

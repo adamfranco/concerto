@@ -28,7 +28,7 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	// Create the properties.
 	$displayNameProp =& $stepOne->createProperty("schema_display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
 	$displayNameProp->setDefaultValue("");
-	$displayNameProp->setErrorString(" <span style='color: f00'>* "._("The name must not start with a space.")."</span>");
+	$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
 	
 	$descriptionProp =& $stepOne->createProperty("schema_description", new RegexValidatorRule(".*"));
 	$descriptionProp->setDefaultValue("");
@@ -60,7 +60,7 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	
 	$property =& $elementStep->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
 	$property->setDefaultValue("");
-	$property->setErrorString(" <span style='color: f00'>* "._("The name must not start with a space.")."</span>");
+	$property->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
 	
 	$property =& $elementStep->createProperty("description", new RegexValidatorRule(".*"));
 	$property->setDefaultValue("");

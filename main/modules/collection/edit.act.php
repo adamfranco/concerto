@@ -27,7 +27,7 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	// Create the properties.
 	$displayNameProp =& $stepOne->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
 	$displayNameProp->setDefaultValue($dr->getDisplayName());
-	$displayNameProp->setErrorString(" <span style='color: f00'>* "._("The name must not start with a space.")."</span>");
+	$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
 	
 	$descriptionProp =& $stepOne->createProperty("description", new RegexValidatorRule(".*"));
 	$descriptionProp->setDefaultValue($dr->getDescription());
