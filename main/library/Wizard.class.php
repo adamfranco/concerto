@@ -1,11 +1,19 @@
 <?
 
+require_once(dirname(__FILE__)."/WizardStep.class.php");
+
 /**
  * The Wizard class provides a system for posting, retrieving, and
  * validating user input over a series of steps, as well as maintianing
  * the submitted values over a series of steps, until the wizard is saved.
  * The wizard is designed to be called from within a single action. The values
  * of its state allow its steps to work as "sub-actions". 
+ *
+ * @package concerto.wizard
+ * @author Adam Franco
+ * @copyright 2004 Middlebury College
+ * @access public
+ * @version $Id$
  */
 
 class Wizard {
