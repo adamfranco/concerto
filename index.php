@@ -5,6 +5,8 @@ define("MYDIR",dirname(__FILE__));
 define("MYPATH",str_replace($_SERVER['DOCUMENT_ROOT'], "", dirname(__FILE__)));
 define("MYURL",str_replace($_SERVER['DOCUMENT_ROOT'], "", dirname(__FILE__))."/index.php");
 
+define("OKI_VERSION", 2);
+
 
 /******************************************************************************
  * Include Harmoni - required
