@@ -9,13 +9,13 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 
 // Create the wizard.
 
- if ($_SESSION['wizard']) {
- 	$wizard =& $_SESSION['wizard'];
+ if ($_SESSION['create_collection_wizard']) {
+ 	$wizard =& $_SESSION['create_collection_wizard'];
  } else {
 
 	// Instantiate the wizard, then add our steps.
 	$wizard =& new Wizard(_("Create a Collection"));
-	$_SESSION['wizard'] =& $wizard;
+	$_SESSION['create_collection_wizard'] =& $wizard;
 	
 	// :: Step One ::
 	$stepOne =& $wizard->createStep(_("Name & Description"));
@@ -38,18 +38,18 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	$stepOneText .= "\n<br><textarea name='description'>[[description]]</textarea>";
 	$stepOneText .= "\n<div style='width: 400px'> &nbsp; </div>";
 	$stepOne->setText($stepOneText);
-	
-	// :: Step Two ::
-	$stepTwo =& $wizard->createStep(_("Select Scheme"));
-	// Create the properties.
-	$displayNameProp =& $stepTwo->createProperty("display_name2", "Regex");
-	$displayNameProp->setExpression(".*");
-	$displayNameProp->setDefaultValue(_("Default Collection Name2"));
-	
-	$stepTwoText = "<h2>"._("Name")."</h2>";
-	$stepTwoText .= "\n"._("The Name for this <em>Collection</em>: ");
-	$stepTwoText .= "\n<input type='text' name='display_name2' value='[[display_name2]]'>";
-	$stepTwo->setText($stepTwoText);
+// 	
+// 	// :: Step Two ::
+// 	$stepTwo =& $wizard->createStep(_("Select Scheme"));
+// 	// Create the properties.
+// 	$displayNameProp =& $stepTwo->createProperty("display_name2", "Regex");
+// 	$displayNameProp->setExpression(".*");
+// 	$displayNameProp->setDefaultValue(_("Default Collection Name2"));
+// 	
+// 	$stepTwoText = "<h2>"._("Name")."</h2>";
+// 	$stepTwoText .= "\n"._("The Name for this <em>Collection</em>: ");
+// 	$stepTwoText .= "\n<input type='text' name='display_name2' value='[[display_name2]]'>";
+// 	$stepTwo->setText($stepTwoText);
 
 }
 
@@ -60,11 +60,26 @@ if ($_REQUEST['save'] || $_REQUEST['save_link']) {
 		$properties =& $wizard->getProperties();
 		print "Now Saving: ";
 		printpre($properties);
+		
+		// Create the dr and get its id.
+		$drManager =& Services::getService("DR");
+		$dr =& $drManager->createDigitalRepository(
+							$properties['display_name']->getValue(),
+							$properties['description']->getValue());
+		
+		// Unset the wizard
+		$wizard = NULL;
+		unset ($_SESSION['create_collection_wizard']);
+		unset ($wizard);
+		
+		// Head off to editing our new collection.
+		$id =& $dr->getId();
+		header(header("Location: ".MYURL."/collection/edit/".$id->getIdString()."/"));
 	}
 	
 } else if ($_REQUEST['cancel'] || $_REQUEST['cancel_link']) {
 	$wizard = NULL;
-	unset ($_SESSION['wizard']);
+	unset ($_SESSION['create_collection_wizard']);
 	unset ($wizard);
 	header(header("Location: ".MYURL."/collections/main/"));
 	
