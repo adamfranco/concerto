@@ -20,6 +20,8 @@ require_once "../polyphony/polyphony.inc.php";
  * Include our libraries
  ******************************************************************************/
 require_once "main/library/ConcertoMenuGenerator.class.php";
+require_once "main/library/printers/AssetPrinter.static.php";
+require_once "main/library/printers/RepositoryPrinter.static.php";
 
 /******************************************************************************
  * Include any theme classes we want to use. They need to be included prior

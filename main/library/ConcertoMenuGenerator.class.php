@@ -50,12 +50,12 @@ class ConcertoMenuGenerator {
 					MYURL."/collections/namebrowse/", 
 					($module == "collections" && $action == "namebrowse")?TRUE:FALSE)
 			);
-			// Name browse
+			// Type browse
 			$menu->addComponent(
 				new LinkMenuItem("<span style='font-size: medium'> - ".
 					_("By Type")."</span>", 
 					MYURL."/collections/typebrowse/", 
-					($module == "collections" && $action == "typebrowse")?TRUE:FALSE)
+					($module == "collections" && ($action == "typebrowse" || $action == "browsetype"))?TRUE:FALSE)
 			);
 			if (ereg("^(collection|asset)$", $module)) {
 				// Name browse
@@ -63,7 +63,7 @@ class ConcertoMenuGenerator {
 					new LinkMenuItem("<span style='font-size: small'> - - ".
 						_("Collection")."</span>", 
 						MYURL."/collection/browse/".$harmoni->pathInfoParts[2]."/", 
-						($module == "collection" && $action == "browse")?TRUE:FALSE)
+						($module == "collection")?TRUE:FALSE)
 				);
 			}
 		}

@@ -7,7 +7,7 @@ $mainScreen =& $harmoni->getAttachedData('mainScreen');
 $centerPane =& $harmoni->getAttachedData('centerPane');
  
 
-// Our Layout Setup
+// Our rows
 $actionRows =& new RowLayout();
 $centerPane->addComponent($actionRows, TOP, CENTER);
 
@@ -19,7 +19,7 @@ $dr =& $drManager->getDigitalRepository($drId);
 
 // Intro
 $introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Browse Assets in the")." <em>".$dr->getDisplayName()."</em> "._("Collection")));
+$introHeader->addComponent(new Content(_("Browse Assets in the")." <em>".$dr->getDisplayName()."</em> "._("Collection")._(" by Type")));
 $actionRows->addComponent($introHeader);
 
 // function links
@@ -31,40 +31,38 @@ $layout->addComponent(new Content(ob_get_contents()));
 ob_end_clean();
 $actionRows->addComponent($layout);
 
-ob_start();
-print  "<p>";
-print  _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
-print  "</p>";
+$drManager =& Services::getService("DR");
 
-$introText =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
-$introText->addComponent(new Content(ob_get_contents()));
-ob_end_clean();
-$actionRows->addComponent($introText);
+// Get all the types
+$types =& $dr->getAssetTypes();
+// put the drs into an array and order them.
+$typeArray = array();
+while($types->hasNext()) {
+	$type =& $types->next();
+	$typeArray[$type->getDomain()." ".$type->getAuthority()." ".$type->getKeyword()] =& $type;
+}
+ksort($typeArray);
 
-// Get the assets to display
-$assets =& $dr->getAssets();
-
-// print the results
-$resultPrinter =& new IteratorResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
+// print the Results
+$resultPrinter =& new ArrayResultPrinter($typeArray, 2, 20, "printTypeShort", $drId);
 $resultLayout =& $resultPrinter->getLayout($harmoni);
 $actionRows->addComponent($resultLayout);
-
 
 // return the main layout.
 return $mainScreen;
 
 
-// Callback function for printing Assets
-function printAssetShort(& $asset, &$harmoni) {
+// Callback function for printing DRs
+function printTypeShort(& $type, & $drId) {
 	ob_start();
 	
-	$assetId =& $asset->getId();
-	print  "\n\t<strong>".$asset->getDisplayName()."</strong> - "._("ID#").": ".
-			$assetId->getIdString();
-	print  "\n\t<br><em>".$asset->getDescription()."</em>";	
-	print  "\n\t<br>";
-	
-	AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
+	$typeString = $type->getDomain()." :: " .$type->getAuthority()." :: ".$type->getKeyword();
+
+	print "<a href='".MYURL."/collection/browsetype/".$drId->getIdString()."/".urlencode($typeString)."'>";
+	print "\n\t<strong>";
+	print $typeString;
+	print "</strong>";
+	print "</a>";
 	
 	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
 	$layout->addComponent(new Content(ob_get_contents()));

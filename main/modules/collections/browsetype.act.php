@@ -11,26 +11,20 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 $actionRows =& new RowLayout();
 $centerPane->addComponent($actionRows, TOP, CENTER);
 
+$typeString = urldecode($harmoni->pathInfoParts[2]);
+$typeParts = explode(" :: ", $typeString);
+$type =& new HarmoniType($typeParts[0],$typeParts[1],$typeParts[2]);
+
 // Intro
 $introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Browse Collections By Name")));
+$introHeader->addComponent(new Content(_("Browse Collections with Type").": \n<br>".$typeString));
 $actionRows->addComponent($introHeader);
 
-$text = "";
-$text .= "<p>";
-$text .= _("Below are listed the availible <em>Collections</em>, organized by name.");
-$text .= "</p>\n<p>";
-$text .= _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
-$text .= "</p>";
-
-$introText =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
-$introText->addComponent(new Content($text));
-$actionRows->addComponent($introText);
+$drManager =& Services::getService("DR");
 
 
 // Get the DRs
-$dr =& Services::getService("DR");
-$allDRs =& $dr->getDigitalRepositories();
+$allDRs =& $drManager->getDigitalRepositoriesByType($type);
 
 // put the drs into an array and order them.
 // @todo, do authorization checking
@@ -47,12 +41,13 @@ $resultLayout =& $resultPrinter->getLayout($harmoni);
 $actionRows->addComponent($resultLayout);
 
 
+
 // return the main layout.
 return $mainScreen;
 
 
 // Callback function for printing DRs
-function printDRShort(& $dr, & $harmoni) {
+function printDRShort(& $dr, $harmoni) {
 	ob_start();
 	
 	$drId =& $dr->getId();
