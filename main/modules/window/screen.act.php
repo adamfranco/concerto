@@ -14,8 +14,7 @@ require_once(HARMONI."GUIManager/StyleProperties/FloatSP.class.php");
 
 // Set a default title
 $outputHandler =& $harmoni->getOutputHandler();
-$theme =& $outputHandler->getTheme();
-$theme->setPageTitle("Concerto");
+$outputHandler->setHead($outputHandler->getHead()."\n\t\t<title>Concerto</title>");
 
 $module = $harmoni->pathInfoParts[0];
 $action = $harmoni->pathInfoParts[1];
