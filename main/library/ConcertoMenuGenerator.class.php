@@ -76,7 +76,15 @@ class ConcertoMenuGenerator {
 			MYURL."/exhibitions/main/", 
 			(ereg("^exhibition.*",$module))?TRUE:FALSE)
 		);
-		
+
+	// :: Admin Tools ::
+		// Main Admin Tools link.
+		$menu->addComponent(
+			new LinkMenuItem(
+			"<span style='font-size: large'>"._("Admin Tools")."</span>", 
+			MYURL."/admin/main/", 
+			(ereg("^admin$",$module))?TRUE:FALSE)
+		);
 	
 		return $menu;
 	}
