@@ -13,7 +13,8 @@ require_once(HARMONI."GUIManager/Layouts/YLayout.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/FloatSP.class.php");
 
 // Set a default title
-$theme =& $harmoni->getTheme();
+$outputHandler =& $harmoni->getOutputHandler();
+$theme =& $outputHandler->getTheme();
 $theme->setPageTitle("Concerto");
 
 $module = $harmoni->pathInfoParts[0];

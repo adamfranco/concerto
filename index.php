@@ -32,8 +32,6 @@ require_once "main/library/printers/RepositoryPrinter.static.php";
  * to starting the session so that they can be restored properly.
  ******************************************************************************/
 require_once(HARMONI."GUIManager/Themes/SimpleLinesTheme.class.php");
-require_once(HARMONI."GUIManager/GUIManager.class.php");
-
 
 
 /******************************************************************************

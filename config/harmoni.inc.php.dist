@@ -6,11 +6,9 @@ require_once(OKI2."/osid/OsidContext.php");
 
 
 // :: set up the $harmoni object :: 
-	$harmoni->config->set("useAuthentication",false);
 	$harmoni->config->set("defaultModule","home");
 	$harmoni->config->set("defaultAction","welcome");
 	$harmoni->config->set("charset","utf-8");
-	$harmoni->config->set("useThemingSystem",true);
 	$harmoni->config->set("sessionName","PHPSESSID");
 	$harmoni->config->set("sessionUseCookies",true);
 	$harmoni->config->set("sessionCookiePath","/");
