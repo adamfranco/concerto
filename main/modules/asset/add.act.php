@@ -44,11 +44,11 @@ if (!$authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $idManager->ge
 	
 	// Create the properties.
 	$displayNameProp =& $step->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
-	$displayNameProp->setDefaultValue(_("Default Asset Name"));
+// 	$displayNameProp->setDefaultValue(_("Default Asset Name"));
 	$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
 	
 	$descriptionProp =& $step->createProperty("description", new RegexValidatorRule(".*"));
-	$descriptionProp->setDefaultValue(_("Default Asset description."));
+// 	$descriptionProp->setDefaultValue(_("Default Asset description."));
 	
 	// Create the step text
 	ob_start();
@@ -71,7 +71,7 @@ if (!$authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $idManager->ge
 	$property->setDefaultValue(_("NONE"));
 	
 	$property =& $step->createProperty("type_domain", new RegexValidatorRule(".*"));
-	$property->setDefaultValue(_("Concerto"));
+	$property->setDefaultValue(_("Asset Types"));
 	
 	$property =& $step->createProperty("type_authority", new RegexValidatorRule(".*"));
 	$property->setDefaultValue(_("Concerto"));
