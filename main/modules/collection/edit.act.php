@@ -18,7 +18,7 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	$dr =& $drManager->getDigitalRepository($id);
 
 	// Instantiate the wizard, then add our steps.
-	$wizard =& new Wizard(_("Create a Collection"));
+	$wizard =& new Wizard(_("Edit a Collection"));
 	$_SESSION['edit_collection_wizard_'.$harmoni->pathInfoParts[2]] =& $wizard;
 	
 	// :: Step One ::
@@ -51,7 +51,9 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	$infoStructures =& $dr->getInfoStructures();
 	
 	$text = "<h2>"._("Select Cataloging Schemata")."</h2>";
-	$text .= _("\nSelect which cataloging schemata you wish to appear during <em>Asset</em> creation and editing. <em>Assets</em> can hold data in any of the schemata, but only the ones selected here will be availible when adding new data.");
+	$text .= "\n<p>"._("Select which cataloging schemata you wish to appear during <em>Asset</em> creation and editing. <em>Assets</em> can hold data in any of the schemata, but only the ones selected here will be availible when adding new data.")."</p>";
+	$text .= "\n<p>"._("If none of the schemata listed below fit your needs, please click the button below to save your changes and create a new schema.")."</p>";
+	$text .= "\n<input type='submit' name='create_schema' value='"._("Save Changes and Create a new Schema")."'>";
 	
 	while ($infoStructures->hasNext()) {
 		$infoStructure =& $infoStructures->next();
@@ -98,7 +100,7 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 // 	}
 }
 
-if ($_REQUEST['save'] || $_REQUEST['save_link']) {
+if ($_REQUEST['save'] || $_REQUEST['save_link'] || $_REQUEST['create_schema']) {
 	// If all properties validate then go through the steps nessisary to
 	// save the data.
 	if ($wizard->updateLastStep()) {
@@ -106,27 +108,38 @@ if ($_REQUEST['save'] || $_REQUEST['save_link']) {
 		print "Now Saving: ";
 		printpre($properties);
 		
-		// Create the dr and get its id.
-		$drManager =& Services::getService("DR");
-		$dr =& $drManager->createDigitalRepository(
-							$properties['display_name']->getValue(),
-							$properties['description']->getValue());
+		// Save the DR
+		$shared =& Services::getService("Shared");
+		$id =& $shared->getId($harmoni->pathInfoParts[2]);
+		
+		$drManager =& Services::getService("DR"); 
+		$dr =& $drManager->getDigitalRepository($id);
+		
+		$dr->updateDisplayName($properties['display_name']->getValue());
+		$dr->updateDescription($properties['description']->getValue());
+		
+		// Save the Schema settings.
+		// @todo
 		
 		// Unset the wizard
 		$wizard = NULL;
 		unset ($_SESSION['edit_collection_wizard_'.$id->getIdString()]);
 		unset ($wizard);
 		
+		printpre($dr);
 		// Head off to editing our new collection.
 		$id =& $dr->getId();
-		header(header("Location: ".MYURL."/collection/edit/".$id->getIdString()."/"));
+		if ($_REQUEST['create_schema'])
+			header("Location: ".MYURL."/schema/create/".implode("/",$harmoni->pathInfoParts));
+		else
+			header("Location: ".MYURL."/collections/namebrowse/");
 	}
 	
 } else if ($_REQUEST['cancel'] || $_REQUEST['cancel_link']) {
 	$wizard = NULL;
 	unset ($_SESSION['edit_collection_wizard_'.$harmoni->pathInfoParts[2]]);
 	unset ($wizard);
-	header(header("Location: ".MYURL."/collections/namebrowse/"));
+	header("Location: ".MYURL."/collections/namebrowse/");
 	
 } else if ($_REQUEST['next'] && $wizard->hasNext())
 	$wizard->next();
