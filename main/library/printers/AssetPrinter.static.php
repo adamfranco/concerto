@@ -96,7 +96,7 @@ class AssetPrinter {
 				print ">";
 				print _("delete")."</a>";
 				
-				print "\n<script type='text/javascript'>";
+				print "\n<script type='text/javascript'>\n//<![CDATA[";
 				print "\n	function deleteAsset".$assetId->getIdString()."From".$repositoryId->getIdString()."() {";
 				print "\n	var url;";
 				print "\n		url = '".MYURL."/asset/delete/".$repositoryId->getIdString()."/".$assetId->getIdString()."/";
@@ -108,7 +108,7 @@ class AssetPrinter {
 				print "\n			window.location = url;";
 				print "\n		}";
 				print "\n	}";
-				print "\n</script>";
+				print "\n//]]>\n</script>";
 				
 				$links[] = ob_get_contents();
 				ob_end_clean();
