@@ -204,7 +204,6 @@ if ($wizard->isSaveRequested() || $_REQUEST['create_schema']) {
 		unset ($_SESSION['edit_collection_wizard_'.$id->getIdString()]);
 		unset ($wizard);
 		
-		printpre($dr);
 		// Head off to editing our new collection.
 		$id =& $dr->getId();
 		if ($_REQUEST['create_schema'])
