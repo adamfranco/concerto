@@ -134,6 +134,8 @@ class Wizard {
 	 * @return object Layout
 	 */
 	function & getLayout (& $harmoni) {
+		ArgumentValidator::validate($harmoni, new ExtendsValidatorRule("Harmoni"), true);
+		
 		// Make sure we have a valid Wizard
 		if (!count($this->_steps))
 			throwError(new Error("No steps in Wizard.", "Wizard", 1));
@@ -146,12 +148,12 @@ class Wizard {
 		
 		// :: Heading ::
 		$heading =& new SingleContentLayout(HEADING_WIDGET, 2);
-		$heading->addContent(new Content($this->_displayName.": ".
+		$heading->addComponent(new Content($this->_displayName.": ".
 					$this->_currentStep." - ".
 					$this->_steps[$this->_currentStep]->getDisplayName()));
 		$wizardLayout->addComponent($heading);
 		
-		$lower =& new ColumnLayout;
+		$lower =& new ColumnLayout (TEXT_BLOCK_WIDGET, 2);
 		$wizardLayout->addComponent($lower);
 			
 		// :: Steps Menu ::
@@ -219,6 +221,7 @@ class Wizard {
 		$buttonText .= "\n\t</tr>";
 		
 		$buttonText .= "\n</table>";
+		$buttons->addComponent(new Content($buttonText));
 		$center->addComponent($buttons);
 		
 		// :: The Current Step ::

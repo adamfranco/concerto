@@ -12,6 +12,12 @@ define("MYURL",str_replace($_SERVER['DOCUMENT_ROOT'], "", dirname(__FILE__))."/i
 require_once "../harmoni/harmoni.inc.php";
 
 /******************************************************************************
+ * Include our libraries
+ ******************************************************************************/
+require_once "main/library/ConcertoMenuGenerator.class.php";
+require_once "main/library/Wizard.class.php";
+
+/******************************************************************************
  * Include any theme classes we want to use. They need to be included prior
  * to starting the session so that they can be restored properly.
  ******************************************************************************/

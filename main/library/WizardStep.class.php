@@ -33,6 +33,7 @@ class WizardStep {
 	 */
 	function WizardStep ( $displayName ) {
 		ArgumentValidator::validate($displayName, new StringValidatorRule, true);
+		
 		$this->_displayName = $displayName;
 		$this->_properties = array();
 	}
@@ -110,7 +111,7 @@ class WizardStep {
 	 * @return object Layout
 	 */
 	function & getLayout (& $harmoni) {
-		$stepLayout =& new SingleContentLayout;
+		$stepLayout =& new SingleContentLayout (TEXT_BLOCK_WIDGET, 2);
 		
 		$text = $this->_parseText();
 		
@@ -147,8 +148,8 @@ class WizardStep {
 	 * @access public
 	 * @return void
 	 */
-	function setText( $text ){
-		ArgumentValidator::validate($propertyName, new StringValidatorRule, true);
+	function setText ( $text ) {
+		ArgumentValidator::validate($text, new StringValidatorRule, true);
 		
 		$this->_text = $text;
 	}
@@ -177,7 +178,7 @@ class WizardStep {
 	 * @access private
 	 * @return string
 	 */
-	function _parseText() {
+	function _parseText () {
 		// Make a copy of our form text for output
 		$outputText = $this->_text;
 		
@@ -189,7 +190,7 @@ class WizardStep {
 				// if this element is of the [[propertyname]] form,
 				// replace the element with the value of the property.
 				if (preg_match("/\[{2}([^|]*)\]{2}/", $match, $parts)) {
-					$outputText = str_replace($match, $this->_properties[$parts[1]], $text);
+					$outputText = str_replace($match, $this->_properties[$parts[1]]->getValue(), $outputText);
 				
 				// if this element is of the 
 				// [['PropertyName' == 'ComparisonVal'|StringIfEquivalent|StringIfNotEquivalent]]
@@ -206,9 +207,9 @@ class WizardStep {
 					// If the property name is quoted, get the value and quote it.
 					// RegEx Details: look for begining and ending quotes.
 					if (preg_match("/^'(.*)'$/", $name, $nameParts)) 
-						$value = "'".$this->_properties[$nameParts[1]]."'";
+						$value = "'".$this->_properties[$nameParts[1]]->getValue()."'";
 					else
-						$value = $this->_properties[$name];
+						$value = $this->_properties[$name]->getValue();
 					
 					$operator = trim($parts[2]);
 					$compVal = trim($parts[3]);
