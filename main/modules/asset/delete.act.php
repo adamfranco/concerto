@@ -17,6 +17,4 @@ for($i = 4; $i < count($harmoni->pathInfoParts); $i++) {
 	$returnURL .= $harmoni->pathInfoParts[$i]."/";
 }
 
-//print("Location: ".$returnURL);
-
 header("Location: ".$returnURL);
