@@ -34,6 +34,10 @@ Concerto Developer Install instructions:
 	b) comment-in and modify the LDAP authentication piece if you wish to use that.
 
 5) Run the installer script
+	The installer script will set up some base data including an
+	administrator user with username/password 'jadministrator'/'password'
+        
 	a) un-comment the installer-script line in the config.
 	b) point your browser at concerto for one page load.
 	c) comment-out the installer script.
+
