@@ -254,8 +254,8 @@ class Wizard {
 		$lower->addComponent($center);
 		
 		// :: Buttons ::
-		$buttons =& new SingleContentLayout;
-		$buttonText = "\n<table>";
+		$buttons =& new SingleContentLayout (TEXT_BLOCK_WIDGET, 3);
+		$buttonText = "\n<table width='100%'>";
 		if (count($this->_steps) > 1) {
 			$buttonText .= "\n\t<tr>";
 			$buttonText .= "\n\t\t<td align='left'>";

@@ -19,18 +19,28 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	
 	// :: Step One ::
 	$stepOne =& $wizard->createStep(_("Name & Description"));
+	
 	// Create the properties.
 	$displayNameProp =& $stepOne->createProperty("display_name", "Regex");
 	$displayNameProp->setExpression(".*");
 	$displayNameProp->setDefaultValue(_("Default Collection Name"));
 	
-	$stepOneText = "<h2>"._("Name")."</h2>";
+	$descriptionProp =& $stepOne->createProperty("description", "Regex");
+	$descriptionProp->setExpression(".*");
+	$descriptionProp->setDefaultValue(_("Default Collection description."));
+	
+	// Create the step text
+	$stepOneText = "\n<h2>"._("Name")."</h2>";
 	$stepOneText .= "\n"._("The Name for this <em>Collection</em>: ");
-	$stepOneText .= "\n<input type='text' name='display_name' value='[[display_name]]'>";
+	$stepOneText .= "\n<br><input type='text' name='display_name' value='[[display_name]]'>";
+	$stepOneText .= "\n<h2>"._("Description")."</h2>";
+	$stepOneText .= "\n"._("The Description for this <em>Collection</em>: ");
+	$stepOneText .= "\n<br><textarea name='description'>[[description]]</textarea>";
+	$stepOneText .= "\n<div style='width: 400px'> &nbsp; </div>";
 	$stepOne->setText($stepOneText);
 	
 	// :: Step Two ::
-	$stepTwo =& $wizard->createStep(_("Name & Description 2"));
+	$stepTwo =& $wizard->createStep(_("Select Scheme"));
 	// Create the properties.
 	$displayNameProp =& $stepTwo->createProperty("display_name2", "Regex");
 	$displayNameProp->setExpression(".*");
