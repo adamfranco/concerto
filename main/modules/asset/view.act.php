@@ -13,15 +13,15 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 $authZ =& Services::getService("AuthZ");
 $idManager =& Services::getService("Id");
 if (!$authZ->isUserAuthorized($idManager->getId(AZ_VIEW), $idManager->getId($harmoni->pathInfoParts[3]))) {
-	$errorLayout =& new SingleContentLayout;
-	$errorLayout->addComponent(new Content(_("You are not authorized to view this <em>Asset</em> here."), MIDDLE, CENTER));
-	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
+	$errorLayout =& new Block(_("You are not authorized to view this <em>Asset</em> here."),2);
+	$centerPane->add($errorLayout, null, null, CENTER, CENTER);
 	return $mainScreen;
 }
 
 // Our Layout Setup
-$actionRows =& new RowLayout();
-$centerPane->addComponent($actionRows, TOP, CENTER);
+$yLayout =& new YLayout();
+$actionRows =& new Container($yLayout, OTHER, 1);
+$centerPane->add($actionRows, null, null, CENTER, TOP);
 
 // Get the Repository
 $repositoryManager =& Services::getService("Repository");
@@ -32,33 +32,26 @@ $repository =& $asset->getRepository();
 $repositoryId =& $repository->getId();
 
 // Intro
-$introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Asset").": <em>".$asset->getDisplayName()."</em>"));
-$actionRows->addComponent($introHeader);
+$introHeader =& new Heading(_("Asset").": <em>".$asset->getDisplayName()."</em>", 2);
+$actionRows->add($introHeader, "100%", null, LEFT, CENTER);
 
 // function links
 ob_start();
 AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
-$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
-$layout->addComponent(new Content(ob_get_contents()));
+$layout =& new Block(ob_get_contents(), 2);
 ob_end_clean();
-$actionRows->addComponent($layout);
+$actionRows->add($layout, null, null, CENTER, CENTER);
 
 // Columns for Description and thumbnail.
-$contentCols =& new ColumnLayout;
-$actionRows->addComponent($contentCols);
+$xLayout =& new XLayout();
+$contentCols =& new Container($xLayout, OTHER, 1);
+$actionRows->add($contentCols, null, null, CENTER, CENTER);
 
 	// Description and dates
 	ob_start();
 	$assetId =& $asset->getId();
 	print  "\n\t<strong>"._("Description").":</strong> \n<em>".$asset->getDescription()."</em>";
 	print  "\n\t<br /><strong>"._("ID#").":</strong> ".$assetId->getIdString();
-	
-	$type =& $asset->getAssetType();
-	print  "\n\t<br /><strong>"._("Type").":</strong> ";
-	print "<a title=\"".$type->getDescription()."\">";
-	print $type->getDomain()."::".$type->getAuthority()."::".$type->getKeyword();
-	print "</a>";
 
 	$effectDate =& $asset->getEffectiveDate();
 	print  "\n\t<br /><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->toString()."</em>";
@@ -66,23 +59,21 @@ $actionRows->addComponent($contentCols);
 	$expirationDate =& $asset->getExpirationDate();
 	print  "\n\t<br /><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->toString()."</em>";
 
-	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
-	$layout->addComponent(new Content(ob_get_contents()));
+	$layout =& new Block(ob_get_contents(), 2);
 	ob_end_clean();
-	$contentCols->addComponent($layout);
+	$contentCols->add($layout, null, null, CENTER, CENTER);
 	
 	// Thumbnail
-// 	ob_start();
+	ob_start();
 // 	$thumbnailFields =& $asset->getPartByPart($_SESSION['concerto_config']['thumbnail_part_id']);
 // 	while ($fields->hasNext()) {
 // 		$field =& $fields->next();
 // 		$value =& $field->getValue();
 // 		print "\n<img src='".$value->toString()."'>\n<br />";
 // 	}
-// 	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
-// 	$layout->addComponent(new Content(ob_get_contents()));
-// 	ob_end_clean();
-// 	$contentCols->addComponent($layout);
+	$layout =& new Block(ob_get_contents(), 4);
+	ob_end_clean();
+	$contentCols->add($layout, "100%", null, LEFT, CENTER);
 
 
 //***********************************
@@ -110,10 +101,9 @@ while ($structSet->hasNext()) {
 	}	
 }
 
-$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
-$layout->addComponent(new Content(ob_get_contents()));
+$layout =& new Block(ob_get_contents(), 2);
 ob_end_clean();
-$actionRows->addComponent($layout);
+$actionRows->add($layout, null, null, CENTER, CENTER);
 
 
 //***********************************
@@ -127,10 +117,9 @@ $content =& $asset->getContent();
 if ($string = $content->toString()) {
 	ob_start();
 	print ($string);
-	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
-	$layout->addComponent(new Content(ob_get_contents()));
+	$layout =& new Block(ob_get_contents(), 4);
 	ob_end_clean();
-	$actionRows->addComponent($layout);
+	$actionRows->add($layout, "100%", null, LEFT, CENTER);
 }
 
 //***********************************

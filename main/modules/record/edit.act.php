@@ -15,9 +15,8 @@ $authZ =& Services::getService("AuthZ");
 $idManager =& Services::getService("Id");
 $id =& $idManager->getId($harmoni->pathInfoParts[3]);
 if (!$authZ->isUserAuthorized($idManager->getId(AZ_EDIT), $id)) {
-	$errorLayout =& new SingleContentLayout;
-	$errorLayout->addComponent(new Content(_("You are not authorized to edit this <em>Asset</em>."), MIDDLE, CENTER));
-	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
+	$errorLayout =& new Block(_("You are not authorized to edit this <em>Asset</em>."),2);
+	$centerPane->add($errorLayout, "100%", null,CENTER, CENTER);
 	return $mainScreen;
 }
 
@@ -116,7 +115,7 @@ if ($wizard->isSaveRequested()) {
 }
 
 $wizardLayout =& $wizard->getLayout($harmoni);
-$centerPane->addComponent($wizardLayout, TOP, CENTER);
+$centerPane->add($wizardLayout, null, null, CENTER, CENTER);
 
 // return the main layout.
 return $mainScreen;

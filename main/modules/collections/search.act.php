@@ -7,28 +7,29 @@ $mainScreen =& $harmoni->getAttachedData('mainScreen');
 $centerPane =& $harmoni->getAttachedData('centerPane');
  
 
-// Our Layout Setup
-$actionRows =& new RowLayout();
-$centerPane->addComponent($actionRows, TOP, CENTER);
+// Our
+$yLayout =& new YLayout();
+$actionRows =& new Container($yLayout,OTHER,1);
+$centerPane->add($actionRows, null, null, CENTER, TOP);
+
 
 // Get the Repository
 $repositoryManager =& Services::getService("Repository");
 $idManager =& Services::getService("Id");
 
 // Intro
-$introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Search Assets in all Collections")));
-$actionRows->addComponent($introHeader);
+$introHeader =& new Heading("Search Assets in all Collections", 2);
+$actionRows->add($introHeader, "100%" ,null, LEFT, CENTER);
 
 ob_start();
 print  "<p>";
 print  _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
 print  "</p>";
 
-$introText =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
-$introText->addComponent(new Content(ob_get_contents()));
+$introText =& new Block(ob_get_contents(),3);
+$actionRows->add($introText, "100%", null, CENTER, CENTER);
 ob_end_clean();
-$actionRows->addComponent($introText);
+
 
 
 // Print out the search types
@@ -62,10 +63,9 @@ foreach (array_keys($searchArray) as $typeString) {
 	print "\n".$searchModules->createSearchForm($searchType, MYURL."/collections/searchresults/".urlencode($typeString)."/");
 }
 
-$searchFields =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
-$searchFields->addComponent(new Content(ob_get_contents()));
+$searchFields =& new Block(ob_get_contents(), 3);
 ob_end_clean();
-$actionRows->addComponent($searchFields);
+$actionRows->add($searchFields, "100%", null, LEFT, CENTER);
 
 // return the main layout.
 return $mainScreen;

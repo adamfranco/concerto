@@ -1,8 +1,8 @@
 <?
-//
 
 if (!defined("AZ_ADD_CHILDREN"))
-       throwError(new Error("You must define an id for AZ_ADD_CHILDREN", "concerto.asset", true));
+	throwError(new Error("You must define an id for AZ_ADD_CHILDREN", "concerto.asset", true));
+
 // Get the Layout compontents. See core/modules/moduleStructure.txt
 // for more info. 
 $harmoni->ActionHandler->execute("window", "screen");
@@ -13,9 +13,8 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 $authZ =& Services::getService("AuthZ");
 $idManager =& Services::getService("Id");
 if (!$authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $idManager->getId($harmoni->pathInfoParts[2]))) {
-	$errorLayout =& new SingleContentLayout;
-	$errorLayout->addComponent(new Content(_("You are not authorized to create an <em>Asset</em> here."), MIDDLE, CENTER));
-	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
+	$errorLayout =& new Block(_("You are not authorized to create an <em>Asset</em> here."),2);
+	$centerPane->add($errorLayout, null, null, CENTER, CENTER);
 	return $mainScreen;
 }
 
@@ -34,13 +33,9 @@ if (!$authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $idManager->ge
 // 	$asset =& $repository->getAsset($assetId);
 
 	// Instantiate the wizard, then add our steps.
-  print($harmoni->pathInfoParts[3]);
-	if($harmoni->pathInfoParts[3] == "exhibitions"){
-	  $wizard =& new Wizard(_("Add Asset to the ")."<em>".$repository->getDisplayName()."</em> "._("Exhibition"));
-  }else{
-    $wizard =& new Wizard(_("Add Asset to the ")."<em>".$repository->getDisplayName()."</em> "._("Collection"));
-  $_SESSION['add_asset_wizard_'.$harmoni->pathInfoParts[2]] =& $wizard;
-	}
+	$wizard =& new Wizard(_("Add Asset to the ")."<em>".$repository->getDisplayName()."</em> "._("Collection"));
+	$_SESSION['add_asset_wizard_'.$harmoni->pathInfoParts[2]] =& $wizard;
+	
 	
 	
 	// :: Name and Description ::
@@ -48,11 +43,11 @@ if (!$authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $idManager->ge
 	
 	// Create the properties.
 	$displayNameProp =& $step->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
-	$displayNameProp->setDefaultValue(_("Default Asset Name"));
+// 	$displayNameProp->setDefaultValue(_("Default Asset Name"));
 	$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
 	
 	$descriptionProp =& $step->createProperty("description", new RegexValidatorRule(".*"));
-	$descriptionProp->setDefaultValue(_("Default Asset description."));
+// 	$descriptionProp->setDefaultValue(_("Default Asset description."));
 	
 	// Create the step text
 	ob_start();
@@ -75,7 +70,7 @@ if (!$authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $idManager->ge
 	$property->setDefaultValue(_("NONE"));
 	
 	$property =& $step->createProperty("type_domain", new RegexValidatorRule(".*"));
-	$property->setDefaultValue(_("Concerto"));
+	$property->setDefaultValue(_("Asset Types"));
 	
 	$property =& $step->createProperty("type_authority", new RegexValidatorRule(".*"));
 	$property->setDefaultValue(_("Concerto"));
@@ -286,7 +281,7 @@ if ($wizard->isSaveRequested()) {
 }
 
 $wizardLayout =& $wizard->getLayout($harmoni);
-$centerPane->addComponent($wizardLayout, TOP, CENTER);
+$centerPane->add($wizardLayout, null, null, CENTER, TOP);
 
 // return the main layout.
 return $mainScreen;

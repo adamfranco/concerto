@@ -7,18 +7,21 @@ $mainScreen =& $harmoni->getAttachedData('mainScreen');
 $centerPane =& $harmoni->getAttachedData('centerPane');
  
 
-// Our
-$actionRows =& new RowLayout();
-$centerPane->addComponent($actionRows, TOP, CENTER);
+/ Our
+$yLayout =& new YLayout();
+$actionRows =& new Container($yLayout,OTHER,1);
+$centerPane->add($actionRows, null, null, CENTER, TOP);
+
 
 $typeString = urldecode($harmoni->pathInfoParts[2]);
 $typeParts = explode(" :: ", $typeString);
 $type =& new HarmoniType($typeParts[0],$typeParts[1],$typeParts[2]);
 
-// Intro
-$introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Browse Collections with Type").": \n<br />".$typeString));
-$actionRows->addComponent($introHeader);
+
+/ Intro
+$introHeader =& new Heading(_("Browse Collections with Type").": \n<br />".$typeString), 2);
+$actionRows->add($introHeader, "100%" ,null, LEFT, CENTER);
+
 
 $repositoryManager =& Services::getService("Repository");
 
@@ -58,8 +61,7 @@ function printrepositoryShort(& $repository, $harmoni) {
 	
 	RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
 	
-	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
-	$layout->addComponent(new Content(ob_get_contents()));
+	$layout =& new Block(ob_get_contents(), 4);
 	ob_end_clean();
 	return $layout;
 }

@@ -75,10 +75,9 @@ foreach (array_keys($partStructureArray) as $key) {
 }
 print "\n</table>";
 
-$text =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
-$text->addComponent(new Content(ob_get_contents()), TOP, LEFT);
+$text =& new Block(ob_get_contents(), 2);
 
-$centerPane->addComponent($text, TOP, LEFT);
+$centerPane->add($text, "100%", null, LEFT, CENTER);
 ob_end_clean();
 
 // return the main layout.

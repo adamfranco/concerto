@@ -9,15 +9,15 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
  
 
 // Our
-$actionRows =& new RowLayout();
-$centerPane->addComponent($actionRows, TOP, CENTER);
+$yLayout =& new YLayout();
+$actionRows =& new Container($yLayout,OTHER,1);
+$centerPane->add($actionRows, null, null, CENTER, TOP);
 
 // Intro
-$introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Collections")));
-$actionRows->addComponent($introHeader);
+$introHeader =& new Heading("Collections", 2);
+$actionRows->add($introHeader, "100%" ,null, LEFT, CENTER);
 
-$introText =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
+
 ob_start();
 print "";
 //print "\n<img src='".MYPATH."/main/modules/home/flower.jpg' alt='A flower. &copy;2003 Adam Franco - Creative Commons Attribution-ShareAlike 1.0 - http://creativecommons.org/licenses/by-sa/1.0/' align='right' style='margin: 10px;' />";
@@ -43,9 +43,9 @@ print "\n<ul>\n<li><a href='".MYURL."/collection/create/'>";
 print _("Create a new <em>Collection</em>");
 print "</a>\n</li>\n</ul>";
 
-$introText->addComponent(new Content(ob_get_contents()));
+$introText =& new Block(ob_get_contents(),3);
+$actionRows->add($introText, "100%", null, CENTER, CENTER);
 ob_end_clean();
-$actionRows->addComponent($introText);
 
 // return the main layout.
 return $mainScreen;

@@ -9,15 +9,15 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
  
 
 // Our
-$actionRows =& new RowLayout();
-$centerPane->addComponent($actionRows, TOP, CENTER);
+$yLayout =& new YLayout();
+$actionRows =& new Container($yLayout,OTHER,1);
+$centerPane->add($actionRows, null, null, CENTER, TOP);
 
 // Intro
-$introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Welcome to Concerto")));
-$actionRows->addComponent($introHeader);
+$introHeader =& new Heading("Welcome to Concerto", 2);
+$actionRows->add($introHeader, "100%" ,null, LEFT, CENTER);
 
-$introText =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
+
 $text = "";
 //$text .= "\n<img src='".MYPATH."/main/modules/home/flower.jpg' alt='A flower. &copy;2003 Adam Franco - Creative Commons Attribution-ShareAlike 1.0 - http://creativecommons.org/licenses/by-sa/1.0/' align='right' style='margin: 10px;' />";
 $text .= "<p>";
@@ -27,8 +27,9 @@ $text .= _("The two main parts of <strong>Concerto</strong> are the <em>Collecti
 $text .= "</p>\n<p>";
 $text .= _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
 $text .= "</p>";
-$introText->addComponent(new Content($text));
-$actionRows->addComponent($introText);
 
-// return the main layout.
+$introText =& new Block($text,3);
+$actionRows->add($introText, "100%", null, CENTER, CENTER);
+
+
 return $mainScreen;

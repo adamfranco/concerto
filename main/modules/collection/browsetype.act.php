@@ -22,9 +22,8 @@ $repository =& $repositoryManager->getRepository($repositoryId);
 $authZ =& Services::getService("AuthZ");
 $idManager =& Services::getService("Id");
 if (!$authZ->isUserAuthorized($idManager->getId(AZ_ACCESS), $repositoryId)) {
-	$errorLayout =& new SingleContentLayout;
-	$errorLayout->addComponent(new Content(_("You are not authorized to access this <em>Collection</em>."), MIDDLE, CENTER));
-	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
+	$errorLayout =& new Block("You are not authorized to access this <em>Collection</em>.",3);
+	$centerPane->add($errorLayout,"100%" ,null, CENTER, CENTER);
 	return $mainScreen;
 }
 
@@ -33,23 +32,22 @@ $typeString = urldecode($harmoni->pathInfoParts[3]);
 $typeParts = explode(" :: ", $typeString);
 $type =& new HarmoniType($typeParts[0],$typeParts[1],$typeParts[2]);
 
-// Our
-$actionRows =& new RowLayout();
-$centerPane->addComponent($actionRows, TOP, CENTER);
+// Our Layout Setup
+$yLayout =& new YLayout();
+$actionRows =& new Container($yLayout,OTHER,1);
+$centerPane->add($actionRows, null, null, CENTER, TOP);
 
 // Intro
-$introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Browse Assets in the")." <em>".$repository->getDisplayName()."</em> "._("Collection")." "._("with type").":\n<br />".$typeString));
-$actionRows->addComponent($introHeader);
+$introHeader =& new Heading("Browse Assets in the <em>".$repository->getDisplayName()."</em> Collection", 2);
+$actionRows->add($introHeader, "100%" ,null, LEFT, CENTER);
 
 // function links
 ob_start();
 print _("Collection").": ";
 RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
-$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
-$layout->addComponent(new Content(ob_get_contents()));
+$layout =& new Block(ob_get_contents(), 2);
 ob_end_clean();
-$actionRows->addComponent($layout);
+$actionRows->add($layout, null, null, CENTER, CENTER);
 
 // Get the assets to display
 $assets =& $repository->getAssetsByType($type);
@@ -57,7 +55,7 @@ $assets =& $repository->getAssetsByType($type);
 // print the results
 $resultPrinter =& new IteratorResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
 $resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
-$actionRows->addComponent($resultLayout);
+$actionRows->add($resultLayout, null, null, CENTER, CENTER);
 
 
 // return the main layout.
@@ -76,8 +74,7 @@ function printAssetShort(& $asset, & $harmoni) {
 	
 	AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
 	
-	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
-	$layout->addComponent(new Content(ob_get_contents()));
+	$layout =& new Block(ob_get_contents(), 4);
 	ob_end_clean();
 	return $layout;
 }

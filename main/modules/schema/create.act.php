@@ -241,7 +241,7 @@ if ($wizard->isSaveRequested()) {
 }
 
 $wizardLayout =& $wizard->getLayout($harmoni);
-$centerPane->addComponent($wizardLayout, TOP, CENTER);
+$centerPane->add($wizardLayout, null, null, CENTER, CENTER);
 
 // return the main layout.
 return $mainScreen;

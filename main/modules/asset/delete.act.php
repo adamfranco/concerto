@@ -22,9 +22,8 @@ if (!$authZ->isUserAuthorized($idManager->getId(AZ_DELETE), $assetId)) {
 	$mainScreen =& $harmoni->getAttachedData('mainScreen');
 	$centerPane =& $harmoni->getAttachedData('centerPane');
 
-	$errorLayout =& new SingleContentLayout;
-	$errorLayout->addComponent(new Content(_("You are not authorized to delete this <em>Asset</em>."), MIDDLE, CENTER));
-	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
+	$errorLayout =& new Block(_("You are not authorized to delete this <em>Asset</em> here."),2);
+	$centerPane->add($errorLayout, null, null, CENTER, CENTER);
 	return $mainScreen;
 }
 

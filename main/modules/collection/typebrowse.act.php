@@ -7,9 +7,10 @@ $mainScreen =& $harmoni->getAttachedData('mainScreen');
 $centerPane =& $harmoni->getAttachedData('centerPane');
  
 
-// Our rows
-$actionRows =& new RowLayout();
-$centerPane->addComponent($actionRows, TOP, CENTER);
+// Our Layout Setup
+$yLayout =& new YLayout();
+$actionRows =& new Container($yLayout,OTHER,1);
+$centerPane->add($actionRows, null, null, CENTER, TOP);
 
 // Get the Repository
 $repositoryManager =& Services::getService("Repository");
@@ -18,18 +19,16 @@ $repositoryId =& $idManager->getId($harmoni->pathInfoParts[2]);
 $repository =& $repositoryManager->getRepository($repositoryId);
 
 // Intro
-$introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Browse Assets in the")." <em>".$repository->getDisplayName()."</em> "._("Collection")._(" by Type")));
-$actionRows->addComponent($introHeader);
+$introHeader =& new Heading("Browse Assets in the <em>".$repository->getDisplayName()."</em> Collection", 2);
+$actionRows->add($introHeader, "100%" ,null, LEFT, CENTER);
 
 // function links
 ob_start();
 print _("Collection").": ";
 RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
-$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
-$layout->addComponent(new Content(ob_get_contents()));
+$layout =& new Block(ob_get_contents(), 2);
 ob_end_clean();
-$actionRows->addComponent($layout);
+$actionRows->add($layout, null, null, CENTER, CENTER);
 
 $repositoryManager =& Services::getService("Repository");
 
@@ -46,7 +45,7 @@ ksort($typeArray);
 // print the Results
 $resultPrinter =& new ArrayResultPrinter($typeArray, 2, 20, "printTypeShort", $repositoryId);
 $resultLayout =& $resultPrinter->getLayout($harmoni);
-$actionRows->addComponent($resultLayout);
+$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 
 // return the main layout.
 return $mainScreen;
@@ -64,8 +63,7 @@ function printTypeShort(& $type, & $repositoryId) {
 	print "</strong>";
 	print "</a>";
 	
-	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
-	$layout->addComponent(new Content(ob_get_contents()));
+	$layout =& new Block(ob_get_contents(), 4);
 	ob_end_clean();
 	return $layout;
 }

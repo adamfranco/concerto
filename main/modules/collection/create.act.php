@@ -10,7 +10,7 @@ $harmoni->ActionHandler->execute("window", "screen");
 $mainScreen =& $harmoni->getAttachedData('mainScreen');
 $centerPane =& $harmoni->getAttachedData('centerPane');
  
-
+/*
 // Check that the user can create a collection here.
 $authZ =& Services::getService("AuthZ");
 $idManager =& Services::getService("Id");
@@ -20,7 +20,7 @@ if (!$authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $idManager->ge
 	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
 	return $mainScreen;
 }
-
+*/
 // Create the wizard.
 
  if ($_SESSION['create_collection_wizard']) {
@@ -137,7 +137,7 @@ if ($wizard->isSaveRequested()) {
 }
 
 $wizardLayout =& $wizard->getLayout($harmoni);
-$centerPane->addComponent($wizardLayout, TOP, CENTER);
+$centerPane->add($wizardLayout, null, null, CENTER, TOP);
 
 // return the main layout.
 return $mainScreen;

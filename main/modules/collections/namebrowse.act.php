@@ -8,13 +8,13 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
  
 
 // Our
-$actionRows =& new RowLayout();
-$centerPane->addComponent($actionRows, TOP, CENTER);
+$yLayout =& new YLayout();
+$actionRows =& new Container($yLayout,OTHER,1);
+$centerPane->add($actionRows, null, null, CENTER, TOP);
 
 // Intro
-$introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Browse Collections By Name")));
-$actionRows->addComponent($introHeader);
+$introHeader =& new Heading("Browse Collections By Name", 2);
+$actionRows->add($introHeader, "100%" ,null, LEFT, CENTER);
 
 $text = "";
 $text .= "<p>";
@@ -23,9 +23,8 @@ $text .= "</p>\n<p>";
 $text .= _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
 $text .= "</p>";
 
-$introText =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
-$introText->addComponent(new Content($text));
-$actionRows->addComponent($introText);
+$introText =& new Block($text,3);
+$actionRows->add($introText, "100%", null, CENTER, CENTER);
 
 
 // Get the Repositoriess
@@ -44,7 +43,7 @@ ksort($repositoryArray);
 // print the Results
 $resultPrinter =& new ArrayResultPrinter($repositoryArray, 2, 20, "printRepositoryShort", $harmoni);
 $resultLayout =& $resultPrinter->getLayout($harmoni);
-$actionRows->addComponent($resultLayout);
+$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 
 
 // return the main layout.
@@ -62,9 +61,10 @@ function printRepositoryShort(& $repository, & $harmoni) {
 	print  "\n\t<br />";
 	
 	RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
-	
-	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
-	$layout->addComponent(new Content(ob_get_contents()));
+	$xLayout =& new XLayout();
+	$layout =& new Container($xLayout, BLOCK, 4);
+	$layout2 =& new Block(ob_get_contents(), 2);
+	$layout->add($layout2, null, null, CENTER, CENTER);
 	ob_end_clean();
 	return $layout;
 }

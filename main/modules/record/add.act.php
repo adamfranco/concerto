@@ -14,9 +14,8 @@ if (!$authZ->isUserAuthorized($idManager->getId(AZ_EDIT), $id)) {
 	$harmoni->ActionHandler->execute("window", "screen");
 	$mainScreen =& $harmoni->getAttachedData('mainScreen');
 	$centerPane =& $harmoni->getAttachedData('centerPane');
-	$errorLayout =& new SingleContentLayout;
-	$errorLayout->addComponent(new Content(_("You are not authorized to edit this <em>Asset</em>."), MIDDLE, CENTER));
-	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
+	$errorLayout =& new Block(_("You are not authorized to edit this <em>Asset</em>."),2);
+	$centerPane->add($errorLayout, "100%", null,CENTER, CENTER);
 	return $mainScreen;
 }
 

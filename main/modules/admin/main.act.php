@@ -9,15 +9,15 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
  
 
 // Our
-$actionRows =& new RowLayout();
-$centerPane->addComponent($actionRows, TOP, CENTER);
+$yLayout =& new YLayout();
+$actionRows =& new Container($yLayout,OTHER,1);
+$centerPane->add($actionRows, null, null, CENTER, TOP);
 
 // Intro
-$introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Admin Tools")));
-$actionRows->addComponent($introHeader);
+$introHeader =& new Heading("Admin Tools", 2);
+$actionRows->add($introHeader, "100%" ,null, LEFT, CENTER);
 
-$introText =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
+
 ob_start();
 print "\n<ul>";
 print "\n\t<li><a href='".MYURL."/agents/group_membership/'>";
@@ -32,12 +32,11 @@ print "</a></li>";
 print "\n\t<li><a href='".MYURL."/agents/create_agent/'>";
 print _("Create User");
 print "</a></li>";
-
 print "\n</ul>";
 
-$introText->addComponent(new Content(ob_get_contents()));
+$introText =& new Block(ob_get_contents(),3);
+$actionRows->add($introText, "100%", null, CENTER, CENTER);
 ob_end_clean();
-$actionRows->addComponent($introText);
 
 // return the main layout.
 return $mainScreen;
