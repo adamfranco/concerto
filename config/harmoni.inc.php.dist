@@ -10,7 +10,7 @@ require_once(OKI2."/osid/OsidContext.php");
 	$harmoni->config->set("defaultModule","home");
 	$harmoni->config->set("defaultAction","welcome");
 	$harmoni->config->set("charset","utf-8");
-	$harmoni->config->set("outputHTML",true);
+	$harmoni->config->set("useThemingSystem",true);
 	$harmoni->config->set("sessionName","PHPSESSID");
 	$harmoni->config->set("sessionUseCookies",true);
 	$harmoni->config->set("sessionCookiePath","/");
@@ -134,12 +134,8 @@ require_once(OKI2."/osid/OsidContext.php");
 
 
 // :: GUIManager setup ::
-	$dbHandler=&Services::requireService("DBHandler");
-	$dbIndex = $dbHandler->addDatabase( new MySQLDatabase("devo","GUI","test","test") );
-	$dbHandler->pConnect($dbIndex);
-	$guimanager =& Services::startService("GUI",$dbIndex, "GUI");
+	$guimanager =& Services::startService("GUI", $dbID, $dbName);
 	$harmoni->setTheme(new SimpleLinesTheme);
-	unset($dbHandler);
 
 // :: Set up language directories ::
 	Services::startService('Lang');
