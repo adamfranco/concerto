@@ -44,7 +44,7 @@ class AssetPrinter {
 		
 		$assetId =& $asset->getId();
 		if ($repositoryId === NULL) {
-			$repository =& $asset->getDigitalRepository();
+			$repository =& $asset->getRepository();
 			$repositoryId =& $repository->getId();
 		}
 		

@@ -13,16 +13,16 @@ $mainScreen =& $harmoni->getAttachedData('mainScreen');
 $centerPane =& $harmoni->getAttachedData('centerPane');
 
 
-// Get the DR
-$drManager =& Services::getService("DR");
+// Get the Repository
+$repositoryManager =& Services::getService("Repository");
 $sharedManager =& Services::getService("Shared");
-$drId =& $sharedManager->getId($harmoni->pathInfoParts[2]);
-$dr =& $drManager->getDigitalRepository($drId);
+$repositoryId =& $sharedManager->getId($harmoni->pathInfoParts[2]);
+$repository =& $repositoryManager->getRepository($repositoryId);
 
 // Check that the user can access this collection
 $authZ =& Services::getService("AuthZ");
 $shared =& Services::getService("Shared");
-if (!$authZ->isUserAuthorized($shared->getId(AZ_ACCESS), $drId)) {
+if (!$authZ->isUserAuthorized($shared->getId(AZ_ACCESS), $repositoryId)) {
 	$errorLayout =& new SingleContentLayout;
 	$errorLayout->addComponent(new Content(_("You are not authorized to access this <em>Collection</em>."), MIDDLE, CENTER));
 	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
@@ -31,10 +31,10 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ACCESS), $drId)) {
 
 
 
-// If the DR supports searching of root assets, just get those
+// If the Repository supports searching of root assets, just get those
 $hasRootSearch = FALSE;
-$rootSearchType =& new HarmoniType("DR","Harmoni","RootAssets", "");
-$searchTypes =& $dr->getSearchTypes();
+$rootSearchType =& new HarmoniType("Repository","Harmoni","RootAssets", "");
+$searchTypes =& $repository->getSearchTypes();
 while ($searchTypes->hasNext()) {
 	if ($rootSearchType->isEqual( $searchTypes->next() )) {
 		$hasRootSearch = TRUE;
@@ -48,13 +48,13 @@ $centerPane->addComponent($actionRows, TOP, CENTER);
 
 // Intro
 $introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Browse Assets in the")." <em>".$dr->getDisplayName()."</em> "._("Collection")));
+$introHeader->addComponent(new Content(_("Browse Assets in the")." <em>".$repository->getDisplayName()."</em> "._("Collection")));
 $actionRows->addComponent($introHeader);
 
 // function links
 ob_start();
 print _("Collection").": ";
-RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $dr);
+RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
 $layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
 $layout->addComponent(new Content(ob_get_contents()));
 ob_end_clean();
@@ -75,7 +75,7 @@ $actionRows->addComponent($introText);
 //***********************************
 if ($hasRootSearch) {
 	$criteria = NULL;
-	$assets =& $dr->getAssetsBySearch($criteria, $rootSearchType);
+	$assets =& $repository->getAssetsBySearch($criteria, $rootSearchType);
 } 
 // Otherwise, just get all the assets
 else {

@@ -26,51 +26,51 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
  	$wizard =& $_SESSION['edit_record_wizard_'.$harmoni->pathInfoParts[4]];
  } else {
  	
- 	// Make sure we have a valid DR
+ 	// Make sure we have a valid Repository
 	$shared =& Services::getService("Shared");
-	$drManager =& Services::getService("DR");
-	$drId =& $shared->getId($harmoni->pathInfoParts[2]);
+	$repositoryManager =& Services::getService("Repository");
+	$repositoryId =& $shared->getId($harmoni->pathInfoParts[2]);
 	$assetId =& $shared->getId($harmoni->pathInfoParts[3]);
 	$recordId =& $shared->getId($harmoni->pathInfoParts[4]);
 
-	$dr =& $drManager->getDigitalRepository($drId);
-	$asset =& $dr->getAsset($assetId);
-	$record =& $asset->getInfoRecord($recordId);
-	$structure =& $record->getInfoStructure();
+	$repository =& $repositoryManager->getRepository($repositoryId);
+	$asset =& $repository->getAsset($assetId);
+	$record =& $asset->getRecord($recordId);
+	$structure =& $record->getRecordStructure();
 	$structureId =& $structure->getId();
 
 	// Instantiate the wizard, then add our steps.
 	$wizard =& new Wizard(_("Edit Record"));
-	$_SESSION['edit_record_wizard_'.$harmoni->pathInfoParts[4]] =& $wizard;
+	$_SESSION['edit_record_wizard_'.$harmoni->pathInfoPartStructures[4]] =& $wizard;
 	
-	// First get the set for this structure and start with the parts in the set.
+	// First get the set for this structure and start with the partStructure in the set.
 	$setManager =& Services::getService("Sets");
-	$partSet =& $setManager->getSet($structureId);
+	$partStructureSet =& $setManager->getSet($structureId);
 	
 	$moduleManager =& Services::getService("InOutModules");
-	// if we are dealing with ordered parts, order them
-	if ($partSet->count()) {
-		$orderedPartsToPrint = array();
-		$partsToPrint = array();
+	// if we are dealing with ordered partStructures, order them
+	if ($partStructureSet->count()) {
+		$orderedPartStructuresToPrint = array();
+		$partStructuresToPrint = array();
 		
-		// get the parts and break them up into ordered and unordered arrays.
-		$parts =& $structure->getInfoParts();
-		while ($parts->hasNext()) {
-			$part =& $parts->next();
-			$partId =& $part->getId();
+		// get the partStructures and break them up into ordered and unordered arrays.
+		$partStructures =& $structure->getPartStructures();
+		while ($partStructures->hasNext()) {
+			$partStructure =& $partStructures->next();
+			$partStructureId =& $partStructure->getId();
 			
-			if ($partSet->isInSet($partId)) {
-				$orderedPartsToPrint[] =& $partId;
+			if ($partSet->isInSet($partStructureId)) {
+				$orderedPartStructuresToPrint[] =& $partStructureId;
 			} else {
-				$partsToPrint[] =& $partId;
+				$partStructuresToPrint[] =& $partStructureId;
 			}
 		}
 	
-		$allParts =& array_merge($orderedPartsToPrint, $partsToPrint);
-		$moduleManager->createWizardStepsForParts($record, $wizard, $allParts);
+		$allPartStructures =& array_merge($orderedPartStructuresToPrint, $partStructuresToPrint);
+		$moduleManager->createWizardStepsForPartStructures($record, $wizard, $allPartStructures);
 	}
 	
-	// Otherwise just add steps for all parts.
+	// Otherwise just add steps for all partStructures.
 	else {
 		$moduleManager->createWizardSteps($record, $wizard);
 	}
@@ -86,16 +86,16 @@ $returnURL = MYURL."/asset/editview/".$harmoni->pathInfoParts[2]."/".$harmoni->p
 
 if ($wizard->isSaveRequested()) {
 
-	// Make sure we have a valid DR
+	// Make sure we have a valid Repository
 	$shared =& Services::getService("Shared");
-	$drManager =& Services::getService("DR");
-	$drId =& $shared->getId($harmoni->pathInfoParts[2]);
+	$repositoryManager =& Services::getService("Repository");
+	$repositoryId =& $shared->getId($harmoni->pathInfoParts[2]);
 	$assetId =& $shared->getId($harmoni->pathInfoParts[3]);
 	$recordId =& $shared->getId($harmoni->pathInfoParts[4]);
 
-	$dr =& $drManager->getDigitalRepository($drId);
-	$asset =& $dr->getAsset($assetId);
-	$record =& $asset->getInfoRecord($recordId);
+	$repository =& $repositoryManager->getRepository($repositoryId);
+	$asset =& $repository->getAsset($assetId);
+	$record =& $asset->getRecord($recordId);
 	
 	$moduleManager =& Services::getService("InOutModules");
 	

@@ -4,13 +4,13 @@
 if (!defined("AZ_DELETE"))
 	throwError(new Error("You must define an id for AZ_ACCESS", "concerto.collection", true));
 
-// Get the DR
-$drManager =& Services::getService("DR");
+// Get the Repository
+$repositoryManager =& Services::getService("Repository");
 $sharedManager =& Services::getService("Shared");
 $assetId =& $sharedManager->getId($harmoni->pathInfoParts[3]);
-$asset =& $drManager->getAsset($assetId);
-$dr =& $asset->getDigitalRepository();
-$drId =& $dr->getId();
+$asset =& $repositoryManager->getAsset($assetId);
+$repository =& $asset->getRepository();
+$repositoryId =& $repository->getId();
 
 // Check that the user can delete this asset
 $authZ =& Services::getService("AuthZ");
@@ -29,7 +29,7 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_DELETE), $assetId)) {
 }
 
 // Delete the asset
-$dr->deleteAsset($assetId);
+$repository->deleteAsset($assetId);
 
 // Head back to where we were
 $returnURL = MYURL."/";

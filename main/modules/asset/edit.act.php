@@ -26,14 +26,14 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
  	$wizard =& $_SESSION['edit_asset_wizard_'.$harmoni->pathInfoParts[3]];
  } else {
  	
- 	// Make sure we have a valid DR
+ 	// Make sure we have a valid Repository
 	$shared =& Services::getService("Shared");
-	$drManager =& Services::getService("DR");
-	$drId =& $shared->getId($harmoni->pathInfoParts[2]);
+	$repositoryManager =& Services::getService("Repository");
+	$repositoryId =& $shared->getId($harmoni->pathInfoParts[2]);
 	$assetId =& $shared->getId($harmoni->pathInfoParts[3]);
 
-	$dr =& $drManager->getDigitalRepository($drId);
-	$asset =& $dr->getAsset($assetId);
+	$repository =& $repositoryManager->getRepository($repositoryId);
+	$asset =& $repository->getAsset($assetId);
 
 	// Instantiate the wizard, then add our steps.
 	$wizard =& new Wizard(_("Edit Asset"));
@@ -125,14 +125,14 @@ $returnURL = MYURL."/asset/editview/".$harmoni->pathInfoParts[2]."/".$harmoni->p
 
 if ($wizard->isSaveRequested()) {
 
-	// Make sure we have a valid DR
+	// Make sure we have a valid Repository
 	$shared =& Services::getService("Shared");
-	$drManager =& Services::getService("DR");
-	$drId =& $shared->getId($harmoni->pathInfoParts[2]);
+	$repositoryManager =& Services::getService("Repository");
+	$repositoryId =& $shared->getId($harmoni->pathInfoParts[2]);
 	$assetId =& $shared->getId($harmoni->pathInfoParts[3]);
 
-	$dr =& $drManager->getDigitalRepository($drId);
-	$asset =& $dr->getAsset($assetId);
+	$repository =& $repositoryManager->getRepository($repositoryId);
+	$asset =& $repository->getAsset($assetId);
 	
 	$properties =& $wizard->getProperties();
 	
@@ -152,7 +152,7 @@ if ($wizard->isSaveRequested()) {
 	// Add our parent if we have specified one.
 // 	if ($properties['parent']->getValue()) {
 // 		$parentId =& $shared->getId($properties['parent']->getValue());
-// 		$parentAsset =& $dr->getAsset($parentId);
+// 		$parentAsset =& $repository->getAsset($parentId);
 // 		$parentAsset->addAsset($assetId);
 // 	}
 	

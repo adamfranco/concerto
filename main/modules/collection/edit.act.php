@@ -27,11 +27,11 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
  	$wizard =& $_SESSION['edit_collection_wizard_'.$harmoni->pathInfoParts[2]];
  } else {
  	
- 	// Make sure we have a valid DR
+ 	// Make sure we have a valid Repository
 	$shared =& Services::getService("Shared");
-	$drManager =& Services::getService("DR");
+	$repositoryManager =& Services::getService("Repository");
 	$id =& $shared->getId($harmoni->pathInfoParts[2]);
-	$dr =& $drManager->getDigitalRepository($id);
+	$repository =& $repositoryManager->getRepository($id);
 
 	// Instantiate the wizard, then add our steps.
 	$wizard =& new Wizard(_("Edit a Collection"));
@@ -42,11 +42,11 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
 	
 	// Create the properties.
 	$displayNameProp =& $stepOne->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
-	$displayNameProp->setDefaultValue($dr->getDisplayName());
+	$displayNameProp->setDefaultValue($repository->getDisplayName());
 	$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
 	
 	$descriptionProp =& $stepOne->createProperty("description", new RegexValidatorRule(".*"));
-	$descriptionProp->setDefaultValue($dr->getDescription());
+	$descriptionProp->setDefaultValue($repository->getDescription());
 	
 	// Create the step text
 	ob_start();
@@ -64,8 +64,8 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
 	// :: Schema Selection ::
 	$selectStep =& $wizard->createStep(_("Schema Selection"));
 	
-	// get an iterator of all InfoStructures
-	$infoStructures =& $dr->getInfoStructures();
+	// get an iterator of all RecordStructures
+	$recordStructures =& $repository->getRecordStructures();
 	$setManager =& Services::getService("Sets");
 	$set =& $setManager->getSet($id);
 	
@@ -85,42 +85,42 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
 	print "\n\t</tr>";
 	
 	// Get the number of info structures
-	$numInfoStructures = 0;
-	while ($infoStructures->hasNext()) {
-		$infoStructure =& $infoStructures->next();
-		$numInfoStructures++;
+	$numRecordStructures = 0;
+	while ($recordStructures->hasNext()) {
+		$recordStructure =& $recordStructures->next();
+		$numRecordStructures++;
 	}
 	
-	$infoStructures =& $dr->getInfoStructures();
-	while ($infoStructures->hasNext()) {
-		$infoStructure =& $infoStructures->next();
-		$infoStructureId =& $infoStructure->getId();
+	$recordStructures =& $repository->getRecordStructures();
+	while ($recordStructures->hasNext()) {
+		$recordStructure =& $recordStructures->next();
+		$recordStructureId =& $recordStructure->getId();
 		
 		// Create the properties.
 		// 'in set' property
-		$property =& $selectStep->createProperty("schema_".$infoStructureId->getIdString(), new RegexValidatorRule(".*"), FALSE);
-		if ($set->isInSet($infoStructureId))
+		$property =& $selectStep->createProperty("schema_".$recordStructureId->getIdString(), new RegexValidatorRule(".*"), FALSE);
+		if ($set->isInSet($recordStructureId))
 			$property->setDefaultValue(1);
 		else
 			$property->setDefaultValue(0);
 		
 		// Order property
-		$property =& $selectStep->createProperty("schema_".$infoStructureId->getIdString()."_position", new RegexValidatorRule(".*"), FALSE);
-		if ($set->isInSet($infoStructureId))
-			$property->setDefaultValue($set->getPosition($infoStructureId)+1);
+		$property =& $selectStep->createProperty("schema_".$recordStructureId->getIdString()."_position", new RegexValidatorRule(".*"), FALSE);
+		if ($set->isInSet($recordStructureId))
+			$property->setDefaultValue($set->getPosition($recordStructureId)+1);
 		else
 			$property->setDefaultValue(0);
 		
 		print "\n<tr><td valign='top'>";
-		print "\n\t<input type='checkbox' name='schema_".$infoStructureId->getIdString()."' value='1' [['schema_".$infoStructureId->getIdString()."' == TRUE|checked='checked'|]] />";
-		print "\n\t<strong>".$infoStructure->getDisplayName()."</strong>";
-		print "\n</td><td valign='top'>\n\t<em>".$infoStructure->getDescription()."</em>";
-		print " <a href='".MYURL."/schema/view/".$id->getIdString()."/".$infoStructureId->getIdString()."/".implode("/", $harmoni->pathInfoParts)."?__skip_to_step=2'>more...</a>";
+		print "\n\t<input type='checkbox' name='schema_".$recordStructureId->getIdString()."' value='1' [['schema_".$recordStructureId->getIdString()."' == TRUE|checked='checked'|]] />";
+		print "\n\t<strong>".$recordStructure->getDisplayName()."</strong>";
+		print "\n</td><td valign='top'>\n\t<em>".$recordStructure->getDescription()."</em>";
+		print " <a href='".MYURL."/schema/view/".$id->getIdString()."/".$recordStructureId->getIdString()."/".implode("/", $harmoni->pathInfoParts)."?__skip_to_step=2'>more...</a>";
 		print "\n</td><td valign='top'>";
 		
-		print "\n\t<select name='schema_".$infoStructureId->getIdString()."_position'>";
-		for ($i=0; $i <= $numInfoStructures; $i++) {
-			print "\n\t\t<option value='$i' [['schema_".$infoStructureId->getIdString()."_position' == '$i'|selected='selected'|]]>".(($i)?$i:"")."</option>";
+		print "\n\t<select name='schema_".$recordStructureId->getIdString()."_position'>";
+		for ($i=0; $i <= $numRecordStructures; $i++) {
+			print "\n\t\t<option value='$i' [['schema_".$recordStructureId->getIdString()."_position' == '$i'|selected='selected'|]]>".(($i)?$i:"")."</option>";
 		}
 		print "\n\t</select>";
 		
@@ -142,25 +142,25 @@ if ($wizard->isSaveRequested() || $_REQUEST['create_schema']) {
 // 		print "Now Saving: ";
 // 		printpre($properties);
 		
-		// Save the DR
+		// Save the Repository
 		$shared =& Services::getService("Shared");
 		$id =& $shared->getId($harmoni->pathInfoParts[2]);
 		
-		$drManager =& Services::getService("DR"); 
-		$dr =& $drManager->getDigitalRepository($id);
+		$repositoryManager =& Services::getService("Repository"); 
+		$repository =& $repositoryManager->getRepository($id);
 		
-		$dr->updateDisplayName($properties['display_name']->getValue());
-		$dr->updateDescription($properties['description']->getValue());
+		$repository->updateDisplayName($properties['display_name']->getValue());
+		$repository->updateDescription($properties['description']->getValue());
 		
 		
 	// Save the Schema settings.
 		
-		// Get the set for this DR
+		// Get the set for this Repository
 		$setManager =& Services::getService("Sets");
 		$set =& $setManager->getSet($id);
 		
-		// get an iterator of all InfoStructures
-		$infoStructures =& $dr->getInfoStructures();
+		// get an iterator of all RecordStructures
+		$recordStructures =& $repository->getRecordStructures();
 		
 		// Store up the positions for later setting after all of the ids have
 		// been added to the set and we can do checking to make sure that 
@@ -169,26 +169,26 @@ if ($wizard->isSaveRequested() || $_REQUEST['create_schema']) {
 		$existingStructures = array();
 		$numStructures = 0;
 		
-		// Go through each InfoStructure
-		while ($infoStructures->hasNext()) {
-			$infoStructure =& $infoStructures->next();
-			$infoStructureId =& $infoStructure->getId();
+		// Go through each RecordStructure
+		while ($recordStructures->hasNext()) {
+			$recordStructure =& $recordStructures->next();
+			$recordStructureId =& $recordStructure->getId();
 			
 			// If the box is checked, make sure that the ID is in the set
-			if ($properties["schema_".$infoStructureId->getIdString()]->getValue()) {
-				if (!$set->isInSet($infoStructureId))
-					$set->addItem($infoStructureId);
-				if ($position = $properties["schema_".$infoStructureId->getIdString()."_position"]->getValue())
-					$positions[$position-1] =& $infoStructureId;
+			if ($properties["schema_".$recordStructureId->getIdString()]->getValue()) {
+				if (!$set->isInSet($recordStructureId))
+					$set->addItem($recordStructureId);
+				if ($position = $properties["schema_".$recordStructureId->getIdString()."_position"]->getValue())
+					$positions[$position-1] =& $recordStructureId;
 				
 				// Store some info so that we can check that all structures are valid.
-				$existingStructures[] = $infoStructureId->getIdString();
+				$existingStructures[] = $recordStructureId->getIdString();
 				$numStructures++;
 			}
 			// Otherwise, remove the ID from the set.
 			else {
-				if ($set->isInSet($infoStructureId))
-					$set->removeItem($infoStructureId);
+				if ($set->isInSet($recordStructureId))
+					$set->removeItem($recordStructureId);
 			}
 		}
 		
@@ -204,7 +204,7 @@ if ($wizard->isSaveRequested() || $_REQUEST['create_schema']) {
 			}
 		}
 		
-		// Remove any infoStructures from the set that may have been removed/
+		// Remove any RecordStructures from the set that may have been removed/
 		// made-not-availible by some other application.
 		if ($numStructures != $set->count()) {
 			$set->reset();
@@ -221,7 +221,7 @@ if ($wizard->isSaveRequested() || $_REQUEST['create_schema']) {
 		unset ($wizard);
 		
 		// Head off to editing our new collection.
-		$id =& $dr->getId();
+		$id =& $repository->getId();
 		if ($_REQUEST['create_schema'])
 			header("Location: ".MYURL."/schema/create/".$id->getIdString()."/".implode("/",$harmoni->pathInfoParts));
 		else

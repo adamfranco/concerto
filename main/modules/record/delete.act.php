@@ -20,16 +20,16 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
 	return $mainScreen;
 }
 
-// Get the DR and Asset
-$drManager =& Services::getService("DR");
+// Get the Repository and Asset
+$repositoryManager =& Services::getService("Repository");
 $sharedManager =& Services::getService("Shared");
 $assetId =& $sharedManager->getId($harmoni->pathInfoParts[3]);
 $recordId =& $sharedManager->getId($harmoni->pathInfoParts[4]);
-$asset =& $drManager->getAsset($assetId);
-$dr =& $asset->getDigitalRepository();
-$drId =& $dr->getId();
+$asset =& $repositoryManager->getAsset($assetId);
+$repository =& $asset->getRepository();
+$repositoryId =& $repository->getId();
 
-$asset->deleteInfoRecord($recordId);
+$asset->deleteRecord($recordId);
 
 $returnURL = MYURL."/asset/editview/".$harmoni->pathInfoParts[2]."/".$harmoni->pathInfoParts[3]."/";
 header("Location: ".$returnURL);

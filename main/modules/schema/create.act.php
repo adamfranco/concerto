@@ -11,11 +11,11 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
  	$wizard =& $_SESSION['create_schema_wizard_'.$harmoni->pathInfoParts[2]];
  } else {
  	
- 	// Make sure we have a valid DR
+ 	// Make sure we have a valid Repository
 	$shared =& Services::getService("Shared");
-	$drManager =& Services::getService("DR");
+	$repositoryManager =& Services::getService("Repository");
 	$id =& $shared->getId($harmoni->pathInfoParts[2]);
-	$dr =& $drManager->getDigitalRepository($id);
+	$repository =& $repositoryManager->getRepository($id);
 
 	// Instantiate the wizard, then add our steps.
 	$wizard =& new Wizard(_("Create a Schema"));
@@ -66,7 +66,7 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	$property->setDefaultValue("");
 	
 	$property =& $elementStep->createProperty("type", new RegexValidatorRule(".*"));
-	$property->setDefaultValue("DR/Harmoni/string");
+	$property->setDefaultValue("Repository/Harmoni/string");
 	
 	$property =& $elementStep->createProperty("mandatory", new RegexValidatorRule(".*"));
 	$property->setDefaultValue("FALSE");
@@ -77,7 +77,7 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	$property =& $elementStep->createProperty("populatedbydr", new RegexValidatorRule(".*"));
 	$property->setDefaultValue("FALSE");
 	
-	// We don't have any InfoParts yet, so we can't get them.
+	// We don't have any PartStructures yet, so we can't get them.
 	
 	ob_start();
 	print "<h2>"._("Add New Elements")."</h2>";
@@ -98,19 +98,19 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 			print _("Select a Type")."... ";
 		print "\n</td><td>";
 			print "\n<select name=\"type\">";
-			// We are going to assume that all InfoStructures have the same InfoPartTypes
-			// in this digitalRepository. This will allow us to list InfoPartTypes before
-			// the InfoStructure is actually created.
-			$infoStructures =& $dr->getInfoStructures();
-			if (!$infoStructures->hasNext())
-				throwError(new Error("No InfoStructures availible.", "Concerto"));
+			// We are going to assume that all RecordStructures have the same PartStructureTypes
+			// in this Repository. This will allow us to list PartStructureTypes before
+			// the RecordStructure is actually created.
+			$recordStructures =& $repository->getRecordStructures();
+			if (!$recordStructures->hasNext())
+				throwError(new Error("No RecordStructures availible.", "Concerto"));
 				
-			while ($infoStructures->hasNext()) {
+			while ($recordStructures->hasNext()) {
 				// we want just the datamanager structure types, so just 
 				// get the first structure that has Format "DataManagerPrimatives"
-				$infoStructure =& $infoStructures->next();
-				if ($infoStructure->getFormat() == "DataManagerPrimatives") {
-					$types =& $infoStructure->getInfoPartTypes();
+				$recordStructure =& $recordStructures->next();
+				if ($recordStructure->getFormat() == "DataManagerPrimatives") {
+					$types =& $recordStructure->getPartStructureTypes();
 					while ($types->hasNext()) {
 						$type =& $types->next();
 						$typeString = urlencode($type->getDomain())."/".urlencode($type->getAuthority())."/".urlencode($type->getKeyword());
@@ -139,7 +139,7 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 		print "\n</td></tr>";
 		
 		print "\n<tr><td>";
-			print _("isPopulatedByDR? ");
+			print _("isPopulatedByRepository? ");
 		print "\n</td><td>";
 			print "<input type=\"radio\" name='populatedbydr' value='TRUE' [['populatedbydr'=='TRUE'| checked='checked'|]] />TRUE / ";
 			print "<input type=\"radio\" name='populatedbydr' value='FALSE' [['populatedbydr'=='FALSE'| checked='checked'|]] /> FALSE";
@@ -159,7 +159,7 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	print "\n\t<br /><strong>"._("Type").":</strong> [[type]]";
 	print "\n\t<br /><strong>"._("isMandatory").":</strong> [[mandatory]]";
 	print "\n\t<br /><strong>"._("isRepeatable").":</strong> [[repeatable]]";
-	print "\n\t<br /><strong>"._("isPopulatedByDR").":</strong> [[populatedbydr]]";
+	print "\n\t<br /><strong>"._("isPopulatedByRepository").":</strong> [[populatedbydr]]";
 	print "</td>\n</tr>[/List]\n</table>";
 
 	$elementStep->setText(ob_get_contents());
@@ -179,48 +179,48 @@ if ($wizard->isSaveRequested()) {
 	if ($wizard->updateLastStep()) {
 		$properties =& $wizard->getProperties();
 		
-		// Get the DR
+		// Get the Repository
 		$shared =& Services::getService("Shared");
 		$id =& $shared->getId($harmoni->pathInfoParts[2]);
 		
-		$drManager =& Services::getService("DR"); 
-		$dr =& $drManager->getDigitalRepository($id);
+		$repositoryManager =& Services::getService("Repository"); 
+		$repository =& $repositoryManager->getRepository($id);
 		
 		// Create the info Structure
-		$infoStructure =& $dr->createInfoStructure($properties['schema_display_name']->getValue(), 
+		$recordStructure =& $repository->createRecordStructure($properties['schema_display_name']->getValue(), 
 								$properties['schema_description']->getValue(), 
 								$properties['format']->getValue(),
 								$properties['schema_display_name']->getValue());
 		Debug::printAll();
-		$infoStructureId =& $infoStructure->getId();
+		$recordStructureId =& $recordStructure->getId();
 		
-		// Create a set for the infoStructure
+		// Create a set for the RecordStructure
 		$setManager =& Services::getService("Sets");
-		$set =& $setManager->getSet($infoStructureId);
+		$set =& $setManager->getSet($recordStructureId);
 		// Store up the positions for later setting after all of the ids have
 		// been added to the set and we can do checking to make sure that 
 		// the specified positions are valid.
 		$positions = array();
 								
-		// Create the infoParts
-		$infoPartProperties =& $properties['elements'];
-		foreach (array_keys($infoPartProperties) as $index) {
-			$typeString = urldecode($infoPartProperties[$index]['type']->getValue());
+		// Create the PartStructures
+		$partStructureProperties =& $properties['elements'];
+		foreach (array_keys($partStructureProperties) as $index) {
+			$typeString = urldecode($partStructureProperties[$index]['type']->getValue());
 			$typeParts = explode("/", $typeString);
 			$type =& new HarmoniType($typeParts[0], $typeParts[1], $typeParts[2], $typeParts[3]);
-			$infoPart =& $infoStructure->createInfoPart(
-							$infoPartProperties[$index]['display_name']->getValue(),
-							$infoPartProperties[$index]['description']->getValue(),
+			$partStructure =& $recordStructure->createPartStructure(
+							$partStructureProperties[$index]['display_name']->getValue(),
+							$partStructureProperties[$index]['description']->getValue(),
 							$type,
-							(($infoPartProperties[$index]['mandatory']->getValue())?TRUE:FALSE),
-							(($infoPartProperties[$index]['repeatable']->getValue())?TRUE:FALSE),
-							(($infoPartProperties[$index]['populatedbydr']->getValue())?TRUE:FALSE)
+							(($partStructureProperties[$index]['mandatory']->getValue())?TRUE:FALSE),
+							(($partStructureProperties[$index]['repeatable']->getValue())?TRUE:FALSE),
+							(($partStructureProperties[$index]['populatedbydr']->getValue())?TRUE:FALSE)
 							);
 			
-			$infoPartId =& $infoPart->getId();
-			// Add the InfoPartId to the set
-			if (!$set->isInSet($infoPartId))
-				$set->addItem($infoPartId);
+			$partStructureId =& $partStructure->getId();
+			// Add the PartStructureId to the set
+			if (!$set->isInSet($partStructureId))
+				$set->addItem($partStructureId);
 		}
 		
 		// Unset the wizard

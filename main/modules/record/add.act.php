@@ -20,16 +20,16 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
 	return $mainScreen;
 }
 
-// Get the DR and Asset
-$drManager =& Services::getService("DR");
+// Get the Repository and Asset
+$repositoryManager =& Services::getService("Repository");
 $sharedManager =& Services::getService("Shared");
 $assetId =& $sharedManager->getId($harmoni->pathInfoParts[3]);
-$asset =& $drManager->getAsset($assetId);
-$dr =& $asset->getDigitalRepository();
-$drId =& $dr->getId();
+$asset =& $repositoryManager->getAsset($assetId);
+$repository =& $asset->getRepository();
+$repositoryId =& $repository->getId();
 
-$infoStructureId =& $sharedManager->getId($_REQUEST['structure']);
+$recordStructureId =& $sharedManager->getId($_REQUEST['structure']);
 
-$asset->createInfoRecord($infoStructureId);
+$asset->createRecord($recordStructureId);
 
 header("Location: ".$_REQUEST['return_url']);

@@ -27,10 +27,10 @@ $introText =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
 $introText->addComponent(new Content($text));
 $actionRows->addComponent($introText);
 
-$drManager =& Services::getService("DR");
+$repositoryManager =& Services::getService("Repository");
 
 // Get all the types
-$types =& $drManager->getDigitalRepositoryTypes();
+$types =& $repositoryManager->getRepositoryTypes();
 // put the drs into an array and order them.
 $typeArray = array();
 while($types->hasNext()) {
@@ -48,7 +48,7 @@ $actionRows->addComponent($resultLayout);
 return $mainScreen;
 
 
-// Callback function for printing DRs
+// Callback function for printing Repositories
 function printTypeShort(& $type) {
 	ob_start();
 	

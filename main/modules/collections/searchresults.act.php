@@ -11,8 +11,8 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 $actionRows =& new RowLayout();
 $centerPane->addComponent($actionRows, TOP, CENTER);
 
-// Get the DR
-$drManager =& Services::getService("DR");
+// Get the Repository
+$repositoryManager =& Services::getService("Repository");
 $sharedManager =& Services::getService("Shared");
 
 // get the search type.
@@ -22,7 +22,7 @@ if (!ereg("^(.+)::(.+)::(.+)$", $typeString, $parts))
 $searchType =& new HarmoniType($parts[1], $parts[2], $parts[3]);
 
 // Get the Search criteria
-$searchModules =& Services::getService("DRSearchModules");
+$searchModules =& Services::getService("RepositorySearchModules");
 $searchCriteria =& $searchModules->getSearchCriteria($searchType);
 
 // Intro
@@ -44,12 +44,12 @@ $actionRows->addComponent($introText);
 // Get the assets to display
 //***********************************
 $assetArray = array();
-// Go through all the drs. if they support the searchType,
+// Go through all the repositories. if they support the searchType,
 // run the search on them.
-$drs =& $drManager->getDigitalRepositories();
-while ($drs->hasNext()) {
-	$dr =& $drs->next();
-	$assets =& $dr->getAssetsBySearch($searchCriteria, $searchType);
+$repositories =& $repositoryManager->getRepositories();
+while ($repositories->hasNext()) {
+	$repository =& $repositories->next();
+	$assets =& $repository->getAssetsBySearch($searchCriteria, $searchType);
 	
 	// add the results to our total results
 	while ($assets->hasNext()) {

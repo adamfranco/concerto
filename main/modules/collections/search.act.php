@@ -11,8 +11,8 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 $actionRows =& new RowLayout();
 $centerPane->addComponent($actionRows, TOP, CENTER);
 
-// Get the DR
-$drManager =& Services::getService("DR");
+// Get the Repository
+$repositoryManager =& Services::getService("Repository");
 $sharedManager =& Services::getService("Shared");
 
 // Intro
@@ -36,13 +36,13 @@ $actionRows->addComponent($introText);
 ob_start();
 
 // Get all the drs and all of their search types
-$searchModules =& Services::getService("DRSearchModules");
+$searchModules =& Services::getService("RepositorySearchModules");
 $searchArray = array();
 
-$drs =& $drManager->getDigitalRepositories();
-while ($drs->hasNext()) {
-	$dr =& $drs->next();
-	$searchTypes =& $dr->getSearchTypes();
+$repositories =& $repositoryManager->getDigitalRepositories();
+while ($repositories->hasNext()) {
+	$repository =& $repositories->next();
+	$searchTypes =& $repository->getSearchTypes();
 	while ($searchTypes->hasNext()) {
 		$searchType =& $searchTypes->next();
 		

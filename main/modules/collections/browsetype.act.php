@@ -20,23 +20,23 @@ $introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
 $introHeader->addComponent(new Content(_("Browse Collections with Type").": \n<br />".$typeString));
 $actionRows->addComponent($introHeader);
 
-$drManager =& Services::getService("DR");
+$repositoryManager =& Services::getService("Repository");
 
 
-// Get the DRs
-$allDRs =& $drManager->getDigitalRepositoriesByType($type);
+// Get the Repositories
+$allRepositories =& $repositoryManager->getRepositoriesByType($type);
 
-// put the drs into an array and order them.
+// put the repositories into an array and order them.
 // @todo, do authorization checking
-$drArray = array();
-while($allDRs->hasNext()) {
-	$dr =& $allDRs->next();
-	$drArray[$dr->getDisplayName()] =& $dr;
+$repositoryArray = array();
+while($allRepositories->hasNext()) {
+	$repository =& $allRepositories->next();
+	$repositoryArray[$repository->getDisplayName()] =& $repository;
 }
-ksort($drArray);
+ksort($repositoryArray);
 
 // print the Results
-$resultPrinter =& new ArrayResultPrinter($drArray, 2, 20, "printDRShort", $harmoni);
+$resultPrinter =& new ArrayResultPrinter($repositoryArray, 2, 20, "printrepositoryShort", $harmoni);
 $resultLayout =& $resultPrinter->getLayout($harmoni);
 $actionRows->addComponent($resultLayout);
 
@@ -46,17 +46,17 @@ $actionRows->addComponent($resultLayout);
 return $mainScreen;
 
 
-// Callback function for printing DRs
-function printDRShort(& $dr, $harmoni) {
+// Callback function for printing repositorys
+function printrepositoryShort(& $repository, $harmoni) {
 	ob_start();
 	
-	$drId =& $dr->getId();
-	print  "\n\t<strong>".$dr->getDisplayName()."</strong> - "._("ID#").": ".
-			$drId->getIdString();
-	print  "\n\t<br /><em>".$dr->getDescription()."</em>";	
+	$repositoryId =& $repository->getId();
+	print  "\n\t<strong>".$repository->getDisplayName()."</strong> - "._("ID#").": ".
+			$repositoryId->getIdString();
+	print  "\n\t<br /><em>".$repository->getDescription()."</em>";	
 	print  "\n\t<br />";
 	
-	RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $dr);
+	RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
 	
 	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
 	$layout->addComponent(new Content(ob_get_contents()));

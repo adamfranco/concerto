@@ -26,22 +26,22 @@ if (count($_GET)) {
 print "'><-- "._("Return")."</a>";
 
 
-// Print out the InfoStructure Parts.
-$drManager =& Services::getService("DR");
+// Print out the RecordStructure Parts.
+$repositoryManager =& Services::getService("Repository");
 $sharedManager =& Services::getService("Shared");
 $setManager =& Services::getService("Sets");
-$drId =& $sharedManager->getId($harmoni->pathInfoParts[2]);
-$infoStructureId =& $sharedManager->getId($harmoni->pathInfoParts[3]);
+$repositoryId =& $sharedManager->getId($harmoni->pathInfoParts[2]);
+$recordStructureId =& $sharedManager->getId($harmoni->pathInfoParts[3]);
 
-$dr =& $drManager->getDigitalRepository($drId);
-$infoStructure =& $dr->getInfoStructure($infoStructureId);
-$set =& $setManager->getSet($infoStructureId);
+$repository =& $repositoryManager->getRepository($repositoryId);
+$recordStructure =& $repository->getRecordStructure($recordStructureId);
+$set =& $setManager->getSet($recordStructureId);
 
-print "<h3>".$infoStructure->getDisplayName()."</h3>";
-print "<em>".$infoStructure->getDescription()."</em>";
-print "<br /><strong>"._("Format").":</strong> ".$infoStructure->getFormat()."";
+print "<h3>".$recordStructure->getDisplayName()."</h3>";
+print "<em>".$recordStructure->getDescription()."</em>";
+print "<br /><strong>"._("Format").":</strong> ".$recordStructure->getFormat()."";
 
-// Print out the infoParts
+// Print out the PartStructures
 print "<h4>"._("Elements").":</h4>";
 print "\n<table border='1'>";
 print "\n<th>"._("Order")."</th>";
@@ -49,28 +49,28 @@ print "\n<th>"._("DisplayName")."</th>";
 print "\n<th>"._("Description")."</th>";
 print "\n<th>"._("IsMandatory?")."</th>";
 print "\n<th>"._("IsRepeatable?")."</th>";
-print "\n<th>"._("IsPopulatedByDR?")."</th>";
+print "\n<th>"._("IsPopulatedByRepository?")."</th>";
 print "\n</tr>";
-$infoParts =& $infoStructure->getInfoParts();
-$partArray = array();
-while ($infoParts->hasNext()) {
-	$infoPart =& $infoParts->next();
-	if ($set->isInSet($infoPart->getId()))
-		$partArray[$set->getPosition($infoPart->getId())] =& $infoPart;
+$partStructures =& $recordStructure->getPartStructures();
+$partStructureArray = array();
+while ($partStructures->hasNext()) {
+	$partStructure =& $partStructures->next();
+	if ($set->isInSet($partStructure->getId()))
+		$partStructureArray[$set->getPosition($partStructure->getId())] =& $partStructure;
 	else
-		$partArray[] =& $infoPart;
+		$partStructureArray[] =& $partStructure;
 }
 
-ksort($partArray);
-foreach (array_keys($partArray) as $key) {
-	$infoPart =& $partArray[$key];
+ksort($partStructureArray);
+foreach (array_keys($partStructureArray) as $key) {
+	$partStructure =& $partStructureArray[$key];
 	print "\n<tr>";
 	print "\n<td>".($key+1)."</td>";
-	print "\n<td><strong>".$infoPart->getDisplayName()."</strong></td>";
-	print "\n<td><em>".$infoPart->getDescription()."</em></td>";
-	print "\n<td>".(($infoPart->isMandatory())?"TRUE":"FALSE")."</td>";
-	print "\n<td>".(($infoPart->isRepeatable())?"TRUE":"FALSE")."</td>";
-	print "\n<td>".(($infoPart->isPopulatedByDR())?"TRUE":"FALSE")."</td>";
+	print "\n<td><strong>".$partStructure->getDisplayName()."</strong></td>";
+	print "\n<td><em>".$partStructure->getDescription()."</em></td>";
+	print "\n<td>".(($partStructure->isMandatory())?"TRUE":"FALSE")."</td>";
+	print "\n<td>".(($partStructure->isRepeatable())?"TRUE":"FALSE")."</td>";
+	print "\n<td>".(($partStructure->isPopulatedByRepository())?"TRUE":"FALSE")."</td>";
 	print "\n</tr>";
 }
 print "\n</table>";

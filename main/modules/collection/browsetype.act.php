@@ -12,16 +12,16 @@ $harmoni->ActionHandler->execute("window", "screen");
 $mainScreen =& $harmoni->getAttachedData('mainScreen');
 $centerPane =& $harmoni->getAttachedData('centerPane');
 
-// Get the DR
-$drManager =& Services::getService("DR");
+// Get the Repository
+$repositoryManager =& Services::getService("Repository");
 $sharedManager =& Services::getService("Shared");
-$drId =& $sharedManager->getId($harmoni->pathInfoParts[2]);
-$dr =& $drManager->getDigitalRepository($drId);
+$repositoryId =& $sharedManager->getId($harmoni->pathInfoParts[2]);
+$repository =& $repositoryManager->getRepository($repositoryId);
 
 // Check that the user can access this collection
 $authZ =& Services::getService("AuthZ");
 $shared =& Services::getService("Shared");
-if (!$authZ->isUserAuthorized($shared->getId(AZ_ACCESS), $drId)) {
+if (!$authZ->isUserAuthorized($shared->getId(AZ_ACCESS), $repositoryId)) {
 	$errorLayout =& new SingleContentLayout;
 	$errorLayout->addComponent(new Content(_("You are not authorized to access this <em>Collection</em>."), MIDDLE, CENTER));
 	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
@@ -39,20 +39,20 @@ $centerPane->addComponent($actionRows, TOP, CENTER);
 
 // Intro
 $introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Browse Assets in the")." <em>".$dr->getDisplayName()."</em> "._("Collection")." "._("with type").":\n<br />".$typeString));
+$introHeader->addComponent(new Content(_("Browse Assets in the")." <em>".$repository->getDisplayName()."</em> "._("Collection")." "._("with type").":\n<br />".$typeString));
 $actionRows->addComponent($introHeader);
 
 // function links
 ob_start();
 print _("Collection").": ";
-RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $dr);
+RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
 $layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
 $layout->addComponent(new Content(ob_get_contents()));
 ob_end_clean();
 $actionRows->addComponent($layout);
 
 // Get the assets to display
-$assets =& $dr->getAssetsByType($type);
+$assets =& $repository->getAssetsByType($type);
 
 // print the results
 $resultPrinter =& new IteratorResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);

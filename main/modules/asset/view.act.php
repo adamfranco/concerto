@@ -23,13 +23,13 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_VIEW), $shared->getId($harmoni->
 $actionRows =& new RowLayout();
 $centerPane->addComponent($actionRows, TOP, CENTER);
 
-// Get the DR
-$drManager =& Services::getService("DR");
+// Get the Repository
+$repositoryManager =& Services::getService("Repository");
 $sharedManager =& Services::getService("Shared");
 $assetId =& $sharedManager->getId($harmoni->pathInfoParts[3]);
-$asset =& $drManager->getAsset($assetId);
-$dr =& $asset->getDigitalRepository();
-$drId =& $dr->getId();
+$asset =& $repositoryManager->getAsset($assetId);
+$repository =& $asset->getRepository();
+$repositoryId =& $repository->getId();
 
 // Intro
 $introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
@@ -67,7 +67,7 @@ $actionRows->addComponent($contentCols);
 	
 	// Thumbnail
 	ob_start();
-// 	$thumbnailFields =& $asset->getInfoFieldByPart($_SESSION['concerto_config']['thumbnail_part_id']);
+// 	$thumbnailFields =& $asset->getPartByPart($_SESSION['concerto_config']['thumbnail_part_id']);
 // 	while ($fields->hasNext()) {
 // 		$field =& $fields->next();
 // 		$value =& $field->getValue();
@@ -85,22 +85,22 @@ $actionRows->addComponent($contentCols);
 ob_start();
 $printedRecordIds = array();
 
-// Get the set of InfoStructures so that we can print them in order.
+// Get the set of RecordStructures so that we can print them in order.
 $setManager =& Services::getService("Sets");
-$structSet =& $setManager->getSet($drId);
+$structSet =& $setManager->getSet($repositoryId);
 
 // First, lets go through the info structures listed in the set and print out
 // the info records for those structures in order.
 while ($structSet->hasNext()) {
 	$structureId =& $structSet->next();
-	$records =& $asset->getInfoRecords($structureId);
+	$records =& $asset->getRecords($structureId);
 	while ($records->hasNext()) {
 		$record =& $records->next();
 		$recordId =& $record->getId();
 		$printedRecordIds[] = $recordId->getIdString();
 
 		print "<hr />";
-		printRecord($drId, $assetId, $record);
+		printRecord($repositoryId, $assetId, $record);
 	}	
 }
 
@@ -137,29 +137,29 @@ return $mainScreen;
 // Function Definitions
 //***********************************
 
-function printRecord(& $drId, &$assetId, & $record) {	
-	$infoStructure =& $record->getInfoStructure();
-	$structureId =& $infoStructure->getId();
+function printRecord(& $repositoryId, &$assetId, & $record) {	
+	$recordStructure =& $record->getRecordStructure();
+	$structureId =& $recordStructure->getId();
 	
 	// Print out the fields parts for this structure
 	$setManager =& Services::getService("Sets");
-	$partSet =& $setManager->getSet($structureId);
+	$partStructureSet =& $setManager->getSet($structureId);
 	
-	$partsArray = array();
+	$partStructureArray = array();
 	// Print out the ordered parts/fields
-	$partSet->reset();
-	while ($partSet->hasNext()) {
-		$partId =& $partSet->next();
-		$partsArray[] =& $infoStructure->getInfoPart($partId);
+	$partStructureSet->reset();
+	while ($partStructureSet->hasNext()) {
+		$partStructureId =& $partStructureSet->next();
+		$partStructureArray[] =& $recordStructure->getPartStructure($partStructureId);
 	}
 	// Get the rest of the parts (the unordered ones);
-	$partIterator =& $infoStructure->getInfoParts();
-	while ($partIterator->hasNext()) {
-		$part =& $partIterator->next();
-		if (!$partSet->isInSet($part->getId()))
-			$partsArray[] =& $part;
+	$partStructureIterator =& $recordStructure->getPartStructures();
+	while ($partStructureIterator->hasNext()) {
+		$partStructure =& $partStructureIterator->next();
+		if (!$partStructureSet->isInSet($partStructure->getId()))
+			$partStructureArray[] =& $partStructure;
 	}
 	
 	$moduleManager =& Services::getService("InOutModules");
-	print $moduleManager->generateDisplayForFields($drId, $assetId, $record, $partsArray);
+	print $moduleManager->generateDisplayForPartStructures($repositoryId, $assetId, $record, $partStructureArray);
 }

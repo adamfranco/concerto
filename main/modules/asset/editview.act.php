@@ -25,13 +25,13 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
 $actionRows =& new RowLayout();
 $centerPane->addComponent($actionRows, TOP, CENTER);
 
-// Get the DR
-$drManager =& Services::getService("DR");
+// Get the Repository
+$repositoryManager =& Services::getService("Repository");
 $sharedManager =& Services::getService("Shared");
 $assetId =& $sharedManager->getId($harmoni->pathInfoParts[3]);
-$asset =& $drManager->getAsset($assetId);
-$dr =& $asset->getDigitalRepository();
-$drId =& $dr->getId();
+$asset =& $repositoryManager->getAsset($assetId);
+$repository =& $asset->getRepository();
+$repositoryId =& $repository->getId();
 
 // Intro
 $introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
@@ -73,7 +73,7 @@ $actionRows->addComponent($contentCols);
 	
 	// Info and links
 	print "\n<strong>"._("Asset Information")."</strong>";
-	print "\n<br /><a href='".MYURL."/asset/edit/".$drId->getIdString()."/".$assetId->getIdString()."/'>"._("edit")."</a>";
+	print "\n<br /><a href='".MYURL."/asset/edit/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>"._("edit")."</a>";
 	
 	print "\n\t</td>\n\t</tr>";
 	print "\n</table>";
@@ -84,7 +84,7 @@ $actionRows->addComponent($contentCols);
 	
 	// Thumbnail
 	ob_start();
-// 	$thumbnailFields =& $asset->getInfoFieldByPart($_SESSION['concerto_config']['thumbnail_part_id']);
+// 	$thumbnailFields =& $asset->getPartByPart($_SESSION['concerto_config']['thumbnail_part_id']);
 // 	while ($fields->hasNext()) {
 // 		$field =& $fields->next();
 // 		$value =& $field->getValue();
@@ -102,22 +102,22 @@ $actionRows->addComponent($contentCols);
 ob_start();
 $printedRecordIds = array();
 
-// Get the set of InfoStructures so that we can print them in order.
+// Get the set of RecordStructures so that we can print them in order.
 $setManager =& Services::getService("Sets");
-$structSet =& $setManager->getSet($drId);
+$structSet =& $setManager->getSet($repositoryId);
 
 // First, lets go through the info structures listed in the set and print out
 // the info records for those structures in order.
 while ($structSet->hasNext()) {
 	$structureId =& $structSet->next();
-	$records =& $asset->getInfoRecords($structureId);
+	$records =& $asset->getRecords($structureId);
 	while ($records->hasNext()) {
 		$record =& $records->next();
 		$recordId =& $record->getId();
 		$printedRecordIds[] = $recordId->getIdString();
 
 		print "<hr />";
-		printRecord($record, $assetId, $drId);
+		printRecord($record, $assetId, $repositoryId);
 	}	
 }
 
@@ -132,7 +132,7 @@ $actionRows->addComponent($layout);
 //***********************************
 ob_start();
 print "\n<hr />";
-print "\n<form action='".MYURL."/record/add/".$drId->getIdString()."/".$assetId->getIdString()."/' method='post'>";
+print "\n<form action='".MYURL."/record/add/".$repositoryId->getIdString()."/".$assetId->getIdString()."/' method='post'>";
 print "\n<div>";
 
 print "\n<input type='hidden' name='return_url' value='".MYURL."/".implode("/", $harmoni->pathInfoParts)."' />";
@@ -147,7 +147,7 @@ $i=1;
 // the info records for those structures in order.
 while ($structSet->hasNext()) {
 	$structureId =& $structSet->next();
-	$structure =& $dr->getInfoStructure($structureId);
+	$structure =& $repository->getRecordStructure($structureId);
 	print "\n\t<option value='".$structureId->getIdString()."'>";
 	print $i.". ".$structure->getDisplayName();
 	print "</option>";
@@ -187,7 +187,7 @@ if ($string = $content->toString()) {
 	
 	// Info and links
 	print "\n<strong>"._("Asset Content")."</strong>";
-	print "\n<br /><a href='".MYURL."/asset/edit/".$drId->getIdString()."/".$assetId->getIdString()."/'>"._("edit")."</a>";
+	print "\n<br /><a href='".MYURL."/asset/edit/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>"._("edit")."</a>";
 	
 	print "\n\t</td>\n\t</tr>";
 	print "\n</table>";
@@ -208,43 +208,43 @@ return $mainScreen;
 // Function Definitions
 //***********************************
 
-function printRecord(& $record, & $assetId, & $drId) {	
-	$infoStructure =& $record->getInfoStructure();
-	$structureId =& $infoStructure->getId();
+function printRecord(& $record, & $assetId, & $repositoryId) {	
+	$recordStructure =& $record->getRecordStructure();
+	$structureId =& $recordStructure->getId();
 	$recordId =& $record->getId();
 	
-	// Print out the fields parts for this structure
+	// Print out the parts/partstructures for this recordstructure
 	$setManager =& Services::getService("Sets");
-	$partSet =& $setManager->getSet($structureId);
+	$partStructureArray =& $setManager->getSet($structureId);
 	
-	$partsArray = array();
+	$partsStructureArray = array();
 	// Print out the ordered parts/fields
-	$partSet->reset();
-	while ($partSet->hasNext()) {
-		$partId =& $partSet->next();
-		$partsArray[] =& $infoStructure->getInfoPart($partId);
+	$partStructureSet->reset();
+	while ($partStructureSet->hasNext()) {
+		$partStructureId =& $partStructureSet->next();
+		$partStructureArray[] =& $recordStructure->getPartStructure($partStructureId);
 	}
 	// Get the rest of the parts (the unordered ones);
-	$partIterator =& $infoStructure->getInfoParts();
-	while ($partIterator->hasNext()) {
-		$part =& $partIterator->next();
-		if (!$partSet->isInSet($part->getId()))
-			$partsArray[] =& $part;
+	$partStructureIterator =& $recordStructure->getPartStructures();
+	while ($partStructureIterator->hasNext()) {
+		$partStructure =& $partStructureIterator->next();
+		if (!$partStructureSet->isInSet($partStructure->getId()))
+			$partStructureArray[] =& $partStructure;
 	}
 	
 	print "\n<table width='100%'>";
 	print "\n\t<tr>\n\t<td>";
 	
 	$moduleManager =& Services::getService("InOutModules");
-	print $moduleManager->generateDisplayForFields($drId, $assetId, $record, $partsArray);
+	print $moduleManager->generateDisplayForPartStuctures($repositoryId, $assetId, $record, $partStructureArray);
 	
 	print "\n\t</td>\n\t<td style='border-left: 1px solid; padding-left: 10px;' valign='top'>";
 	
 	// Info and links
-	print "\n<strong>".$infoStructure->getDisplayName()."</strong>";
-	print "\n<br /><em>".$infoStructure->getDescription()."</em>";
-	print "\n<br /><a href='".MYURL."/record/edit/".$drId->getIdString()."/".$assetId->getIdString()."/".$recordId->getIdString()."/'>"._("edit")."</a>";
-	print "\n | <a href='".MYURL."/record/delete/".$drId->getIdString()."/".$assetId->getIdString()."/".$recordId->getIdString()."/'>"._("delete")."</a>";
+	print "\n<strong>".$recordStructure->getDisplayName()."</strong>";
+	print "\n<br /><em>".$recordStructure->getDescription()."</em>";
+	print "\n<br /><a href='".MYURL."/record/edit/".$repositoryId->getIdString()."/".$assetId->getIdString()."/".$recordId->getIdString()."/'>"._("edit")."</a>";
+	print "\n | <a href='".MYURL."/record/delete/".$repositoryId->getIdString()."/".$assetId->getIdString()."/".$recordId->getIdString()."/'>"._("delete")."</a>";
 	
 	print "\n\t</td>\n\t</tr>";
 	print "\n</table>";

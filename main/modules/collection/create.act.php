@@ -108,13 +108,13 @@ if ($wizard->isSaveRequested()) {
 	if ($wizard->updateLastStep()) {
 		$properties =& $wizard->getProperties();
 		
-		// Create the dr and get its id.
-		$drManager =& Services::getService("DR");
+		// Create the repository and get its id.
+		$repositoryManager =& Services::getService("Repository");
 		$type =& new HarmoniType($properties['type_domain']->getValue(),
 								$properties['type_authority']->getValue(),
 								$properties['type_keyword']->getValue(),
 								$properties['type_description']->getValue());
-		$dr =& $drManager->createDigitalRepository(
+		$repository =& $repositoryManager->createRepository(
 							$properties['display_name']->getValue(),
 							$properties['description']->getValue(), $type);
 		
@@ -124,7 +124,7 @@ if ($wizard->isSaveRequested()) {
 		unset ($wizard);
 		
 		// Head off to editing our new collection.
-		$id =& $dr->getId();
+		$id =& $repository->getId();
 		header(header("Location: ".MYURL."/collection/edit/".$id->getIdString()."/?__skip_to_step=2"));
 	}
 

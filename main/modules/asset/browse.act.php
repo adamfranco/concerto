@@ -24,11 +24,11 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ACCESS), $shared->getId($harmoni
 $actionRows =& new RowLayout();
 $centerPane->addComponent($actionRows, TOP, CENTER);
 
-// Get the DR
-$drManager =& Services::getService("DR");
+// Get the Repository
+$repositoryManager =& Services::getService("Repository");
 $sharedManager =& Services::getService("Shared");
 $assetId =& $sharedManager->getId($harmoni->pathInfoParts[3]);
-$asset =& $drManager->getAsset($assetId);
+$asset =& $repositoryManager->getAsset($assetId);
 
 // Intro
 $introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);

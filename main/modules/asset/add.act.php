@@ -24,17 +24,17 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($h
  	$wizard =& $_SESSION['add_asset_wizard_'.$harmoni->pathInfoParts[2]];
  } else {
  	
- 	// Make sure we have a valid DR
+ 	// Make sure we have a valid Repository
 	$shared =& Services::getService("Shared");
-	$drManager =& Services::getService("DR");
-	$drId =& $shared->getId($harmoni->pathInfoParts[2]);
+	$repositoryManager =& Services::getService("Repository");
+	$repositoryId =& $shared->getId($harmoni->pathInfoParts[2]);
 // 	$assetId =& $shared->getId($harmoni->pathInfoParts[3]);
 
-	$dr =& $drManager->getDigitalRepository($drId);
-// 	$asset =& $dr->getAsset($assetId);
+	$repository =& $repositoryManager->getRepository($repositoryId);
+// 	$asset =& $repository->getAsset($assetId);
 
 	// Instantiate the wizard, then add our steps.
-	$wizard =& new Wizard(_("Add Asset to the ")."<em>".$dr->getDisplayName()."</em> "._("Collection"));
+	$wizard =& new Wizard(_("Add Asset to the ")."<em>".$repository->getDisplayName()."</em> "._("Collection"));
 	$_SESSION['add_asset_wizard_'.$harmoni->pathInfoParts[2]] =& $wizard;
 	
 	
@@ -89,7 +89,7 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($h
 	print "\n<br />Select a type here or use the fields below to create a new one:";
 	print "\n<select name='option_type'>";
 	print "\n\t<option value='NONE' [['option_type'=='NONE'|selected='selected'|]]>Use Fields Below...</option>";
-	$assetTypes =& $dr->getAssetTypes();
+	$assetTypes =& $repository->getAssetTypes();
 	while ($assetTypes->hasNext()) {
 		$assetType =& $assetTypes->next();
 		$typeKey = urlencode($assetType->getDomain()."::".$assetType->getAuthority()."::".$assetType->getKeyword());
@@ -183,7 +183,7 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($h
 	print "\n"._("Select one of the <em>Assets</em> below if you wish to make this new asset a child of another asset: ");
 	print "\n<br /><select name='parent'>";
 	print "\n\t<option value='NONE' [[parent=='NONE'|checked='checked'|]]>None</option>";
-	$assets =& $dr->getAssets();
+	$assets =& $repository->getAssets();
 	while ($assets->hasNext()) {
 		$asset =& $assets->next();
 		$assetId =& $asset->getId();
@@ -198,13 +198,13 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($h
 
 if ($wizard->isSaveRequested()) {
 
-	// Make sure we have a valid DR
+	// Make sure we have a valid Repository
 	$shared =& Services::getService("Shared");
-	$drManager =& Services::getService("DR");
+	$repositoryManager =& Services::getService("Repository");
 	$authZ =& Services::getService("AuthZ");
-	$drId =& $shared->getId($harmoni->pathInfoParts[2]);
+	$repositoryId =& $shared->getId($harmoni->pathInfoParts[2]);
 
-	$dr =& $drManager->getDigitalRepository($drId);
+	$repository =& $repositoryManager->getRepository($repositoryId);
 	
 	$properties =& $wizard->getProperties();
 	
@@ -229,7 +229,7 @@ if ($wizard->isSaveRequested()) {
 										$properties['type_description']->getValue());
 		}
 		
-		$asset =& $dr->createAsset($properties['display_name']->getValue(), 
+		$asset =& $repository->createAsset($properties['display_name']->getValue(), 
 									$properties['description']->getValue(), 
 									$assetType);
 		$assetId =& $asset->getId();
@@ -248,7 +248,7 @@ if ($wizard->isSaveRequested()) {
 			&& $properties['parent']->getValue() != 'NONE') 
 		{
 			$parentId =& $shared->getId($properties['parent']->getValue());
-			$parentAsset =& $dr->getAsset($parentId);
+			$parentAsset =& $repository->getAsset($parentId);
 			$parentAsset->addAsset($assetId);
 		}
 		
@@ -256,7 +256,7 @@ if ($wizard->isSaveRequested()) {
 		unset ($_SESSION['add_asset_wizard_'.$harmoni->pathInfoParts[2]]);
 		unset ($wizard);
 		
-		$returnURL = MYURL."/asset/editview/".$drId->getIdString()."/".$assetId->getIdString();
+		$returnURL = MYURL."/asset/editview/".$repositoryId->getIdString()."/".$assetId->getIdString();
 		
 		header("Location: ".$returnURL);
 	} 
