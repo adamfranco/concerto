@@ -23,16 +23,15 @@ $repository =& $repositoryManager->getRepository($repositoryId);
 $authZ =& Services::getService("AuthZ");
 $idManager =& Services::getService("Id");
 if (!$authZ->isUserAuthorized($idManager->getId(AZ_ACCESS), $repositoryId)) {
-	$errorLayout =& new SingleContentLayout;
-	$errorLayout->addComponent(new Content(_("You are not authorized to access this <em>Exhibition</em>."), MIDDLE, CENTER));
-	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
+	$errorLayout =& new Block(_("You are not authorized to access this <em>Exhibition</em>."),2);
+	$centerPane->add($errorLayout, null, null, CENTER, CENTER);
 	return $mainScreen;
 }
 
 // Our Layout Setup
-$actionRows =& new RowLayout();
-$centerPane->addComponent($actionRows, TOP, CENTER);
-
+$yLayout =& new YLayout();
+$actionRows =& new Container($yLayout, OTHER, 1);
+$centerPane->add($actionRows, null, null, CENTER, CENTER);
 
 // get the search type.
 $typeString = urldecode($harmoni->pathInfoParts[3]);
@@ -45,28 +44,27 @@ $searchModules =& Services::getService("RepositorySearchModules");
 $searchCriteria =& $searchModules->getSearchCriteria($searchType);
 
 // Intro
-$introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Search results of Assets in the")." <em>".$repository->getDisplayName()."</em> "._("Exhibition")));
-$actionRows->addComponent($introHeader);
+$introHeader =& new Heading(_("Search Assets in the").
+             " <em>".$repository->getDisplayName()."</em> "._("Exhibition"), 2);
+$actionRows->add($introHeader, "100%", null, LEFT, CENTER);
+
 
 // function links
 ob_start();
 print _("Exhibition").": ";
 RepositoryPrinter::printRepositoryFunctionLinksExh($harmoni, $repository);
-$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
-$layout->addComponent(new Content(ob_get_contents()));
+$layout =& new Block(ob_get_contents, 2);
 ob_end_clean();
-$actionRows->addComponent($layout);
+$actionRows->add($layout, null, null, CENTER, CENTER);
 
 ob_start();
 print  "<p>";
 print  _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
 print  "</p>";
 
-$introText =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
-$introText->addComponent(new Content(ob_get_contents()));
+$$introText =& new Block(ob_get_contents, 2);
 ob_end_clean();
-$actionRows->addComponent($introText);
+$actionRows->add($introText, null, null, CENTER, CENTER);
 
 //***********************************
 // Get the assets to display
@@ -78,7 +76,7 @@ $assets =& $repository->getAssetsBySearch($searchCriteria, $searchType);
 //***********************************
 $resultPrinter =& new IteratorResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
 $resultLayout =& $resultPrinter->getLayout($harmoni);
-$actionRows->addComponent($resultLayout);
+$actionRows->add($resultLayout, null, null, CENTER, CENTER);
 
 
 // return the main layout.
@@ -97,8 +95,7 @@ function printAssetShort(& $asset, &$harmoni) {
 
 	AssetPrinter::printAssetFunctionLinksExh($harmoni, $asset);
 
-	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
-	$layout->addComponent(new Content(ob_get_contents()));
+	$layout =& new Block(ob_get_contents, 3);
 	ob_end_clean();
 	return $layout;
 }

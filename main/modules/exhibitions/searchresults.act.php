@@ -7,9 +7,10 @@ $mainScreen =& $harmoni->getAttachedData('mainScreen');
 $centerPane =& $harmoni->getAttachedData('centerPane');
 
 
-// Our Layout Setup
-$actionRows =& new RowLayout();
-$centerPane->addComponent($actionRows, TOP, CENTER);
+// Our
+$yLayout =& new YLayout();
+$actionRows =& new Container($yLayout, OTHER, 1);
+$centerPane->add($actionRows, null, null, CENTER, CENTER);
 
 // Get the Repository
 $repositoryManager =& Services::getService("Repository");
@@ -26,20 +27,17 @@ $searchModules =& Services::getService("RepositorySearchModules");
 $searchCriteria =& $searchModules->getSearchCriteria($searchType);
 
 // Intro
-$introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Search results of Slide shows in all Exhibitions")));
-$actionRows->addComponent($introHeader);
+$introHeader =& new Heading(_("Search results of Slide shows in all Exhibitions"), 2);
+$actionRows->add($introHeader, "100%", null, LEFT, CENTER);
 
 ob_start();
 print  "<p>";
 print  _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
 print  "</p>";
 
-$introText =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
-$introText->addComponent(new Content(ob_get_contents()));
+$introText =& new Block(ob_get_contents(), 3);
 ob_end_clean();
-$actionRows->addComponent($introText);
-
+$actionRows->add($introText, null, null, CENTER, CENTER);
 //***********************************
 // Get the assets to display
 //***********************************
@@ -62,7 +60,7 @@ while ($repositories->hasNext()) {
 //***********************************
 $resultPrinter =& new ArrayResultPrinter($assetArray, 2, 6, "printAssetShort", $harmoni);
 $resultLayout =& $resultPrinter->getLayout($harmoni);
-$actionRows->addComponent($resultLayout);
+$actionRows->add($resultLayout, null, null, CENTER, CENTER);
 
 
 // return the main layout.
@@ -81,8 +79,7 @@ function printAssetShort(& $asset, &$harmoni) {
 
 	AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
 
-	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
-	$layout->addComponent(new Content(ob_get_contents()));
+	$layout =& new Block(ob_get_contents, 4);
 	ob_end_clean();
 	return $layout;
 }

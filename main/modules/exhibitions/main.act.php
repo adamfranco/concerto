@@ -9,15 +9,15 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 
 
 // Our
-$actionRows =& new RowLayout();
-$centerPane->addComponent($actionRows, TOP, CENTER);
+$yLayout =& new YLayout();
+$actionRows =& new Container($yLayout, OTHER, 1);
+$centerPane->add($actionRows, null, null, CENTER, CENTER);
 
 // Intro
-$introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Exhibitions")));
-$actionRows->addComponent($introHeader);
+$introHeader =& new Heading(_("Exhibitions"), 2);
+$actionRows->add($introHeader, "100%", null, LEFT, CENTER);
 
-$introText =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
+
 ob_start();
 print "";
 print "<p>";
@@ -43,10 +43,9 @@ print "</p>";
 */
 // If the user is authorized, allow them to create a new exhibition.
 // @todo - add authorization.
-
-$introText->addComponent(new Content(ob_get_contents()));
+$introText =& new Block(ob_get_contents(), 3);
 ob_end_clean();
-$actionRows->addComponent($introText);
+$actionRows->add($introText, null, null, CENTER, CENTER);
 
 // return the main layout.
 return $mainScreen;
