@@ -93,7 +93,7 @@ $structSet =& $setManager->getSet($repositoryId);
 // the info records for those structures in order.
 while ($structSet->hasNext()) {
 	$structureId =& $structSet->next();
-	$records =& $asset->getRecords($structureId);
+	$records =& $asset->getRecordsByRecordStructure($structureId);
 	while ($records->hasNext()) {
 		$record =& $records->next();
 		$recordId =& $record->getId();

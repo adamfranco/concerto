@@ -59,7 +59,7 @@ if (!$authZ->isUserAuthorized($idManager->getId(AZ_EDIT), $id)) {
 			$partStructure =& $partStructures->next();
 			$partStructureId =& $partStructure->getId();
 			
-			if ($partSet->isInSet($partStructureId)) {
+			if ($partStructureSet->isInSet($partStructureId)) {
 				$orderedPartStructuresToPrint[] =& $partStructureId;
 			} else {
 				$partStructuresToPrint[] =& $partStructureId;
