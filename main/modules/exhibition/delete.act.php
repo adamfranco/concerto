@@ -11,7 +11,6 @@ if (!defined("AZ_DELETE"))
 	throwError(new Error("You must define an id for AZ_ACCESS", "concerto.exhibition", true));
 
 // Get the Repository
-//$x=& Services::startService("HarmoniRepositoryManager");
 $repositoryManager =& Services::getService("Repository");
 $idManager =& Services::getService("Id");
 $repositoryId =& $idManager->getId($harmoni->pathInfoParts[2],$harmoni->pathInfoParts[2]);
