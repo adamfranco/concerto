@@ -28,7 +28,19 @@ class RepositoryPrinter {
 	 * @date 8/6/04
 	 */
 	function printRepositoryFunctionLinks (& $harmoni, & $repository) {
-		// @todo User AuthZ to decide if we should print links.
+		if (!defined("AZ_ACCESS"))
+			throwError(new Error("You must define an id for AZ_ACCESS", "concerto.collection", true));
+		if (!defined("AZ_VIEW"))
+			throwError(new Error("You must define an id for AZ_VIEW", "concerto.collection", true));
+		if (!defined("AZ_EDIT"))
+			throwError(new Error("You must define an id for AZ_EDIT", "concerto.collection", true));
+		if (!defined("AZ_DELETE"))
+			throwError(new Error("You must define an id for AZ_DELETE", "concerto.collection", true));
+		if (!defined("AZ_ADD_CHILDREN"))
+			throwError(new Error("You must define an id for AZ_ADD_CHILDREN", "concerto.collection", true));
+		
+		$authZ =& Services::getService("AuthZ");
+		$shared =& Services::getService("Shared");
 		$repositoryId =& $repository->getId();
 		
 		$links = array();
@@ -38,32 +50,38 @@ class RepositoryPrinter {
 		
 		$actionString = $harmoni->getCurrentAction();
 		
-		if ($actionString != "collection.browse") {
-			$links[] = "<a href='".MYURL."/collection/browse/".$repositoryId->getIdString()."/'>";
-			$links[count($links) - 1] .= _("browse")."</a>";
-		} else {
-			$links[] = _("browse");
+		if ($authZ->isUserAuthorized($shared->getId(AZ_ACCESS), $repositoryId)) {
+			if ($actionString != "collection.browse") {
+				$links[] = "<a href='".MYURL."/collection/browse/".$repositoryId->getIdString()."/'>";
+				$links[count($links) - 1] .= _("browse")."</a>";
+			} else {
+				$links[] = _("browse");
+			}
+			
+			if ($actionString != "collection.typebrowse") {
+				$links[] = "<a href='".MYURL."/collection/typebrowse/".$repositoryId->getIdString()."/'>";
+				$links[count($links) - 1] .= _("browse by type")."</a>";
+			} else {
+				$links[] = _("browse by type");
+			}
+			
+			if ($actionString != "collection.search") {
+				$links[] = "<a href='".MYURL."/collection/search/".$repositoryId->getIdString()."/'>";
+				$links[count($links) - 1] .= _("search")."</a>";
+			} else {
+				$links[] = _("search");
+			}
 		}
 		
-		if ($actionString != "collection.typebrowse") {
-			$links[] = "<a href='".MYURL."/collection/typebrowse/".$repositoryId->getIdString()."/'>";
-			$links[count($links) - 1] .= _("browse by type")."</a>";
-		} else {
-			$links[] = _("browse by type");
+		if ($authZ->isUserAuthorized($shared->getId(AZ_EDIT), $repositoryId)) {
+			$links[] = "<a href='".MYURL."/collection/edit/".$repositoryId->getIdString()."/'>";
+			$links[count($links) - 1] .= _("edit")."</a>";
 		}
-		
-		if ($actionString != "collection.search") {
-			$links[] = "<a href='".MYURL."/collection/search/".$repositoryId->getIdString()."/'>";
-			$links[count($links) - 1] .= _("search")."</a>";
-		} else {
-			$links[] = _("search");
-		}
-		
-	 	$links[] = "<a href='".MYURL."/collection/edit/".$repositoryId->getIdString()."/'>";
-	 	$links[count($links) - 1] .= _("edit")."</a>";
 	 	
-	 	$links[] = "<a href='".MYURL."/asset/add/".$repositoryId->getIdString()."/".implode("/",$harmoni->pathInfoParts)."'>";
-	 	$links[count($links) - 1] .= _("add asset")."</a>";
+	 	if ($authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $repositoryId)) {
+			$links[] = "<a href='".MYURL."/asset/add/".$repositoryId->getIdString()."/".implode("/",$harmoni->pathInfoParts)."'>";
+			$links[count($links) - 1] .= _("add asset")."</a>";
+		}
 		
 		print  implode("\n\t | ", $links);
 	}
