@@ -34,7 +34,8 @@ require_once(OKI2."/osid/OsidContext.php");
 	
 
 // :: Set up the database connection ::
-	$dbHandler =& Services::requireService("DBHandler");
+	Services::startService("DBHandler");
+	$dbHandler =& Services::getService("DBHandler");
 	$dbName = "concerto_test";
 	$dbID = $dbHandler->addDatabase( new MySQLDatabase("localhost", $dbName,"test","test") );
 	$dbHandler->pConnect($dbID);
