@@ -215,7 +215,7 @@ function printRecord(& $record, & $assetId, & $repositoryId) {
 	
 	// Print out the parts/partstructures for this recordstructure
 	$setManager =& Services::getService("Sets");
-	$partStructureArray =& $setManager->getSet($structureId);
+	$partStructureSet =& $setManager->getSet($structureId);
 	
 	$partsStructureArray = array();
 	// Print out the ordered parts/fields
@@ -236,7 +236,7 @@ function printRecord(& $record, & $assetId, & $repositoryId) {
 	print "\n\t<tr>\n\t<td>";
 	
 	$moduleManager =& Services::getService("InOutModules");
-	print $moduleManager->generateDisplayForPartStuctures($repositoryId, $assetId, $record, $partStructureArray);
+	print $moduleManager->generateDisplayForPartStructures($repositoryId, $assetId, $record, $partStructureArray);
 	
 	print "\n\t</td>\n\t<td style='border-left: 1px solid; padding-left: 10px;' valign='top'>";
 	
