@@ -108,7 +108,7 @@
 // :: Set up the Hierarchy Manager ::
 	Services::startService("Hierarchy", $dbID, $dbName);
 
-// :: Set up the DigitalRepositoryManager ::
+// :: Set up the RepositoryManager ::
 	$repositoryHierarchyId = "673";
 	$defaultParentId = "301";
 	$configuration = array(
@@ -129,7 +129,7 @@
 // ::Specify some Ids for concerto ::
 	if (!is_array($_SESSION['concerto_config'])) {
 		$_SESSION['concerto_config'] = array();
-		$sharedManager =& Services::getService("Shared");
+		$sharedManager =& Services::getService("Id");
 		$_SESSION['concerto_config']['media_file_structure_id'] = $sharedManager->getId("1097");
 		$_SESSION['concerto_config']['thumbnail_part_id'] = $sharedManager->getId("1104");
 	}
