@@ -29,6 +29,10 @@ print "</a></li>";
 print "\n\t<li><a href='".MYURL."/authorization/choose_agent/'>";
 print _("Edit authorizations");
 print "</a></li>";
+print "\n\t<li><a href='".MYURL."/agents/create_agent/'>";
+print _("Create User");
+print "</a></li>";
+
 print "\n</ul>";
 
 $introText->addComponent(new Content(ob_get_contents()));
