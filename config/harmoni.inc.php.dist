@@ -208,8 +208,10 @@ require_once(OKI2."/osid/OsidContext.php");
 
 
 // :: Set up the DataManager ::
-	DataManager::setup($dbID);
-
+	$configuration =& new ConfigurationProperties;
+	$configuration->addProperty('database_index', $dbID);
+	Services::startManagerAsService("DataManager", $context, $configuration);
+	
 
 // :: Set up the RepositoryManager ::
 	$repositoryHierarchyId = "1";
