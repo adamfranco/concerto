@@ -228,6 +228,7 @@ function printRecord(& $record, & $assetId, & $drId) {
 	print "\n<strong>".$infoStructure->getDisplayName()."</strong>";
 	print "\n<br /><em>".$infoStructure->getDescription()."</em>";
 	print "\n<br /><a href='".MYURL."/record/edit/".$drId->getIdString()."/".$assetId->getIdString()."/".$recordId->getIdString()."/'>"._("edit")."</a>";
+	print "\n | <a href='".MYURL."/record/delete/".$drId->getIdString()."/".$assetId->getIdString()."/".$recordId->getIdString()."/'>"._("delete")."</a>";
 	
 	print "\n\t</td>\n\t</tr>";
 	print "\n</table>";
