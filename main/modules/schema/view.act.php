@@ -29,11 +29,13 @@ print "'><-- "._("Return")."</a>";
 // Print out the InfoStructure Parts.
 $drManager =& Services::getService("DR");
 $sharedManager =& Services::getService("Shared");
+$setManager =& Services::getService("Sets");
 $drId =& $sharedManager->getId($harmoni->pathInfoParts[2]);
 $infoStructureId =& $sharedManager->getId($harmoni->pathInfoParts[3]);
 
 $dr =& $drManager->getDigitalRepository($drId);
 $infoStructure =& $dr->getInfoStructure($infoStructureId);
+$set =& $setManager->getSet($infoStructureId);
 
 print "<h3>".$infoStructure->getDisplayName()."</h3>";
 print "<em>".$infoStructure->getDescription()."</em>";
@@ -42,16 +44,28 @@ print "<br /><strong>"._("Format").":</strong> ".$infoStructure->getFormat()."";
 // Print out the infoParts
 print "<h4>"._("Elements").":</h4>";
 print "\n<table border='1'>";
-print "\n<th>DisplayName</th>";
-print "\n<th>Description</th>";
-print "\n<th>IsManditory?</th>";
-print "\n<th>IsRepeatable?</th>";
-print "\n<th>IsPopulatedByDR?</th>";
+print "\n<th>"._("Order")."</th>";
+print "\n<th>"._("DisplayName")."</th>";
+print "\n<th>"._("Description")."</th>";
+print "\n<th>"._("IsManditory?")."</th>";
+print "\n<th>"._("IsRepeatable?")."</th>";
+print "\n<th>"._("IsPopulatedByDR?")."</th>";
 print "\n</tr>";
 $infoParts =& $infoStructure->getInfoParts();
+$partArray = array();
 while ($infoParts->hasNext()) {
 	$infoPart =& $infoParts->next();
+	if ($set->isInSet($infoPart->getId()))
+		$partArray[$set->getPosition($infoPart->getId())] =& $infoPart;
+	else
+		$partArray[] =& $infoPart;
+}
+
+ksort($partArray);
+foreach (array_keys($partArray) as $key) {
+	$infoPart =& $partArray[$key];
 	print "\n<tr>";
+	print "\n<td>".($key+1)."</td>";
 	print "\n<td><strong>".$infoPart->getDisplayName()."</strong></td>";
 	print "\n<td><em>".$infoPart->getDescription()."</em></td>";
 	print "\n<td>".(($infoPart->isManditory())?"TRUE":"FALSE")."</td>";

@@ -77,9 +77,6 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	$property =& $elementStep->createProperty("populatedbydr", new RegexValidatorRule(".*"));
 	$property->setDefaultValue("FALSE");
 	
-	$property =& $elementStep->createProperty("position", new RegexValidatorRule(".*"));
-	$property->setDefaultValue(0);
-	
 	// We don't have any InfoParts yet, so we can't get them.
 	
 	ob_start();
@@ -142,16 +139,6 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 			print "<input type=\"radio\" name='populatedbydr' value='FALSE' [['populatedbydr'=='FALSE'| checked|]] /> FALSE";
 		print "\n</td></tr>";
 		
-		print "\n<tr><td>";
-			print _("Order/Position ");
-		print "\n</td><td>";
-			print "\n\t<select name=\"position\">";
-			for ($i=0; $i <= 100; $i++) {
-				print "\n\t\t<option value='$i' [['position' == '$i'|selected='selected'|]]>".(($i)?$i:"")."</option>";
-			}
-			print "\n\t</select>";
-		print "\n</td></tr>";
-		
 		print "</table>";
 	
 	print "\n<br />[Buttons]";
@@ -167,7 +154,6 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	print "\n\t<br /><strong>"._("isMandatory").":</strong> [[mandatory]]";
 	print "\n\t<br /><strong>"._("isRepeatable").":</strong> [[repeatable]]";
 	print "\n\t<br /><strong>"._("isPopulatedByDR").":</strong> [[populatedbydr]]";
-	print "\n\t<br /><strong>"._("Order/Position").":</strong> [[position > 0|position|]]";
 	print "</td>\n</tr>[/List]\n</table>";
 
 	$elementStep->setText(ob_get_contents());
@@ -229,20 +215,6 @@ if ($wizard->isSaveRequested()) {
 			// Add the InfoPartId to the set
 			if (!$set->isInSet($infoPartId))
 				$set->addItem($infoPartId);
-			if ($position = $infoPartProperties[$index]['position']->getValue())
-				$positions[$position-1] =& $infoPartId;
-		}
-		
-		// Go through the positions and set them all.
-		ksort ($positions);
-		$countPositions = $set->count();
-		foreach (array_keys($positions) as $position) {
-			if ($position < 0 || $position >= $countPositions) {
-				// move to the last position
-				$set->moveToPosition($positions[$position], $countPositions-1);
-			} else {
-				$set->moveToPosition($positions[$position], $position);
-			}
 		}
 		
 		// Unset the wizard
