@@ -39,9 +39,15 @@ $actionRows->addComponent($contentCols);
 	// Description and dates
 	ob_start();
 	$assetId =& $asset->getId();
-	print  "<strong>"._("ID#").":</strong> ".$assetId->getIdString();
-	print  "\n\t<br><strong>"._("Description").":</strong> \n<br /><em>".$asset->getDescription()."</em>";	
-	print  "\n\t<br>";
+	print  "\n\t<strong>"._("Description").":</strong> \n<em>".$asset->getDescription()."</em>";
+	print  "\n\t<br><strong>"._("ID#").":</strong> ".$assetId->getIdString();
+
+	$effectDate =& $asset->getEffectiveDate();
+	print  "\n\t<br><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->toString()."</em>";
+
+	$expirationDate =& $asset->getExpirationDate();
+	print  "\n\t<br><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->toString()."</em>";
+
 	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
 	$layout->addComponent(new Content(ob_get_contents()));
 	ob_end_clean();
@@ -55,7 +61,7 @@ $actionRows->addComponent($contentCols);
 // 		$value =& $field->getValue();
 // 		print "\n<img src='".$value->toString()."'>\n<br />";
 // 	}
-	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
+	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
 	$layout->addComponent(new Content(ob_get_contents()));
 	ob_end_clean();
 	$contentCols->addComponent($layout);
@@ -80,7 +86,7 @@ while ($structSet->hasNext()) {
 		$record =& $records->next();
 		$recordId =& $record->getId();
 		$printedRecordIds[] = $recordId->getIdString();
-		
+
 		print "<hr>";
 		printRecord($record);
 	}	
@@ -101,6 +107,22 @@ while ($structSet->hasNext()) {
 // }
 
 $layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
+$layout->addComponent(new Content(ob_get_contents()));
+ob_end_clean();
+$actionRows->addComponent($layout);
+
+
+//***********************************
+// Content
+//	If we can, we may want to print the content here.
+// 	@todo Add some sniffing of content so that we can either put it in if
+// 	it is text, image, etc, or do otherwise with it if it is some other form
+// 	of data.
+//***********************************
+ob_start();
+$content =& $asset->getContent();
+print ($content->toString());
+$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
 $layout->addComponent(new Content(ob_get_contents()));
 ob_end_clean();
 $actionRows->addComponent($layout);
@@ -132,11 +154,11 @@ function printRecord(& $record) {
 		} else {
 			if (!is_array($fieldsToPrint[$partId->getIdString()]))
 				$fieldsToPrint[$partId->getIdString()] = array();
-			$fieldsToPrint[$partId->getIdString()] =& $field;
+			$fieldsToPrint[$partId->getIdString()][] =& $field;
 		}
 	}
 	
-	// Print out the parts/fields
+	// Print out the ordered parts/fields
 	while ($partSet->hasNext()) {
 		$partId =& $partSet->next();
 		$fieldsArray =& $orderedFieldsToPrint[$partId->getIdString()];
