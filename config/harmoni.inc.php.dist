@@ -204,22 +204,20 @@ require_once(OKI2."/osid/OsidContext.php");
 
 
 // :: Set up the Sets Manager ::
-	Services::startService("Sets", $dbID);
+	$configuration =& new ConfigurationProperties;
+	$configuration->addProperty('database_index', $dbID);
+	Services::startManagerAsService("SetManager", $context, $configuration);
 
-
-// ::Specify some Ids for concerto ::
-	if (!is_array($_SESSION['concerto_config'])) {
-		$_SESSION['concerto_config'] = array();
-		$idManager =& Services::getService("Id");
-		$_SESSION['concerto_config']['media_file_structure_id'] = $idManager->getId("1097");
-		$_SESSION['concerto_config']['thumbnail_part_id'] = $idManager->getId("1104");
-	}
 	
 // :: Set up the MIME service for sniffing mime types ::
-	Services::startService("MIME");
+	$configuration =& new ConfigurationProperties;
+	Services::startManagerAsService("MIMEManager", $context, $configuration);
 
 	
 // :: Set up the ImageProcessor service for generating thumbnails ::
+	$configuration =& new ConfigurationProperties;
+	$configuration->addProperty('thumbnail_format', $arg0 = "image/jpeg");
+	
 	Services::startService("ImageProcessor",
 							"image/jpeg",		// thumbnail format
 					
@@ -234,15 +232,13 @@ require_once(OKI2."/osid/OsidContext.php");
 	);
 
 
-// :: Set up definitions for the Authorization Functions Used in Concerto ::
-// $authZ =& Services::getService("AuthZ");
-// $id =& Services::getService("Id");
-// $viewFunc =& $authZ->getFunction($id->getId('178'));
-// $funcType =& $viewFunc->getFunctionType();
-// $newId =& $id->createId();
-// print $newId->getIdString();
-// $hId =& $id->getId('673');
-// $authZ->createFunction($newId, "Access", "Access this and its children.", $funcType, $hId);
+// ::Specify some Ids for concerto ::
+	if (!is_array($_SESSION['concerto_config'])) {
+		$_SESSION['concerto_config'] = array();
+		$idManager =& Services::getService("Id");
+		$_SESSION['concerto_config']['media_file_structure_id'] = $idManager->getId("1097");
+		$_SESSION['concerto_config']['thumbnail_part_id'] = $idManager->getId("1104");
+	}
 
 /*********************************************************
  * View/Use AZs
@@ -309,3 +305,7 @@ define("AZ_DELETE_GROUPS", '299');
 // $nullType =& new Type ("System", "Concerto", "NULL");
 // $properties =& new HarmoniProperties($nullType);
 // $agentManager->createGroup("Auditors", $groupType, "Users that can view all content in the system but not modify it.", $properties);
+
+// print "<pre>";
+// print_r($_SESSION);
+// print "</pre>";

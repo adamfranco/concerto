@@ -1,5 +1,7 @@
 <?
 
+apd_set_pprof_trace();
+
 // Define a Constant reference to this application directory.
 define("MYDIR",dirname(__FILE__));
 define("MYPATH",str_replace($_SERVER['DOCUMENT_ROOT'], "", dirname(__FILE__)));
