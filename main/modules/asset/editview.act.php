@@ -83,17 +83,17 @@ $actionRows->addComponent($contentCols);
 	$contentCols->addComponent($layout);
 	
 	// Thumbnail
-	ob_start();
+// 	ob_start();
 // 	$thumbnailFields =& $asset->getPartByPart($_SESSION['concerto_config']['thumbnail_part_id']);
 // 	while ($fields->hasNext()) {
 // 		$field =& $fields->next();
 // 		$value =& $field->getValue();
 // 		print "\n<img src='".$value->toString()."'>\n<br />";
 // 	}
-	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
-	$layout->addComponent(new Content(ob_get_contents()));
-	ob_end_clean();
-	$contentCols->addComponent($layout);
+// 	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
+// 	$layout->addComponent(new Content(ob_get_contents()));
+// 	ob_end_clean();
+// 	$contentCols->addComponent($layout);
 
 
 //***********************************
