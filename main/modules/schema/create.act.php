@@ -25,21 +25,20 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	$stepOne =& $wizard->createStep(_("Name & Description"));
 	
 	// Create the properties.
-	$displayNameProp =& $stepOne->createProperty("display_name", "Regex");
-	$displayNameProp->setExpression(".*");
+	$displayNameProp =& $stepOne->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
 	$displayNameProp->setDefaultValue($dr->getDisplayName());
+	$displayNameProp->setErrorString(" <span style='color: f00'>* "._("The name must not start with a space.")."</span>");
 	
-	$descriptionProp =& $stepOne->createProperty("description", "Regex");
-	$descriptionProp->setExpression(".*");
+	$descriptionProp =& $stepOne->createProperty("description", new RegexValidatorRule(".*"));
 	$descriptionProp->setDefaultValue($dr->getDescription());
 	
 	// Create the step text
 	$stepOneText = "\n<h2>"._("Name")."</h2>";
 	$stepOneText .= "\n"._("The Name for this Schema: ");
-	$stepOneText .= "\n<br><input type='text' name='display_name' value=\"[[display_name]]\">";
+	$stepOneText .= "\n<br><input type='text' name='display_name' value=\"[[display_name]]\">[[display_name|Error]]";
 	$stepOneText .= "\n<h2>"._("Description")."</h2>";
 	$stepOneText .= "\n"._("The Description for this Schema: ");
-	$stepOneText .= "\n<br><textarea name='description'>[[description]]</textarea>";
+	$stepOneText .= "\n<br><textarea name='description'>[[description]]</textarea>[[description|Error]]";
 	$stepOneText .= "\n<div style='width: 400px'> &nbsp; </div>";
 	$stepOne->setText($stepOneText);
 	
@@ -60,8 +59,7 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 		$infoStructureId =& $infoStructure->getId();
 		
 		// Create the properties.
-		$property =& $elementStep->createProperty("schema_".$infoStructureId->getIdString(), "Regex", FALSE);
-		$property->setExpression(".*");
+		$property =& $elementStep->createProperty("schema_".$infoStructureId->getIdString(), new RegexValidatorRule(".*"), FALSE);
 		$property->setDefaultValue(0);
 		
 		$text .= "\n<p>\n<input type='checkbox' name='schema_".$infoStructureId->getIdString()."' value='1' [[schema_".$infoStructureId->getIdString()."==1|checked='checked'|]]>";
@@ -79,7 +77,7 @@ for ($i = 3; $i < count($harmoni->pathInfoParts); $i++) {
 }
 $returnURL = MYURL."/".implode("/",$currentPathInfo);
 
-if ($_REQUEST['save'] || $_REQUEST['save_link'] || $_REQUEST['create_schema']) {
+if ($wizard->isSaveRequested() || $_REQUEST['create_schema']) {
 	// If all properties validate then go through the steps nessisary to
 	// save the data.
 	if ($wizard->updateLastStep()) {
@@ -107,20 +105,13 @@ if ($_REQUEST['save'] || $_REQUEST['save_link'] || $_REQUEST['create_schema']) {
 		header("Location: ".$returnURL);
 	}
 	
-} else if ($_REQUEST['cancel'] || $_REQUEST['cancel_link']) {
+} else if ($wizard->isCancelRequested()) {
 	$wizard = NULL;
 	unset ($_SESSION['create_schema_wizard_'.$harmoni->pathInfoParts[2]]);
 	unset ($wizard);
 	header("Location: ".$returnURL);
 	
-} else if ($_REQUEST['next'] && $wizard->hasNext())
-	$wizard->next();
-
-else if ($_REQUEST['previous'] && $wizard->hasPrevious())
-	$wizard->previous();
-
-else if ($_REQUEST['go_to_step'])
-	$wizard->goToStep($_REQUEST['go_to_step']);
+}
 
 $wizardLayout =& $wizard->getLayout($harmoni);
 $centerPane->addComponent($wizardLayout, TOP, CENTER);

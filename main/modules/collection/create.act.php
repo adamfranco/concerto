@@ -86,13 +86,13 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 
 }
 
-if ($_REQUEST['save'] || $_REQUEST['save_link']) {
+// Handle saving if requested
+if ($wizard->isSaveRequested()) {
+
 	// If all properties validate then go through the steps nessisary to
 	// save the data.
 	if ($wizard->updateLastStep()) {
 		$properties =& $wizard->getProperties();
-// 		print "Now Saving: ";
-// 		printpre($properties);
 		
 		// Create the dr and get its id.
 		$drManager =& Services::getService("DR");
@@ -113,21 +113,14 @@ if ($_REQUEST['save'] || $_REQUEST['save_link']) {
 		$id =& $dr->getId();
 		header(header("Location: ".MYURL."/collection/edit/".$id->getIdString()."/"));
 	}
-	
-} else if ($_REQUEST['cancel'] || $_REQUEST['cancel_link']) {
+
+// Handle canceling if requested
+} else if ($wizard->isCancelRequested()) {
 	$wizard = NULL;
 	unset ($_SESSION['create_collection_wizard']);
 	unset ($wizard);
 	header(header("Location: ".MYURL."/collections/main/"));
-	
-} else if ($_REQUEST['next'] && $wizard->hasNext())
-	$wizard->next();
-
-else if ($_REQUEST['previous'] && $wizard->hasPrevious())
-	$wizard->previous();
-
-else if ($_REQUEST['go_to_step'])
-	$wizard->goToStep($_REQUEST['go_to_step']);
+}
 
 $wizardLayout =& $wizard->getLayout($harmoni);
 $centerPane->addComponent($wizardLayout, TOP, CENTER);

@@ -25,21 +25,20 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	$stepOne =& $wizard->createStep(_("Name & Description"));
 	
 	// Create the properties.
-	$displayNameProp =& $stepOne->createProperty("display_name", "Regex");
-	$displayNameProp->setExpression(".*");
+	$displayNameProp =& $stepOne->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
 	$displayNameProp->setDefaultValue($dr->getDisplayName());
+	$displayNameProp->setErrorString(" <span style='color: f00'>* "._("The name must not start with a space.")."</span>");
 	
-	$descriptionProp =& $stepOne->createProperty("description", "Regex");
-	$descriptionProp->setExpression(".*");
+	$descriptionProp =& $stepOne->createProperty("description", new RegexValidatorRule(".*"));
 	$descriptionProp->setDefaultValue($dr->getDescription());
 	
 	// Create the step text
 	$stepOneText = "\n<h2>"._("Name")."</h2>";
 	$stepOneText .= "\n"._("The Name for this <em>Collection</em>: ");
-	$stepOneText .= "\n<br><input type='text' name='display_name' value=\"[[display_name]]\">";
+	$stepOneText .= "\n<br><input type='text' name='display_name' value=\"[[display_name]]\">[[display_name|Error]]";
 	$stepOneText .= "\n<h2>"._("Description")."</h2>";
 	$stepOneText .= "\n"._("The Description for this <em>Collection</em>: ");
-	$stepOneText .= "\n<br><textarea name='description'>[[description]]</textarea>";
+	$stepOneText .= "\n<br><textarea name='description'>[[description]]</textarea>[[description|Error]]";
 	$stepOneText .= "\n<div style='width: 400px'> &nbsp; </div>";
 	$stepOne->setText($stepOneText);
 	
@@ -60,8 +59,7 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 		$infoStructureId =& $infoStructure->getId();
 		
 		// Create the properties.
-		$property =& $selectStep->createProperty("schema_".$infoStructureId->getIdString(), "Regex", FALSE);
-		$property->setExpression(".*");
+		$property =& $selectStep->createProperty("schema_".$infoStructureId->getIdString(), new RegexValidatorRule(".*"), FALSE);
 		$property->setDefaultValue(0);
 		
 		$text .= "\n<p>\n<input type='checkbox' name='schema_".$infoStructureId->getIdString()."' value='1' [[schema_".$infoStructureId->getIdString()."==1|checked='checked'|]]>";
@@ -69,38 +67,11 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 		$text .= "\n<br><em>".$infoStructure->getDescription()."</em>\n</p>";
 	}
 	$selectStep->setText($text);
-
-// 
-// 	// :: Schema Creation ::
-// 	
-// 	// The createInfoStructure() method is not defined in the DR OSID. It has been
-// 	// added to the Harmoni implimentation in order to provide enhanced 
-// 	// functionality in dynamically creating info structures.
-// 	if (method_exists($dr, "createInfoStructure")) {
-// 	
-// 		$createStep =& $wizard->createStep(_("Schema Creation"));
-// 		
-// 		$text = "<h2>"._("Create a new Cataloging Schema")."</h2>";
-// 		$text .= _("\nSelect which caltaloging schemata you wish to appear during <em>Asset</em> creation and editing. <em>Assets</em> can hold data in any schema, but only the ones selected here will be availible when adding new data.");
-// 		
-// 		while ($infoStructures->hasNext()) {
-// 			$infoStructure =& $infoStructures->next();
-// 			$infoStructureId =& $infoStructure->getId();
-// 			
-// 			// Create the properties.
-// 			$property =& $createStep->createProperty("schema_".$infoStructureId->getIdString(), "Regex");
-// 			$property->setExpression(".*");
-// 			$property->setDefaultValue(0);
-// 			
-// 			$text .= "\n<p>\n<input type='checkbox' name='schema_".$infoStructureId->getIdString()."' value=\"[[schema_".$infoStructureId->getIdString()."]]\">";
-// 			$text .= "\n<strong>".$infoStructure->getDisplayName()."</strong>";
-// 			$text .= "\n<br><em>".$infoStructure->getDescription()."</em>\n</p>";
-// 		}
-// 		$createStep->setText($text);
-// 	}
 }
 
-if ($_REQUEST['save'] || $_REQUEST['save_link'] || $_REQUEST['create_schema']) {
+// Handle saving if requested
+if ($wizard->isSaveRequested() || $_REQUEST['create_schema']) {
+
 	// If all properties validate then go through the steps nessisary to
 	// save the data.
 	if ($wizard->updateLastStep()) {
@@ -135,23 +106,15 @@ if ($_REQUEST['save'] || $_REQUEST['save_link'] || $_REQUEST['create_schema']) {
 			header("Location: ".MYURL."/collections/namebrowse/");
 	}
 	
-} else if ($_REQUEST['cancel'] || $_REQUEST['cancel_link']) {
+// Handle canceling if requested
+} else if ($wizard->isCancelRequested()) {
 	$wizard = NULL;
 	unset ($_SESSION['edit_collection_wizard_'.$harmoni->pathInfoParts[2]]);
 	unset ($wizard);
 	header("Location: ".MYURL."/collections/namebrowse/");
-	
-} else if ($_REQUEST['next'] && $wizard->hasNext())
-	$wizard->next();
-
-else if ($_REQUEST['previous'] && $wizard->hasPrevious())
-	$wizard->previous();
-
-else if ($_REQUEST['go_to_step'])
-	$wizard->goToStep($_REQUEST['go_to_step']);
 
 // If we have an integer as our 4th path info.
-else if (count($harmoni->pathInfoParts) == 4 
+} else if (count($harmoni->pathInfoParts) == 4 
 	&& ereg("^[1-9][0-9]*$",$harmoni->pathInfoParts[3]))
 	$wizard->goToStep($harmoni->pathInfoParts[3]);
 
