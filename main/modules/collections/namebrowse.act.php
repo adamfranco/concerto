@@ -18,8 +18,8 @@ $actionRows->addComponent($introHeader);
 
 $text = "";
 $text .= "<p>";
-$text .= _("<em>Collections</em> are containers for <em>Assets</em>. <em>Assets</em> can in turn contain other Assets. Each collection can have its own cataloging schema.");
-$text .= " ";
+$text .= _("Below are listed the availible <em>Collections</em>, organized by name.");
+$text .= "</p>\n<p>";
 $text .= _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
 $text .= "</p>";
 
@@ -47,10 +47,30 @@ if (count($drArray)) {
 	foreach (array_keys($drArray) as $name) {
 		$dr =& $drArray[$name];
 		$drId =& $dr->getId();
+		$drType =& $dr->getType();
+		
 		$text .= "\n<li>";
-		$text .= "\n\t<strong>".$dr->getDisplayName()."</strong> - ".
-				$drId->getIdString()." - <em>".$dr->getDescription()."</em>";
-		$text .= "\n</li>";
+		$text .= "\n\t<strong>".$dr->getDisplayName()."</strong> - "._("ID#").": ".
+				$drId->getIdString();
+		$text .= "<br><em>".$dr->getDescription()."</em>";
+//		$text .= "<div style='font-size: smaller'><br>";
+//		$text .= $drType->getDomain() ."::". $drType->getAuthority() ."::". $drType->getKeyword() ."<br><em>".$drType->getDescription()."</em></span>";
+		
+		// @todo User AuthZ to decide if we should print links.
+		$text .= "<br>";
+		$links = array();
+		
+		$links[] = "<a href='".MYURL."/collection/browse/".$drId->getIdString()."/'>";
+		$links[count($links) - 1] .= _("browse")."</a>";
+		
+		$links[] = "<a href='".MYURL."/collection/search/".$drId->getIdString()."/'>";
+		$links[count($links) - 1] .= _("search")."</a>";
+		
+		$links[] = "<a href='".MYURL."/collection/edit/".$drId->getIdString()."/'>";
+		$links[count($links) - 1] .= _("edit")."</a>";
+		
+		$text .= implode(" | ", $links);
+		$text .= "\n<br></li>";
 	}
 	
 } else {
