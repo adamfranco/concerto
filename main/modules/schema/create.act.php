@@ -24,50 +24,141 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	// :: Step One ::
 	$stepOne =& $wizard->createStep(_("Name & Description"));
 	
-	// Create the properties.
-	$displayNameProp =& $stepOne->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
-	$displayNameProp->setDefaultValue($dr->getDisplayName());
-	$displayNameProp->setErrorString(" <span style='color: f00'>* "._("The name must not start with a space.")."</span>");
 	
-	$descriptionProp =& $stepOne->createProperty("description", new RegexValidatorRule(".*"));
-	$descriptionProp->setDefaultValue($dr->getDescription());
+	// Create the properties.
+	$displayNameProp =& $stepOne->createProperty("schema_display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
+	$displayNameProp->setDefaultValue("Default Schema Name");
+	$displayNameProp->setErrorString(" <span style='color: f00'>* "._("The name must not start with a space.")."</span>");
+
+	$formatProp =& $stepOne->createProperty("schema_format", new RegexValidatorRule(".*"));
+	$formatProp->setDefaultValue("Plain Text - UTF-8 encoding");
+	
+	$descriptionProp =& $stepOne->createProperty("schema_description", new RegexValidatorRule(".*"));
+	$descriptionProp->setDefaultValue("Default Schema description.");
+	
 	
 	// Create the step text
-	$stepOneText = "\n<h2>"._("Name")."</h2>";
-	$stepOneText .= "\n"._("The Name for this Schema: ");
-	$stepOneText .= "\n<br><input type='text' name='display_name' value=\"[[display_name]]\">[[display_name|Error]]";
-	$stepOneText .= "\n<h2>"._("Description")."</h2>";
-	$stepOneText .= "\n"._("The Description for this Schema: ");
-	$stepOneText .= "\n<br><textarea name='description'>[[description]]</textarea>[[description|Error]]";
-	$stepOneText .= "\n<div style='width: 400px'> &nbsp; </div>";
-	$stepOne->setText($stepOneText);
-	
+	ob_start();
+	print "\n<h2>"._("Name")."</h2>";
+	print "\n"._("The Name for this Schema: ");
+	print "\n<br><input type='text' name='schema_display_name' value=\"[[schema_display_name]]\">[[schema_display_name|Error]]";
+	print "\n<h2>"._("Description")."</h2>";
+	print "\n"._("The Description for this Schema: ");
+	print "\n<br><textarea name='schema_description'>[[schema_description]]</textarea>[[schema_description|Error]]";
+	print "\n<h2>"._("Format")."</h2>";
+	print "\n"._("The format of data that is entered into the fields: ");
+	print "\n<br /><em>"._("'Plain Text - ASCII encoding', 'XML', etc.")."</em>";
+	print "\n<br><input type='text' name='schema_format' value=\"[[schema_format]]\" size='25'>[[schema_format|Error]]";
+	print "\n<div style='width: 400px'> &nbsp; </div>";
+	$stepOne->setText(ob_get_contents());
+	ob_end_clean();
+		
 	
 	// :: Add Elements ::
-	$elementStep =& $wizard->createStep(_("Add Elements"));
+	$elementStep =& $wizard->addStep(new MultiValuedWizardStep(_("Add Elements")));
+	$_SESSION['create_schema_wizard_'.$harmoni->pathInfoParts[2]."element_step"] =& $elementStep;
 	
-	// get an iterator of all InfoStructures
-	$infoStructures =& $dr->getInfoStructures();
+	$property =& $elementStep->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
+	$property->setDefaultValue("");
+	$property->setErrorString(" <span style='color: f00'>* "._("The name must not start with a space.")."</span>");
 	
-	$text = "<h2>"._("Add a new Element")."</h2>";
-	$text .= "\n<p>"._("")."</p>";
-	$text .= "\n<p>"._("If none of the schemata listed below fit your needs, please click the button below to save your changes and create a new schema.")."</p>";
-	$text .= "\n<input type='submit' name='create_schema' value='"._("Save Changes and Create a new Schema")."'>";
+	$property =& $elementStep->createProperty("description", new RegexValidatorRule(".*"));
+	$property->setDefaultValue("");
 	
-	while ($infoStructures->hasNext()) {
-		$infoStructure =& $infoStructures->next();
-		$infoStructureId =& $infoStructure->getId();
+	$property =& $elementStep->createProperty("type", new RegexValidatorRule(".*"));
+	$property->setDefaultValue("DR/Harmoni/string");
+	
+	$property =& $elementStep->createProperty("mandatory", new RegexValidatorRule(".*"));
+	$property->setDefaultValue("FALSE");
+	
+	$property =& $elementStep->createProperty("repeatable", new RegexValidatorRule(".*"));
+	$property->setDefaultValue("FALSE");
+	
+	$property =& $elementStep->createProperty("populatedbydr", new RegexValidatorRule(".*"));
+	$property->setDefaultValue("FALSE");
+	
+	// We don't have any InfoParts yet, so we can't get them.
+	
+	ob_start();
+	print "<h2>"._("Add New Elements")."</h2>";
+	print "\n<p>"._("If none of the schemata listed below fit your needs, please click the button below to save your changes and create a new schema.")."</p>";
+	
+	print "\n<table border=\"0\">";
+		print "\n<tr><td>";
+			print "DisplayName: ";
+		print "\n</td><td>";
+			print "<input type='text' name='display_name' value=\"[[display_name]]\">[[display_name|Error]]";
+		print "\n</td></tr>";
+		print "\n<tr><td>";
+			print "Description: ";
+		print "\n</td><td>";
+			print "<textarea name=\"description\" rows=\"3\" cols=\"25\">[[description]]</textarea>[[description|Error]]";
+		print "\n</td></tr>";
+		print "\n<tr><td>";
+			print "Select a Type... ";
+		print "\n</td><td>";
+			print "\n<select name=\"type\">";
+			// We are going to assume that all InfoStructures have the same InfoPartTypes
+			// in this digitalRepository. This will allow us to list InfoPartTypes before
+			// the InfoStructure is actually created.
+			$infoStructures =& $dr->getInfoStructures();
+			if (!$infoStructures->hasNext())
+				throwError(new Error("No InfoStructures availible.", "Concerto"));
+			
+			// just get the fist one to use:
+			$infoStructure =& $infoStructures->next();
+			$types =& $infoStructure->getInfoPartTypes();
+			while ($types->hasNext()) {
+				$type =& $types->next();
+				$typeString = urlencode($type->getDomain())."/".urlencode($type->getAuthority())."/".urlencode($type->getKeyword());
+				print "\n<option value=\"".$typeString."\" [['type'=='".$typeString."'| selected|]]>";
+				print $type->getDomain()." :: ".$type->getAuthority()." :: ".$type->getKeyword();
+				print "</option>";
+			}
+			print "\n</select>[[type|Error]]";
+		print "\n</td></tr>";
+
+		print "\n<tr><td>";
+			print "isMandatory? ";
+		print "\n</td><td>";
+			print "<input type=\"radio\" name='mandatory' value='TRUE' [['mandatory'=='TRUE'| checked|]] />TRUE / ";
+			print "<input type=\"radio\" name='mandatory' value='FALSE' [['mandatory'=='FALSE'| checked|]] /> FALSE";
+		print "\n</td></tr>";
 		
-		// Create the properties.
-		$property =& $elementStep->createProperty("schema_".$infoStructureId->getIdString(), new RegexValidatorRule(".*"), FALSE);
-		$property->setDefaultValue(0);
+		print "\n<tr><td>";
+			print "isRepeatable? ";
+		print "\n</td><td>";
+			print "<input type=\"radio\" name='repeatable' value='TRUE' [['repeatable'=='TRUE'| checked|]] />TRUE / ";
+			print "<input type=\"radio\" name='repeatable' value='FALSE' [['repeatable'=='FALSE'| checked|]] /> FALSE";
+		print "\n</td></tr>";
 		
-		$text .= "\n<p>\n<input type='checkbox' name='schema_".$infoStructureId->getIdString()."' value='1' [[schema_".$infoStructureId->getIdString()."==1|checked='checked'|]]>";
-		$text .= "\n<strong>".$infoStructure->getDisplayName()."</strong>";
-		$text .= "\n<br><em>".$infoStructure->getDescription()."</em>\n</p>";
-	}
-	$elementStep->setText($text);
+		print "\n<tr><td>";
+			print "isPopulatedByDR? ";
+		print "\n</td><td>";
+			print "<input type=\"radio\" name='populatedbydr' value='TRUE' [['populatedbydr'=='TRUE'| checked|]] />TRUE / ";
+			print "<input type=\"radio\" name='populatedbydr' value='FALSE' [['populatedbydr'=='FALSE'| checked|]] /> FALSE";
+		print "\n</td></tr>";
+		
+		print "</table>";
+	
+	print "\n<br />[Buttons]";
+	print "\n<hr>";
+	print "Elements Added:";
+	print "\n<table>[List]<tr><td valign='top'>[ListButtons]<br />[ListMoveButtons]</td>";
+	print "<td style='padding-bottom: 20px'>";
+	print "<strong>DisplayName:</strong> [[display_name]]";
+	print "<br /><strong>Description:</strong> [[description]]";
+	print "<br /><strong>Type:</strong> [[type]]";
+	print "<br /><strong>isMandatory:</strong> [[mandatory]]";
+	print "<br /><strong>isRepeatable:</strong> [[repeatable]]";
+	print "<br /><strong>isPopulatedByDR:</strong> [[populatedbydr]]";
+	print "</td></tr>[/List]</table>";
+
+	$elementStep->setText(ob_get_contents());
+	ob_end_clean();
 }
+
+// If we've added a new element, add it to the list.
 
 
 // Prepare the return URL so that we can get back to where we were.
