@@ -200,46 +200,27 @@ function printRecord(& $record, & $assetId, & $drId) {
 	// Print out the fields parts for this structure
 	$setManager =& Services::getService("Sets");
 	$partSet =& $setManager->getSet($structureId);
-	$orderedFieldsToPrint = array();
-	$fieldsToPrint = array();
 	
-	// get the fields and break them up into ordered and unordered arrays.
-	$fields =& $record->getInfoFields();
-	while ($fields->hasNext()) {
-		$field =& $fields->next();
-		$part =& $field->getInfoPart();
-		$partId =& $part->getId();
-		
-		if ($partSet->isInSet($partId)) {
-			if (!is_array($orderedFieldsToPrint[$partId->getIdString()]))
-				$orderedFieldsToPrint[$partId->getIdString()] = array();
-			$orderedFieldsToPrint[$partId->getIdString()][] =& $field;
-		} else {
-			if (!is_array($fieldsToPrint[$partId->getIdString()]))
-				$fieldsToPrint[$partId->getIdString()] = array();
-			$fieldsToPrint[$partId->getIdString()][] =& $field;
-		}
+	$partsArray = array();
+	// Print out the ordered parts/fields
+	$partSet->reset();
+	while ($partSet->hasNext()) {
+		$partId =& $partSet->next();
+		$partsArray[] =& $infoStructure->getInfoPart($partId);
+	}
+	// Get the rest of the parts (the unordered ones);
+	$partIterator =& $infoStructure->getInfoParts();
+	while ($partIterator->hasNext()) {
+		$part =& $partIterator->next();
+		if (!$partSet->isInSet($part->getId()))
+			$partsArray[] =& $part;
 	}
 	
 	print "\n<table width='100%'>";
 	print "\n\t<tr>\n\t<td>";
 	
-	// Print out the ordered parts/fields
-	while ($partSet->hasNext()) {
-		$partId =& $partSet->next();
-		$fieldsArray =& $orderedFieldsToPrint[$partId->getIdString()];
-		foreach (array_keys($fieldsArray) as $key) {
-			printField($fieldsArray[$key]);
-		}
-	}
-	
-	// Print out the parts/fields
-	foreach (array_keys($fieldsToPrint) as $partIdString) {
-		$fieldsArray =& $fieldsToPrint[$partIdString];
-		foreach (array_keys($fieldsArray) as $key) {
-			printField($fieldsArray[$key]);
-		}
-	}
+	$moduleManager =& Services::getService("InOutModules");
+	print $moduleManager->generateDisplayForFields($drId, $assetId, $record, $partsArray);
 	
 	print "\n\t</td>\n\t<td style='border-left: 1px solid; padding-left: 10px;' valign='top'>";
 	
@@ -250,15 +231,4 @@ function printRecord(& $record, & $assetId, & $drId) {
 	
 	print "\n\t</td>\n\t</tr>";
 	print "\n</table>";
-}
-
-function printField(& $field) {
-	$part =& $field->getInfoPart();
-	print "\n<strong>".$part->getDisplayName().":</strong> \n";
-	$value =& $field->getValue();
-	if (is_object($value))
-		print $value->toString();
-	else
-		print $value;
-	print "\n<br />";
 }
