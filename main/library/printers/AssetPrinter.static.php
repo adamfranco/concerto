@@ -70,8 +70,34 @@ class AssetPrinter {
 			$links[] = _("edit");
 		}
 		
-		if (ereg("^asset\.$", $actionString) && $harmoni->pathInfoParts[3] == $assetId->getIdString()) {
-			$links[] = "<a href='".MYURL."/asset/add/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>";
+		if ($actionString != "asset.delete") {
+			ob_start();
+			print "<a href='Javascript:deleteAsset".$assetId->getIdString()."From".$repositoryId->getIdString()."();'";
+			print ">";
+			print _("delete")."</a>";
+			
+			print "\n<script language='JavaScript1.2'>";
+			print "\n	function deleteAsset".$assetId->getIdString()."From".$repositoryId->getIdString()."() {";
+			print "\n	var url;";
+			print "\n		url = '".MYURL."/asset/delete/".$repositoryId->getIdString()."/".$assetId->getIdString()."/";
+			if (ereg("^asset\..*$", $actionString))
+				print "collection/browse/".$repositoryId->getIdString()."/';";
+			else
+				print implode("/", $harmoni->pathInfoParts)."/';";
+			print "\n		if (confirm(\""._("Are you sure you want to delete this Asset?")."\")) {";
+			print "\n			window.location = url;";
+			print "\n		}";
+			print "\n	}";
+			print "\n</script>";
+			
+			$links[] = ob_get_contents();
+			ob_end_clean();
+		} else {
+			$links[] = _("delete");
+		}
+		
+		if (ereg("^asset\..*$", $actionString) && $harmoni->pathInfoParts[3] == $assetId->getIdString()) {
+			$links[] = "<a href='".MYURL."/asset/addchild/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>";
 			$links[count($links) - 1] .= _("add child asset")."</a>";
 		}
 		
