@@ -35,7 +35,7 @@ $actionRows->addComponent($introText);
 // Get the assets to display
 $assets =& $dr->getAssets();
 
-$resultPrinter =& new IteratorResultPrinter($assets, 2, 4, "printAssetShort");
+$resultPrinter =& new IteratorResultPrinter($assets, 2, 3, "printAssetShort");
 $resultLayout =& $resultPrinter->getLayout($harmoni);
 $actionRows->addComponent($resultLayout);
 
@@ -44,6 +44,8 @@ $actionRows->addComponent($resultLayout);
 return $mainScreen;
 
 function printAssetShort(& $asset) {
+	ob_start();
+	
 	$assetId =& $asset->getId();
 	print  "\n\t<strong>".$asset->getDisplayName()."</strong> - "._("ID#").": ".
 			$assetId->getIdString();
@@ -65,4 +67,9 @@ function printAssetShort(& $asset) {
 	$links[count($links) - 1] .= _("edit")."</a>";
 	
 	print  implode("\n\t | ", $links);
+	
+	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
+	$layout->addComponent(new Content(ob_get_contents()));
+	ob_end_clean();
+	return $layout;
 }

@@ -17,10 +17,10 @@ class ConcertoMenuGenerator {
 	 *		"module.action" .
 	 * @return object MenuLayout
 	 */
-	function & generateMainMenu($actionString) {
+	function & generateMainMenu($harmoni) {
 		$parts = explode(".", $actionString);
-		$module = $parts[0];
-		$action = $parts[1];
+		$module = $harmoni->pathInfoParts[0];
+		$action = $harmoni->pathInfoParts[1];
 		
 		$menu =& new VerticalMenuLayout(MENU_WIDGET, 1);
 
@@ -62,7 +62,7 @@ class ConcertoMenuGenerator {
 				$menu->addComponent(
 					new LinkMenuItem("<span style='font-size: small'> - - ".
 						_("Collection")."</span>", 
-						MYURL."/collection/browse/".$part[2]."/", 
+						MYURL."/collection/browse/".$harmoni->pathInfoParts[2]."/", 
 						($module == "collection" && $action == "browse")?TRUE:FALSE)
 				);
 			}

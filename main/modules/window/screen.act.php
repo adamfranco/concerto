@@ -70,7 +70,7 @@ $mainScreen =& new RowLayout(TEXT_BLOCK_WIDGET, 1);
 	$mainScreen->addComponent($centerPane, TOP, LEFT);
 	
 	// Main Menu
-	$mainMenu =& ConcertoMenuGenerator::generateMainMenu($harmoni->getCurrentAction());
+	$mainMenu =& ConcertoMenuGenerator::generateMainMenu($harmoni);
 	$centerPane->addComponent($mainMenu, TOP, LEFT);
 
 // :: Footer ::
