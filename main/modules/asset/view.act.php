@@ -88,7 +88,7 @@ while ($structSet->hasNext()) {
 		$printedRecordIds[] = $recordId->getIdString();
 
 		print "<hr>";
-		printRecord($record);
+		printRecord($drId, $assetId, $record);
 	}	
 }
 
@@ -125,56 +125,29 @@ return $mainScreen;
 // Function Definitions
 //***********************************
 
-function printRecord(& $record) {	
+function printRecord(& $drId, &$assetId, & $record) {	
 	$infoStructure =& $record->getInfoStructure();
 	$structureId =& $infoStructure->getId();
 	
 	// Print out the fields parts for this structure
 	$setManager =& Services::getService("Sets");
 	$partSet =& $setManager->getSet($structureId);
-	$orderedFieldsToPrint = array();
-	$fieldsToPrint = array();
 	
-	// get the fields and break them up into ordered and unordered arrays.
-	$fields =& $record->getInfoFields();
-	while ($fields->hasNext()) {
-		$field =& $fields->next();
-		$part =& $field->getInfoPart();
-		$partId =& $part->getId();
-		
-		if ($partSet->isInSet($partId)) {
-			if (!is_array($orderedFieldsToPrint[$partId->getIdString()]))
-				$orderedFieldsToPrint[$partId->getIdString()] = array();
-			$orderedFieldsToPrint[$partId->getIdString()][] =& $field;
-		} else {
-			if (!is_array($fieldsToPrint[$partId->getIdString()]))
-				$fieldsToPrint[$partId->getIdString()] = array();
-			$fieldsToPrint[$partId->getIdString()][] =& $field;
-		}
-	}
-	
+	$partsArray = array();
 	// Print out the ordered parts/fields
+	$partSet->reset();
 	while ($partSet->hasNext()) {
 		$partId =& $partSet->next();
-		$fieldsArray =& $orderedFieldsToPrint[$partId->getIdString()];
-		foreach (array_keys($fieldsArray) as $key) {
-			printField($fieldsArray[$key]);
-		}
+		$partsArray[] =& $infoStructure->getInfoPart($partId);
+	}
+	// Get the rest of the parts (the unordered ones);
+	$partIterator =& $infoStructure->getInfoParts();
+	while ($partIterator->hasNext()) {
+		$part =& $partIterator->next();
+		if (!$partSet->isInSet($part->getId()))
+			$partsArray[] =& $part;
 	}
 	
-	// Print out the parts/fields
-	foreach (array_keys($fieldsToPrint) as $partIdString) {
-		$fieldsArray =& $fieldsToPrint[$partIdString];
-		foreach (array_keys($fieldsArray) as $key) {
-			printField($fieldsArray[$key]);
-		}
-	}
-}
-
-function printField(& $field) {
-	$part =& $field->getInfoPart();
-	print "\n<strong>".$part->getDisplayName().":</strong> \n";
-	$value =& $field->getValue();
-	print $value->toString();
-	print "\n<br />";
+	$moduleManager =& Services::getService("InOutModules");
+	print $moduleManager->generateDisplayForFields($drId, $assetId, $record, $partsArray);
 }
