@@ -8,7 +8,6 @@ require_once(OKI2."/osid/OsidContext.php");
 // :: set up the $harmoni object :: 
 	$harmoni->config->set("defaultModule","home");
 	$harmoni->config->set("defaultAction","welcome");
-	$harmoni->config->set("charset","utf-8");
 	$harmoni->config->set("sessionName","PHPSESSID");
 	$harmoni->config->set("sessionUseCookies",true);
 	$harmoni->config->set("sessionCookiePath","/");
@@ -31,7 +30,7 @@ require_once(OKI2."/osid/OsidContext.php");
 										 ".act.php"));
 	
 
-// :: Set up the database connection ::
+// :: Set up the DatabaseManager ::
 	$configuration =& new ConfigurationProperties;
 	Services::startManagerAsService("DatabaseManager", $context, $configuration);
 	
@@ -140,7 +139,12 @@ require_once(OKI2."/osid/OsidContext.php");
 	$configuration->addProperty('database_index', $dbID);
 	$configuration->addProperty('database_name', $dbName);
 	$configuration->addProperty('default_theme', new SimpleLinesTheme);
+	$configuration->addProperty('character_set', $arg0 = 'utf-8');
+	$configuration->addProperty('document_type', $arg1 = 'text/html');
+	$configuration->addProperty('document_type_definition', $arg2 = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">');
+	unset($arg0, $arg1, $arg2);
 	Services::startManagerAsService("GUIManager", $context, $configuration);
+
 
 // :: Set up language directories ::
 	$configuration =& new ConfigurationProperties;
@@ -151,7 +155,7 @@ require_once(OKI2."/osid/OsidContext.php");
 	));
 	unset ($arg0, $arg1);
 	Services::startManagerAsService("LanguageManager", $context, $configuration);
-
+	
 
 // :: Set up the Authorization System ::
 	$configuration =& new ConfigurationProperties;
@@ -209,7 +213,7 @@ require_once(OKI2."/osid/OsidContext.php");
 	$configuration =& new ConfigurationProperties;
 	$configuration->addProperty('database_index', $dbID);
 	Services::startManagerAsService("DataManager", $context, $configuration);
-	
+
 
 // :: Set up the RepositoryManager ::
 	$repositoryHierarchyId = "1";
