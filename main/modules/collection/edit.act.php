@@ -63,9 +63,9 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	
 	print "\n<br><table border='1'>";
 	print "\n\t<tr>";
-	print "\n\t<th>Display Name</th>";
-	print "\n\t<th>Description</th>";
-	print "\n\t<th>Order</th>";
+	print "\n\t<th>"._("Display Name")."</th>";
+	print "\n\t<th>"._("Description")."</th>";
+	print "\n\t<th>"._("Order/Position")."</th>";
 	print "\n\t</tr>";
 	
 	// Get the number of info structures
@@ -99,6 +99,7 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 		print "\n\t<input type='checkbox' name='schema_".$infoStructureId->getIdString()."' value='1' [['schema_".$infoStructureId->getIdString()."' == TRUE|checked='checked'|]]>";
 		print "\n\t<strong>".$infoStructure->getDisplayName()."</strong>";
 		print "\n</td><td valign='top'>\n\t<em>".$infoStructure->getDescription()."</em>";
+		print " <a href='".MYURL."/schema/view/".$id->getIdString()."/".$infoStructureId->getIdString()."/".implode("/", $harmoni->pathInfoParts)."?__skip_to_step=2'>more...</a>";
 		print "\n</td><td valign='top'>";
 		
 		print "\n\t<select name='schema_".$infoStructureId->getIdString()."_position'>";
