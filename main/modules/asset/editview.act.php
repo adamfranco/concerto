@@ -55,6 +55,12 @@ $actionRows->addComponent($contentCols);
 	$assetId =& $asset->getId();
 	print  "\n\t<strong>"._("Description").":</strong> \n<em>".$asset->getDescription()."</em>";
 	print  "\n\t<br /><strong>"._("ID#").":</strong> ".$assetId->getIdString();
+	
+	$type =& $asset->getAssetType();
+	print  "\n\t<br /><strong>"._("Type").":</strong> ";
+	print "<a title=\"".$type->getDescription()."\">";
+	print $type->getDomain()."::".$type->getAuthority()."::".$type->getKeyword();
+	print "</a>";
 
 	$effectDate =& $asset->getEffectiveDate();
 	print  "\n\t<br /><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->toString()."</em>";
