@@ -17,6 +17,18 @@ $sharedManager =& Services::getService("Shared");
 $drId =& $sharedManager->getId($harmoni->pathInfoParts[2]);
 $dr =& $drManager->getDigitalRepository($drId);
 
+
+// If the DR supports searching of root assets, just get those
+$hasRootSearch = FALSE;
+$rootSearchType =& new HarmoniType("DR","Harmoni","RootAssets", "");
+$searchTypes =& $dr->getSearchTypes();
+while ($searchTypes->hasNext()) {
+	if ($rootSearchType->isEqual( $searchTypes->next() )) {
+		$hasRootSearch = TRUE;
+		break;
+	}
+}
+
 // Intro
 $introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
 $introHeader->addComponent(new Content(_("Browse Assets in the")." <em>".$dr->getDisplayName()."</em> "._("Collection")));
@@ -41,10 +53,21 @@ $introText->addComponent(new Content(ob_get_contents()));
 ob_end_clean();
 $actionRows->addComponent($introText);
 
+//***********************************
 // Get the assets to display
-$assets =& $dr->getAssets();
+//***********************************
+if ($hasRootSearch) {
+	$criteria = NULL;
+	$assets =& $dr->getAssetsBySearch($criteria, $rootSearchType);
+} 
+// Otherwise, just get all the assets
+else {
+	$assets =& $asset->getAssets();
+}
 
+//***********************************
 // print the results
+//***********************************
 $resultPrinter =& new IteratorResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
 $resultLayout =& $resultPrinter->getLayout($harmoni);
 $actionRows->addComponent($resultLayout);

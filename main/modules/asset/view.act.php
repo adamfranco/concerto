@@ -14,7 +14,7 @@ $centerPane->addComponent($actionRows, TOP, CENTER);
 // Get the DR
 $drManager =& Services::getService("DR");
 $sharedManager =& Services::getService("Shared");
-$assetId =& $sharedManager->getId($harmoni->pathInfoParts[2]);
+$assetId =& $sharedManager->getId($harmoni->pathInfoParts[3]);
 $asset =& $drManager->getAsset($assetId);
 $dr =& $asset->getDigitalRepository();
 $drId =& $dr->getId();
@@ -92,20 +92,6 @@ while ($structSet->hasNext()) {
 	}	
 }
 
-// We only want to print out the infoStructures in the set.
-// 
-// // Next, lets get all the InfoRecords and print them out if we have not 
-// // aready printed them out.
-// $records =& $asset->getInfoRecords();
-// while ($records->hasNext()) {
-// 	$record =& $records->next();
-// 	$recordId =& $record->getId();
-// 	if (!in_array($recordId->getIdString(), $printedRecordIds)) {
-// 		print "<hr>";
-// 		printRecord($record);
-// 	}
-// }
-
 $layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
 $layout->addComponent(new Content(ob_get_contents()));
 ob_end_clean();
@@ -119,16 +105,25 @@ $actionRows->addComponent($layout);
 // 	it is text, image, etc, or do otherwise with it if it is some other form
 // 	of data.
 //***********************************
-ob_start();
 $content =& $asset->getContent();
-print ($content->toString());
-$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
-$layout->addComponent(new Content(ob_get_contents()));
-ob_end_clean();
-$actionRows->addComponent($layout);
+if ($string = $content->toString()) {
+	ob_start();
+	print ($string);
+	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
+	$layout->addComponent(new Content(ob_get_contents()));
+	ob_end_clean();
+	$actionRows->addComponent($layout);
+}
 
+//***********************************
 // return the main layout.
 return $mainScreen;
+//***********************************
+
+
+//***********************************
+// Function Definitions
+//***********************************
 
 function printRecord(& $record) {	
 	$infoStructure =& $record->getInfoStructure();

@@ -30,12 +30,17 @@ class AssetPrinter {
 	function printAssetFunctionLinks (& $harmoni, & $asset, $repositoryId = NULL) {
 		// @todo User AuthZ to decide if we should print links.
 		$assetId =& $asset->getId();
+		if ($repositoryId === NULL) {
+			$repository =& $asset->getDigitalRepository();
+			$repositoryId =& $repository->getId();
+		}
+		
 		$links = array();
 		
 		$actionString = $harmoni->getCurrentAction();
 		
 		if ($actionString != "asset.view") {
-			$links[] = "<a href='".MYURL."/asset/view/".$assetId->getIdString()."/'>";
+			$links[] = "<a href='".MYURL."/asset/view/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>";
 			$links[count($links) - 1] .= _("view")."</a>";
 		} else {
 			$links[] = _("view");
@@ -43,8 +48,8 @@ class AssetPrinter {
 		
 		$children =& $asset->getAssets();
 		if ($children->hasNext()) {
-			if ($actionString != "asset.browse" || $assetId->getIdString() != $harmoni->pathInfoParts[2]) {
-				$links[] = "<a href='".MYURL."/asset/browse/".$assetId->getIdString()."/'>";
+			if ($actionString != "asset.browse" || $assetId->getIdString() != $harmoni->pathInfoParts[3]) {
+				$links[] = "<a href='".MYURL."/asset/browse/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>";
 				$links[count($links) - 1] .= _("browse")."</a>";
 			} else {
 				$links[] = _("browse");
@@ -59,17 +64,13 @@ class AssetPrinter {
 		}
 		
 		if ($actionString != "asset.edit") {
-			$links[] = "<a href='".MYURL."/asset/edit/".$assetId->getIdString()."/'>";
+			$links[] = "<a href='".MYURL."/asset/edit/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>";
 			$links[count($links) - 1] .= _("edit")."</a>";
 		} else {
 			$links[] = _("edit");
 		}
 		
-		if (ereg("^asset\.$", $actionString) && $harmoni->pathInfoParts[2] == $assetId->getIdString()) {
-			if ($repositoryId === NULL) {
-				$repository =& $asset->getDigitalRepository();
-				$repositoryId =& $repository->getId();
-			}
+		if (ereg("^asset\.$", $actionString) && $harmoni->pathInfoParts[3] == $assetId->getIdString()) {
 			$links[] = "<a href='".MYURL."/asset/add/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>";
 			$links[count($links) - 1] .= _("add child asset")."</a>";
 		}

@@ -14,17 +14,16 @@ $centerPane->addComponent($actionRows, TOP, CENTER);
 // Get the DR
 $drManager =& Services::getService("DR");
 $sharedManager =& Services::getService("Shared");
-$assetId =& $sharedManager->getId($harmoni->pathInfoParts[2]);
+$assetId =& $sharedManager->getId($harmoni->pathInfoParts[3]);
 $asset =& $drManager->getAsset($assetId);
 
 // Intro
 $introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Browse Assets in the")." <em>".$asset->getDisplayName()."</em> "._("Asset")));
+$introHeader->addComponent(new Content(_("Asset").": <em>".$asset->getDisplayName()."</em>"));
 $actionRows->addComponent($introHeader);
 
 // function links
 ob_start();
-print "<em>".$asset->getDisplayName()."</em> "._("Asset").": ";
 AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
 $layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
 $layout->addComponent(new Content(ob_get_contents()));
@@ -41,10 +40,15 @@ $introText->addComponent(new Content(ob_get_contents()));
 ob_end_clean();
 $actionRows->addComponent($introText);
 
+
+//***********************************
 // Get the assets to display
+//***********************************
 $assets =& $asset->getAssets();
 
+//***********************************
 // print the results
+//***********************************
 $resultPrinter =& new IteratorResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
 $resultLayout =& $resultPrinter->getLayout($harmoni);
 $actionRows->addComponent($resultLayout);
