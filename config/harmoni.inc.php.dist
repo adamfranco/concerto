@@ -8,7 +8,7 @@
 	$harmoni->config->set("defaultAction","welcome");
 	$harmoni->config->set("charset","utf-8");
 	$harmoni->config->set("outputHTML",true);
-	$harmoni->config->set("sessionName","AUTHN");
+	$harmoni->config->set("sessionName","PHPSESSID");
 	$harmoni->config->set("sessionUseCookies",true);
 	$harmoni->config->set("sessionCookiePath","/");
 	$harmoni->config->set("sessionCookieDomain","middlebury.edu");
@@ -103,29 +103,11 @@
 	HarmoniDataManager::setup($dbID);
 
 // :: Set up the Hierarchy Manager ::
-	$configuration = array(
-		"type" => SQL_DATABASE,
-		"database_index" => $dbID,
-		"hierarchy_table_name" => "hierarchy",
-		"hierarchy_id_column" => "id",
-		"hierarchy_display_name_column" => "display_name",
-		"hierarchy_description_column" => "description",
-		"node_table_name" => "hierarchy_node",
-		"node_hierarchy_key_column" => "fk_hierarchy",
-		"node_id_column" => "id",
-		"node_parent_key_column" => "fk_parent",
-		"node_display_name_column" => "display_name",
-		"node_description_column" => "description"
-	);
-	Services::startService("Hierarchy", $configuration);
-	$hierarchyManager =& Services::getService("Hierarchy");
-	$nodeTypes = array();
-// 	$hierarchy =& $hierarchyManager->createHierarchy("Concerto", "The Hierarchy for the Concerto DR", $nodeTypes, FALSE, FALSE);
-// 	printpre($hierarchy);
+	Services::startService("Hierarchy", $dbID, "adam_concerto");
 
 // :: Set up the DigitalRepositoryManager ::
 	$configuration = array(
-		"hierarchyId" => "3",
+		"hierarchyId" => "673",
 		"versionControlAll" => TRUE
 	);
 	
