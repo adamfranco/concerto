@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
+
+<changelog name="Concerto ChangeLog">
+	<version number="0.1.0" date="The Nebulous Future">
+		<new author='adam'>
+			Created an installer script for devs.
+		</new>
+		<new author='adam'>
+			Everything.
+		</new>
+	</version>
+	
+	<authors>
+		<name short="gabe">Gabe Schine</name>
+		<name short="adam">Adam Franco</name>
+		<name short="dobo">Dobo Radichkov</name>
+		<name short="nik">Nikitas Stamatopoulos</name>
+		<name short="niraj">Niraj Dhungel</name>
+		<name short="alex">Alex Chapin</name>
+	</authors>
+	<groupid>82873</groupid>
+	<reftypes>
+		<reftype name="bug">567473</reftype>
+		<reftype name="fr">567476</reftype>
+		<reftype name="task"></reftype>
+	</reftypes>
+</changelog>

@@ -1,0 +1,12 @@
+
+
+Name: Concerto ChangeLog
+
+
+v. 0.1.0 (The Nebulous Future)
+----------------------------------------------------
+		
+	* New feature: Created an installer script for devs. (Adam Franco)
+		
+	* New feature: Everything. (Adam Franco)
+	
