@@ -26,7 +26,7 @@ class ConcertoMenuGenerator {
 
 	// :: Home ::
 		$menu->addComponent(
-			new LinkMenuItem(_("Home"), 
+			new LinkMenuItem("<span style='font-size: large'>"._("Home")."</span>", 
 				MYURL."/home/welcome/", 
 				($module == "home" && $action == "welcome")?TRUE:FALSE)
 		);
@@ -35,34 +35,44 @@ class ConcertoMenuGenerator {
 		// Main Collections link.
 		$menu->addComponent(
 			new LinkMenuItem(
-				_("Collections"), 
+				"<span style='font-size: large'>"._("Collections")."</span>", 
 				MYURL."/collections/main/", 
 				($module == "collections" && $action == "main")?TRUE:FALSE)
 		);
 		
 		// Collection browse links.
 		// Just show if we are not in a particular collection.
-		if ($module == "collections") {
+		if (ereg("collection(s)?|asset", $module)) {
 			// Name browse
 			$menu->addComponent(
-				new LinkMenuItem(" - ".
-					_("By Name"), 
+				new LinkMenuItem("<span style='font-size: medium'> - ".
+					_("By Name")."</span>", 
 					MYURL."/collections/namebrowse/", 
 					($module == "collections" && $action == "namebrowse")?TRUE:FALSE)
 			);
 			// Name browse
 			$menu->addComponent(
-				new LinkMenuItem(" - ".
-					_("By Type"), 
+				new LinkMenuItem("<span style='font-size: medium'> - ".
+					_("By Type")."</span>", 
 					MYURL."/collections/typebrowse/", 
 					($module == "collections" && $action == "typebrowse")?TRUE:FALSE)
-			);		}
+			);
+			if (ereg("^(collection|asset)$", $module)) {
+				// Name browse
+				$menu->addComponent(
+					new LinkMenuItem("<span style='font-size: small'> - - ".
+						_("Collection")."</span>", 
+						MYURL."/collection/browse/".$part[2]."/", 
+						($module == "collection" && $action == "browse")?TRUE:FALSE)
+				);
+			}
+		}
 		
 	// :: Exhibitions ::
 		// Main Exhibitions link.
 		$menu->addComponent(
 			new LinkMenuItem(
-			_("Exhibitions"), 
+			"<span style='font-size: large'>"._("Exhibitions")."</span>", 
 			MYURL."/exhibitions/main/", 
 			(ereg("^exhibition.*",$module))?TRUE:FALSE)
 		);
