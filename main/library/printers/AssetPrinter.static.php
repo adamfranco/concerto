@@ -96,7 +96,7 @@ class AssetPrinter {
 				print ">";
 				print _("delete")."</a>";
 				
-				print "\n<script language='JavaScript1.2'>";
+				print "\n<script type='text/javascript'>";
 				print "\n	function deleteAsset".$assetId->getIdString()."From".$repositoryId->getIdString()."() {";
 				print "\n	var url;";
 				print "\n		url = '".MYURL."/asset/delete/".$repositoryId->getIdString()."/".$assetId->getIdString()."/";
