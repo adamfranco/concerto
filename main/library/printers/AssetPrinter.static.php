@@ -58,6 +58,13 @@ class AssetPrinter {
 // 			}
 		}
 		
+		if ($actionString != "asset.edit") {
+			$links[] = "<a href='".MYURL."/asset/edit/".$assetId->getIdString()."/'>";
+			$links[count($links) - 1] .= _("edit")."</a>";
+		} else {
+			$links[] = _("edit");
+		}
+		
 		if (ereg("^asset\.$", $actionString) && $harmoni->pathInfoParts[2] == $assetId->getIdString()) {
 			if ($repositoryId === NULL) {
 				$repository =& $asset->getDigitalRepository();
