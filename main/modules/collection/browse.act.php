@@ -86,7 +86,7 @@ else {
 //***********************************
 $resultPrinter =& new IteratorResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
 $resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
-$actionRows->add($resultLayout, "100%", null, CENTER, CENTER);
+$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 
 
 // return the main layout.
@@ -106,7 +106,7 @@ function printAssetShort(& $asset, &$harmoni) {
 	AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
 	$xLayout =& new XLayout();
 	$layout =& new Container($xLayout, BLOCK, 4);
-	$layout2 =& new Block(ob_get_contents(), 2);
+	$layout2 =& new Block(ob_get_contents(), 3);
 	$layout->add($layout2, null, null, CENTER, CENTER);
 	//$layout->addComponent(new Content(ob_get_contents()));
 	ob_end_clean();

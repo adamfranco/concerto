@@ -7,7 +7,7 @@ $mainScreen =& $harmoni->getAttachedData('mainScreen');
 $centerPane =& $harmoni->getAttachedData('centerPane');
  
 
-/ Our
+// Our
 $yLayout =& new YLayout();
 $actionRows =& new Container($yLayout,OTHER,1);
 $centerPane->add($actionRows, null, null, CENTER, TOP);
@@ -18,8 +18,8 @@ $typeParts = explode(" :: ", $typeString);
 $type =& new HarmoniType($typeParts[0],$typeParts[1],$typeParts[2]);
 
 
-/ Intro
-$introHeader =& new Heading(_("Browse Collections with Type").": \n<br />".$typeString), 2);
+// Intro
+$introHeader =& new Heading(_("Browse Collections with Type").": \n<br />".$typeString, 2);
 $actionRows->add($introHeader, "100%" ,null, LEFT, CENTER);
 
 
@@ -41,7 +41,7 @@ ksort($repositoryArray);
 // print the Results
 $resultPrinter =& new ArrayResultPrinter($repositoryArray, 2, 20, "printrepositoryShort", $harmoni);
 $resultLayout =& $resultPrinter->getLayout($harmoni);
-$actionRows->addComponent($resultLayout);
+$actionRows->add($resultLayout, null, null, CENTER, CENTER);
 
 
 

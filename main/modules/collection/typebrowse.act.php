@@ -26,9 +26,9 @@ $actionRows->add($introHeader, "100%" ,null, LEFT, CENTER);
 ob_start();
 print _("Collection").": ";
 RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
-$layout =& new Block(ob_get_contents(), 2);
+$layout =& new Block(ob_get_contents(), 3);
 ob_end_clean();
-$actionRows->add($layout, null, null, CENTER, CENTER);
+$actionRows->add($layout, "100%", null, LEFT, CENTER);
 
 $repositoryManager =& Services::getService("Repository");
 

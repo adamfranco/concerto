@@ -41,14 +41,14 @@ $actionRows->add($introHeader, "100%", null, LEFT, CENTER);
 // function links
 ob_start();
 AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
-$layout =& new Block(ob_get_contents(), 2);
+$layout =& new Block(ob_get_contents(), 3);
 ob_end_clean();
 $actionRows->add($layout, "100%", null, LEFT, CENTER);
 
 // Columns for Description and thumbnail.
 $xLayout =& new XLayout();
 $contentCols =& new Container($xLayout, OTHER, 1);
-$actionRows->add($contentCols, null, null, CENTER, CENTER);
+$actionRows->add($contentCols, "100%", null, LEFT, CENTER);
 
 	// Description and dates
 	ob_start();
@@ -62,9 +62,9 @@ $actionRows->add($contentCols, null, null, CENTER, CENTER);
 	$expirationDate =& $asset->getExpirationDate();
 	print  "\n\t<br /><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->toString()."</em>";
 
-	$layout =& new Block(ob_get_contents(), 2);
+	$layout =& new Block(ob_get_contents(), 3);
 	ob_end_clean();
-	$contentCols->add($layout, null, null, CENTER, CENTER);
+	$contentCols->add($layout, "100%", null, LEFT, CENTER);
 	
 	// Edit Links
 	ob_start();
@@ -76,9 +76,9 @@ $actionRows->add($contentCols, null, null, CENTER, CENTER);
 	
 	print "\n\t</td>\n\t</tr>";
 	print "\n</table>";
-	$layout =& new Block(ob_get_contents(), 2);
+	$layout =& new Block(ob_get_contents(), 3);
 	ob_end_clean();
-	$contentCols->add($layout, null, null, CENTER, CENTER);
+	$contentCols->add($layout, "100%", null, LEFT, CENTER);
 	
 	// Thumbnail
 	ob_start();
@@ -118,9 +118,9 @@ while ($structSet->hasNext()) {
 	}	
 }
 
-$layout =& new Block(ob_get_contents(), 2);
+$layout =& new Block(ob_get_contents(), 3);
 ob_end_clean();
-$actionRows->addt($layout, null, null, CENTER, CENTER);
+$actionRows->add($layout, "100%", null, LEFT, CENTER);
 
 
 //***********************************
@@ -157,9 +157,9 @@ print " "._("Schema").".";
 print "\n</div>";
 print"\n</form>";
 
-$layout =& new Block(ob_get_contents(), 2);
+$layout =& new Block(ob_get_contents(), 3);
 ob_end_clean();
-$actionRows->add($layout, null, null, CENTER, CENTER);
+$actionRows->add($layout, "100%", null, LEFT, CENTER);
 
 
 //***********************************

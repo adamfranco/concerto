@@ -50,7 +50,7 @@ print  "<p>";
 print  _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
 print  "</p>";
 
-$introText =& new Block(ob_get_contents(), 2);
+$introText =& new Block(ob_get_contents(), 3);
 ob_end_clean();
 $actionRows->add($introText, null, null, CENTER, CENTER);
 
@@ -71,9 +71,9 @@ while ($searchTypes->hasNext()) {
 	print "\n".$searchModules->createSearchForm($searchType, MYURL."/collection/searchresults/".$repositoryId->getIdString()."/".urlencode($typeString)."/");
 }
 
-$searchFields =& new Block(ob_get_contents(), 2);
+$searchFields =& new Block(ob_get_contents(), 3);
 ob_end_clean();
-$actionRows->add($searchFields, null, null, CENTER, CENTER);
+$actionRows->add($searchFields, "100%", null, LEFT, CENTER);
 
 // return the main layout.
 return $mainScreen;
