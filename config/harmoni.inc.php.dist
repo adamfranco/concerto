@@ -28,12 +28,13 @@
 
 // :: Set up the database connection ::
 	$dbHandler=&Services::requireService("DBHandler");
-	$dbID = $dbHandler->addDatabase( new MySQLDatabase("localhost","adam_concerto","test","test") );
+	$dbName = "adam_concerto";
+	$dbID = $dbHandler->addDatabase( new MySQLDatabase("localhost", $dbName,"test","test") );
 	$dbHandler->pConnect($dbID);
 	unset($dbHandler); // done with that for now
 
 // :: Set up the SharedManager as this is required for the ID service ::
-	Services::startService("Shared", $dbID, "adam_concerto");
+	Services::startService("Shared", $dbID, $dbName);
 
 
 // :: Set up the Authentication and Login Handlers ::
@@ -51,7 +52,7 @@
 	
 	//printpre($GLOBALS);
 	
-	Services::startService("AuthN", $dbID,"adam_concerto");
+	Services::startService("AuthN", $dbID, $dbName);
 	
 	#########################
 	# HANDLE AUTHENTICATION #
@@ -61,6 +62,7 @@
 	#########################
 	
 	Services::startService("Authentication");
+	Services::startService("AgentInformation");
 	Services::startService("DBHandler");
 	
 	// :: get all the services we need ::
@@ -74,6 +76,7 @@
 	$options->set("passwordField", "password");
 	$options->set("passwordFieldEncrypted", TRUE);
 	$options->set("passwordFieldEncryptionType", "databaseMD5");
+	$options->set("agentInformationFields", array("username" => "username", "display_name" => "display_name"));
 	
 	// :: create the DBAuthenticationMethod with the above options ::
 	$dbAuthMethod =& new DBAuthenticationMethod($options);
@@ -100,15 +103,120 @@
 
 
 // :: Set up the DataManager ::
-	HarmoniDataManager::setup($dbID);
+	DataManager::setup($dbID);
 
 // :: Set up the Hierarchy Manager ::
-	Services::startService("Hierarchy", $dbID, "adam_concerto");
+	Services::startService("Hierarchy", $dbID, $dbName);
 
 // :: Set up the DigitalRepositoryManager ::
+	$repositoryHierarchyId = "673";
+	$defaultParentId = "301";
 	$configuration = array(
-		"hierarchyId" => "673",
-		"versionControlAll" => TRUE
+		"hierarchyId" => $repositoryHierarchyId,
+		"versionControlAll" => TRUE,
+		"dbId" => $dbID,
+		"defaultParentId" => $defaultParentId,
 	);
 	
 	Services::startService("DR", $configuration);
+
+// :: Set up the Authorization System ::
+	Services::startService("AuthZ", $dbID, $dbName);
+	
+// :: Set up the Sets Manager ::
+	Services::startService("Sets", $dbID);
+
+// ::Specify some Ids for concerto ::
+	if (!is_array($_SESSION['concerto_config'])) {
+		$_SESSION['concerto_config'] = array();
+		$sharedManager =& Services::getService("Shared");
+		$_SESSION['concerto_config']['media_file_structure_id'] = $sharedManager->getId("1097");
+		$_SESSION['concerto_config']['thumbnail_part_id'] = $sharedManager->getId("1104");
+	}
+	
+// :: Set up the MIME service for sniffing mime types ::
+	Services::startService("MIME");
+
+	
+// :: Set up the ImageProcessor service for generating thumbnails ::
+	Services::startService("ImageProcessor",
+							"image/jpeg",		// thumbnail format
+					
+					//  ------ GD options ------		
+							FALSE,				// use GD libraries
+							array(),			// GD Formats
+				
+					//  ------ ImageMagick options ------
+							TRUE,				// Use ImageMagick
+							"/usr/X11R6/bin",	// ImageMagick path
+							"/tmp"				// ImageMagick temp dir
+	);
+
+
+// :: Set up definitions for the Authorization Functions Used in Concerto ::
+// $authZ =& Services::getService("AuthZ");
+// $shared =& Services::getService("Shared");
+// $viewFunc =& $authZ->getFunction($shared->getId('178'));
+// $funcType =& $viewFunc->getFunctionType();
+// $newId =& $shared->createId();
+// print $newId->getIdString();
+// $hId =& $shared->getId('673');
+// $authZ->createFunction($newId, "Access", "Access this and its children.", $funcType, $hId);
+
+/*********************************************************
+ * View/Use AZs
+ *********************************************************/
+// Can this qualifier and its children be accessed?
+define("AZ_ACCESS", '331');
+
+// Can a qualifier be viewed?
+define("AZ_VIEW", '178');
+
+// Can a qualifier be commented on?
+define("AZ_COMMENT", '179');
+
+/*********************************************************
+ * Editing AZs
+ *********************************************************/
+// Can a qualifier be edited?
+define("AZ_EDIT", '175');
+
+// Can a qualifier be deleted?
+define("AZ_DELETE", '177');
+
+// Can a a child be added to this qualifier?
+define("AZ_ADD_CHILDREN", '176');
+
+/*********************************************************
+ * Administration AZs
+ *********************************************************/
+ // Can the AZs of a qualifier be viewed?
+define("AZ_VIEW_AZS", '292');
+
+ // Can the AZs of a qualifier be modified?
+define("AZ_MODIFY_AZS", '293');
+
+ // Can agents be created here?
+define("AZ_CREATE_AGENTS", '294');
+
+ // Can agent properties be modified here?
+define("AZ_MODIFY_AGENTS", '295');
+
+ // Can agents be deleted here?
+define("AZ_DELETE_AGENTS", '296');
+
+ // Can groups be created here?
+define("AZ_CREATE_GROUPS", '297');
+
+ // Can groups properties be modified here?
+define("AZ_MODIFY_GROUPS", '298');
+
+ // Can groups be deleted here?
+define("AZ_DELETE_GROUPS", '299');
+
+/*********************************************************
+ * Hierarchy Ids
+ *********************************************************/
+ // Digital Repository Id
+ define("REPOSITORY_NODE_ID", $defaultParentId);
+ 
