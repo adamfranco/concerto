@@ -35,6 +35,7 @@
 
 // :: Set up the SharedManager as this is required for the ID service ::
 	Services::startService("Id", $dbID, $dbName);
+	Services::startService("Agent", $dbID, $dbName);
 
 
 // :: Set up the Authentication and Login Handlers ::
