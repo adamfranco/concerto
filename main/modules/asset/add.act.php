@@ -117,6 +117,20 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	ob_end_clean();
 	
 	
+	// :: Content ::
+	$step =& $wizard->createStep(_("Content")." ("._("optional").")");
+	
+	$property =& $step->createProperty("content", new RegexValidatorRule(".*"));
+	
+	// Create the step text
+	ob_start();
+	print "\n<h2>"._("Content")."</h2>";
+	print "\n"._("This is an optional place to put content for this <em>Asset</em>. <br />If you would like more structure, you can create new schemas to hold the <em>Asset's</em> data.");
+	print "\n<br><textarea name='content' cols='50' rows='20'>[[content]]</textarea>[[content|Error]]";
+	print "\n<div style='width: 400px'> &nbsp; </div>";
+	$step->setText(ob_get_contents());
+	ob_end_clean();
+	
 	// :: Effective/Expiration Dates ::
 	$step =& $wizard->createStep(_("Effective Dates")." ("._("optional").")");
 	
@@ -200,6 +214,9 @@ if ($wizard->isSaveRequested()) {
  								$assetType);
  	$assetId =& $asset->getId();
  	
+ 	$content =& new Blob($properties['content']->getValue());
+	$asset->updateContent($content);
+ 	
  	// Update the effective/expiration dates
  	if ($properties['effective_date']->getValue())
 	 	$asset->updateEffectiveDate(new Time($properties['effective_date']->getValue()));
@@ -207,7 +224,9 @@ if ($wizard->isSaveRequested()) {
 	 	$asset->updateExpirationDate(new Time($properties['expiration_date']->getValue()));
 	
 	// Add our parent if we have specified one.
-	if ($properties['parent']->getValue()) {
+	if ($properties['parent']->getValue() 
+		&& $properties['parent']->getValue() != 'NONE') 
+	{
 		$parentId =& $shared->getId($properties['parent']->getValue());
 		$parentAsset =& $dr->getAsset($parentId);
 		$parentAsset->addAsset($assetId);
