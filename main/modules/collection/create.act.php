@@ -96,8 +96,8 @@ if ($_REQUEST['save'] || $_REQUEST['save_link']) {
 	// save the data.
 	if ($wizard->updateLastStep()) {
 		$properties =& $wizard->getProperties();
-		print "Now Saving: ";
-		printpre($properties);
+// 		print "Now Saving: ";
+// 		printpre($properties);
 		
 		// Create the dr and get its id.
 		$drManager =& Services::getService("DR");

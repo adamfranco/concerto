@@ -101,7 +101,7 @@ msgstr "Navegé los Colecciónes por Nombre"
 
 #: /www/afranco/concerto/main/modules/collections/namebrowse.act.php:21
 msgid "Below are listed the availible <em>Collections</em>, organized by name."
-msgstr ""
+msgstr "Debajo son los <em>Colecciónes</em> disponibles, organizado por nombre."
 
 #: /www/afranco/concerto/main/modules/collections/namebrowse.act.php:53
 #: /www/afranco/concerto/main/modules/collections/typebrowse.act.php:71
@@ -133,7 +133,7 @@ msgid ""
 "Below are listed the availible <em>Collections</em>, organized by type, then "
 "name."
 msgstr "Debajo son los <em>Colecciónes</em> disponibles, organizado por tipo, "
-"pues nombre"
+"pues nombre."
 
 #: /www/afranco/concerto/main/modules/collections/typebrowse.act.php:95
 msgid "No <em>Collections</em> are availible for this type."
