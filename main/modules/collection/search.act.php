@@ -14,15 +14,15 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
  
 // Get the Repository
 $repositoryManager =& Services::getService("Repository");
-$sharedManager =& Services::getService("Shared");
-$repositoryId =& $sharedManager->getId($harmoni->pathInfoParts[2]);
+$idManager =& Services::getService("Id");
+$repositoryId =& $idManager->getId($harmoni->pathInfoParts[2]);
 $repository =& $repositoryManager->getRepository($repositoryId);
 
 
 // Check that the user can access this collection
 $authZ =& Services::getService("AuthZ");
-$shared =& Services::getService("Shared");
-if (!$authZ->isUserAuthorized($shared->getId(AZ_ACCESS), $repositoryId)) {
+$idManager =& Services::getService("Id");
+if (!$authZ->isUserAuthorized($idManager->getId(AZ_ACCESS), $repositoryId)) {
 	$errorLayout =& new SingleContentLayout;
 	$errorLayout->addComponent(new Content(_("You are not authorized to access this <em>Collection</em>."), MIDDLE, CENTER));
 	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);

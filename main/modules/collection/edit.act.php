@@ -12,9 +12,9 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 
 // Check that the user can access this collection
 $authZ =& Services::getService("AuthZ");
-$shared =& Services::getService("Shared");
-$id =& $shared->getId($harmoni->pathInfoParts[2]);
-if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
+$idManager =& Services::getService("Id");
+$id =& $idManager->getId($harmoni->pathInfoParts[2]);
+if (!$authZ->isUserAuthorized($idManager->getId(AZ_EDIT), $id)) {
 	$errorLayout =& new SingleContentLayout;
 	$errorLayout->addComponent(new Content(_("You are not authorized to edit this <em>Collection</em>."), MIDDLE, CENTER));
 	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
@@ -28,9 +28,9 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
  } else {
  	
  	// Make sure we have a valid Repository
-	$shared =& Services::getService("Shared");
+	$idManager =& Services::getService("Id");
 	$repositoryManager =& Services::getService("Repository");
-	$id =& $shared->getId($harmoni->pathInfoParts[2]);
+	$id =& $idManager->getId($harmoni->pathInfoParts[2]);
 	$repository =& $repositoryManager->getRepository($id);
 
 	// Instantiate the wizard, then add our steps.
@@ -143,8 +143,8 @@ if ($wizard->isSaveRequested() || $_REQUEST['create_schema']) {
 // 		printpre($properties);
 		
 		// Save the Repository
-		$shared =& Services::getService("Shared");
-		$id =& $shared->getId($harmoni->pathInfoParts[2]);
+		$idManager =& Services::getService("Id");
+		$id =& $idManager->getId($harmoni->pathInfoParts[2]);
 		
 		$repositoryManager =& Services::getService("Repository"); 
 		$repository =& $repositoryManager->getRepository($id);

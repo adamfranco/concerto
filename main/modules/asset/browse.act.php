@@ -12,8 +12,8 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 
 // Check that the user can create an asset here.
 $authZ =& Services::getService("AuthZ");
-$shared =& Services::getService("Shared");
-if (!$authZ->isUserAuthorized($shared->getId(AZ_ACCESS), $shared->getId($harmoni->pathInfoParts[3]))) {
+$idManager =& Services::getService("Id");
+if (!$authZ->isUserAuthorized($idManager->getId(AZ_ACCESS), $idManager->getId($harmoni->pathInfoParts[3]))) {
 	$errorLayout =& new SingleContentLayout;
 	$errorLayout->addComponent(new Content(_("You are not authorized to access this <em>Asset</em> here."), MIDDLE, CENTER));
 	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
@@ -26,8 +26,8 @@ $centerPane->addComponent($actionRows, TOP, CENTER);
 
 // Get the Repository
 $repositoryManager =& Services::getService("Repository");
-$sharedManager =& Services::getService("Shared");
-$assetId =& $sharedManager->getId($harmoni->pathInfoParts[3]);
+$idManager =& Services::getService("Id");
+$assetId =& $idManager->getId($harmoni->pathInfoParts[3]);
 $asset =& $repositoryManager->getAsset($assetId);
 
 // Intro

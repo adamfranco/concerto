@@ -14,14 +14,14 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 
 // Get the Repository
 $repositoryManager =& Services::getService("Repository");
-$sharedManager =& Services::getService("Shared");
-$repositoryId =& $sharedManager->getId($harmoni->pathInfoParts[2]);
+$idManager =& Services::getService("Id");
+$repositoryId =& $idManager->getId($harmoni->pathInfoParts[2]);
 $repository =& $repositoryManager->getRepository($repositoryId);
 
 // Check that the user can access this collection
 $authZ =& Services::getService("AuthZ");
-$shared =& Services::getService("Shared");
-if (!$authZ->isUserAuthorized($shared->getId(AZ_ACCESS), $repositoryId)) {
+$idManager =& Services::getService("Id");
+if (!$authZ->isUserAuthorized($idManager->getId(AZ_ACCESS), $repositoryId)) {
 	$errorLayout =& new SingleContentLayout;
 	$errorLayout->addComponent(new Content(_("You are not authorized to access this <em>Collection</em>."), MIDDLE, CENTER));
 	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
@@ -85,10 +85,10 @@ function printAssetShort(& $asset, & $harmoni) {
 // Callback function for checking authorizations
 function canView( & $asset ) {
 	$authZ =& Services::getService("AuthZ");
-	$shared =& Services::getService("Shared");
+	$idManager =& Services::getService("Id");
 	
-	if ($authZ->isUserAuthorized($shared->getId(AZ_ACCESS), $asset->getId())
-		|| $authZ->isUserAuthorized($shared->getId(AZ_VIEW), $asset->getId()))
+	if ($authZ->isUserAuthorized($idManager->getId(AZ_ACCESS), $asset->getId())
+		|| $authZ->isUserAuthorized($idManager->getId(AZ_VIEW), $asset->getId()))
 	{
 		return TRUE;
 	} else {

@@ -28,10 +28,10 @@ print "'><-- "._("Return")."</a>";
 
 // Print out the RecordStructure Parts.
 $repositoryManager =& Services::getService("Repository");
-$sharedManager =& Services::getService("Shared");
+$idManager =& Services::getService("Id");
 $setManager =& Services::getService("Sets");
-$repositoryId =& $sharedManager->getId($harmoni->pathInfoParts[2]);
-$recordStructureId =& $sharedManager->getId($harmoni->pathInfoParts[3]);
+$repositoryId =& $idManager->getId($harmoni->pathInfoParts[2]);
+$recordStructureId =& $idManager->getId($harmoni->pathInfoParts[3]);
 
 $repository =& $repositoryManager->getRepository($repositoryId);
 $recordStructure =& $repository->getRecordStructure($recordStructureId);

@@ -12,9 +12,9 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 
 // Check that the user can access this collection
 $authZ =& Services::getService("AuthZ");
-$shared =& Services::getService("Shared");
-$id =& $shared->getId($harmoni->pathInfoParts[3]);
-if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
+$idManager =& Services::getService("Id");
+$id =& $idManager->getId($harmoni->pathInfoParts[3]);
+if (!$authZ->isUserAuthorized($idManager->getId(AZ_EDIT), $id)) {
 	$errorLayout =& new SingleContentLayout;
 	$errorLayout->addComponent(new Content(_("You are not authorized to edit this <em>Asset</em>."), MIDDLE, CENTER));
 	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
@@ -27,8 +27,8 @@ $centerPane->addComponent($actionRows, TOP, CENTER);
 
 // Get the Repository
 $repositoryManager =& Services::getService("Repository");
-$sharedManager =& Services::getService("Shared");
-$assetId =& $sharedManager->getId($harmoni->pathInfoParts[3]);
+$idManager =& Services::getService("Id");
+$assetId =& $idManager->getId($harmoni->pathInfoParts[3]);
 $asset =& $repositoryManager->getAsset($assetId);
 $repository =& $asset->getRepository();
 $repositoryId =& $repository->getId();

@@ -13,7 +13,7 @@ $centerPane->addComponent($actionRows, TOP, CENTER);
 
 // Get the Repository
 $repositoryManager =& Services::getService("Repository");
-$sharedManager =& Services::getService("Shared");
+$idManager =& Services::getService("Id");
 
 // get the search type.
 $typeString = urldecode($harmoni->pathInfoParts[2]);

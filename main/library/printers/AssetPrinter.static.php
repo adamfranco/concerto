@@ -40,7 +40,7 @@ class AssetPrinter {
 			throwError(new Error("You must define an id for AZ_ADD_CHILDREN", "concerto.collection", true));
 
 		$authZ =& Services::getService("AuthZ");
-		$shared =& Services::getService("Shared");
+		$idManager =& Services::getService("Id");
 		
 		$assetId =& $asset->getId();
 		if ($repositoryId === NULL) {
@@ -52,7 +52,7 @@ class AssetPrinter {
 		
 		$actionString = $harmoni->getCurrentAction();
 		
-		if ($authZ->isUserAuthorized($shared->getId(AZ_VIEW), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId(AZ_VIEW), $asset->getId())) {
 			if ($actionString != "asset.view") {
 				$links[] = "<a href='".MYURL."/asset/view/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>";
 				$links[count($links) - 1] .= _("view")."</a>";
@@ -61,7 +61,7 @@ class AssetPrinter {
 			}
 		}
 		
-		if ($authZ->isUserAuthorized($shared->getId(AZ_ACCESS), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId(AZ_ACCESS), $asset->getId())) {
 			$children =& $asset->getAssets();
 			if ($children->hasNext()) {
 				if ($actionString != "asset.browse" || $assetId->getIdString() != $harmoni->pathInfoParts[3]) {
@@ -80,7 +80,7 @@ class AssetPrinter {
 			}
 		}
 		
-		if ($authZ->isUserAuthorized($shared->getId(AZ_EDIT), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId(AZ_EDIT), $asset->getId())) {
 			if ($actionString != "asset.editview") {
 				$links[] = "<a href='".MYURL."/asset/editview/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>";
 				$links[count($links) - 1] .= _("edit")."</a>";
@@ -89,7 +89,7 @@ class AssetPrinter {
 			}
 		}
 		
-		if ($authZ->isUserAuthorized($shared->getId(AZ_DELETE), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId(AZ_DELETE), $asset->getId())) {
 			if ($actionString != "asset.delete") {
 				ob_start();
 				print "<a href='Javascript:deleteAsset".$assetId->getIdString()."From".$repositoryId->getIdString()."();'";
@@ -117,7 +117,7 @@ class AssetPrinter {
 			}
 		}
 		
-		if ($authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $asset->getId())) {
 			if (ereg("^asset\..*$", $actionString) && $harmoni->pathInfoParts[3] == $assetId->getIdString()) {
 				$links[] = "<a href='".MYURL."/asset/addchild/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>";
 				$links[count($links) - 1] .= _("add child asset")."</a>";

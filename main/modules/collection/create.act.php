@@ -13,8 +13,8 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 
 // Check that the user can create a collection here.
 $authZ =& Services::getService("AuthZ");
-$shared =& Services::getService("Shared");
-if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId(REPOSITORY_NODE_ID))) {
+$idManager =& Services::getService("Id");
+if (!$authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $idManager->getId(REPOSITORY_NODE_ID))) {
 	$errorLayout =& new SingleContentLayout;
 	$errorLayout->addComponent(new Content(_("You are not authorized to create a <em>Collection</em>."), MIDDLE, CENTER));
 	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);

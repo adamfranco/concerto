@@ -11,8 +11,8 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 
 // Check that the user can create an asset here.
 $authZ =& Services::getService("AuthZ");
-$shared =& Services::getService("Shared");
-if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($harmoni->pathInfoParts[2]))) {
+$idManager =& Services::getService("Id");
+if (!$authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $idManager->getId($harmoni->pathInfoParts[2]))) {
 	$errorLayout =& new SingleContentLayout;
 	$errorLayout->addComponent(new Content(_("You are not authorized to create an <em>Asset</em> here."), MIDDLE, CENTER));
 	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
@@ -25,10 +25,10 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($h
  } else {
  	
  	// Make sure we have a valid Repository
-	$shared =& Services::getService("Shared");
+	$idManager =& Services::getService("Id");
 	$repositoryManager =& Services::getService("Repository");
-	$repositoryId =& $shared->getId($harmoni->pathInfoParts[2]);
-// 	$assetId =& $shared->getId($harmoni->pathInfoParts[3]);
+	$repositoryId =& $idManager->getId($harmoni->pathInfoParts[2]);
+// 	$assetId =& $idManager->getId($harmoni->pathInfoParts[3]);
 
 	$repository =& $repositoryManager->getRepository($repositoryId);
 // 	$asset =& $repository->getAsset($assetId);
@@ -199,10 +199,10 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($h
 if ($wizard->isSaveRequested()) {
 
 	// Make sure we have a valid Repository
-	$shared =& Services::getService("Shared");
+	$idManager =& Services::getService("Id");
 	$repositoryManager =& Services::getService("Repository");
 	$authZ =& Services::getService("AuthZ");
-	$repositoryId =& $shared->getId($harmoni->pathInfoParts[2]);
+	$repositoryId =& $idManager->getId($harmoni->pathInfoParts[2]);
 
 	$repository =& $repositoryManager->getRepository($repositoryId);
 	
@@ -211,8 +211,8 @@ if ($wizard->isSaveRequested()) {
 	// First, verify that we chose a parent that we can add children to.
 	if (!$properties['parent']->getValue() 
 		|| $properties['parent']->getValue() == 'NONE'
-		|| ($parentId =& $shared->getId($properties['parent']->getValue())
-			&& $authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $parentId)))
+		|| ($parentId =& $idManager->getId($properties['parent']->getValue())
+			&& $authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $parentId)))
 	{
 		
 		// Get the type from the select if one is specified
@@ -247,7 +247,7 @@ if ($wizard->isSaveRequested()) {
 		if ($properties['parent']->getValue() 
 			&& $properties['parent']->getValue() != 'NONE') 
 		{
-			$parentId =& $shared->getId($properties['parent']->getValue());
+			$parentId =& $idManager->getId($properties['parent']->getValue());
 			$parentAsset =& $repository->getAsset($parentId);
 			$parentAsset->addAsset($assetId);
 		}

@@ -12,9 +12,9 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
  } else {
  	
  	// Make sure we have a valid Repository
-	$shared =& Services::getService("Shared");
+	$idManager =& Services::getService("Id");
 	$repositoryManager =& Services::getService("Repository");
-	$id =& $shared->getId($harmoni->pathInfoParts[2]);
+	$id =& $idManager->getId($harmoni->pathInfoParts[2]);
 	$repository =& $repositoryManager->getRepository($id);
 
 	// Instantiate the wizard, then add our steps.
@@ -180,8 +180,8 @@ if ($wizard->isSaveRequested()) {
 		$properties =& $wizard->getProperties();
 		
 		// Get the Repository
-		$shared =& Services::getService("Shared");
-		$id =& $shared->getId($harmoni->pathInfoParts[2]);
+		$idManager =& Services::getService("Id");
+		$id =& $idManager->getId($harmoni->pathInfoParts[2]);
 		
 		$repositoryManager =& Services::getService("Repository"); 
 		$repository =& $repositoryManager->getRepository($id);

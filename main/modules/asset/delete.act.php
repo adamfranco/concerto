@@ -6,16 +6,16 @@ if (!defined("AZ_DELETE"))
 
 // Get the Repository
 $repositoryManager =& Services::getService("Repository");
-$sharedManager =& Services::getService("Shared");
-$assetId =& $sharedManager->getId($harmoni->pathInfoParts[3]);
+$idManager =& Services::getService("Id");
+$assetId =& $idManager->getId($harmoni->pathInfoParts[3]);
 $asset =& $repositoryManager->getAsset($assetId);
 $repository =& $asset->getRepository();
 $repositoryId =& $repository->getId();
 
 // Check that the user can delete this asset
 $authZ =& Services::getService("AuthZ");
-$shared =& Services::getService("Shared");
-if (!$authZ->isUserAuthorized($shared->getId(AZ_DELETE), $assetId)) {
+$idManager =& Services::getService("Id");
+if (!$authZ->isUserAuthorized($idManager->getId(AZ_DELETE), $assetId)) {
 	// Get the Layout compontents. See core/modules/moduleStructure.txt
 	// for more info. 
 	$harmoni->ActionHandler->execute("window", "screen");

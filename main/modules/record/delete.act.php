@@ -6,9 +6,9 @@ if (!defined("AZ_EDIT"))
 
 // Check that the user can access this collection
 $authZ =& Services::getService("AuthZ");
-$shared =& Services::getService("Shared");
-$id =& $shared->getId($harmoni->pathInfoParts[3]);
-if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
+$idManager =& Services::getService("Id");
+$id =& $idManager->getId($harmoni->pathInfoParts[3]);
+if (!$authZ->isUserAuthorized($idManager->getId(AZ_EDIT), $id)) {
 	// Get the Layout compontents. See core/modules/moduleStructure.txt
 	// for more info. 
 	$harmoni->ActionHandler->execute("window", "screen");
@@ -22,9 +22,9 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
 
 // Get the Repository and Asset
 $repositoryManager =& Services::getService("Repository");
-$sharedManager =& Services::getService("Shared");
-$assetId =& $sharedManager->getId($harmoni->pathInfoParts[3]);
-$recordId =& $sharedManager->getId($harmoni->pathInfoParts[4]);
+$idManager =& Services::getService("Id");
+$assetId =& $idManager->getId($harmoni->pathInfoParts[3]);
+$recordId =& $idManager->getId($harmoni->pathInfoParts[4]);
 $asset =& $repositoryManager->getAsset($assetId);
 $repository =& $asset->getRepository();
 $repositoryId =& $repository->getId();

@@ -13,8 +13,8 @@ $centerPane->addComponent($actionRows, TOP, CENTER);
 
 // Get the Repository
 $repositoryManager =& Services::getService("Repository");
-$sharedManager =& Services::getService("Shared");
-$repositoryId =& $sharedManager->getId($harmoni->pathInfoParts[2]);
+$idManager =& Services::getService("Id");
+$repositoryId =& $idManager->getId($harmoni->pathInfoParts[2]);
 $repository =& $repositoryManager->getRepository($repositoryId);
 
 // Intro
