@@ -161,11 +161,12 @@ require_once(OKI2."/osid/OsidContext.php");
 	Services::startManagerAsService("HierarchyManager", $context, $configuration);
 
 
-// :: Set up the RepositoryManager ::	
+// :: Set up the RepositoryManager ::
+	$defaultParentId = "301";	
 	$configuration =& new ConfigurationProperties;
 	$configuration->addProperty('database_index', $dbID);
 	$configuration->addProperty('hierarchy_id', $arg0 = "673");
-	$configuration->addProperty('default_parent_id', $arg1 = "301");
+	$configuration->addProperty('default_parent_id', $defaultParentId);
 	$configuration->addProperty('version_control_all', $arg2 = TRUE);
 	$configuration->addProperty('use_filesystem_for_files', $arg3 = TRUE);
 	$configuration->addProperty('file_data_path', $arg4 = "/www/afranco/concerto_data");
