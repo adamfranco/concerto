@@ -40,6 +40,24 @@ class ConcertoMenuGenerator {
 				(ereg("^collection.*",$module))?TRUE:FALSE)
 		);
 		
+		// Collection browse links.
+		// Just show if we are not in a particular collection.
+		if ($module == "collections") {
+			// Name browse
+			$menu->addComponent(
+				new LinkMenuItem(" - ".
+					_("By Name"), 
+					MYURL."/collections/namebrowse/", 
+					($module == "collections" && $action == "namebrowse")?TRUE:FALSE)
+			);
+			// Name browse
+			$menu->addComponent(
+				new LinkMenuItem(" - ".
+					_("By Type"), 
+					MYURL."/collections/typebrowse/", 
+					($module == "collections" && $action == "typebrowse")?TRUE:FALSE)
+			);		}
+		
 	// :: Exhibitions ::
 		// Main Exhibitions link.
 		$menu->addComponent(
