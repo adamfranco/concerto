@@ -34,8 +34,8 @@ require_once(OKI2."/osid/OsidContext.php");
 	
 
 // :: Set up the database connection ::
-	$dbHandler=&Services::requireService("DBHandler");
-	$dbName = "adam_concerto";
+	$dbHandler =& Services::requireService("DBHandler");
+	$dbName = "adam_concerto_timing";
 	$dbID = $dbHandler->addDatabase( new MySQLDatabase("localhost", $dbName,"test","test") );
 	$dbHandler->pConnect($dbID);
 	unset($dbHandler); // done with that for now
@@ -93,36 +93,36 @@ require_once(OKI2."/osid/OsidContext.php");
 	$configuration->addProperty($dbAuthType, $dbAuthNMethod);
 		
 		// set up LDAPAuthentication Method
-		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/LDAPAuthNMethod.class.php");
-		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/LDAPAuthNTokens.class.php");	
-		$ldapAuthType =& new Type ("Authentication", "Middlebury College", "Middlebury LDAP");
-		$ldapConfiguration =& new ConfigurationProperties;
-		$ldapConfiguration->addProperty('tokens_class', $arg0 = 'LDAPAuthNTokens');
-		$ldapConfiguration->addProperty("LDAPHost", $arg1 = "ad.middlebury.edu");
-		$ldapConfiguration->addProperty("baseDN", $arg2 = "cn=users,dc=middlebury,dc=edu");
-		$ldapConfiguration->addProperty("bindDN", $arg3 = "juser");
-		$ldapConfiguration->addProperty("bindDNPassword", $arg4 = "poi987");
-		$propertiesFields = array (
-			'username' => 'samaccountname',
-			'name' =>  'displayname',
-			'first name' =>  'givenname',
-			'last name' =>  'sn',
-			'department' =>  'department',
-			'email' =>  'mail',
-		);
-		$ldapConfiguration->addProperty('properties_fields', $propertiesFields);
-		$loginFields = array (
-			'samaccountname', 
-			'mail',
-			'cn',
-		);
-		$ldapConfiguration->addProperty('login_fields', $loginFields);
-		
-		$ldapAuthNMethod =& new LDAPAuthNMethod;
-		$ldapAuthNMethod->assignConfiguration($ldapConfiguration);
-		unset($arg0, $arg1, $arg2, $arg3, $arg4, $propertiesFields, $loginFields, $ldapConfiguration);
-		
-	$configuration->addProperty($ldapAuthType, $ldapAuthNMethod);
+// 		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/LDAPAuthNMethod.class.php");
+// 		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/LDAPAuthNTokens.class.php");	
+// 		$ldapAuthType =& new Type ("Authentication", "Middlebury College", "Middlebury LDAP");
+// 		$ldapConfiguration =& new ConfigurationProperties;
+// 		$ldapConfiguration->addProperty('tokens_class', $arg0 = 'LDAPAuthNTokens');
+// 		$ldapConfiguration->addProperty("LDAPHost", $arg1 = "ad.middlebury.edu");
+// 		$ldapConfiguration->addProperty("baseDN", $arg2 = "cn=users,dc=middlebury,dc=edu");
+// 		$ldapConfiguration->addProperty("bindDN", $arg3 = "juser");
+// 		$ldapConfiguration->addProperty("bindDNPassword", $arg4 = "poi987");
+// 		$propertiesFields = array (
+// 			'username' => 'samaccountname',
+// 			'name' =>  'displayname',
+// 			'first name' =>  'givenname',
+// 			'last name' =>  'sn',
+// 			'department' =>  'department',
+// 			'email' =>  'mail',
+// 		);
+// 		$ldapConfiguration->addProperty('properties_fields', $propertiesFields);
+// 		$loginFields = array (
+// 			'samaccountname', 
+// 			'mail',
+// 			'cn',
+// 		);
+// 		$ldapConfiguration->addProperty('login_fields', $loginFields);
+// 		
+// 		$ldapAuthNMethod =& new LDAPAuthNMethod;
+// 		$ldapAuthNMethod->assignConfiguration($ldapConfiguration);
+// 		unset($arg0, $arg1, $arg2, $arg3, $arg4, $propertiesFields, $loginFields, $ldapConfiguration);
+// 		
+// 	$configuration->addProperty($ldapAuthType, $ldapAuthNMethod);
 	
 	Services::startManagerAsService("AuthNMethodManager", $context, $configuration);
 	
@@ -150,53 +150,6 @@ require_once(OKI2."/osid/OsidContext.php");
 //	$langLoc->setLanguage("en_US");
 //	$languages =& $langLoc->getLanguages();
 //  printpre($languages);
-
-
-// :: Set up the DataManager ::
-	DataManager::setup($dbID);
-
-
-// :: Set up the Hierarchy Manager ::
-	$configuration =& new ConfigurationProperties;
-	$configuration->addProperty('database_index', $dbID);
-	$configuration->addProperty('database_name', $dbName);
-	Services::startManagerAsService("HierarchyManager", $context, $configuration);
-
-
-// :: Set up the RepositoryManager ::
-	$defaultParentId = "301";	
-	$configuration =& new ConfigurationProperties;
-	$configuration->addProperty('database_index', $dbID);
-	$configuration->addProperty('hierarchy_id', $arg0 = "673");
-	$configuration->addProperty('default_parent_id', $defaultParentId);
-	$configuration->addProperty('version_control_all', $arg2 = TRUE);
-	$configuration->addProperty('use_filesystem_for_files', $arg3 = TRUE);
-	$configuration->addProperty('file_data_path', $arg4 = "/www/afranco/concerto_data");
-	Services::startManagerAsService("RepositoryManager", $context, $configuration);
-	unset($arg0, $arg1, $arg2, $arg3, $arg4);
-	
-/************************************************************************
- * To convert from database Storage of files to filesystem storage,
- * set all of the configuration needed for both except the switch for which
- * system to use. Keep that at its original value. Then uncomment the following
- * lines and set the values to the desired ones.
- */
-//  	$idManager =& Services::getService("Id");
-//  	$repositoryManagaer =& Services::getService("Repository");
-//  	
-// 	$destinationRecordClass = "FileSystemFileRecord";
-// 	$recordStructureOfBothRecords =& $idManager->getId("FILE");
-// 	
-// 	$repositoriesToConvert =& $repositoryManagaer->getRepositories();
-// 	while ($repositoriesToConvert->hasNextRepository()) {
-// 		$repository =& $repositoriesToConvert->nextRepository();
-// 		
-// 		$repositoryId =& $repository->getId();
-// 		print "\n<br/>Converting Repository: ".$repositoryId->getIdString();
-// 		
-// 		$repository->convertRecords($recordStructureOfBothRecords, $destinationRecordClass);
-// 	}
-/************************************************************************/
 
 
 // :: Set up the Authorization System ::
@@ -233,81 +186,125 @@ require_once(OKI2."/osid/OsidContext.php");
 							"/usr/X11R6/bin",	// ImageMagick path
 							"/tmp"				// ImageMagick temp dir
 	);
+	
+
+// :: Set up the DataManager ::
+	DataManager::setup($dbID);
 
 
-// ::Specify some Ids for concerto ::
-	if (!is_array($_SESSION['concerto_config'])) {
-		$_SESSION['concerto_config'] = array();
-		$idManager =& Services::getService("Id");
-		$_SESSION['concerto_config']['media_file_structure_id'] = $idManager->getId("1097");
-		$_SESSION['concerto_config']['thumbnail_part_id'] = $idManager->getId("1104");
-	}
+// :: Set up the Hierarchy Manager ::
+	$configuration =& new ConfigurationProperties;
+	$configuration->addProperty('database_index', $dbID);
+	$configuration->addProperty('database_name', $dbName);
+	Services::startManagerAsService("HierarchyManager", $context, $configuration);
+
+
+
+/*********************************************************
+ * The installer script for Concerto. Uncomment this for 
+ * one execute on an empty database to create the default
+ * data-set.
+ *********************************************************/
+// include (MYDIR."/install/dev_install.inc.php");
+/*********************************************************/
+
+
+
+// :: Set up the RepositoryManager ::
+	$repositoryHierarchyId = "1";
+	$defaultParentId = "3";	
+	$configuration =& new ConfigurationProperties;
+	$configuration->addProperty('database_index', $dbID);
+	$configuration->addProperty('hierarchy_id', $repositoryHierarchyId);
+	$configuration->addProperty('default_parent_id', $defaultParentId);
+	$configuration->addProperty('version_control_all', $arg2 = TRUE);
+	$configuration->addProperty('use_filesystem_for_files', $arg3 = TRUE);
+	$configuration->addProperty('file_data_path', $arg4 = "/www/afranco/concerto_data");
+	Services::startManagerAsService("RepositoryManager", $context, $configuration);
+	unset($arg0, $arg1, $arg2, $arg3, $arg4);
+	
+/************************************************************************
+ * To convert from database Storage of files to filesystem storage,
+ * set all of the configuration needed for both except the switch for which
+ * system to use. Keep that at its original value. Then uncomment the following
+ * lines and set the values to the desired ones.
+ */
+//  	$idManager =& Services::getService("Id");
+//  	$repositoryManagaer =& Services::getService("Repository");
+//  	
+// 	$destinationRecordClass = "FileSystemFileRecord";
+// 	$recordStructureOfBothRecords =& $idManager->getId("FILE");
+// 	
+// 	$repositoriesToConvert =& $repositoryManagaer->getRepositories();
+// 	while ($repositoriesToConvert->hasNextRepository()) {
+// 		$repository =& $repositoriesToConvert->nextRepository();
+// 		
+// 		$repositoryId =& $repository->getId();
+// 		print "\n<br/>Converting Repository: ".$repositoryId->getIdString();
+// 		
+// 		$repository->convertRecords($recordStructureOfBothRecords, $destinationRecordClass);
+// 	}
+/************************************************************************/
+
+
+
 
 /*********************************************************
  * View/Use AZs
  *********************************************************/
 // Can this qualifier and its children be accessed?
-define("AZ_ACCESS", '331');
+define("AZ_ACCESS", '7');
 
 // Can a qualifier be viewed?
-define("AZ_VIEW", '178');
+define("AZ_VIEW", '9');
 
 // Can a qualifier be commented on?
-define("AZ_COMMENT", '179');
+define("AZ_COMMENT", '11');
 
 /*********************************************************
  * Editing AZs
  *********************************************************/
 // Can a qualifier be edited?
-define("AZ_EDIT", '175');
+define("AZ_EDIT", '13');
 
 // Can a qualifier be deleted?
-define("AZ_DELETE", '177');
+define("AZ_DELETE", '15');
 
 // Can a a child be added to this qualifier?
-define("AZ_ADD_CHILDREN", '176');
+define("AZ_ADD_CHILDREN", '17');
 
 /*********************************************************
  * Administration AZs
  *********************************************************/
  // Can the AZs of a qualifier be viewed?
-define("AZ_VIEW_AZS", '292');
+define("AZ_VIEW_AZS", '19');
 
  // Can the AZs of a qualifier be modified?
-define("AZ_MODIFY_AZS", '293');
+define("AZ_MODIFY_AZS", '21');
 
  // Can agents be created here?
-define("AZ_CREATE_AGENTS", '294');
+define("AZ_CREATE_AGENTS", '23');
 
  // Can agent properties be modified here?
-define("AZ_MODIFY_AGENTS", '295');
+define("AZ_MODIFY_AGENTS", '25');
 
  // Can agents be deleted here?
-define("AZ_DELETE_AGENTS", '296');
+define("AZ_DELETE_AGENTS", '27');
 
  // Can groups be created here?
-define("AZ_CREATE_GROUPS", '297');
+define("AZ_CREATE_GROUPS", '29');
 
  // Can groups properties be modified here?
-define("AZ_MODIFY_GROUPS", '298');
+define("AZ_MODIFY_GROUPS", '31');
 
  // Can groups be deleted here?
-define("AZ_DELETE_GROUPS", '299');
+define("AZ_DELETE_GROUPS", '33');
 
 /*********************************************************
  * Hierarchy Ids
  *********************************************************/
  // Digital Repository Id
  define("REPOSITORY_NODE_ID", $defaultParentId);
- 
-//  
-// $agentManager =& Services::getService("Agent");
-// $idManager =& Services::getService("Id");
-// $agentManager->deleteGroup($idManager->getId("410"));
-// $groupType =& new Type ("System", "Concerto", "SystemGroups", "Groups for administrators and others with special privledges.");
-// $nullType =& new Type ("System", "Concerto", "NULL");
-// $properties =& new HarmoniProperties($nullType);
-// $agentManager->createGroup("Auditors", $groupType, "Users that can view all content in the system but not modify it.", $properties);
 
 // print "<pre>";
 // print_r($_SESSION);
