@@ -210,7 +210,7 @@ class Wizard {
 		// :: Heading ::
 		$heading =& new SingleContentLayout(HEADING_WIDGET, 2);
 		$heading->addComponent(new Content($this->_displayName.": ".
-					$this->_currentStep." - ".
+					$this->_currentStep.". ".
 					$this->_steps[$this->_currentStep]->getDisplayName()));
 		$wizardLayout->addComponent($heading);
 		
@@ -224,14 +224,14 @@ class Wizard {
 			if ($number != $this->_currentStep
 				&& $this->_allowStepLinks) {
 				$menu->addComponent(
-					new LinkMenuItem($number." - ".
+					new LinkMenuItem($number.". ".
 						$this->_steps[$number]->getDisplayName(),
 						"Javascript:goToStep('".$number."')",
 						FALSE)
 				);			
 			} else {
 				$menu->addComponent(
-					new StandardMenuItem($number." - ".
+					new StandardMenuItem($number.". ".
 						$this->_steps[$number]->getDisplayName(),
 						($number == $this->_currentStep)?TRUE:FALSE)
 				);

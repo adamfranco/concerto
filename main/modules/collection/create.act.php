@@ -32,24 +32,62 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	// Create the step text
 	$stepOneText = "\n<h2>"._("Name")."</h2>";
 	$stepOneText .= "\n"._("The Name for this <em>Collection</em>: ");
-	$stepOneText .= "\n<br><input type='text' name='display_name' value='[[display_name]]'>";
+	$stepOneText .= "\n<br><input type='text' name='display_name' value=\"[[display_name]]\">";
 	$stepOneText .= "\n<h2>"._("Description")."</h2>";
 	$stepOneText .= "\n"._("The Description for this <em>Collection</em>: ");
 	$stepOneText .= "\n<br><textarea name='description'>[[description]]</textarea>";
 	$stepOneText .= "\n<div style='width: 400px'> &nbsp; </div>";
 	$stepOne->setText($stepOneText);
-// 	
-// 	// :: Step Two ::
-// 	$stepTwo =& $wizard->createStep(_("Select Scheme"));
-// 	// Create the properties.
-// 	$displayNameProp =& $stepTwo->createProperty("display_name2", "Regex");
-// 	$displayNameProp->setExpression(".*");
-// 	$displayNameProp->setDefaultValue(_("Default Collection Name2"));
-// 	
-// 	$stepTwoText = "<h2>"._("Name")."</h2>";
-// 	$stepTwoText .= "\n"._("The Name for this <em>Collection</em>: ");
-// 	$stepTwoText .= "\n<input type='text' name='display_name2' value='[[display_name2]]'>";
-// 	$stepTwo->setText($stepTwoText);
+	
+	// :: Step Two ::
+	$stepTwo =& $wizard->createStep(_("Type"));
+	// Create the properties.
+	$property =& $stepTwo->createProperty("type_domain", "Regex");
+	$property->setExpression(".*");
+	$property->setDefaultValue(_("Collections"));
+	
+	$property =& $stepTwo->createProperty("type_authority", "Regex");
+	$property->setExpression(".*");
+	$property->setDefaultValue(_("Concerto"));
+	
+	$property =& $stepTwo->createProperty("type_keyword", "Regex");
+	$property->setExpression(".*");
+	$property->setDefaultValue(_("Generic Collection"));
+	
+	$property =& $stepTwo->createProperty("type_description", "Regex");
+	$property->setExpression(".*");
+	$property->setDefaultValue(_("This is a <em>Collection</em> of unspecified type."));
+	
+	// create the text
+	$stepTwoText = "<h2>"._("Type")."</h2>";
+	$stepTwoText .= "\n"._("All <em>Collections</em> have an immutable type. This type can be used to catagorize <em>Collections</em>, but is not necessary.");
+	$stepTwoText .= "\n<table>";
+	$stepTwoText .= "\n\t<tr>\n\t\t<td>";
+	$stepTwoText .= "<strong>"._("Domain").": </strong>";
+	$stepTwoText .= "\n\t\t</td>";
+	$stepTwoText .= "\n\t\t<td>";
+	$stepTwoText .= "\n<input type='text' name='type_domain' value=\"[[type_domain]]\">";
+	$stepTwoText .= "\n\t\t</td>\n\t</tr>";
+	$stepTwoText .= "\n\t<tr>\n\t\t<td>";
+	$stepTwoText .= "<strong>"._("Authority").": </strong>";
+	$stepTwoText .= "\n\t\t</td>";
+	$stepTwoText .= "\n\t\t<td>";
+	$stepTwoText .= "\n<input type='text' name='type_authority' value=\"[[type_authority]]\">";
+	$stepTwoText .= "\n\t\t</td>\n\t</tr>";
+	$stepTwoText .= "\n\t<tr>\n\t\t<td>";
+	$stepTwoText .= "<strong>"._("Keyword").": </strong>";
+	$stepTwoText .= "\n\t\t</td>";
+	$stepTwoText .= "\n\t\t<td>";
+	$stepTwoText .= "\n<input type='text' name='type_keyword' value=\"[[type_keyword]]\">";
+	$stepTwoText .= "\n\t\t</td>\n\t</tr>";
+	$stepTwoText .= "\n\t<tr>\n\t\t<td>";
+	$stepTwoText .= "<strong>"._("Description").": </strong>";
+	$stepTwoText .= "\n\t\t</td>";
+	$stepTwoText .= "\n\t\t<td>";
+	$stepTwoText .= "\n<textarea name='type_description'>[[type_description]]</textarea>";
+	$stepTwoText .= "\n\t\t</td>\n\t</tr>";
+	$stepTwoText .= "\n</table>";
+	$stepTwo->setText($stepTwoText);
 
 }
 
@@ -63,9 +101,13 @@ if ($_REQUEST['save'] || $_REQUEST['save_link']) {
 		
 		// Create the dr and get its id.
 		$drManager =& Services::getService("DR");
+		$type =& new HarmoniType($properties['type_domain']->getValue(),
+								$properties['type_authority']->getValue(),
+								$properties['type_keyword']->getValue(),
+								$properties['type_description']->getValue());
 		$dr =& $drManager->createDigitalRepository(
 							$properties['display_name']->getValue(),
-							$properties['description']->getValue());
+							$properties['description']->getValue(), $type);
 		
 		// Unset the wizard
 		$wizard = NULL;
