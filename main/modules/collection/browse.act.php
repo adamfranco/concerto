@@ -35,7 +35,7 @@ $actionRows->addComponent($introText);
 // Get the assets to display
 $assets =& $dr->getAssets();
 
-$resultPrinter =& new IteratorResultPrinter($assets, 2, 3, "printAssetShort");
+$resultPrinter =& new IteratorResultPrinter($assets, 2, 4, "printAssetShort");
 $resultLayout =& $resultPrinter->getLayout($harmoni);
 $actionRows->addComponent($resultLayout);
 
@@ -57,14 +57,20 @@ function printAssetShort(& $asset) {
 	print  "\n\t<br>";
 	$links = array();
 	
-	$links[] = "<a href='".MYURL."/collection/browse/".$assetId->getIdString()."/'>";
-	$links[count($links) - 1] .= _("browse")."</a>";
+	$links[] = "<a href='".MYURL."/asset/view/".$assetId->getIdString()."/'>";
+	$links[count($links) - 1] .= _("view")."</a>";
 	
-	$links[] = "<a href='".MYURL."/collection/search/".$assetId->getIdString()."/'>";
-	$links[count($links) - 1] .= _("search")."</a>";
+	$children =& $asset->getAssets();
+	if ($children->hasNext()) {
+		$links[] = "<a href='".MYURL."/asset/browse/".$assetId->getIdString()."/'>";
+		$links[count($links) - 1] .= _("browse")."</a>";
+		
+		$links[] = "<a href='".MYURL."/asset/typebrowse/".$assetId->getIdString()."/'>";
+		$links[count($links) - 1] .= _("browse by type")."</a>";
+	}
 	
-	$links[] = "<a href='".MYURL."/collection/edit/".$assetId->getIdString()."/'>";
-	$links[count($links) - 1] .= _("edit")."</a>";
+// 	$links[] = "<a href='".MYURL."/asset/edit/".$assetId->getIdString()."/'>";
+// 	$links[count($links) - 1] .= _("edit")."</a>";
 	
 	print  implode("\n\t | ", $links);
 	
