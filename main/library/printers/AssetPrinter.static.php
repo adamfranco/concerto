@@ -43,22 +43,22 @@ class AssetPrinter {
 		
 		$children =& $asset->getAssets();
 		if ($children->hasNext()) {
-			if ($actionString != "asset.browse") {
+			if ($actionString != "asset.browse" || $assetId->getIdString() != $harmoni->pathInfoParts[2]) {
 				$links[] = "<a href='".MYURL."/asset/browse/".$assetId->getIdString()."/'>";
 				$links[count($links) - 1] .= _("browse")."</a>";
 			} else {
 				$links[] = _("browse");
 			}
 			
-			if ($actionString != "asset.typebrowse") {
-				$links[] = "<a href='".MYURL."/asset/typebrowse/".$assetId->getIdString()."/'>";
-				$links[count($links) - 1] .= _("browse by type")."</a>";
-			} else {
-				$links[] = _("browse by type");
-			}
+// 			if ($actionString != "asset.typebrowse") {
+// 				$links[] = "<a href='".MYURL."/asset/typebrowse/".$assetId->getIdString()."/'>";
+// 				$links[count($links) - 1] .= _("browse by type")."</a>";
+// 			} else {
+// 				$links[] = _("browse by type");
+// 			}
 		}
 		
-		if (ereg("^asset\.$", $actionString) && $harmoni->pathInfoParts[3] == $assetId->getIdString()) {
+		if (ereg("^asset\.$", $actionString) && $harmoni->pathInfoParts[2] == $assetId->getIdString()) {
 			if ($repositoryId === NULL) {
 				$repository =& $asset->getDigitalRepository();
 				$repositoryId =& $repository->getId();
