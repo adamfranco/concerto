@@ -62,18 +62,6 @@ $actionRows->add($contentCols, "100%", null, LEFT, CENTER);
 	$layout =& new Block(ob_get_contents(), 3);
 	ob_end_clean();
 	$contentCols->add($layout, "100%", null, LEFT, CENTER);
-	
-	// Thumbnail
-	ob_start();
-// 	$thumbnailFields =& $asset->getPartByPart($_SESSION['concerto_config']['thumbnail_part_id']);
-// 	while ($fields->hasNext()) {
-// 		$field =& $fields->next();
-// 		$value =& $field->getValue();
-// 		print "\n<img src='".$value->toString()."'>\n<br />";
-// 	}
-	$layout =& new Block(ob_get_contents(), 3);
-	ob_end_clean();
-	$contentCols->add($layout, "100%", null, LEFT, CENTER);
 
 
 //***********************************
