@@ -17,7 +17,7 @@ class ConcertoMenuGenerator {
 	 *		"module.action" .
 	 * @return object MenuLayout
 	 */
-	function & generateMainMenu($harmoni) {
+	function &generateMainMenu($harmoni) {
 		$parts = explode(".", $actionString);
 		$module = $harmoni->pathInfoParts[0];
 		$action = $harmoni->pathInfoParts[1];
