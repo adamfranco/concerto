@@ -15,9 +15,8 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 $authZ =& Services::getService("AuthZ");
 $idManager =& Services::getService("Id");
 if (!$authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $idManager->getId(REPOSITORY_NODE_ID))) {
-	$errorLayout =& new SingleContentLayout;
-	$errorLayout->addComponent(new Content(_("You are not authorized to create an <em>Exhibition</em>."), MIDDLE, CENTER));
-	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
+	$errorLayout =& new Block(_("You are not authorized to create an <em>Exhibition</em>."),3);
+	$centerPane->add($errorLayout, null, null, CENTER, CENTER);
 	return $mainScreen;
 }
 
