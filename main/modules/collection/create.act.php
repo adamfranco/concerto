@@ -21,41 +21,36 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	$stepOne =& $wizard->createStep(_("Name & Description"));
 	
 	// Create the properties.
-	$displayNameProp =& $stepOne->createProperty("display_name", "Regex");
-	$displayNameProp->setExpression(".*");
+	$displayNameProp =& $stepOne->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
 	$displayNameProp->setDefaultValue(_("Default Collection Name"));
+	$displayNameProp->setErrorString(" <span style='color: f00'>* "._("The name must not start with a space.")."</span>");
 	
-	$descriptionProp =& $stepOne->createProperty("description", "Regex");
-	$descriptionProp->setExpression(".*");
+	$descriptionProp =& $stepOne->createProperty("description", new RegexValidatorRule(".*"));
 	$descriptionProp->setDefaultValue(_("Default Collection description."));
 	
 	// Create the step text
 	$stepOneText = "\n<h2>"._("Name")."</h2>";
 	$stepOneText .= "\n"._("The Name for this <em>Collection</em>: ");
-	$stepOneText .= "\n<br><input type='text' name='display_name' value=\"[[display_name]]\">";
+	$stepOneText .= "\n<br><input type='text' name='display_name' value=\"[[display_name]]\">[[display_name|Error]]";
 	$stepOneText .= "\n<h2>"._("Description")."</h2>";
 	$stepOneText .= "\n"._("The Description for this <em>Collection</em>: ");
-	$stepOneText .= "\n<br><textarea name='description'>[[description]]</textarea>";
+	$stepOneText .= "\n<br><textarea name='description'>[[description]]</textarea>[[description|Error]]";
 	$stepOneText .= "\n<div style='width: 400px'> &nbsp; </div>";
 	$stepOne->setText($stepOneText);
 	
 	// :: Step Two ::
 	$stepTwo =& $wizard->createStep(_("Type"));
 	// Create the properties.
-	$property =& $stepTwo->createProperty("type_domain", "Regex");
-	$property->setExpression(".*");
+	$property =& $stepTwo->createProperty("type_domain", new RegexValidatorRule(".*"));
 	$property->setDefaultValue(_("Collections"));
 	
-	$property =& $stepTwo->createProperty("type_authority", "Regex");
-	$property->setExpression(".*");
+	$property =& $stepTwo->createProperty("type_authority", new RegexValidatorRule(".*"));
 	$property->setDefaultValue(_("Concerto"));
 	
-	$property =& $stepTwo->createProperty("type_keyword", "Regex");
-	$property->setExpression(".*");
+	$property =& $stepTwo->createProperty("type_keyword", new RegexValidatorRule(".*"));
 	$property->setDefaultValue(_("Generic Collection"));
 	
-	$property =& $stepTwo->createProperty("type_description", "Regex");
-	$property->setExpression(".*");
+	$property =& $stepTwo->createProperty("type_description", new RegexValidatorRule(".*"));
 	$property->setDefaultValue(_("This is a <em>Collection</em> of unspecified type."));
 	
 	// create the text

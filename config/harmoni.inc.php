@@ -18,10 +18,12 @@
 		return $harmoni->pathInfoParts[0] . "." . $harmoni->pathInfoParts[1];
 	}
 	$harmoni->setActionCallbackFunction( "callback_action" );
-	$harmoni->ActionHandler->setModulesLocation( realpath(MYDIR."/main/modules"), MODULES_FOLDERS );
-	$harmoni->ActionHandler->setActionsType( ACTIONS_FLATFILES, ".act.php" );
-	$harmoni->ActionHandler->addModulesLocation( realpath(POLYPHONY."/main/modules"), MODULES_FOLDERS );
-	$harmoni->ActionHandler->setActionsTypeForModulesLocation( realpath(POLYPHONY."/main/modules"), ACTIONS_FLATFILES, ".act.php" );
+	$harmoni->ActionHandler->addActionSource(	
+				new FlatFileActionSource(realpath(MYDIR."/main/modules"), 
+										 ".act.php"));
+	$harmoni->ActionHandler->addActionSource(	
+				new FlatFileActionSource(realpath(POLYPHONY."/main/modules"), 
+										 ".act.php"));
 	
 
 // :: Set up the database connection ::
@@ -93,7 +95,7 @@
 	$langLoc->addApplication('polyphony', POLYPHONY.'/main/languages');
 //	$langLoc->setLanguage("es_ES");
 //	$langLoc->setLanguage("en_US");
-	$languages =& $langLoc->getLanguages();
+//	$languages =& $langLoc->getLanguages();
 //  printpre($languages);
 
 
