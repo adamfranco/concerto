@@ -208,14 +208,14 @@ if ($wizard->isSaveRequested()) {
 		unset ($wizard);
 		
 		// Head off to editing our new collection.
-		header("Location: ".$returnURL);
+		header("Location: ".$returnURL."?__skip_to_step=2");
 	}
 	
 } else if ($wizard->isCancelRequested()) {
 	$wizard = NULL;
 	unset ($_SESSION['create_schema_wizard_'.$harmoni->pathInfoParts[2]]);
 	unset ($wizard);
-	header("Location: ".$returnURL);
+	header("Location: ".$returnURL."?__skip_to_step=2");
 	
 }
 

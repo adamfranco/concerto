@@ -111,7 +111,7 @@ if ($wizard->isSaveRequested()) {
 		
 		// Head off to editing our new collection.
 		$id =& $dr->getId();
-		header(header("Location: ".MYURL."/collection/edit/".$id->getIdString()."/"));
+		header(header("Location: ".MYURL."/collection/edit/".$id->getIdString()."/?__skip_to_step=2"));
 	}
 
 // Handle canceling if requested
