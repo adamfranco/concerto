@@ -1,5 +1,7 @@
 <?
 
+require_once(MYDIR."/main/library/ConcertoMenuGenerator.class.php");
+
 // Set a default title
 $theme =& $harmoni->getTheme();
 $theme->setPageTitle("Concerto");
@@ -66,11 +68,8 @@ $mainScreen =& new RowLayout(TEXT_BLOCK_WIDGET, 1);
 	$mainScreen->addComponent($centerPane, TOP, LEFT);
 	
 	// Main Menu
-	$mainMenu =& new VerticalMenuLayout(MENU_WIDGET, 2);
-	$centerPane->addComponent($mainMenu, TOP);
-	$mainMenu->addComponent(new LinkMenuItem(_("Home"), MYURL."/home/welcome/", ($harmoni->getCurrentAction() == "home.welcome")?TRUE:FALSE));
-	$mainMenu->addComponent(new LinkMenuItem(_("Collections"), MYURL."/collections/main/", (ereg("^collection.*",$harmoni->getCurrentAction()))?TRUE:FALSE));
-	$mainMenu->addComponent(new LinkMenuItem(_("Exhibitions"), MYURL."/exhibitions/main/", (ereg("^exhibition.*",$harmoni->getCurrentAction()))?TRUE:FALSE));
+	$mainMenu =& ConcertoMenuGenerator::generateMainMenu($harmoni->getCurrentAction());
+	$centerPane->addComponent($mainMenu, TOP, LEFT);
 
 // :: Footer ::
 	$footer =& new SingleContentLayout();
