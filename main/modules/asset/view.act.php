@@ -1,11 +1,23 @@
 <?
 
+if (!defined("AZ_VIEW"))
+	throwError(new Error("You must define an id for AZ_VIEW", "concerto.asset", true));
+
 // Get the Layout compontents. See core/modules/moduleStructure.txt
 // for more info. 
 $harmoni->ActionHandler->execute("window", "screen");
 $mainScreen =& $harmoni->getAttachedData('mainScreen');
 $centerPane =& $harmoni->getAttachedData('centerPane');
  
+// Check that the user can create an asset here.
+$authZ =& Services::getService("AuthZ");
+$shared =& Services::getService("Shared");
+if (!$authZ->isUserAuthorized($shared->getId(AZ_VIEW), $shared->getId($harmoni->pathInfoParts[3]))) {
+	$errorLayout =& new SingleContentLayout;
+	$errorLayout->addComponent(new Content(_("You are not authorized to view this <em>Asset</em> here."), MIDDLE, CENTER));
+	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
+	return $mainScreen;
+}
 
 // Our Layout Setup
 $actionRows =& new RowLayout();

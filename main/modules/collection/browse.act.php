@@ -29,6 +29,8 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ACCESS), $drId)) {
 	return $mainScreen;
 }
 
+
+
 // If the DR supports searching of root assets, just get those
 $hasRootSearch = FALSE;
 $rootSearchType =& new HarmoniType("DR","Harmoni","RootAssets", "");

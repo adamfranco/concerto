@@ -1,11 +1,25 @@
 <?
 
+// Check for our authorization function definitions
+if (!defined("AZ_ADD_CHILDREN"))
+	throwError(new Error("You must define an id for AZ_ADD_CHILDREN", "concerto.collection", true));
+
 // Get the Layout compontents. See core/modules/moduleStructure.txt
 // for more info. 
 $harmoni->ActionHandler->execute("window", "screen");
 $mainScreen =& $harmoni->getAttachedData('mainScreen');
 $centerPane =& $harmoni->getAttachedData('centerPane');
  
+
+// Check that the user can create a collection here.
+$authZ =& Services::getService("AuthZ");
+$shared =& Services::getService("Shared");
+if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId(REPOSITORY_NODE_ID))) {
+	$errorLayout =& new SingleContentLayout;
+	$errorLayout->addComponent(new Content(_("You are not authorized to create a <em>Collection</em>."), MIDDLE, CENTER));
+	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
+	return $mainScreen;
+}
 
 // Create the wizard.
 

@@ -1,10 +1,23 @@
 <?
 
+if (!defined("AZ_ADD_CHILDREN"))
+	throwError(new Error("You must define an id for AZ_ADD_CHILDREN", "concerto.asset", true));
+
 // Get the Layout compontents. See core/modules/moduleStructure.txt
 // for more info. 
 $harmoni->ActionHandler->execute("window", "screen");
 $mainScreen =& $harmoni->getAttachedData('mainScreen');
 $centerPane =& $harmoni->getAttachedData('centerPane');
+
+// Check that the user can create an asset here.
+$authZ =& Services::getService("AuthZ");
+$shared =& Services::getService("Shared");
+if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($harmoni->pathInfoParts[2]))) {
+	$errorLayout =& new SingleContentLayout;
+	$errorLayout->addComponent(new Content(_("You are not authorized to create an <em>Asset</em> here."), MIDDLE, CENTER));
+	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
+	return $mainScreen;
+}
 
 // Create the wizard.
  if ($_SESSION['add_asset_wizard_'.$harmoni->pathInfoParts[2]]) {
@@ -188,58 +201,70 @@ if ($wizard->isSaveRequested()) {
 	// Make sure we have a valid DR
 	$shared =& Services::getService("Shared");
 	$drManager =& Services::getService("DR");
+	$authZ =& Services::getService("AuthZ");
 	$drId =& $shared->getId($harmoni->pathInfoParts[2]);
 
 	$dr =& $drManager->getDigitalRepository($drId);
 	
 	$properties =& $wizard->getProperties();
 	
-	
-	// Get the type from the select if one is specified
-	if ($properties['option_type']->getValue() != 'NONE') {
-		$typeString = urldecode($properties['option_type']->getValue());
-		$typeparts = explode("::", $typeString);
-		$assetType = new HarmoniType($typeparts[0], $typeparts[1], $typeparts[2]);
-	} 
-	// Otherwise, Generate the type from the specified fields
-	else {
-		$assetType = new HarmoniType($properties['type_domain']->getValue(), 
-									$properties['type_authority']->getValue(), 
-									$properties['type_keyword']->getValue(), 
-									$properties['type_description']->getValue());
-	}
-	
- 	$asset =& $dr->createAsset($properties['display_name']->getValue(), 
- 								$properties['description']->getValue(), 
- 								$assetType);
- 	$assetId =& $asset->getId();
- 	
- 	$content =& new Blob($properties['content']->getValue());
-	$asset->updateContent($content);
- 	
- 	// Update the effective/expiration dates
- 	if ($properties['effective_date']->getValue())
-	 	$asset->updateEffectiveDate(new Time($properties['effective_date']->getValue()));
-	if ($properties['expiration_date']->getValue())
-	 	$asset->updateExpirationDate(new Time($properties['expiration_date']->getValue()));
-	
-	// Add our parent if we have specified one.
-	if ($properties['parent']->getValue() 
-		&& $properties['parent']->getValue() != 'NONE') 
+	// First, verify that we chose a parent that we can add children to.
+	if (!$properties['parent']->getValue() 
+		|| $properties['parent']->getValue() == 'NONE'
+		|| ($parentId =& $shared->getId($properties['parent']->getValue())
+			&& $authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $parentId)))
 	{
-		$parentId =& $shared->getId($properties['parent']->getValue());
-		$parentAsset =& $dr->getAsset($parentId);
-		$parentAsset->addAsset($assetId);
+		
+		// Get the type from the select if one is specified
+		if ($properties['option_type']->getValue() != 'NONE') {
+			$typeString = urldecode($properties['option_type']->getValue());
+			$typeparts = explode("::", $typeString);
+			$assetType = new HarmoniType($typeparts[0], $typeparts[1], $typeparts[2]);
+		} 
+		// Otherwise, Generate the type from the specified fields
+		else {
+			$assetType = new HarmoniType($properties['type_domain']->getValue(), 
+										$properties['type_authority']->getValue(), 
+										$properties['type_keyword']->getValue(), 
+										$properties['type_description']->getValue());
+		}
+		
+		$asset =& $dr->createAsset($properties['display_name']->getValue(), 
+									$properties['description']->getValue(), 
+									$assetType);
+		$assetId =& $asset->getId();
+		
+		$content =& new Blob($properties['content']->getValue());
+		$asset->updateContent($content);
+		
+		// Update the effective/expiration dates
+		if ($properties['effective_date']->getValue())
+			$asset->updateEffectiveDate(new Time($properties['effective_date']->getValue()));
+		if ($properties['expiration_date']->getValue())
+			$asset->updateExpirationDate(new Time($properties['expiration_date']->getValue()));
+		
+		// Add our parent if we have specified one.
+		if ($properties['parent']->getValue() 
+			&& $properties['parent']->getValue() != 'NONE') 
+		{
+			$parentId =& $shared->getId($properties['parent']->getValue());
+			$parentAsset =& $dr->getAsset($parentId);
+			$parentAsset->addAsset($assetId);
+		}
+		
+		$wizard = NULL;
+		unset ($_SESSION['add_asset_wizard_'.$harmoni->pathInfoParts[2]]);
+		unset ($wizard);
+		
+		$returnURL = MYURL."/asset/editview/".$drId->getIdString()."/".$assetId->getIdString();
+		
+		header("Location: ".$returnURL);
+	} 
+	// If we don't have authorization to add to the picked parent, send us back to
+	// that step.
+	else {
+		$wizzard->skipToStep(5);
 	}
-	
-	$wizard = NULL;
-	unset ($_SESSION['add_asset_wizard_'.$harmoni->pathInfoParts[2]]);
-	unset ($wizard);
-	
-	$returnURL = MYURL."/asset/editview/".$drId->getIdString()."/".$assetId->getIdString();
-	
-	header("Location: ".$returnURL);
-	
 } else if ($wizard->isCancelRequested()) {	
 
 	// Prepare the return URL so that we can get back to where we were.
