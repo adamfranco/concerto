@@ -52,13 +52,13 @@ $actionRows->addComponent($contentCols);
 	ob_start();
 	$assetId =& $asset->getId();
 	print  "\n\t<strong>"._("Description").":</strong> \n<em>".$asset->getDescription()."</em>";
-	print  "\n\t<br><strong>"._("ID#").":</strong> ".$assetId->getIdString();
+	print  "\n\t<br /><strong>"._("ID#").":</strong> ".$assetId->getIdString();
 
 	$effectDate =& $asset->getEffectiveDate();
-	print  "\n\t<br><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->toString()."</em>";
+	print  "\n\t<br /><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->toString()."</em>";
 
 	$expirationDate =& $asset->getExpirationDate();
-	print  "\n\t<br><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->toString()."</em>";
+	print  "\n\t<br /><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->toString()."</em>";
 
 	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
 	$layout->addComponent(new Content(ob_get_contents()));
@@ -99,7 +99,7 @@ while ($structSet->hasNext()) {
 		$recordId =& $record->getId();
 		$printedRecordIds[] = $recordId->getIdString();
 
-		print "<hr>";
+		print "<hr />";
 		printRecord($drId, $assetId, $record);
 	}	
 }

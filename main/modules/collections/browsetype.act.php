@@ -17,7 +17,7 @@ $type =& new HarmoniType($typeParts[0],$typeParts[1],$typeParts[2]);
 
 // Intro
 $introHeader =& new SingleContentLayout(HEADING_WIDGET, 2);
-$introHeader->addComponent(new Content(_("Browse Collections with Type").": \n<br>".$typeString));
+$introHeader->addComponent(new Content(_("Browse Collections with Type").": \n<br />".$typeString));
 $actionRows->addComponent($introHeader);
 
 $drManager =& Services::getService("DR");
@@ -53,8 +53,8 @@ function printDRShort(& $dr, $harmoni) {
 	$drId =& $dr->getId();
 	print  "\n\t<strong>".$dr->getDisplayName()."</strong> - "._("ID#").": ".
 			$drId->getIdString();
-	print  "\n\t<br><em>".$dr->getDescription()."</em>";	
-	print  "\n\t<br>";
+	print  "\n\t<br /><em>".$dr->getDescription()."</em>";	
+	print  "\n\t<br />";
 	
 	RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $dr);
 	

@@ -38,7 +38,7 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
 	$_SESSION['edit_collection_wizard_'.$harmoni->pathInfoParts[2]] =& $wizard;
 	
 	// :: Step One ::
-	$stepOne =& $wizard->createStep(_("Name & Description"));
+	$stepOne =& $wizard->createStep(_("Name &amp; Description"));
 	
 	// Create the properties.
 	$displayNameProp =& $stepOne->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
@@ -52,10 +52,10 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
 	ob_start();
 	print "\n<h2>"._("Name")."</h2>";
 	print "\n"._("The Name for this <em>Collection</em>: ");
-	print "\n<br><input type='text' name='display_name' value=\"[[display_name]]\" />[[display_name|Error]]";
+	print "\n<br /><input type='text' name='display_name' value=\"[[display_name]]\" />[[display_name|Error]]";
 	print "\n<h2>"._("Description")."</h2>";
 	print "\n"._("The Description for this <em>Collection</em>: ");
-	print "\n<br><textarea name='description'>[[description]]</textarea>[[description|Error]]";
+	print "\n<br /><textarea name='description' rows='5' cols='30'>[[description]]</textarea>[[description|Error]]";
 	print "\n<div style='width: 400px'> &nbsp; </div>";
 	$stepOne->setText(ob_get_contents());
 	ob_end_clean();
@@ -77,7 +77,7 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
 
 	
 	
-	print "\n<br><table border='1'>";
+	print "\n<br /><table border='1'>";
 	print "\n\t<tr>";
 	print "\n\t<th>"._("Display Name")."</th>";
 	print "\n\t<th>"._("Description")."</th>";

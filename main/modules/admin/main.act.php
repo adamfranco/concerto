@@ -19,8 +19,7 @@ $actionRows->addComponent($introHeader);
 
 $introText =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
 ob_start();
-print "";
-print "</p>\n<ul>";
+print "\n<ul>";
 print "\n\t<li><a href='".MYURL."/agents/group_membership/'>";
 print _("Edit Group Membership");
 print "</a></li>";
@@ -30,7 +29,7 @@ print "</a></li>";
 print "\n\t<li><a href='".MYURL."/authorization/choose_agent/'>";
 print _("Edit authorizations");
 print "</a></li>";
-print "</ul>\n<p>";
+print "\n</ul>";
 
 $introText->addComponent(new Content(ob_get_contents()));
 ob_end_clean();

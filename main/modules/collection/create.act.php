@@ -45,10 +45,10 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId(RE
 	// Create the step text
 	$stepOneText = "\n<h2>"._("Name")."</h2>";
 	$stepOneText .= "\n"._("The Name for this <em>Collection</em>: ");
-	$stepOneText .= "\n<br><input type='text' name='display_name' value=\"[[display_name]]\" />[[display_name|Error]]";
+	$stepOneText .= "\n<br /><input type='text' name='display_name' value=\"[[display_name]]\" />[[display_name|Error]]";
 	$stepOneText .= "\n<h2>"._("Description")."</h2>";
 	$stepOneText .= "\n"._("The Description for this <em>Collection</em>: ");
-	$stepOneText .= "\n<br><textarea name='description'>[[description]]</textarea>[[description|Error]]";
+	$stepOneText .= "\n<br /><textarea name='description'>[[description]]</textarea>[[description|Error]]";
 	$stepOneText .= "\n<div style='width: 400px'> &nbsp; </div>";
 	$stepOne->setText($stepOneText);
 	

@@ -58,8 +58,8 @@ function printDRShort(& $dr, & $harmoni) {
 	$drId =& $dr->getId();
 	print  "\n\t<strong>".$dr->getDisplayName()."</strong> - "._("ID#").": ".
 			$drId->getIdString();
-	print  "\n\t<br><em>".$dr->getDescription()."</em>";	
-	print  "\n\t<br>";
+	print  "\n\t<br /><em>".$dr->getDescription()."</em>";	
+	print  "\n\t<br />";
 	
 	RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $dr);
 	

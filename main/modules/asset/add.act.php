@@ -40,7 +40,7 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($h
 	
 	
 	// :: Name and Description ::
-	$step =& $wizard->createStep(_("Name & Description"));
+	$step =& $wizard->createStep(_("Name &amp; Description"));
 	
 	// Create the properties.
 	$displayNameProp =& $step->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
@@ -54,10 +54,10 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($h
 	ob_start();
 	print "\n<h2>"._("Name")."</h2>";
 	print "\n"._("The Name for this <em>Asset</em>: ");
-	print "\n<br><input type='text' name='display_name' value=\"[[display_name]]\" />[[display_name|Error]]";
+	print "\n<br /><input type='text' name='display_name' value=\"[[display_name]]\" />[[display_name|Error]]";
 	print "\n<h2>"._("Description")."</h2>";
 	print "\n"._("The Description for this <em>Asset</em>: ");
-	print "\n<br><textarea name='description'>[[description]]</textarea>[[description|Error]]";
+	print "\n<br /><textarea rows='5' cols='30' name='description'>[[description]]</textarea>[[description|Error]]";
 	print "\n<div style='width: 400px'> &nbsp; </div>";
 	$step->setText(ob_get_contents());
 	ob_end_clean();
@@ -88,12 +88,12 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($h
 	print "\n"._("All <em>Assets</em> have an immutable type. This type can be used to catagorize <em>Assets</em>, but is not necessary.");
 	print "\n<br />Select a type here or use the fields below to create a new one:";
 	print "\n<select name='option_type'>";
-	print "\n\t<option value='NONE' [['option_type'=='NONE'|selected|]]>Use Fields Below...</option>";
+	print "\n\t<option value='NONE' [['option_type'=='NONE'|selected='selected'|]]>Use Fields Below...</option>";
 	$assetTypes =& $dr->getAssetTypes();
 	while ($assetTypes->hasNext()) {
 		$assetType =& $assetTypes->next();
 		$typeKey = urlencode($assetType->getDomain()."::".$assetType->getAuthority()."::".$assetType->getKeyword());
-		print "\n\t<option value='".$typeKey."' [['option_type'=='".$typeKey."'|selected|]]>"
+		print "\n\t<option value='".$typeKey."' [['option_type'=='".$typeKey."'|selected='selected'|]]>"
 			.$assetType->getDomain()."::".$assetType->getAuthority()."::".$assetType->getKeyword()
 			."</option>";
 	}
@@ -123,7 +123,7 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($h
 	print "<strong>"._("Description").": </strong>";
 	print "\n\t\t</td>";
 	print "\n\t\t<td>";
-	print "\n<textarea name='type_description'>[[type_description]]</textarea>";
+	print "\n<textarea name='type_description' rows='5' cols='30'>[[type_description]]</textarea>";
 	print "\n\t\t</td>\n\t</tr>";
 	print "\n</table>";
 	$step->setText(ob_get_contents());
@@ -139,7 +139,7 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($h
 	ob_start();
 	print "\n<h2>"._("Content")."</h2>";
 	print "\n"._("This is an optional place to put content for this <em>Asset</em>. <br />If you would like more structure, you can create new schemas to hold the <em>Asset's</em> data.");
-	print "\n<br><textarea name='content' cols='50' rows='20'>[[content]]</textarea>[[content|Error]]";
+	print "\n<br /><textarea name='content' cols='50' rows='20'>[[content]]</textarea>[[content|Error]]";
 	print "\n<div style='width: 400px'> &nbsp; </div>";
 	$step->setText(ob_get_contents());
 	ob_end_clean();
@@ -160,11 +160,11 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($h
 	ob_start();
 	print "\n<h2>"._("Effective Date")."</h2>";
 	print "\n"._("The date that this <em>Asset</em> becomes effective: ");
-	print "\n<br><input type='text' name='effective_date' value=\"[[effective_date]]\" />[[effective_date|Error]]";
+	print "\n<br /><input type='text' name='effective_date' value=\"[[effective_date]]\" />[[effective_date|Error]]";
 	
 	print "\n<h2>"._("Expiration Date")."</h2>";
 	print "\n"._("The date that this <em>Asset</em> expires: ");
-	print "\n<br><input type='text' name='expiration_date' value=\"[[expiration_date]]\" />[[expiration_date|Error]]";
+	print "\n<br /><input type='text' name='expiration_date' value=\"[[expiration_date]]\" />[[expiration_date|Error]]";
 	$step->setText(ob_get_contents());
 	ob_end_clean();
 	
@@ -181,13 +181,13 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($h
 	ob_start();
 	print "\n<h2>"._("Parent <em>Asset</em>")."</h2>";
 	print "\n"._("Select one of the <em>Assets</em> below if you wish to make this new asset a child of another asset: ");
-	print "\n<br><select name='parent'>";
-	print "\n\t<option value='NONE' [[parent=='NONE'|checked|]]>None</option>";
+	print "\n<br /><select name='parent'>";
+	print "\n\t<option value='NONE' [[parent=='NONE'|checked='checked'|]]>None</option>";
 	$assets =& $dr->getAssets();
 	while ($assets->hasNext()) {
 		$asset =& $assets->next();
 		$assetId =& $asset->getId();
-		print "\n\t<option value='".$assetId->getIdString()."' [[parent=='".$assetId->getIdString()."'|checked|]]>Id: ".$assetId->getIdString()." - ".$asset->getDisplayName()."</option>";
+		print "\n\t<option value='".$assetId->getIdString()."' [[parent=='".$assetId->getIdString()."'|checked='checked'|]]>Id: ".$assetId->getIdString()." - ".$asset->getDisplayName()."</option>";
 	}
 		
 	print "\n</select>";

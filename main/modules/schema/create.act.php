@@ -41,14 +41,14 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	ob_start();
 	print "\n<h2>"._("Name")."</h2>";
 	print "\n"._("The Name for this Schema: ");
-	print "\n<br><input type='text' name='schema_display_name' value=\"[[schema_display_name]]\" />[[schema_display_name|Error]]";
+	print "\n<br /><input type='text' name='schema_display_name' value=\"[[schema_display_name]]\" />[[schema_display_name|Error]]";
 	print "\n<h2>"._("Description")."</h2>";
 	print "\n"._("The Description for this Schema: ");
-	print "\n<br><textarea name='schema_description'>[[schema_description]]</textarea>[[schema_description|Error]]";
+	print "\n<br /><textarea name='schema_description'>[[schema_description]]</textarea>[[schema_description|Error]]";
 	print "\n<h2>"._("Format")."</h2>";
 	print "\n"._("The format of data that is entered into the fields: ");
 	print "\n<br /><em>"._("'Plain Text - ASCII encoding', 'XML', etc.")."</em>";
-	print "\n<br><input type='text' name='format' value=\"[[format]]\" size='25' />[[format|Error]]";
+	print "\n<br /><input type='text' name='format' value=\"[[format]]\" size='25' />[[format|Error]]";
 	print "\n<div style='width: 400px'> &nbsp; </div>";
 	$stepOne->setText(ob_get_contents());
 	ob_end_clean();
@@ -114,7 +114,7 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 					while ($types->hasNext()) {
 						$type =& $types->next();
 						$typeString = urlencode($type->getDomain())."/".urlencode($type->getAuthority())."/".urlencode($type->getKeyword());
-						print "\n<option value=\"".$typeString."\" [['type'=='".$typeString."'| selected|]]>";
+						print "\n<option value=\"".$typeString."\" [['type'=='".$typeString."'| selected='selected'|]]>";
 						print $type->getDomain()." :: ".$type->getAuthority()." :: ".$type->getKeyword();
 						print "</option>";
 					}
@@ -127,28 +127,28 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 		print "\n<tr><td>";
 			print _("isMandatory? ");
 		print "\n</td><td>";
-			print "<input type=\"radio\" name='mandatory' value='TRUE' [['mandatory'=='TRUE'| checked|]] />TRUE / ";
-			print "<input type=\"radio\" name='mandatory' value='FALSE' [['mandatory'=='FALSE'| checked|]] /> FALSE";
+			print "<input type=\"radio\" name='mandatory' value='TRUE' [['mandatory'=='TRUE'| checked='checked'|]] />TRUE / ";
+			print "<input type=\"radio\" name='mandatory' value='FALSE' [['mandatory'=='FALSE'| checked='checked'|]] /> FALSE";
 		print "\n</td></tr>";
 		
 		print "\n<tr><td>";
 			print _("isRepeatable? ");
 		print "\n</td><td>";
-			print "<input type=\"radio\" name='repeatable' value='TRUE' [['repeatable'=='TRUE'| checked|]] />TRUE / ";
-			print "<input type=\"radio\" name='repeatable' value='FALSE' [['repeatable'=='FALSE'| checked|]] /> FALSE";
+			print "<input type=\"radio\" name='repeatable' value='TRUE' [['repeatable'=='TRUE'| checked='checked'|]] />TRUE / ";
+			print "<input type=\"radio\" name='repeatable' value='FALSE' [['repeatable'=='FALSE'| checked='checked'|]] /> FALSE";
 		print "\n</td></tr>";
 		
 		print "\n<tr><td>";
 			print _("isPopulatedByDR? ");
 		print "\n</td><td>";
-			print "<input type=\"radio\" name='populatedbydr' value='TRUE' [['populatedbydr'=='TRUE'| checked|]] />TRUE / ";
-			print "<input type=\"radio\" name='populatedbydr' value='FALSE' [['populatedbydr'=='FALSE'| checked|]] /> FALSE";
+			print "<input type=\"radio\" name='populatedbydr' value='TRUE' [['populatedbydr'=='TRUE'| checked='checked'|]] />TRUE / ";
+			print "<input type=\"radio\" name='populatedbydr' value='FALSE' [['populatedbydr'=='FALSE'| checked='checked'|]] /> FALSE";
 		print "\n</td></tr>";
 		
 		print "</table>";
 	
 	print "\n<br />[Buttons]";
-	print "\n<hr>";
+	print "\n<hr />";
 	print _("Elements Added:");
 	print "\n<table>";
 	print "[List]\n<tr>";

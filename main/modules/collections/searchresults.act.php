@@ -76,8 +76,8 @@ function printAssetShort(& $asset, &$harmoni) {
 	$assetId =& $asset->getId();
 	print  "\n\t<strong>".$asset->getDisplayName()."</strong> - "._("ID#").": ".
 			$assetId->getIdString();
-	print  "\n\t<br><em>".$asset->getDescription()."</em>";	
-	print  "\n\t<br>";
+	print  "\n\t<br /><em>".$asset->getDescription()."</em>";	
+	print  "\n\t<br />";
 	
 	AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
 	
