@@ -104,16 +104,22 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 			$infoStructures =& $dr->getInfoStructures();
 			if (!$infoStructures->hasNext())
 				throwError(new Error("No InfoStructures availible.", "Concerto"));
-			
-			// just get the fist one to use:
-			$infoStructure =& $infoStructures->next();
-			$types =& $infoStructure->getInfoPartTypes();
-			while ($types->hasNext()) {
-				$type =& $types->next();
-				$typeString = urlencode($type->getDomain())."/".urlencode($type->getAuthority())."/".urlencode($type->getKeyword());
-				print "\n<option value=\"".$typeString."\" [['type'=='".$typeString."'| selected|]]>";
-				print $type->getDomain()." :: ".$type->getAuthority()." :: ".$type->getKeyword();
-				print "</option>";
+				
+			while ($infoStructures->hasNext()) {
+				// we want just the datamanager structure types, so just 
+				// get the first structure that has Format "DataManagerPrimatives"
+				$infoStructure =& $infoStructures->next();
+				if ($infoStructure->getFormat() == "DataManagerPrimatives") {
+					$types =& $infoStructure->getInfoPartTypes();
+					while ($types->hasNext()) {
+						$type =& $types->next();
+						$typeString = urlencode($type->getDomain())."/".urlencode($type->getAuthority())."/".urlencode($type->getKeyword());
+						print "\n<option value=\"".$typeString."\" [['type'=='".$typeString."'| selected|]]>";
+						print $type->getDomain()." :: ".$type->getAuthority()." :: ".$type->getKeyword();
+						print "</option>";
+					}
+					break;
+				}
 			}
 			print "\n</select>[[type|Error]]";
 		print "\n</td></tr>";
