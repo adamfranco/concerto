@@ -34,12 +34,15 @@ require_once(OKI2."/osid/OsidContext.php");
 	
 
 // :: Set up the database connection ::
-	Services::startService("DBHandler");
-	$dbHandler =& Services::getService("DBHandler");
+	$configuration =& new ConfigurationProperties;
+	Services::startManagerAsService("DatabaseManager", $context, $configuration);
+	
+	//Set up the database connection
+	$databaseManager =& Services::getService("DatabaseManager");
 	$dbName = "concerto_test";
-	$dbID = $dbHandler->addDatabase( new MySQLDatabase("localhost", $dbName,"test","test") );
-	$dbHandler->pConnect($dbID);
-	unset($dbHandler); // done with that for now
+	$dbID = $databaseManager->addDatabase( new MySQLDatabase("localhost", $dbName,"test","test") );
+	$databaseManager->pConnect($dbID);
+	unset($databaseManager); // done with that for now
 
 
 // :: Set up the IdManager as this is required for the ID service ::
