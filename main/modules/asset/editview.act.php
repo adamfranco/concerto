@@ -133,6 +133,7 @@ $actionRows->addComponent($layout);
 ob_start();
 print "\n<hr>";
 print "\n<form action='".MYURL."/record/add/".$drId->getIdString()."/".$assetId->getIdString()."/' method='post'>";
+print "\n<div>";
 
 print "\n<input type='hidden' name='return_url' value='".MYURL."/".implode("/", $harmoni->pathInfoParts)."'>";
 print "\n<input type='submit' value='"._("Add")."' /> ";
@@ -157,7 +158,8 @@ print "\n</select>";
 
 print " "._("Schema").".";
 
-print"</form";
+print "\n</div>";
+print"\n</form>";
 
 $layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
 $layout->addComponent(new Content(ob_get_contents()));
