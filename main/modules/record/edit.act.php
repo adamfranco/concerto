@@ -41,7 +41,7 @@ if (!$authZ->isUserAuthorized($idManager->getId(AZ_EDIT), $id)) {
 
 	// Instantiate the wizard, then add our steps.
 	$wizard =& new Wizard(_("Edit Record"));
-	$_SESSION['edit_record_wizard_'.$harmoni->pathInfoPartStructures[4]] =& $wizard;
+	$_SESSION['edit_record_wizard_'.$harmoni->pathInfoParts[4]] =& $wizard;
 	
 	// First get the set for this structure and start with the partStructure in the set.
 	$setManager =& Services::getService("Sets");
