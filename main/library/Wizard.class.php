@@ -129,6 +129,36 @@ class Wizard {
 	}
 	
 	/**
+	 * Returns a array of all properties in all steps.
+	 * If steps have properties of the same name, there could be conflicts.
+	 * @return array An array of Property objects.
+	 */
+	function & getProperties() {
+		$allProperties = array();
+	
+		foreach (array_keys($this->_steps) as $number) {
+			$stepProperties =& $this->_steps[$number]->getProperties();
+			foreach (array_keys($stepProperties) as $name) {
+				$allProperties[$name] =& $stepProperties[$name];
+			}
+		}
+	
+		return $allProperties;
+	}
+	
+	/**
+	 * Update the properties of the last step. The should generally be called
+	 * before saving data if the last step has not been updated via a next()
+	 * or previous() command.
+	 *
+	 * @access public
+	 * @return boolean True on success. False on invalid Property values.
+	 */
+	function updateLastStep () {
+		return $this->_steps[$this->_currentStep]->updateProperties();
+	}
+	
+	/**
 	 * Returns a layout of content for the current Wizard-state
 	 * @param object Harmoni The harmoni object which contains the current context.
 	 * @return object Layout
@@ -143,7 +173,7 @@ class Wizard {
 		$wizardLayout =& new RowLayout;
 		
 		// :: Form tags for around the layout :: 
-		$wizardLayout->setPreSurroundingText("<form action='".MYURL."/".implode("/", $harmoni->pathInfoParts)."/' method='post' id='wizardform'>");
+		$wizardLayout->setPreSurroundingText("<form action='".MYURL."/".implode("/", $harmoni->pathInfoParts)."' method='post' id='wizardform'>");
 		$wizardLayout->setPostSurroundingText("</form>");
 		
 		// :: Heading ::
@@ -232,22 +262,6 @@ class Wizard {
 		$center->addComponent($buttons);
 		
 		return $wizardLayout;
-	}
-	
-	/**
-	 * Returns a array of all properties in all steps.
-	 * If steps have properties of the same name, there could be conflicts.
-	 * @return array An array of Property objects.
-	 */
-	function & getProperties() {
-		$allProperties = array();
-		foreach (array_keys($this->_steps) as $number) {
-			$stepProperties =& $this->_steps->getProperties();
-			foreach (array_keys($stepProperties) as $name) {
-				$allProperties[$name] =& $stepProperties[$name];
-			}
-		}
-		return $allProperties;
 	}
 }
 

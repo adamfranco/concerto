@@ -32,6 +32,13 @@ $text .= "</a></li>";
 $text .= "</ul>\n<p>";
 $text .= _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
 $text .= "</p>";
+
+// If the user is authorized, allow them to create a new collection.
+// @todo - add authorization.
+$text .= "\n<ul>\n<li><a href='".MYURL."/collections/create/'>";
+$text .= _("Create a new <em>Collection</em>");
+$text .= "</a>\n</li>\n</ul>";
+
 $introText->addComponent(new Content($text));
 $actionRows->addComponent($introText);
 
