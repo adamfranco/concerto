@@ -173,8 +173,39 @@ class Wizard {
 		$wizardLayout =& new RowLayout;
 		
 		// :: Form tags for around the layout :: 
-		$wizardLayout->setPreSurroundingText("<form action='".MYURL."/".implode("/", $harmoni->pathInfoParts)."' method='post' id='wizardform'>");
-		$wizardLayout->setPostSurroundingText("</form>");
+		$wizardLayout->setPreSurroundingText("<form action='".MYURL."/".implode("/", $harmoni->pathInfoParts)."' method='post' id='wizardform' name='wizardform'>");
+		$postText = "\n<input type='hidden' name='go_to_step' value=''>";
+		$postText .= "\n<input type='hidden' name='save_link' value=''>";
+		$postText .= "\n<input type='hidden' name='cancel_link' value=''>";
+		$postText .= "\n</form>";
+		$wizardLayout->setPostSurroundingText($postText);
+		
+		// Add to the page's javascript so we can skip to next pages by
+		// adding values to the hiddenFields above.
+		$javaScript = "
+			
+			// Set a flag to save the form after it is submited
+			function save() {
+				document.wizardform.save_link.value = 'save';
+				document.wizardform.submit();
+			}
+			
+			// Set a flag to cancel this wizard
+			function cancel() {
+				document.wizardform.cancel_link.value = 'cancel';
+				document.wizardform.submit();
+			}
+			
+			// Specify which step to go to on submit.
+			function goToStep(step) {
+				document.wizardform.go_to_step.value = step;
+				document.wizardform.submit();
+			}
+		
+		";
+		$theme =& $harmoni->getTheme();
+		$theme->addHeadJavascript($javaScript);
+		
 		
 		// :: Heading ::
 		$heading =& new SingleContentLayout(HEADING_WIDGET, 2);
@@ -195,7 +226,7 @@ class Wizard {
 				$menu->addComponent(
 					new LinkMenuItem($number." - ".
 						$this->_steps[$number]->getDisplayName(),
-						MYURL."/".implode("/",$harmoni->pathInfoParts)."/".$number."/",
+						"Javascript:goToStep('".$number."')",
 						FALSE)
 				);			
 			} else {
@@ -209,13 +240,13 @@ class Wizard {
 		if ($this->_allowStepLinks || !$this->hasNext()) {
 			$menu->addComponent(
 				new LinkMenuItem(_("Save"),
-					MYURL."/".implode("/",$harmoni->pathInfoParts)."/save/",
+					"Javascript:save()",
 					FALSE)
 			);
 		}
 		$menu->addComponent(
 			new LinkMenuItem(_("Cancel"),
-				MYURL."/".implode("/",$harmoni->pathInfoParts)."/cancel/",
+				"Javascript:cancel()",
 				FALSE)
 		);
 		

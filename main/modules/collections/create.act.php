@@ -43,7 +43,9 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 
 }
 
-if ($_REQUEST['save']) {
+printpre($_REQUEST);
+
+if ($_REQUEST['save'] || $_REQUEST['save_link']) {
 	// If all properties validate then go through the steps nessisary to
 	// save the data.
 	if ($wizard->updateLastStep()) {
@@ -52,7 +54,7 @@ if ($_REQUEST['save']) {
 		printpre($properties);
 	}
 	
-} else if ($_REQUEST['cancel']) {
+} else if ($_REQUEST['cancel'] || $_REQUEST['cancel_link']) {
 	$wizard = NULL;
 	unset ($_SESSION['wizard']);
 	unset ($wizard);
@@ -63,6 +65,9 @@ if ($_REQUEST['save']) {
 
 else if ($_REQUEST['previous'] && $wizard->hasPrevious())
 	$wizard->previous();
+
+else if ($_REQUEST['go_to_step'])
+	$wizard->goToStep($_REQUEST['go_to_step']);
 
 $wizardLayout =& $wizard->getLayout($harmoni);
 $centerPane->addComponent($wizardLayout, TOP, CENTER);
