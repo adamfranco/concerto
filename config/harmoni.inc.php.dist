@@ -1,7 +1,7 @@
 <?
 // :: Version: $Id$
 
-require_once(HARMONI."/oki2/shared/ConfigurationPropertiesType.class.php");
+require_once(HARMONI."/oki2/shared/ConfigurationProperties.class.php");
 require_once(OKI2."/osid/OsidContext.php");
 
 
@@ -44,7 +44,7 @@ require_once(OKI2."/osid/OsidContext.php");
 	Services::startService("AgentManager", $dbID, $dbName);
 
 // :: Start the AuthenticationManager OSID Impl.
-	$configuration =& new HarmoniProperties(new ConfigurationPropertiesType);
+	$configuration =& new ConfigurationProperties;
 	$tokenCollectors = array(
 //		serialize(new Type ("Authentication", "Middlebury College", "Concerto DB")) 
 //			=> new BasicFormNamePassTokenCollector,
@@ -55,13 +55,13 @@ require_once(OKI2."/osid/OsidContext.php");
 	Services::startManagerAsService("AuthenticationManager", $context, $configuration);
 	
 // :: Start and configure the AuthenticationMethodManager
-	$configuration =& new HarmoniProperties(new ConfigurationPropertiesType);
+	$configuration =& new ConfigurationProperties;
 	
 		// set up a Database Authentication Method
 		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/SQLDatabaseAuthNMethod.class.php");
 		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/SQLDatabaseMD5UsernamePasswordAuthNTokens.class.php");
 		$dbAuthType =& new Type ("Authentication", "Middlebury College", "Concerto DB");
-		$dbMethodConfiguration =& new HarmoniProperties(new ConfigurationPropertiesType);
+		$dbMethodConfiguration =& new ConfigurationProperties;
 		$dbMethodConfiguration->addProperty('tokens_class', $arg0 = 'SQLDatabaseMD5UsernamePasswordAuthNTokens');
 		$dbMethodConfiguration->addProperty('database_id', $dbID);
 		$dbMethodConfiguration->addProperty('authentication_table', $arg2 = 'auth_db_user');
@@ -83,7 +83,7 @@ require_once(OKI2."/osid/OsidContext.php");
 		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/LDAPAuthNMethod.class.php");
 		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/LDAPAuthNTokens.class.php");	
 		$ldapAuthType =& new Type ("Authentication", "Middlebury College", "Middlebury LDAP");
-		$ldapConfiguration =& new HarmoniProperties(new ConfigurationPropertiesType);
+		$ldapConfiguration =& new ConfigurationProperties;
 		$ldapConfiguration->addProperty('tokens_class', $arg0 = 'LDAPAuthNTokens');
 		$ldapConfiguration->addProperty("LDAPHost", $arg1 = "ad.middlebury.edu");
 		$ldapConfiguration->addProperty("baseDN", $arg2 = "cn=users,dc=middlebury,dc=edu");
@@ -115,7 +115,7 @@ require_once(OKI2."/osid/OsidContext.php");
 	
 	
 // :: Agent-Token Mapping Manager ::	
-	$configuration =& new HarmoniProperties(new ConfigurationPropertiesType);
+	$configuration =& new ConfigurationProperties;
 	$configuration->addProperty('database_id', $dbID);
 	Services::startManagerAsService("AgentTokenMappingManager", $context, $configuration);
 
@@ -181,7 +181,10 @@ require_once(OKI2."/osid/OsidContext.php");
 /************************************************************************/
 
 // :: Set up the Authorization System ::
-	Services::startService("AuthZ", $dbID, $dbName);
+	$configuration =& new ConfigurationProperties;
+	$configuration->addProperty('database_index', $dbID);
+	$configuration->addProperty('database_name', $dbName);
+	Services::startManagerAsService("AuthorizationManager", $context, $configuration);
 	
 // :: Set up the Sets Manager ::
 	Services::startService("Sets", $dbID);
