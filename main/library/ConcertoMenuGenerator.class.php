@@ -22,7 +22,7 @@ class ConcertoMenuGenerator {
 		$module = $parts[0];
 		$action = $parts[1];
 		
-		$menu =& new VerticalMenuLayout(MENU_WIDGET, 2);
+		$menu =& new VerticalMenuLayout(MENU_WIDGET, 1);
 
 	// :: Home ::
 		$menu->addComponent(
@@ -37,7 +37,7 @@ class ConcertoMenuGenerator {
 			new LinkMenuItem(
 				_("Collections"), 
 				MYURL."/collections/main/", 
-				(ereg("^collection.*",$module))?TRUE:FALSE)
+				($module == "collections" && $action == "main")?TRUE:FALSE)
 		);
 		
 		// Collection browse links.

@@ -26,7 +26,9 @@ if ($isAuthenticated) {
 	}
 	
 	header("Location: ".MYURL."/".implode("/",$currentPathInfo));
-}
+} else {
 
-// if we weren't sucessfull, we will be sent to the failed login
-// action automatically.
+	// if we weren't sucessfull, head to the failed login action if for 
+	// some reason we are not sent there automatically.
+	$harmoni->forward($harmoni->LoginHandler->getFailedLoginAction());
+}

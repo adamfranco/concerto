@@ -50,15 +50,17 @@ $mainScreen =& new RowLayout(TEXT_BLOCK_WIDGET, 1);
 	// Status Bar
 	$statusBar =& new SingleContentLayout();
 	$headRow->addComponent($statusBar, TOP, RIGHT);
-		$statusText = "";
+		$statusText = _("Current User: ");
 		if ($harmoni->LoginState->isValid()) {
-			$statusText .= "<a href='".MYURL."/auth/logout/".
+			$statusText .= $harmoni->LoginState->getAgentName();
+			$statusText .= " - <a href='".MYURL."/auth/logout/".
 						implode("/", $harmoni->pathInfoParts)."'>";
-			$statusText .= _("You are logged in.");
+			$statusText .= _("Log Out");
 		} else {
-			$statusText .= "<a href='".MYURL."/auth/login/".
+			$statusText .= _("anonymous");
+			$statusText .= " - <a href='".MYURL."/auth/login/".
 						implode("/", $harmoni->pathInfoParts)."'>";
-			$statusText .= _("You are not logged in.");
+			$statusText .= _("Log In");
 		}
 		$statusText .= "</a>";
 	$statusBar->addComponent(new Content($statusText));

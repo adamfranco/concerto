@@ -23,12 +23,12 @@
 
 // :: Set up the database connection ::
 	$dbHandler=&Services::requireService("DBHandler");
-	$dbID = $dbHandler->addDatabase( new MySQLDatabase("localhost","AuthN","test","test") );
+	$dbID = $dbHandler->addDatabase( new MySQLDatabase("localhost","adam_concerto","test","test") );
 	$dbHandler->pConnect($dbID);
 	unset($dbHandler); // done with that for now
 
 // :: Set up the SharedManager as this is required for the ID service ::
-	Services::startService("Shared", $dbID, "AuthN");
+	Services::startService("Shared", $dbID, "adam_concerto");
 
 
 // :: Set up the Authentication and Login Handlers ::
@@ -38,12 +38,15 @@
 											"auth.login",
 											"language.change",
 											"window.screen",
-											"home.welcome"
+											"home.welcome",
+											"collections.main",
+											"collections.namebrowse",
+											"collections.typebrowse"
 											);
 	
 	//printpre($GLOBALS);
 	
-	Services::startService("AuthN", $dbID, "AuthN");
+	Services::startService("AuthN", $dbID,"adam_concerto");
 	
 	#########################
 	# HANDLE AUTHENTICATION #
@@ -61,9 +64,11 @@
 	// :: set up the DBAuthenticationMethod options ::
 	$options =& new DBMethodOptions;
 	$options->set("databaseIndex",$dbID);
-	$options->set("tableName", "AuthN.user");
+	$options->set("tableName", "adam_concerto.auth_db_user");
 	$options->set("usernameField", "username");
 	$options->set("passwordField", "password");
+	$options->set("passwordFieldEncrypted", TRUE);
+	$options->set("passwordFieldEncryptionType", "databaseMD5");
 	
 	// :: create the DBAuthenticationMethod with the above options ::
 	$dbAuthMethod =& new DBAuthenticationMethod($options);
@@ -85,3 +90,36 @@
 //	$langLoc->setLanguage("en_US");
 	$languages =& $langLoc->getLanguages();
 //  printpre($languages);
+
+
+// :: Set up the DataManager ::
+	HarmoniDataManager::setup($dbID);
+
+// :: Set up the Hierarchy Manager ::
+	$configuration = array(
+		"type" => SQL_DATABASE,
+		"database_index" => $dbID,
+		"hierarchy_table_name" => "hierarchy",
+		"hierarchy_id_column" => "id",
+		"hierarchy_display_name_column" => "display_name",
+		"hierarchy_description_column" => "description",
+		"node_table_name" => "hierarchy_node",
+		"node_hierarchy_key_column" => "fk_hierarchy",
+		"node_id_column" => "id",
+		"node_parent_key_column" => "fk_parent",
+		"node_display_name_column" => "display_name",
+		"node_description_column" => "description"
+	);
+	Services::startService("Hierarchy", $configuration);
+	$hierarchyManager =& Services::getService("Hierarchy");
+	$nodeTypes = array();
+// 	$hierarchy =& $hierarchyManager->createHierarchy("Concerto", "The Hierarchy for the Concerto DR", $nodeTypes, FALSE, FALSE);
+// 	printpre($hierarchy);
+
+// :: Set up the DigitalRepositoryManager ::
+	$configuration = array(
+		"hierarchyId" => "3",
+		"versionControlAll" => TRUE
+	);
+	
+	Services::startService("DR", $configuration);
