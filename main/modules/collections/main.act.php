@@ -35,7 +35,7 @@ $text .= "</p>";
 
 // If the user is authorized, allow them to create a new collection.
 // @todo - add authorization.
-$text .= "\n<ul>\n<li><a href='".MYURL."/collections/create/'>";
+$text .= "\n<ul>\n<li><a href='".MYURL."/collection/create/'>";
 $text .= _("Create a new <em>Collection</em>");
 $text .= "</a>\n</li>\n</ul>";
 
