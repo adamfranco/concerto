@@ -43,8 +43,6 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 
 }
 
-printpre($_REQUEST);
-
 if ($_REQUEST['save'] || $_REQUEST['save_link']) {
 	// If all properties validate then go through the steps nessisary to
 	// save the data.

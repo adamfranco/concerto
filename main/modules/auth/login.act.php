@@ -9,6 +9,7 @@ while ($authTypes->hasNext()) {
 	$authType =& $authTypes->next();
 	
 	// Try authenticating with this type
+	print "Authenticating";
 	$authN->authenticateUser($authType);
 	
 	// If they are authenticated, quit
@@ -26,9 +27,4 @@ if ($isAuthenticated) {
 	}
 	
 	header("Location: ".MYURL."/".implode("/",$currentPathInfo));
-} else {
-
-	// if we weren't sucessfull, head to the failed login action if for 
-	// some reason we are not sent there automatically.
-	$harmoni->forward($harmoni->LoginHandler->getFailedLoginAction());
 }
