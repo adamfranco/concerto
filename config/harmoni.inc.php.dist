@@ -19,6 +19,7 @@ require_once(OKI2."/osid/OsidContext.php");
 	$context =& new OsidContext;
 	$context->assignContext('harmoni', $harmoni);
 
+
 // :: setup the ActionHandler ::
 	function callback_action(&$harmoni) {
 		return $harmoni->pathInfoParts[0] . "." . $harmoni->pathInfoParts[1];
@@ -39,9 +40,20 @@ require_once(OKI2."/osid/OsidContext.php");
 	$dbHandler->pConnect($dbID);
 	unset($dbHandler); // done with that for now
 
+
 // :: Set up the IdManager as this is required for the ID service ::
-	Services::startService("IdManager", $dbID, $dbName);
-	Services::startService("AgentManager", $dbID, $dbName);
+	$configuration =& new ConfigurationProperties;
+	$configuration->addProperty('database_index', $dbID);
+	$configuration->addProperty('database_name', $dbName);
+	Services::startManagerAsService("IdManager", $context, $configuration);
+	
+	
+// :: Set up the AgentManager ::
+	$configuration =& new ConfigurationProperties;
+	$configuration->addProperty('database_index', $dbID);
+	$configuration->addProperty('database_name', $dbName);
+	Services::startManagerAsService("AgentManager", $context, $configuration);
+
 
 // :: Start the AuthenticationManager OSID Impl.
 	$configuration =& new ConfigurationProperties;
@@ -53,7 +65,8 @@ require_once(OKI2."/osid/OsidContext.php");
 	);
 	$configuration->addProperty('token_collectors', $tokenCollectors);
 	Services::startManagerAsService("AuthenticationManager", $context, $configuration);
-	
+
+
 // :: Start and configure the AuthenticationMethodManager
 	$configuration =& new ConfigurationProperties;
 	
@@ -140,22 +153,24 @@ require_once(OKI2."/osid/OsidContext.php");
 // :: Set up the DataManager ::
 	DataManager::setup($dbID);
 
-// :: Set up the Hierarchy Manager ::
-	Services::startService("Hierarchy", $dbID, $dbName);
 
-// :: Set up the RepositoryManager ::
-	$repositoryHierarchyId = "673";
-	$defaultParentId = "301";
-	$configuration = array(
-		"hierarchyId" => $repositoryHierarchyId,
-		"versionControlAll" => TRUE,
-		"dbId" => $dbID,
-		"defaultParentId" => $defaultParentId,
-		"use_filesystem_for_files" => TRUE,
-		"file_data_path" => "/www/afranco/concerto_data",
-	);
-	
-	Services::startService("Repository", $configuration);
+// :: Set up the Hierarchy Manager ::
+	$configuration =& new ConfigurationProperties;
+	$configuration->addProperty('database_index', $dbID);
+	$configuration->addProperty('database_name', $dbName);
+	Services::startManagerAsService("HierarchyManager", $context, $configuration);
+
+
+// :: Set up the RepositoryManager ::	
+	$configuration =& new ConfigurationProperties;
+	$configuration->addProperty('database_index', $dbID);
+	$configuration->addProperty('hierarchy_id', $arg0 = "673");
+	$configuration->addProperty('default_parent_id', $arg1 = "301");
+	$configuration->addProperty('version_control_all', $arg2 = TRUE);
+	$configuration->addProperty('use_filesystem_for_files', $arg3 = TRUE);
+	$configuration->addProperty('file_data_path', $arg4 = "/www/afranco/concerto_data");
+	Services::startManagerAsService("RepositoryManager", $context, $configuration);
+	unset($arg0, $arg1, $arg2, $arg3, $arg4);
 	
 /************************************************************************
  * To convert from database Storage of files to filesystem storage,
@@ -180,14 +195,17 @@ require_once(OKI2."/osid/OsidContext.php");
 // 	}
 /************************************************************************/
 
+
 // :: Set up the Authorization System ::
 	$configuration =& new ConfigurationProperties;
 	$configuration->addProperty('database_index', $dbID);
 	$configuration->addProperty('database_name', $dbName);
 	Services::startManagerAsService("AuthorizationManager", $context, $configuration);
-	
+
+
 // :: Set up the Sets Manager ::
 	Services::startService("Sets", $dbID);
+
 
 // ::Specify some Ids for concerto ::
 	if (!is_array($_SESSION['concerto_config'])) {
