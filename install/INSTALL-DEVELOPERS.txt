@@ -1,0 +1,39 @@
+Concerto Developer Install instructions:
+
+1) Obtain Concerto, Harmoni, and Polyphony
+	a) Check out from CVS or download the following packages
+		- Concerto (this package that contains this file):
+			http://sf.net/projects/concerto/
+			CVS: http://sourceforge.net/cvs/?group_id=88266
+			Files: http://sourceforge.net/project/showfiles.php?group_id=88266
+		- The Harmoni Framework
+			http://sf.net/projects/concerto/
+			CVS: http://sourceforge.net/cvs/?group_id=82873
+			Files: http://sourceforge.net/project/showfiles.php?group_id=82873
+		- Polyphony
+			(Part of the Harmoni project)
+	b) Place Concerto, Harmoni, and Polyphony in the same web accessible directory
+	
+2) Create a MySQL database for Concerto to use.
+	a) create the database
+	b) give a database user full permission to that database.
+
+3) Create a data directory for concerto.
+	The default specified in the config is a directory called "concerto_data"
+	in the same directory as concerto, harmoni, and polyphony.
+
+2) Create your config
+	a) copy 
+			concerto/config/harmoni.inc.php.dist 
+		to
+			concerto/config/harmoni.inc.php
+
+4) Modify your config
+	a) change the database connection entry in the config to reflect the database that
+		you just created.
+	b) comment-in and modify the LDAP authentication piece if you wish to use that.
+
+5) Run the installer script
+	a) un-comment the installer-script line in the config.
+	b) point your browser at concerto for one page load.
+	c) comment-out the installer script.

@@ -35,7 +35,7 @@ require_once(OKI2."/osid/OsidContext.php");
 
 // :: Set up the database connection ::
 	$dbHandler =& Services::requireService("DBHandler");
-	$dbName = "adam_concerto_timing";
+	$dbName = "concerto_test";
 	$dbID = $dbHandler->addDatabase( new MySQLDatabase("localhost", $dbName,"test","test") );
 	$dbHandler->pConnect($dbID);
 	unset($dbHandler); // done with that for now
@@ -186,10 +186,6 @@ require_once(OKI2."/osid/OsidContext.php");
 							"/usr/X11R6/bin",	// ImageMagick path
 							"/tmp"				// ImageMagick temp dir
 	);
-	
-
-// :: Set up the DataManager ::
-	DataManager::setup($dbID);
 
 
 // :: Set up the Hierarchy Manager ::
@@ -201,13 +197,20 @@ require_once(OKI2."/osid/OsidContext.php");
 
 
 /*********************************************************
+ *
+ * ----------------INSTALLER SCRIPT------------------
+ *
  * The installer script for Concerto. Uncomment this for 
  * one execute on an empty database to create the default
  * data-set.
  *********************************************************/
-// include (MYDIR."/install/dev_install.inc.php");
+//include (MYDIR."/install/dev_install.inc.php");
 /*********************************************************/
 
+
+
+// :: Set up the DataManager ::
+	DataManager::setup($dbID);
 
 
 // :: Set up the RepositoryManager ::
@@ -219,7 +222,7 @@ require_once(OKI2."/osid/OsidContext.php");
 	$configuration->addProperty('default_parent_id', $defaultParentId);
 	$configuration->addProperty('version_control_all', $arg2 = TRUE);
 	$configuration->addProperty('use_filesystem_for_files', $arg3 = TRUE);
-	$configuration->addProperty('file_data_path', $arg4 = "/www/afranco/concerto_data");
+	$configuration->addProperty('file_data_path', $arg4 = MYPATH."/../concerto_data");
 	Services::startManagerAsService("RepositoryManager", $context, $configuration);
 	unset($arg0, $arg1, $arg2, $arg3, $arg4);
 	

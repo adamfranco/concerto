@@ -1,0 +1,7 @@
+-----Concerto Installation------
+
+User Installation:
+	Not ready yet.
+
+Developer Installation:
+	Please read install/INSTALL-DEVELOPERS.txt

@@ -11,6 +11,28 @@
 
 
 /*********************************************************
+ * Create the needed database tables
+ *********************************************************/
+$sqlFiles = array (
+	HARMONI_BASE."/SQL/Agent/MySQL_Agent.sql",
+	HARMONI_BASE."/SQL/Authentication/MySQL_Example_Authentication.sql",
+	HARMONI_BASE."/SQL/AuthN/MySQL_AgentTokenMapping.sql",
+	HARMONI_BASE."/SQL/AuthZ/MySQL_AuthZ.sql",
+	HARMONI_BASE."/SQL/dataManager/MySQL_dataManager.sql",
+	HARMONI_BASE."/SQL/DigitalRepository/MySQL_DigitalRepository.sql",
+	HARMONI_BASE."/SQL/hierarchy2/MySQL_hierarchy2.sql",
+	HARMONI_BASE."/SQL/Id/MySQL_Id.sql",
+	HARMONI_BASE."/SQL/sets/MySQL_sets.sql",
+	HARMONI_BASE."/SQL/shared/MySQL_shared.sql",
+	HARMONI_BASE."/SQL/themes/MySQL_themes.sql",
+);
+
+foreach ($sqlFiles as $file) {
+	SQLUtils::runSQLfile($file, $dbID);
+}
+
+
+/*********************************************************
  * Script for setting up the RepositoryManager Hierarchy
  *********************************************************/
 		$hierarchyManager =& Services::getService("HierarchyManager");
