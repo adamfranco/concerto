@@ -33,10 +33,9 @@
 	$dbHandler->pConnect($dbID);
 	unset($dbHandler); // done with that for now
 
-// :: Set up the SharedManager as this is required for the ID service ::
+// :: Set up the IdManager as this is required for the ID service ::
 	Services::startService("Id", $dbID, $dbName);
 	Services::startService("Agent", $dbID, $dbName);
-
 
 // :: Set up the Authentication and Login Handlers ::
 	$harmoni->LoginHandler->setFailedLoginAction("auth.fail_redirect");
@@ -117,9 +116,34 @@
 		"versionControlAll" => TRUE,
 		"dbId" => $dbID,
 		"defaultParentId" => $defaultParentId,
+		"use_filesystem_for_files" => TRUE,
+		"file_data_path" => "/www/afranco/concerto_data",
 	);
 	
 	Services::startService("Repository", $configuration);
+	
+/************************************************************************
+ * To convert from database Storage of files to filesystem storage,
+ * set all of the configuration needed for both except the switch for which
+ * system to use. Keep that at its original value. Then uncomment the following
+ * lines and set the values to the desired ones.
+ */
+//  	$idManager =& Services::getService("Id");
+//  	$repositoryManagaer =& Services::getService("Repository");
+//  	
+// 	$destinationRecordClass = "FileSystemFileRecord";
+// 	$recordStructureOfBothRecords =& $idManager->getId("FILE");
+// 	
+// 	$repositoriesToConvert =& $repositoryManagaer->getRepositories();
+// 	while ($repositoriesToConvert->hasNextRepository()) {
+// 		$repository =& $repositoriesToConvert->nextRepository();
+// 		
+// 		$repositoryId =& $repository->getId();
+// 		print "\n<br/>Converting Repository: ".$repositoryId->getIdString();
+// 		
+// 		$repository->convertRecords($recordStructureOfBothRecords, $destinationRecordClass);
+// 	}
+/************************************************************************/
 
 // :: Set up the Authorization System ::
 	Services::startService("AuthZ", $dbID, $dbName);
@@ -130,9 +154,9 @@
 // ::Specify some Ids for concerto ::
 	if (!is_array($_SESSION['concerto_config'])) {
 		$_SESSION['concerto_config'] = array();
-		$sharedManager =& Services::getService("Id");
-		$_SESSION['concerto_config']['media_file_structure_id'] = $sharedManager->getId("1097");
-		$_SESSION['concerto_config']['thumbnail_part_id'] = $sharedManager->getId("1104");
+		$idManager =& Services::getService("Id");
+		$_SESSION['concerto_config']['media_file_structure_id'] = $idManager->getId("1097");
+		$_SESSION['concerto_config']['thumbnail_part_id'] = $idManager->getId("1104");
 	}
 	
 // :: Set up the MIME service for sniffing mime types ::
@@ -156,12 +180,12 @@
 
 // :: Set up definitions for the Authorization Functions Used in Concerto ::
 // $authZ =& Services::getService("AuthZ");
-// $shared =& Services::getService("Shared");
-// $viewFunc =& $authZ->getFunction($shared->getId('178'));
+// $id =& Services::getService("Id");
+// $viewFunc =& $authZ->getFunction($id->getId('178'));
 // $funcType =& $viewFunc->getFunctionType();
-// $newId =& $shared->createId();
+// $newId =& $id->createId();
 // print $newId->getIdString();
-// $hId =& $shared->getId('673');
+// $hId =& $id->getId('673');
 // $authZ->createFunction($newId, "Access", "Access this and its children.", $funcType, $hId);
 
 /*********************************************************
@@ -221,3 +245,11 @@ define("AZ_DELETE_GROUPS", '299');
  // Digital Repository Id
  define("REPOSITORY_NODE_ID", $defaultParentId);
  
+//  
+// $agentManager =& Services::getService("Agent");
+// $idManager =& Services::getService("Id");
+// $agentManager->deleteGroup($idManager->getId("410"));
+// $groupType =& new Type ("System", "Concerto", "SystemGroups", "Groups for administrators and others with special privledges.");
+// $nullType =& new Type ("System", "Concerto", "NULL");
+// $properties =& new HarmoniProperties($nullType);
+// $agentManager->createGroup("Auditors", $groupType, "Users that can view all content in the system but not modify it.", $properties);
