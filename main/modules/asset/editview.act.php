@@ -53,19 +53,6 @@ $actionRows->addComponent($contentCols);
 	ob_end_clean();
 	$contentCols->addComponent($layout);
 	
-	// Thumbnail
-	ob_start();
-// 	$thumbnailFields =& $asset->getInfoFieldByPart($_SESSION['concerto_config']['thumbnail_part_id']);
-// 	while ($fields->hasNext()) {
-// 		$field =& $fields->next();
-// 		$value =& $field->getValue();
-// 		print "\n<img src='".$value->toString()."'>\n<br />";
-// 	}
-	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
-	$layout->addComponent(new Content(ob_get_contents()));
-	ob_end_clean();
-	$contentCols->addComponent($layout);
-	
 	// Edit Links
 	ob_start();
 	print "\n\t<table>\n\t<tr><td style='border-left: 1px solid; padding-left: 10px;' valign='top'>";
@@ -77,6 +64,19 @@ $actionRows->addComponent($contentCols);
 	print "\n\t</td>\n\t</tr>";
 	print "\n</table>";
 	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 2);
+	$layout->addComponent(new Content(ob_get_contents()));
+	ob_end_clean();
+	$contentCols->addComponent($layout);
+	
+	// Thumbnail
+	ob_start();
+// 	$thumbnailFields =& $asset->getInfoFieldByPart($_SESSION['concerto_config']['thumbnail_part_id']);
+// 	while ($fields->hasNext()) {
+// 		$field =& $fields->next();
+// 		$value =& $field->getValue();
+// 		print "\n<img src='".$value->toString()."'>\n<br />";
+// 	}
+	$layout =& new SingleContentLayout(TEXT_BLOCK_WIDGET, 3);
 	$layout->addComponent(new Content(ob_get_contents()));
 	ob_end_clean();
 	$contentCols->addComponent($layout);
@@ -256,6 +256,9 @@ function printField(& $field) {
 	$part =& $field->getInfoPart();
 	print "\n<strong>".$part->getDisplayName().":</strong> \n";
 	$value =& $field->getValue();
-	print $value->toString();
+	if (is_object($value))
+		print $value->toString();
+	else
+		print $value;
 	print "\n<br />";
 }
