@@ -52,9 +52,10 @@ class WizardStep {
 	 * @param string $type The desired type of property.
 	 * @return object WizardProperty
 	 */
-	function & createProperty ( $propertyName, $type ) {
+	function & createProperty ( $propertyName, $type, $isValueRequired = TRUE ) {
 		ArgumentValidator::validate($propertyName, new StringValidatorRule, true);
-		ArgumentValidator::validate($propertyName, new StringValidatorRule, true);
+		ArgumentValidator::validate($type, new StringValidatorRule, true);
+		ArgumentValidator::validate($isValueRequired, new BooleanValidatorRule, true);
 		$validTypes = array("Regex", "Integer", "Float", "Boolean", "Option");
 		if (!in_array($type, $validTypes))
 			throwError(new Error("Unkown Property type, ".$type.".", "Wizard", 1));
@@ -63,7 +64,7 @@ class WizardStep {
 			throwError(new Error("Property, ".$propertyName.", already exists in Wizard.", "Wizard", 1));
 
 		$className = $type."WizardProperty";
-		$this->_properties[$propertyName] =& new $className( $propertyName );
+		$this->_properties[$propertyName] =& new $className( $propertyName, $isValueRequired );
 		return $this->_properties[$propertyName];
 	}
 	
@@ -220,9 +221,9 @@ class WizardStep {
 					// Evaluate our comparison and replace with the appropriate
 					// string.
 					if (eval($comparison))
-						$outputText = str_replace($match, $parts[4], $text);
+						$outputText = str_replace($match, $parts[4], $outputText);
 					else
-						$outputText = str_replace($match, $parts[5], $text);
+						$outputText = str_replace($match, $parts[5], $outputText);
 				} else {
 					throwError(new Error("Unknown String form, ".$match.".", "Wizard", 1));
 				}

@@ -24,6 +24,13 @@ class WizardProperty {
 	var $_value;
 	
 	/**
+	 * @attribute string _isValueRequired If false, the existance of a value in
+	 * the $_REQUEST array will not be required. This is needed for checkbox
+	 * values which are simply not submitted if unchecked.
+	 */
+	var $_isValueRequired;
+	
+	/**
 	 * @attribute mixed _defaultValue The default value of the property
 	 */
 	var $_defaultValue;
@@ -31,7 +38,7 @@ class WizardProperty {
 	/**
 	 * Constructor: throw error as this is an abstract class.
 	 */
-	function WizardProperty ( $name ) {
+	function WizardProperty ( $name, $isValueRequired = TRUE ) {
 		throwError(new Error("Instantiate a child class instead.", "Wizard", 1));
 	}
 	
@@ -60,7 +67,7 @@ class WizardProperty {
 	
 	function update () {
 		// Set the value from the request array.
-		if (isset($_REQUEST[$this->_name]))
+		if (isset($_REQUEST[$this->_name]) || !$this->_isValueRequired)
 			$this->_value = $_REQUEST[$this->_name];
 		else
 			throwError(new Error("Requested property, ".$this->_name.", does not exist in the _REQUEST array.", "Wizard", 1));

@@ -239,7 +239,7 @@ class Wizard {
 		}
 		if ($this->_allowStepLinks || !$this->hasNext()) {
 			$menu->addComponent(
-				new LinkMenuItem(_("Save"),
+				new LinkMenuItem("<div style='width: 100px'>"._("Save")."</div>",
 					"Javascript:save()",
 					FALSE)
 			);

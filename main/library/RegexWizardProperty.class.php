@@ -24,10 +24,12 @@ class RegexWizardProperty extends WizardProperty {
 	/**
 	 * Constructor: throw error as this is an abstract class.
 	 */
-	function RegexWizardProperty ( $name ) {
+	function RegexWizardProperty ( $name, $isValueRequired = TRUE ) {
 		ArgumentValidator::validate($name, new StringValidatorRule, true);
+		ArgumentValidator::validate($isValueRequired, new BooleanValidatorRule, true);
 
 		$this->_name = $name;
+		$this->_isValueRequired = $isValueRequired;
 	}
 	
 	function setExpression ( $reqexExpression ) {
