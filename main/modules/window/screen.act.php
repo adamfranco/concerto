@@ -50,20 +50,59 @@ $mainScreen =& new RowLayout(TEXT_BLOCK_WIDGET, 1);
 	// Status Bar
 	$statusBar =& new SingleContentLayout();
 	$headRow->addComponent($statusBar, TOP, RIGHT);
-		$statusText = _("Current User: ");
-		if ($harmoni->LoginState->isValid()) {
-			$statusText .= $harmoni->LoginState->getAgentName();
-			$statusText .= " - <a href='".MYURL."/auth/logout/".
-						implode("/", $harmoni->pathInfoParts)."'>";
-			$statusText .= _("Log Out");
-		} else {
-			$statusText .= _("anonymous");
-			$statusText .= " - <a href='".MYURL."/auth/login/".
-						implode("/", $harmoni->pathInfoParts)."'>";
-			$statusText .= _("Log In");
+		ob_start();
+		$authNManager =& Services::getService("AuthN");
+		$agentManager =& Services::getService("Agent");
+		$authTypes =& $authNManager->getAuthenticationTypes();
+		print "\n<table border='1'>";
+		print "\n\t<tr><th colspan='3'>";
+		print _("Current Authentications: ");
+		print "\n\t</th></tr>";
+		
+		while($authTypes->hasNextType()) {
+			$authType =& $authTypes->nextType();
+			$typeString = $authType->getDomain()."::".$authType->getAuthority()
+				."::".$authType->getKeyword();
+			print "\n\t<tr>";
+			print "\n\t\t<td>";
+			print "<a href='#' title='$typeString' onClick='alert(\"$typeString\")'>";
+			print $authType->getKeyword();
+			print "</a>";
+			print "\n\t\t</td>";
+			print "\n\t\t<td>";
+			$userId =& $authNManager->getUserId($authType);
+			$userAgent =& $agentManager->getAgent($userId);
+			print $userId->getIdString();
+			print ": ";
+			print $userAgent->getDisplayName();
+			print "\n\t\t</td>";
+			print "\n\t\t<td>";
+			if ($authNManager->isUserAuthenticated($authType)) {
+				print "<a href='".MYURL."/auth/logout_type/".urlencode($typeString)."/".
+					implode("/", $harmoni->pathInfoParts)."'>Log Out</a>";
+			} else {
+				print "<a href='".MYURL."/auth/login_type/".urlencode($typeString)."/".
+					implode("/", $harmoni->pathInfoParts)."'>Log In</a>";
+			}
+			print "\n\t\t</td>";
+			print "\n\t</tr>";
 		}
-		$statusText .= "</a>";
-	$statusBar->addComponent(new Content($statusText));
+		print "\n</table>";
+		
+// 		if ($harmoni->LoginState->isValid()) {
+// 			print $harmoni->LoginState->getAgentName();
+// 			print " - <a href='".MYURL."/auth/logout/".
+// 						implode("/", $harmoni->pathInfoParts)."'>";
+// 			print _("Log Out");
+// 		} else {
+// 			print _("anonymous");
+// 			print " - <a href='".MYURL."/auth/login/".
+// 						implode("/", $harmoni->pathInfoParts)."'>";
+// 			print _("Log In");
+// 		}
+// 		print "</a>";
+	$statusBar->addComponent(new Content(ob_get_contents()));
+	ob_end_clean();
 
 // :: Center Pane ::
 	$centerPane =& new ColumnLayout();
