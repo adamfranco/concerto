@@ -45,7 +45,7 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId(RE
 	// Create the step text
 	$stepOneText = "\n<h2>"._("Name")."</h2>";
 	$stepOneText .= "\n"._("The Name for this <em>Collection</em>: ");
-	$stepOneText .= "\n<br><input type='text' name='display_name' value=\"[[display_name]]\">[[display_name|Error]]";
+	$stepOneText .= "\n<br><input type='text' name='display_name' value=\"[[display_name]]\" />[[display_name|Error]]";
 	$stepOneText .= "\n<h2>"._("Description")."</h2>";
 	$stepOneText .= "\n"._("The Description for this <em>Collection</em>: ");
 	$stepOneText .= "\n<br><textarea name='description'>[[description]]</textarea>[[description|Error]]";
@@ -75,19 +75,19 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId(RE
 	$stepTwoText .= "<strong>"._("Domain").": </strong>";
 	$stepTwoText .= "\n\t\t</td>";
 	$stepTwoText .= "\n\t\t<td>";
-	$stepTwoText .= "\n<input type='text' name='type_domain' value=\"[[type_domain]]\">";
+	$stepTwoText .= "\n<input type='text' name='type_domain' value=\"[[type_domain]]\" />";
 	$stepTwoText .= "\n\t\t</td>\n\t</tr>";
 	$stepTwoText .= "\n\t<tr>\n\t\t<td>";
 	$stepTwoText .= "<strong>"._("Authority").": </strong>";
 	$stepTwoText .= "\n\t\t</td>";
 	$stepTwoText .= "\n\t\t<td>";
-	$stepTwoText .= "\n<input type='text' name='type_authority' value=\"[[type_authority]]\">";
+	$stepTwoText .= "\n<input type='text' name='type_authority' value=\"[[type_authority]]\" />";
 	$stepTwoText .= "\n\t\t</td>\n\t</tr>";
 	$stepTwoText .= "\n\t<tr>\n\t\t<td>";
 	$stepTwoText .= "<strong>"._("Keyword").": </strong>";
 	$stepTwoText .= "\n\t\t</td>";
 	$stepTwoText .= "\n\t\t<td>";
-	$stepTwoText .= "\n<input type='text' name='type_keyword' value=\"[[type_keyword]]\">";
+	$stepTwoText .= "\n<input type='text' name='type_keyword' value=\"[[type_keyword]]\" />";
 	$stepTwoText .= "\n\t\t</td>\n\t</tr>";
 	$stepTwoText .= "\n\t<tr>\n\t\t<td>";
 	$stepTwoText .= "<strong>"._("Description").": </strong>";

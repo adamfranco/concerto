@@ -18,7 +18,7 @@ $mainScreen =& new RowLayout(TEXT_BLOCK_WIDGET, 1);
 	$logo =& new SingleContentLayout();
 	$headRow->addComponent($logo, TOP, LEFT);
 	$text = "\n<a href='".MYPATH."/'>";
-	$text .= "<img src='".MYPATH."/main/modules/window/logo.gif' border='0' />";
+	$text .= "<img src='".MYPATH."/main/modules/window/logo.gif' style='border: 0px;' alt='"._("Concerto Logo'")." />";
 	$text .= "</a>";
 	$logo->addComponent(new Content($text));
 	
@@ -27,7 +27,7 @@ $mainScreen =& new RowLayout(TEXT_BLOCK_WIDGET, 1);
 	$headRow->addComponent($languageBar, TOP, LEFT);
 		$languageText = "\n<form action='".MYURL."/language/change/".
 						implode("/", $harmoni->pathInfoParts)."' method='post'>";
-		$languageText .= "\n\t<select name='language'>";
+		$languageText .= "\n\t<div>\n\t<select name='language'>";
 		$langLoc =& Services::getService('Lang');
 		$currentCode = $langLoc->getLanguage();
 		$languages = $langLoc->getLanguages();
@@ -38,8 +38,8 @@ $mainScreen =& new RowLayout(TEXT_BLOCK_WIDGET, 1);
 			$languageText .= $language."</option>";
 		}
 		$languageText .= "\n\t</select>";
-		$languageText .= "\n\t<input type='submit'>";
-		$languageText .= "\n</form>";
+		$languageText .= "\n\t<input type='submit' />";
+		$languageText .= "\n\t</div>\n</form>";
 	$languageBar->addComponent(new Content($languageText));
 	
 	// Header space

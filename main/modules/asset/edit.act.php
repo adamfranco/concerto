@@ -55,7 +55,7 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
 	ob_start();
 	print "\n<h2>"._("Name")."</h2>";
 	print "\n"._("The Name for this <em>Asset</em>: ");
-	print "\n<br><input type='text' name='display_name' value=\"[[display_name]]\">[[display_name|Error]]";
+	print "\n<br><input type='text' name='display_name' value=\"[[display_name]]\" />[[display_name|Error]]";
 	print "\n<h2>"._("Description")."</h2>";
 	print "\n"._("The Description for this <em>Asset</em>: ");
 	print "\n<br><textarea name='description'>[[description]]</textarea>[[description|Error]]";
@@ -106,11 +106,11 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
 	ob_start();
 	print "\n<h2>"._("Effective Date")."</h2>";
 	print "\n"._("The date that this <em>Asset</em> becomes effective: ");
-	print "\n<br><input type='text' name='effective_date' value=\"[[effective_date]]\">[[effective_date|Error]]";
+	print "\n<br><input type='text' name='effective_date' value=\"[[effective_date]]\" />[[effective_date|Error]]";
 	
 	print "\n<h2>"._("Expiration Date")."</h2>";
 	print "\n"._("The date that this <em>Asset</em> expires: ");
-	print "\n<br><input type='text' name='expiration_date' value=\"[[expiration_date]]\">[[expiration_date|Error]]";
+	print "\n<br><input type='text' name='expiration_date' value=\"[[expiration_date]]\" />[[expiration_date|Error]]";
 	$step->setText(ob_get_contents());
 	ob_end_clean();
 }

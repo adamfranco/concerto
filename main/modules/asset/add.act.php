@@ -54,7 +54,7 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($h
 	ob_start();
 	print "\n<h2>"._("Name")."</h2>";
 	print "\n"._("The Name for this <em>Asset</em>: ");
-	print "\n<br><input type='text' name='display_name' value=\"[[display_name]]\">[[display_name|Error]]";
+	print "\n<br><input type='text' name='display_name' value=\"[[display_name]]\" />[[display_name|Error]]";
 	print "\n<h2>"._("Description")."</h2>";
 	print "\n"._("The Description for this <em>Asset</em>: ");
 	print "\n<br><textarea name='description'>[[description]]</textarea>[[description|Error]]";
@@ -105,19 +105,19 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($h
 	print "<strong>"._("Domain").": </strong>";
 	print "\n\t\t</td>";
 	print "\n\t\t<td>";
-	print "\n<input type='text' name='type_domain' value=\"[[type_domain]]\">";
+	print "\n<input type='text' name='type_domain' value=\"[[type_domain]]\" />";
 	print "\n\t\t</td>\n\t</tr>";
 	print "\n\t<tr>\n\t\t<td>";
 	print "<strong>"._("Authority").": </strong>";
 	print "\n\t\t</td>";
 	print "\n\t\t<td>";
-	print "\n<input type='text' name='type_authority' value=\"[[type_authority]]\">";
+	print "\n<input type='text' name='type_authority' value=\"[[type_authority]]\" />";
 	print "\n\t\t</td>\n\t</tr>";
 	print "\n\t<tr>\n\t\t<td>";
 	print "<strong>"._("Keyword").": </strong>";
 	print "\n\t\t</td>";
 	print "\n\t\t<td>";
-	print "\n<input type='text' name='type_keyword' value=\"[[type_keyword]]\">";
+	print "\n<input type='text' name='type_keyword' value=\"[[type_keyword]]\" />";
 	print "\n\t\t</td>\n\t</tr>";
 	print "\n\t<tr>\n\t\t<td>";
 	print "<strong>"._("Description").": </strong>";
@@ -160,11 +160,11 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_ADD_CHILDREN), $shared->getId($h
 	ob_start();
 	print "\n<h2>"._("Effective Date")."</h2>";
 	print "\n"._("The date that this <em>Asset</em> becomes effective: ");
-	print "\n<br><input type='text' name='effective_date' value=\"[[effective_date]]\">[[effective_date|Error]]";
+	print "\n<br><input type='text' name='effective_date' value=\"[[effective_date]]\" />[[effective_date|Error]]";
 	
 	print "\n<h2>"._("Expiration Date")."</h2>";
 	print "\n"._("The date that this <em>Asset</em> expires: ");
-	print "\n<br><input type='text' name='expiration_date' value=\"[[expiration_date]]\">[[expiration_date|Error]]";
+	print "\n<br><input type='text' name='expiration_date' value=\"[[expiration_date]]\" />[[expiration_date|Error]]";
 	$step->setText(ob_get_contents());
 	ob_end_clean();
 	

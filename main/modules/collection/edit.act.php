@@ -52,7 +52,7 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
 	ob_start();
 	print "\n<h2>"._("Name")."</h2>";
 	print "\n"._("The Name for this <em>Collection</em>: ");
-	print "\n<br><input type='text' name='display_name' value=\"[[display_name]]\">[[display_name|Error]]";
+	print "\n<br><input type='text' name='display_name' value=\"[[display_name]]\" />[[display_name|Error]]";
 	print "\n<h2>"._("Description")."</h2>";
 	print "\n"._("The Description for this <em>Collection</em>: ");
 	print "\n<br><textarea name='description'>[[description]]</textarea>[[description|Error]]";
@@ -73,7 +73,7 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
 	print "<h2>"._("Select Cataloging Schemata")."</h2>";
 	print "\n<p>"._("Select which cataloging schemata you wish to appear during <em>Asset</em> creation and editing. <em>Assets</em> can hold data in any of the schemata, but only the ones selected here will be availible when adding new data.")."</p>";
 	print "\n<p>"._("If none of the schemata listed below fit your needs, please click the button below to save your changes and create a new schema.")."</p>";
-	print "\n<input type='submit' name='create_schema' value='"._("Save Changes and Create a new Schema")."'>";
+	print "\n<input type='submit' name='create_schema' value='"._("Save Changes and Create a new Schema")."' />";
 
 	
 	
@@ -112,7 +112,7 @@ if (!$authZ->isUserAuthorized($shared->getId(AZ_EDIT), $id)) {
 			$property->setDefaultValue(0);
 		
 		print "\n<tr><td valign='top'>";
-		print "\n\t<input type='checkbox' name='schema_".$infoStructureId->getIdString()."' value='1' [['schema_".$infoStructureId->getIdString()."' == TRUE|checked='checked'|]]>";
+		print "\n\t<input type='checkbox' name='schema_".$infoStructureId->getIdString()."' value='1' [['schema_".$infoStructureId->getIdString()."' == TRUE|checked='checked'|]] />";
 		print "\n\t<strong>".$infoStructure->getDisplayName()."</strong>";
 		print "\n</td><td valign='top'>\n\t<em>".$infoStructure->getDescription()."</em>";
 		print " <a href='".MYURL."/schema/view/".$id->getIdString()."/".$infoStructureId->getIdString()."/".implode("/", $harmoni->pathInfoParts)."?__skip_to_step=2'>more...</a>";

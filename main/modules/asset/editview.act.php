@@ -135,7 +135,7 @@ print "\n<hr>";
 print "\n<form action='".MYURL."/record/add/".$drId->getIdString()."/".$assetId->getIdString()."/' method='post'>";
 
 print "\n<input type='hidden' name='return_url' value='".MYURL."/".implode("/", $harmoni->pathInfoParts)."'>";
-print "\n<input type='submit' value='"._("Add")."'> ";
+print "\n<input type='submit' value='"._("Add")."' /> ";
 print "\n"._("a new Record for the ");
 
 print "\n<select name='structure'>";
