@@ -37,7 +37,7 @@ $allDRs =& $dr->getDigitalRepositories();
 $drArray = array();
 while($allDRs->hasNext()) {
 	$dr =& $allDRs->next();
-	$drArray[$dr->getDisplayName] =& $dr;
+	$drArray[$dr->getDisplayName()] =& $dr;
 }
 ksort($drArray);
 

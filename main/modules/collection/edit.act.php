@@ -33,14 +33,16 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	$descriptionProp->setDefaultValue($dr->getDescription());
 	
 	// Create the step text
-	$stepOneText = "\n<h2>"._("Name")."</h2>";
-	$stepOneText .= "\n"._("The Name for this <em>Collection</em>: ");
-	$stepOneText .= "\n<br><input type='text' name='display_name' value=\"[[display_name]]\">[[display_name|Error]]";
-	$stepOneText .= "\n<h2>"._("Description")."</h2>";
-	$stepOneText .= "\n"._("The Description for this <em>Collection</em>: ");
-	$stepOneText .= "\n<br><textarea name='description'>[[description]]</textarea>[[description|Error]]";
-	$stepOneText .= "\n<div style='width: 400px'> &nbsp; </div>";
-	$stepOne->setText($stepOneText);
+	ob_start();
+	print "\n<h2>"._("Name")."</h2>";
+	print "\n"._("The Name for this <em>Collection</em>: ");
+	print "\n<br><input type='text' name='display_name' value=\"[[display_name]]\">[[display_name|Error]]";
+	print "\n<h2>"._("Description")."</h2>";
+	print "\n"._("The Description for this <em>Collection</em>: ");
+	print "\n<br><textarea name='description'>[[description]]</textarea>[[description|Error]]";
+	print "\n<div style='width: 400px'> &nbsp; </div>";
+	$stepOne->setText(ob_get_contents());
+	ob_end_clean();
 	
 	
 	// :: Schema Selection ::
@@ -48,11 +50,14 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	
 	// get an iterator of all InfoStructures
 	$infoStructures =& $dr->getInfoStructures();
+	$setManager =& Services::getService("Sets");
+	$set =& $setManager->getSet($id);
 	
-	$text = "<h2>"._("Select Cataloging Schemata")."</h2>";
-	$text .= "\n<p>"._("Select which cataloging schemata you wish to appear during <em>Asset</em> creation and editing. <em>Assets</em> can hold data in any of the schemata, but only the ones selected here will be availible when adding new data.")."</p>";
-	$text .= "\n<p>"._("If none of the schemata listed below fit your needs, please click the button below to save your changes and create a new schema.")."</p>";
-	$text .= "\n<input type='submit' name='create_schema' value='"._("Save Changes and Create a new Schema")."'>";
+	ob_start();
+	print "<h2>"._("Select Cataloging Schemata")."</h2>";
+	print "\n<p>"._("Select which cataloging schemata you wish to appear during <em>Asset</em> creation and editing. <em>Assets</em> can hold data in any of the schemata, but only the ones selected here will be availible when adding new data.")."</p>";
+	print "\n<p>"._("If none of the schemata listed below fit your needs, please click the button below to save your changes and create a new schema.")."</p>";
+	print "\n<input type='submit' name='create_schema' value='"._("Save Changes and Create a new Schema")."'>";
 	
 	while ($infoStructures->hasNext()) {
 		$infoStructure =& $infoStructures->next();
@@ -60,13 +65,18 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 		
 		// Create the properties.
 		$property =& $selectStep->createProperty("schema_".$infoStructureId->getIdString(), new RegexValidatorRule(".*"), FALSE);
-		$property->setDefaultValue(0);
 		
-		$text .= "\n<p>\n<input type='checkbox' name='schema_".$infoStructureId->getIdString()."' value='1' [[schema_".$infoStructureId->getIdString()."==1|checked='checked'|]]>";
-		$text .= "\n<strong>".$infoStructure->getDisplayName()."</strong>";
-		$text .= "\n<br><em>".$infoStructure->getDescription()."</em>\n</p>";
+		if ($set->isInSet($infoStructureId))
+			$property->setDefaultValue(1);
+		else
+			$property->setDefaultValue(0);
+		
+		print "\n<p>\n<input type='checkbox' name='schema_".$infoStructureId->getIdString()."' value='1' [['schema_".$infoStructureId->getIdString()."' == TRUE|checked='checked'|]]>";
+		print "\n<strong>".$infoStructure->getDisplayName()."</strong>";
+		print "\n<br><em>".$infoStructure->getDescription()."</em>\n</p>";
 	}
-	$selectStep->setText($text);
+	$selectStep->setText(ob_get_contents());
+	ob_end_clean();
 }
 
 // Handle saving if requested
@@ -76,8 +86,8 @@ if ($wizard->isSaveRequested() || $_REQUEST['create_schema']) {
 	// save the data.
 	if ($wizard->updateLastStep()) {
 		$properties =& $wizard->getProperties();
-		print "Now Saving: ";
-		printpre($properties);
+// 		print "Now Saving: ";
+// 		printpre($properties);
 		
 		// Save the DR
 		$shared =& Services::getService("Shared");
@@ -89,8 +99,31 @@ if ($wizard->isSaveRequested() || $_REQUEST['create_schema']) {
 		$dr->updateDisplayName($properties['display_name']->getValue());
 		$dr->updateDescription($properties['description']->getValue());
 		
-		// Save the Schema settings.
-		// @todo
+		
+	// Save the Schema settings.
+		
+		// Get the set for this DR
+		$setManager =& Services::getService("Sets");
+		$set =& $setManager->getSet($id);
+		
+		// get an iterator of all InfoStructures
+		$infoStructures =& $dr->getInfoStructures();
+		// Go through each InfoStructure
+		while ($infoStructures->hasNext()) {
+			$infoStructure =& $infoStructures->next();
+			$infoStructureId =& $infoStructure->getId();
+			
+			// If the box is checked, make sure that the ID is in the set
+			if ($properties["schema_".$infoStructureId->getIdString()]->getValue()) {
+				if (!$set->isInSet($infoStructureId))
+					$set->addItem($infoStructureId);
+			}
+			// Otherwise, remove the ID from the set.
+			else {
+				if ($set->isInSet($infoStructureId))
+					$set->removeItem($infoStructureId);
+			}
+		}
 		
 		// Unset the wizard
 		$wizard = NULL;
