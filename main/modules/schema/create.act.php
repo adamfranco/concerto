@@ -77,6 +77,9 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	$property =& $elementStep->createProperty("populatedbydr", new RegexValidatorRule(".*"));
 	$property->setDefaultValue("FALSE");
 	
+	$property =& $elementStep->createProperty("position", new RegexValidatorRule(".*"));
+	$property->setDefaultValue(0);
+	
 	// We don't have any InfoParts yet, so we can't get them.
 	
 	ob_start();
@@ -139,6 +142,16 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 			print "<input type=\"radio\" name='populatedbydr' value='FALSE' [['populatedbydr'=='FALSE'| checked|]] /> FALSE";
 		print "\n</td></tr>";
 		
+		print "\n<tr><td>";
+			print _("Order/Position ");
+		print "\n</td><td>";
+			print "\n\t<select name=\"position\">";
+			for ($i=0; $i <= 100; $i++) {
+				print "\n\t\t<option value='$i' [['position' == '$i'|selected='selected'|]]>".(($i)?$i:"")."</option>";
+			}
+			print "\n\t</select>";
+		print "\n</td></tr>";
+		
 		print "</table>";
 	
 	print "\n<br />[Buttons]";
@@ -154,6 +167,7 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	print "\n\t<br /><strong>"._("isMandatory").":</strong> [[mandatory]]";
 	print "\n\t<br /><strong>"._("isRepeatable").":</strong> [[repeatable]]";
 	print "\n\t<br /><strong>"._("isPopulatedByDR").":</strong> [[populatedbydr]]";
+	print "\n\t<br /><strong>"._("Order/Position").":</strong> [[position > 0|position|]]";
 	print "</td>\n</tr>[/List]\n</table>";
 
 	$elementStep->setText(ob_get_contents());
@@ -185,6 +199,16 @@ if ($wizard->isSaveRequested()) {
 								$properties['schema_description']->getValue(), 
 								$properties['format']->getValue(),
 								$properties['schema_display_name']->getValue());
+		Debug::printAll();
+		$infoStructureId =& $infoStructure->getId();
+		
+		// Create a set for the infoStructure
+		$setManager =& Services::getService("Sets");
+		$set =& $setManager->getSet($infoStructureId);
+		// Store up the positions for later setting after all of the ids have
+		// been added to the set and we can do checking to make sure that 
+		// the specified positions are valid.
+		$positions = array();
 								
 		// Create the infoParts
 		$infoPartProperties =& $properties['elements'];
@@ -192,7 +216,7 @@ if ($wizard->isSaveRequested()) {
 			$typeString = urldecode($infoPartProperties[$index]['type']->getValue());
 			$typeParts = explode("/", $typeString);
 			$type =& new HarmoniType($typeParts[0], $typeParts[1], $typeParts[2], $typeParts[3]);
-			$infoStructure->createInfoPart(
+			$infoPart =& $infoStructure->createInfoPart(
 							$infoPartProperties[$index]['display_name']->getValue(),
 							$infoPartProperties[$index]['description']->getValue(),
 							$type,
@@ -200,6 +224,25 @@ if ($wizard->isSaveRequested()) {
 							(($infoPartProperties[$index]['repeatable']->getValue())?TRUE:FALSE),
 							(($infoPartProperties[$index]['populatedbydr']->getValue())?TRUE:FALSE)
 							);
+			
+			$infoPartId =& $infoPart->getId();
+			// Add the InfoPartId to the set
+			if (!$set->isInSet($infoPartId))
+				$set->addItem($infoPartId);
+			if ($position = $infoPartProperties[$index]['position']->getValue())
+				$positions[$position-1] =& $infoPartId;
+		}
+		
+		// Go through the positions and set them all.
+		ksort ($positions);
+		$countPositions = $set->count();
+		foreach (array_keys($positions) as $position) {
+			if ($position < 0 || $position >= $countPositions) {
+				// move to the last position
+				$set->moveToPosition($positions[$position], $countPositions-1);
+			} else {
+				$set->moveToPosition($positions[$position], $position);
+			}
 		}
 		
 		// Unset the wizard

@@ -58,23 +58,59 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 	print "\n<p>"._("Select which cataloging schemata you wish to appear during <em>Asset</em> creation and editing. <em>Assets</em> can hold data in any of the schemata, but only the ones selected here will be availible when adding new data.")."</p>";
 	print "\n<p>"._("If none of the schemata listed below fit your needs, please click the button below to save your changes and create a new schema.")."</p>";
 	print "\n<input type='submit' name='create_schema' value='"._("Save Changes and Create a new Schema")."'>";
+
 	
+	
+	print "\n<br><table border='1'>";
+	print "\n\t<tr>";
+	print "\n\t<th>Display Name</th>";
+	print "\n\t<th>Description</th>";
+	print "\n\t<th>Order</th>";
+	print "\n\t</tr>";
+	
+	// Get the number of info structures
+	$numInfoStructures = 0;
+	while ($infoStructures->hasNext()) {
+		$infoStructure =& $infoStructures->next();
+		$numInfoStructures++;
+	}
+	
+	$infoStructures =& $dr->getInfoStructures();
 	while ($infoStructures->hasNext()) {
 		$infoStructure =& $infoStructures->next();
 		$infoStructureId =& $infoStructure->getId();
 		
 		// Create the properties.
+		// 'in set' property
 		$property =& $selectStep->createProperty("schema_".$infoStructureId->getIdString(), new RegexValidatorRule(".*"), FALSE);
-		
 		if ($set->isInSet($infoStructureId))
 			$property->setDefaultValue(1);
 		else
 			$property->setDefaultValue(0);
 		
-		print "\n<p>\n<input type='checkbox' name='schema_".$infoStructureId->getIdString()."' value='1' [['schema_".$infoStructureId->getIdString()."' == TRUE|checked='checked'|]]>";
-		print "\n<strong>".$infoStructure->getDisplayName()."</strong>";
-		print "\n<br><em>".$infoStructure->getDescription()."</em>\n</p>";
+		// Order property
+		$property =& $selectStep->createProperty("schema_".$infoStructureId->getIdString()."_position", new RegexValidatorRule(".*"), FALSE);
+		if ($set->isInSet($infoStructureId))
+			$property->setDefaultValue($set->getPosition($infoStructureId)+1);
+		else
+			$property->setDefaultValue(0);
+		
+		print "\n<tr><td valign='top'>";
+		print "\n\t<input type='checkbox' name='schema_".$infoStructureId->getIdString()."' value='1' [['schema_".$infoStructureId->getIdString()."' == TRUE|checked='checked'|]]>";
+		print "\n\t<strong>".$infoStructure->getDisplayName()."</strong>";
+		print "\n</td><td valign='top'>\n\t<em>".$infoStructure->getDescription()."</em>";
+		print "\n</td><td valign='top'>";
+		
+		print "\n\t<select name='schema_".$infoStructureId->getIdString()."_position'>";
+		for ($i=0; $i <= $numInfoStructures; $i++) {
+			print "\n\t\t<option value='$i' [['schema_".$infoStructureId->getIdString()."_position' == '$i'|selected='selected'|]]>".(($i)?$i:"")."</option>";
+		}
+		print "\n\t</select>";
+		
+		print "\n</td></tr>";
 	}
+	print "\n</table>";
+	
 	$selectStep->setText(ob_get_contents());
 	ob_end_clean();
 }
@@ -108,6 +144,12 @@ if ($wizard->isSaveRequested() || $_REQUEST['create_schema']) {
 		
 		// get an iterator of all InfoStructures
 		$infoStructures =& $dr->getInfoStructures();
+		
+		// Store up the positions for later setting after all of the ids have
+		// been added to the set and we can do checking to make sure that 
+		// the specified positions are valid.
+		$positions = array();
+		
 		// Go through each InfoStructure
 		while ($infoStructures->hasNext()) {
 			$infoStructure =& $infoStructures->next();
@@ -117,11 +159,25 @@ if ($wizard->isSaveRequested() || $_REQUEST['create_schema']) {
 			if ($properties["schema_".$infoStructureId->getIdString()]->getValue()) {
 				if (!$set->isInSet($infoStructureId))
 					$set->addItem($infoStructureId);
+				if ($position = $properties["schema_".$infoStructureId->getIdString()."_position"]->getValue())
+					$positions[$position-1] =& $infoStructureId;
 			}
 			// Otherwise, remove the ID from the set.
 			else {
 				if ($set->isInSet($infoStructureId))
 					$set->removeItem($infoStructureId);
+			}
+		}
+		
+		// Go through the positions and set them all.
+		ksort ($positions);
+		$countPositions = $set->count();
+		foreach (array_keys($positions) as $position) {
+			if ($position < 0 || $position >= $countPositions) {
+				// move to the last position
+				$set->moveToPosition($positions[$position], $countPositions-1);
+			} else {
+				$set->moveToPosition($positions[$position], $position);
 			}
 		}
 		
