@@ -23,7 +23,7 @@
  *********************************************************/
 $sqlFiles = array (
 	HARMONI_BASE."/SQL/Agent/MySQL_Agent.sql",
-	HARMONI_BASE."/SQL/Authentication/MySQL_Example_Authentication.sql",
+	HARMONI_BASE."/SQL/AuthN/MySQL_Example_Authentication.sql",
 	HARMONI_BASE."/SQL/AuthN/MySQL_AgentTokenMapping.sql",
 	HARMONI_BASE."/SQL/AuthZ/MySQL_AuthZ.sql",
 	HARMONI_BASE."/SQL/dataManager/MySQL_dataManager.sql",
