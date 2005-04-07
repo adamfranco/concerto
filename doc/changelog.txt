@@ -3,7 +3,7 @@
 Name: Concerto ChangeLog
 
 
-v. 0.1.0 (The Nebulous Future)
+v. 0.1.0 (2005-04-07)
 ----------------------------------------------------
 		
 	* New feature: Created an installer script for devs. (Adam Franco)

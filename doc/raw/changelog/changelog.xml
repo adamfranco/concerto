@@ -10,7 +10,7 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="0.1.0" date="The Nebulous Future">
+	<version number="0.1.0" date="2005-04-07">
 		<new author='adam'>
 			Created an installer script for devs.
 		</new>
