@@ -1,4 +1,13 @@
-<?
+<?php
+/**
+ * @package concerto.display
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
+ * @version $Id$
+ */
+ 
 require_once(HARMONI."GUIManager/Components/Block.class.php");
 require_once(HARMONI."GUIManager/Components/Menu.class.php");
 require_once(HARMONI."GUIManager/Components/MenuItemHeading.class.php");

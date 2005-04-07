@@ -1,4 +1,12 @@
-<?
+<?php
+/**
+ * @package concerto.modules.record
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
+ * @version $Id$
+ */
 
 // Get the Layout compontents. See core/modules/moduleStructure.txt
 // for more info. 

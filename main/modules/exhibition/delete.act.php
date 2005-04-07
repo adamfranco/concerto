@@ -1,4 +1,13 @@
-<?
+<?php
+/**
+ * @package concerto.modules.exhibition
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
+ * @version $Id$
+ */
+ 
 require_once (OKI2."osid/repository/RepositoryManager.php");
 require_once (HARMONI."oki2/repository/HarmoniRepository.class.php");
 

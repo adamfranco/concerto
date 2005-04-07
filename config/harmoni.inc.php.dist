@@ -1,5 +1,14 @@
 <?
-// :: Version: $Id$
+/**
+ * The main configuration file.
+ *
+ * @package concerto.config
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
+ * @version $Id$
+ */
 
 require_once(HARMONI."/oki2/shared/ConfigurationProperties.class.php");
 require_once(OKI2."/osid/OsidContext.php");

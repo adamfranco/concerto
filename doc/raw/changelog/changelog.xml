@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- 
+ @package concerto.docs
+ 
+ @copyright Copyright &copy; 2005, Middlebury College
+ @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ 
+ @version $Id$
+ -->
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">

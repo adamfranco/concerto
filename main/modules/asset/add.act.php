@@ -1,4 +1,12 @@
-<?
+<?php
+/**
+ * @package concerto.modules.asset
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
+ * @version $Id$
+ */
 
 if (!defined("AZ_ADD_CHILDREN"))
 	throwError(new Error("You must define an id for AZ_ADD_CHILDREN", "concerto.asset", true));

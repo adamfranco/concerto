@@ -1,11 +1,24 @@
-<?
+<?php
+/**
+ * @package concerto.display
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
+ * @version $Id$
+ */
 
 /**
  * The MenuGenerator class is a static class used for the generation of Menus in
  * Concerto.
- * @package concerto.display
+ *
  * @author Adam Franco
- * @access public
+ *
+ * @package concerto.display
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
  * @version $Id$
  */
 

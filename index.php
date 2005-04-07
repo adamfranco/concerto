@@ -1,4 +1,14 @@
-<?
+<?php
+/**
+ * This is the main control script for the application.
+ *
+ * @package concerto
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
+ * @version $Id$
+ */
 
 // Define a Constant reference to this application directory.
 define("MYDIR",dirname(__FILE__));

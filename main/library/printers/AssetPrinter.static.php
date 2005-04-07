@@ -1,12 +1,22 @@
 <?php
+/**
+ * @package concerto.printers
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
+ * @version $Id$
+ */
 
 /**
  * A static printer class for printing common asset info
- * 
+ *
  * @package concerto.printers
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
  * @version $Id$
- * @date $Date$
- * @copyright 2004 Middlebury College
  */
 
 class AssetPrinter {
