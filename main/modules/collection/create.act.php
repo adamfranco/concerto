@@ -18,17 +18,16 @@ $harmoni->ActionHandler->execute("window", "screen");
 $mainScreen =& $harmoni->getAttachedData('mainScreen');
 $centerPane =& $harmoni->getAttachedData('centerPane');
  
-/*
+
 // Check that the user can create a collection here.
 $authZ =& Services::getService("AuthZ");
 $idManager =& Services::getService("Id");
 if (!$authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $idManager->getId(REPOSITORY_NODE_ID))) {
-	$errorLayout =& new SingleContentLayout;
-	$errorLayout->addComponent(new Content(_("You are not authorized to create a <em>Collection</em>."), MIDDLE, CENTER));
-	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
+	$errorBlock =& new Block(_("You are not authorized to create a <em>Collection</em>."), 4);
+	$centerPane->add($errorBlock, "100%", null, MIDDLE, CENTER);
 	return $mainScreen;
 }
-*/
+
 // Create the wizard.
 
  if ($_SESSION['create_collection_wizard']) {
