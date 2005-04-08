@@ -62,7 +62,7 @@ require_once(HARMONI."GUIManager/Themes/SimpleLinesTheme.class.php");
  * Start the session so that we can use the session for storage.
  ******************************************************************************/
 $harmoni->startSession();
-//printpre($_SESSION);
+
 
 /******************************************************************************
  * Include our configs
@@ -81,6 +81,8 @@ require_once ($configPath);
  ******************************************************************************/
 
 $harmoni->execute();
+
+
 // printpre($_SESSION);
 // debug::output(session_id());
 // Debug::printAll();
