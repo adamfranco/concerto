@@ -23,12 +23,26 @@ define("LOAD_AUTHENTICATION", false);
 /******************************************************************************
  * Include Harmoni - required
  ******************************************************************************/
-require_once "../harmoni/harmoni.inc.php";
+$harmoniPath = "../harmoni/harmoni.inc.php";
+if (!file_exists($harmoniPath)) {
+	print "<h2>Harmoni was not found in the specified location, '";
+	print $harmoniPath;
+	print "'. Please install Harmoni there or change the location specifed.</h2>";
+	print "<h3>Harmoni is part of the Harmoni project and can be downloaded from <a href='http://sf.net/projects/harmoni/'>http://sf.net/projects/harmoni/</a></h3>";
+}
+require_once ($harmoniPath);
 
 /******************************************************************************
  * Include Polyphony
  ******************************************************************************/
-require_once "../polyphony/polyphony.inc.php";
+$polyphonyPath = "../polyphony/polyphony.inc.php";
+if (!file_exists($polyphonyPath)) {
+	print "<h2>Polyphony was not found in the specified location, '";
+	print $polyphonyPath;
+	print "'. Please install Polyphony there or change the location specifed.</h2>";
+	print "<h3>Polyphony is part of the Harmoni project and can be downloaded from <a href='http://sf.net/projects/harmoni/'>http://sf.net/projects/harmoni/</a></h3>";
+}
+require_once ($polyphonyPath);
 
 /******************************************************************************
  * Include our libraries
@@ -53,7 +67,13 @@ $harmoni->startSession();
 /******************************************************************************
  * Include our configs
  ******************************************************************************/
-require_once "config/harmoni.inc.php";
+$configPath = "config/harmoni.inc.php";
+if (!file_exists($configPath)) {
+	print "<h2>The configuration file was not found in the specified location, '";
+	print $configPath;
+	print "'. Please copy the sample config: 'config/harmoni.inc.php.dist' to '$configPath'.</h2>";
+}
+require_once ($configPath);
 
 
 /******************************************************************************
