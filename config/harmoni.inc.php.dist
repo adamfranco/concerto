@@ -92,7 +92,7 @@ require_once(OKI2."/osid/OsidContext.php");
 		$dbMethodConfiguration->addProperty('password_field', $arg4 = 'password');
 		$propertiesFields = array(
 			'username' => 'username',
-			'name'=> 'display_name',
+//			'name'=> 'display_name',
 		);
 		$dbMethodConfiguration->addProperty('properties_fields', $propertiesFields);
 		

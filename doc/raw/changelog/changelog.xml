@@ -10,7 +10,7 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="0.2.0" date="The Nebulous Future">
+	<version number="0.1.1" date="2005-04-11">
 		<change author='adam'>
 			Authentication now plays nicely with GET parameters and maintains them
 			around during the authentication sequence.

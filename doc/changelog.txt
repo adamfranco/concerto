@@ -3,6 +3,11 @@
 Name: Concerto ChangeLog
 
 
+v. 0.1.1 (2005-04-11)
+----------------------------------------------------
+		
+	* Change: Authentication now plays nicely with GET parameters and maintains them around during the authentication sequence. (Adam Franco)
+	
 v. 0.1.0 (2005-04-07)
 ----------------------------------------------------
 		
