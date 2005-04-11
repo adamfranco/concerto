@@ -22,7 +22,7 @@ $actionRows =& new Container($yLayout,OTHER,1);
 $centerPane->add($actionRows, null, null, CENTER, TOP);
 
 // Intro
-$introHeader =& new Heading("Welcome to Concerto", 2);
+$introHeader =& new Heading(_("Welcome to Concerto"), 2);
 $actionRows->add($introHeader, "100%" ,null, LEFT, CENTER);
 
 
