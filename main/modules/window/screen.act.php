@@ -100,16 +100,30 @@ $headRow->add($statusRow,null,null,RIGHT,TOP);
 			print "\n\t\t</td>";
 			print "\n\t\t<td>";
 			if ($authNManager->isUserAuthenticated($authType)) {
-				print "<a href='".MYURL."/auth/logout_type/".urlencode($typeString)."/".
-					implode("/", $harmoni->pathInfoParts)."'>Log Out</a>";
+				$url = MYURL."/auth/logout_type/".urlencode($typeString)."/".
+					implode("/", $harmoni->pathInfoParts);
+				if (count($_GET)) {
+					$url .= "?";
+					foreach ($_GET as $name => $value) {
+						$url .= "&".$name."=".$value;
+					}
+				}
+				print "<a href='".$url."'>Log Out</a>";
 			} else {
-				print "<a href='".MYURL."/auth/login_type/".urlencode($typeString)."/".
-				implode("/", $harmoni->pathInfoParts)."'>Log In</a>";
-		}
+				$url = MYURL."/auth/login_type/".urlencode($typeString)."/".
+					implode("/", $harmoni->pathInfoParts);
+				if (count($_GET)) {
+					$url .= "?";
+					foreach ($_GET as $name => $value) {
+						$url .= "&".$name."=".$value;
+					}
+				}
+				print "<a href='".$url."'>Log In</a>";
+			}
 		print "\n\t\t</td>";
 		print "\n\t</tr>";
-	}
-		print "\n</table>";
+		}
+	print "\n</table>";
 
 $statusBar =& new Block(ob_get_contents(),2);
 $statusRow->add($statusBar,null,null,RIGHT,TOP);
