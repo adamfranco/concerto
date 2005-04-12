@@ -82,7 +82,7 @@ $actionRows->add($introText, "100%", null, CENTER, CENTER);
 //***********************************
 if ($hasRootSearch) {
 	$criteria = NULL;
-	$assets =& $repository->getAssetsBySearch($criteria, $rootSearchType);
+	$assets =& $repository->getAssetsBySearch($criteria, $rootSearchType, $searchProperties = NULL);
 } 
 // Otherwise, just get all the assets
 else {

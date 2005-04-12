@@ -55,7 +55,7 @@ $assetArray = array();
 $repositories =& $repositoryManager->getRepositories();
 while ($repositories->hasNext()) {
 	$repository =& $repositories->next();
-	$assets =& $repository->getAssetsBySearch($searchCriteria, $searchType);
+	$assets =& $repository->getAssetsBySearch($searchCriteria, $searchType, $searchProperties = NULL);
 
 	// add the results to our total results
 	while ($assets->hasNext()) {

@@ -77,7 +77,7 @@ $actionRows->add($introText, null, null, CENTER, CENTER);
 //***********************************
 // Get the assets to display
 //***********************************
-$assets =& $repository->getAssetsBySearch($searchCriteria, $searchType);
+$assets =& $repository->getAssetsBySearch($searchCriteria, $searchType, $searchProperties = NULL);
 
 //***********************************
 // print the results
