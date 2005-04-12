@@ -15,6 +15,9 @@
 			Path declaration now works on Win32 systems with their reverse-slash
 			directories. Thanks fcool for noticing this.
 		</fix>
+		<fix author='adam'>
+			Fixed problems with Record editing.
+		</fix>
 		<important author='adam'>
 			Concerto now runs on PHP5 and on Win32 systems in addition to PHP4.3 and
 			POSIX systems.

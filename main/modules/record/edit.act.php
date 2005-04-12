@@ -59,6 +59,7 @@ if (!$authZ->isUserAuthorized($idManager->getId(AZ_EDIT), $id)) {
 	if ($partStructureSet->count()) {
 		$orderedPartStructuresToPrint = array();
 		$partStructuresToPrint = array();
+		$allPartStructures = array();
 		
 		// get the partStructures and break them up into ordered and unordered arrays.
 		$partStructures =& $structure->getPartStructures();
@@ -66,14 +67,15 @@ if (!$authZ->isUserAuthorized($idManager->getId(AZ_EDIT), $id)) {
 			$partStructure =& $partStructures->next();
 			$partStructureId =& $partStructure->getId();
 			
+			$allPartStructures[] =& $partStructure;
+			
 			if ($partStructureSet->isInSet($partStructureId)) {
 				$orderedPartStructuresToPrint[] =& $partStructureId;
 			} else {
 				$partStructuresToPrint[] =& $partStructureId;
 			}
 		}
-	
-		$allPartStructures =& array_merge($orderedPartStructuresToPrint, $partStructuresToPrint);
+		
 		$moduleManager->createWizardStepsForPartStructures($record, $wizard, $allPartStructures);
 	}
 	
