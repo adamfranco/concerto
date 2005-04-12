@@ -9,6 +9,8 @@
  *
  * @version $Id$
  */
+ 
+ error_reporting(E_ALL & ~E_NOTICE);
 
 // Define a Constant reference to this application directory.
 define("MYDIR",dirname(__FILE__));
