@@ -10,7 +10,7 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="0.1.2" date="2005-04-12">
+	<version number="0.1.2" date="2005-04-13">
 		<fix author='adam'>
 			Path declaration now works on Win32 systems with their reverse-slash
 			directories. Thanks fcool for noticing this.

@@ -3,10 +3,14 @@
 Name: Concerto ChangeLog
 
 
-v. 0.1.1 (2005-04-12)
+v. 0.1.2 (2005-04-13)
 ----------------------------------------------------
 		
 	* Bug Fix: Path declaration now works on Win32 systems with their reverse-slash directories. Thanks fcool for noticing this. (Adam Franco)
+		
+	* Bug Fix: Fixed problems with Record editing. (Adam Franco)
+		
+	**** IMPORTANT *** Change: Concerto now runs on PHP5 and on Win32 systems in addition to PHP4.3 and POSIX systems. (Adam Franco)
 	
 v. 0.1.1 (2005-04-11)
 ----------------------------------------------------
