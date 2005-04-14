@@ -3,7 +3,7 @@
 Name: Concerto ChangeLog
 
 
-v. 0.1.2 (2005-04-13)
+v. 0.1.2 (2005-04-14)
 ----------------------------------------------------
 		
 	* Bug Fix: Path declaration now works on Win32 systems with their reverse-slash directories. Thanks fcool for noticing this. (Adam Franco)
