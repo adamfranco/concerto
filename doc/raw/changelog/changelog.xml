@@ -10,6 +10,12 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
+	<version number="0.2.0" date="The Nebulous Future">
+		<fix author='adam'>
+			Converted remaining refernces to the 'MIDDLE' alignment to the new
+			'CENTER' alignment used by the GUIManager.
+		</fix>
+	</version>
 	<version number="0.1.2" date="2005-04-14">
 		<fix author='adam'>
 			Path declaration now works on Win32 systems with their reverse-slash

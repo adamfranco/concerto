@@ -24,7 +24,7 @@ $authZ =& Services::getService("AuthZ");
 $idManager =& Services::getService("Id");
 if (!$authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $idManager->getId(REPOSITORY_NODE_ID))) {
 	$errorBlock =& new Block(_("You are not authorized to create a <em>Collection</em>."), 4);
-	$centerPane->add($errorBlock, "100%", null, MIDDLE, CENTER);
+	$centerPane->add($errorBlock, "100%", null, CENTER, CENTER);
 	return $mainScreen;
 }
 

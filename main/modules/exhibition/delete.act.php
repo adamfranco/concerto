@@ -37,8 +37,8 @@ $idManager =& Services::getService("Id");
 	$centerPane =& $harmoni->getAttachedData('centerPane');
 
 	$errorLayout =& new SingleContentLayout;
-	$errorLayout->addComponent(new Content(_("You are not authorized to delete this <em>Repository</em>."), MIDDLE, CENTER));
-	$centerPane->addComponent($errorLayout, MIDDLE, CENTER);
+	$errorLayout->addComponent(new Content(_("You are not authorized to delete this <em>Repository</em>."), CENTER, CENTER));
+	$centerPane->addComponent($errorLayout, CENTER, CENTER);
  //return $mainScreen;
 }*/
   
