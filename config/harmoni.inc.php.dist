@@ -227,8 +227,8 @@ require_once(OKI2."/osid/OsidContext.php");
 
 
 // :: Set up the RepositoryManager ::
-	$repositoryHierarchyId = "1";
-	$defaultParentId = "3";	
+	$repositoryHierarchyId = "dev_id-1";
+	$defaultParentId = "dev_id-3";	
 	$configuration =& new ConfigurationProperties;
 	$configuration->addProperty('database_index', $dbID);
 	$configuration->addProperty('hierarchy_id', $repositoryHierarchyId);
@@ -268,58 +268,58 @@ require_once(OKI2."/osid/OsidContext.php");
 /*********************************************************
  * Authorization Root node
  *********************************************************/
- define("AZ_ROOT_NODE", '2');
+ define("AZ_ROOT_NODE", 'dev_id-2');
 
 /*********************************************************
  * View/Use AZs
  *********************************************************/
 // Can this qualifier and its children be accessed?
-define("AZ_ACCESS", '7');
+define("AZ_ACCESS", 'dev_id-7');
 
 // Can a qualifier be viewed?
-define("AZ_VIEW", '9');
+define("AZ_VIEW", 'dev_id-9');
 
 // Can a qualifier be commented on?
-define("AZ_COMMENT", '11');
+define("AZ_COMMENT", 'dev_id-11');
 
 /*********************************************************
  * Editing AZs
  *********************************************************/
 // Can a qualifier be edited?
-define("AZ_EDIT", '13');
+define("AZ_EDIT", 'dev_id-13');
 
 // Can a qualifier be deleted?
-define("AZ_DELETE", '15');
+define("AZ_DELETE", 'dev_id-15');
 
 // Can a a child be added to this qualifier?
-define("AZ_ADD_CHILDREN", '17');
+define("AZ_ADD_CHILDREN", 'dev_id-17');
 
 /*********************************************************
  * Administration AZs
  *********************************************************/
  // Can the AZs of a qualifier be viewed?
-define("AZ_VIEW_AZS", '19');
+define("AZ_VIEW_AZS", 'dev_id-19');
 
  // Can the AZs of a qualifier be modified?
-define("AZ_MODIFY_AZS", '21');
+define("AZ_MODIFY_AZS", 'dev_id-21');
 
  // Can agents be created here?
-define("AZ_CREATE_AGENTS", '23');
+define("AZ_CREATE_AGENTS", 'dev_id-23');
 
  // Can agent properties be modified here?
-define("AZ_MODIFY_AGENTS", '25');
+define("AZ_MODIFY_AGENTS", 'dev_id-25');
 
  // Can agents be deleted here?
-define("AZ_DELETE_AGENTS", '27');
+define("AZ_DELETE_AGENTS", 'dev_id-27');
 
  // Can groups be created here?
-define("AZ_CREATE_GROUPS", '29');
+define("AZ_CREATE_GROUPS", 'dev_id-29');
 
  // Can groups properties be modified here?
-define("AZ_MODIFY_GROUPS", '31');
+define("AZ_MODIFY_GROUPS", 'dev_id-31');
 
  // Can groups be deleted here?
-define("AZ_DELETE_GROUPS", '33');
+define(define("AZ_DELETE_GROUPS", 'dev_id-33');
 
 /*********************************************************
  * Hierarchy Ids

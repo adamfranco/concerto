@@ -15,6 +15,10 @@
 			Converted remaining refernces to the 'MIDDLE' alignment to the new
 			'CENTER' alignment used by the GUIManager.
 		</fix>
+		<change author='adam'>
+			The default config now sets up the IdManager with a prefix 'dev_id-'
+			to encourage testing of string-id support.
+		</change>
 	</version>
 	<version number="0.1.2" date="2005-04-14">
 		<fix author='adam'>
