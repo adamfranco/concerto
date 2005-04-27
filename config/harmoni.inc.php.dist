@@ -32,8 +32,9 @@ require_once(OKI2."/osid/OsidContext.php");
 	}
 	$harmoni->setActionCallbackFunction( "callback_action" );
 	$harmoni->ActionHandler->addActionSource(	
-				new FlatFileActionSource(realpath(MYDIR."/main/modules"), 
-										 ".act.php"));
+				new ClassesActionSource(realpath(MYDIR."/main/modules"), 
+										 ".act.php",
+										 "Action"));
 	$harmoni->ActionHandler->addActionSource(	
 				new FlatFileActionSource(realpath(POLYPHONY."/main/modules"), 
 										 ".act.php"));
@@ -319,7 +320,7 @@ define("AZ_CREATE_GROUPS", 'dev_id-29');
 define("AZ_MODIFY_GROUPS", 'dev_id-31');
 
  // Can groups be deleted here?
-define(define("AZ_DELETE_GROUPS", 'dev_id-33');
+define("AZ_DELETE_GROUPS", 'dev_id-33');
 
 /*********************************************************
  * Hierarchy Ids
