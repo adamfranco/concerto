@@ -6,56 +6,86 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
  *
  * @version $Id$
+ */ 
+
+require_once(dirname(__FILE__)."/../MainWindowAction.class.php");
+
+/**
+ * 
+ * 
+ * @package concerto.modules.collections
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
+ * @version $Id$
  */
-
-// Get the Layout compontents. See core/modules/moduleStructure.txt
-// for more info. 
-$harmoni->ActionHandler->execute("window", "screen");
-$mainScreen =& $harmoni->getAttachedData('mainScreen');
-$centerPane =& $harmoni->getAttachedData('centerPane');
- 
-
-// Our
-$yLayout =& new YLayout();
-$actionRows =& new Container($yLayout,OTHER,1);
-$centerPane->add($actionRows, null, null, CENTER, TOP);
-
-// Intro
-$introHeader =& new Heading("Browse Collections By Name", 2);
-$actionRows->add($introHeader, "100%" ,null, LEFT, CENTER);
-
-$text = "";
-$text .= "<p>";
-$text .= _("Below are listed the availible <em>Collections</em>, organized by name.");
-$text .= "</p>\n<p>";
-$text .= _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
-$text .= "</p>";
-
-$introText =& new Block($text,3);
-$actionRows->add($introText, "100%", null, CENTER, CENTER);
-
-
-// Get the Repositoriess
-$repositoryManager =& Services::getService("Repository");
-$allRepositories =& $repositoryManager->getRepositories();
-
-// put the drs into an array and order them.
-// @todo, do authorization checking
-$repositoryArray = array();
-while($allRepositories->hasNext()) {
-	$repository =& $allRepositories->next();
-	$repositoryArray[$repository->getDisplayName()] =& $repository;
+class namebrowseAction 
+	extends MainWindowAction
+{
+	/**
+	 * Check Authorizations
+	 * 
+	 * @return boolean
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function isAuthorizedToExecute () {
+		return TRUE;
+	}
+	
+	/**
+	 * Return the heading text for this action, or an empty string.
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function getHeadingText () {
+		return _("Browse Collections By Name");
+	}
+	
+	/**
+	 * Build the content for this action
+	 * 
+	 * @return boolean
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function buildContent () {
+		$actionRows =& $this->getActionRows();
+		$harmoni =& $this->getHarmoni();
+		
+		ob_start();
+		print "<p>";
+		print _("Below are listed the availible <em>Collections</em>, organized by name.");
+		print "</p>\n<p>";
+		print _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
+		print "</p>";
+		
+		$actionRows->add(new Block(ob_get_contents(), 3), "100%", null, CENTER, CENTER);
+		ob_end_clean();
+		
+		
+		// Get the Repositoriess
+		$repositoryManager =& Services::getService("Repository");
+		$allRepositories =& $repositoryManager->getRepositories();
+		
+		// put the drs into an array and order them.
+		// @todo, do authorization checking
+		$repositoryArray = array();
+		while($allRepositories->hasNext()) {
+			$repository =& $allRepositories->next();
+			$repositoryArray[$repository->getDisplayName()] =& $repository;
+		}
+		ksort($repositoryArray);
+		
+		// print the Results
+		$resultPrinter =& new ArrayResultPrinter($repositoryArray, 2, 20, "printRepositoryShort", $harmoni);
+		$resultLayout =& $resultPrinter->getLayout($harmoni);
+		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
+	}
 }
-ksort($repositoryArray);
-
-// print the Results
-$resultPrinter =& new ArrayResultPrinter($repositoryArray, 2, 20, "printRepositoryShort", $harmoni);
-$resultLayout =& $resultPrinter->getLayout($harmoni);
-$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
-
-
-// return the main layout.
-return $mainScreen;
 
 
 // Callback function for printing Repositories
@@ -76,3 +106,5 @@ function printRepositoryShort(& $repository, & $harmoni) {
 	ob_end_clean();
 	return $layout;
 }
+
+?>

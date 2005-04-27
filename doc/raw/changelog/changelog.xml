@@ -19,6 +19,10 @@
 			The default config now sets up the IdManager with a prefix 'dev_id-'
 			to encourage testing of string-id support.
 		</change>
+		<change author='adam'>
+			Concerto Actions are now classes in order to allow for easier refactoring
+			of common functionality via subclassing.
+		</change>
 	</version>
 	<version number="0.1.2" date="2005-04-14">
 		<fix author='adam'>

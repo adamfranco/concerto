@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * @package concerto.modules.admin
  * 
@@ -6,45 +6,75 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
  *
  * @version $Id$
+ */ 
+
+require_once(dirname(__FILE__)."/../MainWindowAction.class.php");
+
+/**
+ * 
+ * 
+ * @package concerto.modules.admin
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
+ * @version $Id$
  */
+class mainAction 
+	extends MainWindowAction
+{
+	/**
+	 * Check Authorizations
+	 * 
+	 * @return boolean
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function isAuthorizedToExecute () {
+		return TRUE;
+	}
+	
+	/**
+	 * Return the heading text for this action, or an empty string.
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function getHeadingText () {
+		return _("Admin Tools");
+	}
+	
+	/**
+	 * Build the content for this action
+	 * 
+	 * @return boolean
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function buildContent () {
+		$actionRows =& $this->getActionRows();
+		
+		ob_start();
+		print "\n<ul>";
+		print "\n\t<li><a href='".MYURL."/agents/group_membership/'>";
+		print _("Edit Group Membership");
+		print "</a></li>";
+		print "\n\t<li><a href='".MYURL."/authorization/browse_authorizations/'>";
+		print _("Browse authorizations");
+		print "</a></li>";
+		print "\n\t<li><a href='".MYURL."/authorization/choose_agent/'>";
+		print _("Edit authorizations");
+		print "</a></li>";
+		print "\n\t<li><a href='".MYURL."/agents/create_agent/'>";
+		print _("Create User");
+		print "</a></li>";
+		print "\n</ul>";
+		
+		$introText =& new Block(ob_get_contents(),3);
+		$actionRows->add($introText, "100%", null, CENTER, CENTER);
+		ob_end_clean();
+	}
+}
 
-// Get the Layout compontents. See core/modules/moduleStructure.txt
-// for more info. 
-$harmoni->ActionHandler->execute("window", "screen");
-$mainScreen =& $harmoni->getAttachedData('mainScreen');
-$statusBar =& $harmoni->getAttachedData('statusBar');
-$centerPane =& $harmoni->getAttachedData('centerPane');
- 
-
-// Our
-$yLayout =& new YLayout();
-$actionRows =& new Container($yLayout,OTHER,1);
-$centerPane->add($actionRows, null, null, CENTER, TOP);
-
-// Intro
-$introHeader =& new Heading("Admin Tools", 2);
-$actionRows->add($introHeader, "100%" ,null, LEFT, CENTER);
-
-
-ob_start();
-print "\n<ul>";
-print "\n\t<li><a href='".MYURL."/agents/group_membership/'>";
-print _("Edit Group Membership");
-print "</a></li>";
-print "\n\t<li><a href='".MYURL."/authorization/browse_authorizations/'>";
-print _("Browse authorizations");
-print "</a></li>";
-print "\n\t<li><a href='".MYURL."/authorization/choose_agent/'>";
-print _("Edit authorizations");
-print "</a></li>";
-print "\n\t<li><a href='".MYURL."/agents/create_agent/'>";
-print _("Create User");
-print "</a></li>";
-print "\n</ul>";
-
-$introText =& new Block(ob_get_contents(),3);
-$actionRows->add($introText, "100%", null, CENTER, CENTER);
-ob_end_clean();
-
-// return the main layout.
-return $mainScreen;
+?>

@@ -6,38 +6,71 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
  *
  * @version $Id$
+ */ 
+
+require_once(dirname(__FILE__)."/../MainWindowAction.class.php");
+
+/**
+ * 
+ * 
+ * @package concerto.modules.home
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
+ * @version $Id$
  */
+class welcomeAction 
+	extends MainWindowAction
+{
+	/**
+	 * Check Authorizations
+	 * 
+	 * @return boolean
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function isAuthorizedToExecute () {
+		return TRUE;
+	}
+	
+	/**
+	 * Return the heading text for this action, or an empty string.
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function getHeadingText () {
+		return _("Welcome to Concerto");
+	}
+	
+	/**
+	 * Build the content for this action
+	 * 
+	 * @return boolean
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function buildContent () {
+		$actionRows =& $this->getActionRows();
+		ob_start();
+		print "<p>";
+		print _("<strong>Concerto</strong> is a digital assets management tool developed at Middlebury College.");
+		print "</p>\n<p>";
+		print _("The two main parts of <strong>Concerto</strong> are the <em>Collections</em> of digital <em>Assets</em> and the <em>Exhibitions</em> of <em>Slide-Shows</em>. Click on the links to the left to start exploring <strong>Concerto</strong>.");
+		print "</p>\n<p>";
+		print _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
+		print "</p>";
+		
+		$actionRows->add(
+			new Block(ob_get_contents(),3), 
+			"100%", 
+			null, 
+			CENTER, 
+			CENTER);
+		ob_end_clean();
+	}	
+}
 
-// Get the Layout compontents. See core/modules/moduleStructure.txt
-// for more info. 
-$harmoni->ActionHandler->execute("window", "screen");
-$mainScreen =& $harmoni->getAttachedData('mainScreen');
-$statusBar =& $harmoni->getAttachedData('statusBar');
-$centerPane =& $harmoni->getAttachedData('centerPane');
- 
-
-// Our
-$yLayout =& new YLayout();
-$actionRows =& new Container($yLayout,OTHER,1);
-$centerPane->add($actionRows, null, null, CENTER, TOP);
-
-// Intro
-$introHeader =& new Heading(_("Welcome to Concerto"), 2);
-$actionRows->add($introHeader, "100%" ,null, LEFT, CENTER);
-
-
-$text = "";
-//$text .= "\n<img src='".MYPATH."/main/modules/home/flower.jpg' alt='A flower. &copy;2003 Adam Franco - Creative Commons Attribution-ShareAlike 1.0 - http://creativecommons.org/licenses/by-sa/1.0/' align='right' style='margin: 10px;' />";
-$text .= "<p>";
-$text .= _("<strong>Concerto</strong> is a digital assets management tool developed at Middlebury College.");
-$text .= "</p>\n<p>";
-$text .= _("The two main parts of <strong>Concerto</strong> are the <em>Collections</em> of digital <em>Assets</em> and the <em>Exhibitions</em> of <em>Slide-Shows</em>. Click on the links to the left to start exploring <strong>Concerto</strong>.");
-$text .= "</p>\n<p>";
-$text .= _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
-$text .= "</p>";
-
-$introText =& new Block($text,3);
-$actionRows->add($introText, "100%", null, CENTER, CENTER);
-
-
-return $mainScreen;
+?>
