@@ -8,7 +8,7 @@
  * @version $Id$
  */ 
 
-require_once(dirname(__FILE__)."/../RepositoryAction.class.php");
+require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
 
 /**
  * 
@@ -332,8 +332,7 @@ class addAction
 			
 		}
 		
-		$wizardLayout =& $wizard->getLayout($harmoni);
-		$centerPane->add($wizardLayout, null, null, CENTER, TOP);
+		$centerPane->add($wizard->getLayout($harmoni), null, null, CENTER, TOP);
 	}
 }
 

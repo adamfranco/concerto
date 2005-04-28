@@ -8,7 +8,7 @@
  * @version $Id$
  */ 
 
-require_once(dirname(__FILE__)."/../MainWindowAction.class.php");
+require_once(MYDIR."/main/library/abstractActions/MainWindowAction.class.php");
 
 /**
  * 
@@ -71,8 +71,7 @@ class mainAction
 		print "</a></li>";
 		print "\n</ul>";
 		
-		$introText =& new Block(ob_get_contents(),3);
-		$actionRows->add($introText, "100%", null, CENTER, CENTER);
+		$actionRows->add(new Block(ob_get_contents(), 3), "100%", null, CENTER, CENTER);
 		ob_end_clean();
 	}
 }

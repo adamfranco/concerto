@@ -8,7 +8,7 @@
  * @version $Id$
  */ 
 
-require_once(dirname(__FILE__)."/../AssetAction.class.php");
+require_once(MYDIR."/main/library/abstractActions/AssetAction.class.php");
 
 /**
  * 

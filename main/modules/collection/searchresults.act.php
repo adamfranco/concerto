@@ -8,7 +8,7 @@
  * @version $Id$
  */ 
 
-require_once(dirname(__FILE__)."/../RepositoryAction.class.php");
+require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
 
 /**
  * 
