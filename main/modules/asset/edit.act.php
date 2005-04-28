@@ -76,7 +76,8 @@ class editAction
 	 * in {@link runWizard()} and does not need to be implemented here.
 	 * 
 	 * @param string $cacheName
-	 * @return void
+	 * @return boolean TRUE if save was successful and tear-down/cleanup of the
+	 *		Wizard should ensue.
 	 * @access public
 	 * @since 4/28/05
 	 */
@@ -99,7 +100,9 @@ class editAction
 				new Time($properties['effective_date']->getValue()));
 		if ($properties['expiration_date']->getValue())
 			$asset->updateExpirationDate(
-				new Time($properties['expiration_date']->getValue()));		
+				new Time($properties['expiration_date']->getValue()));
+		
+		return TRUE;
 	}
 	
 	/**
@@ -130,9 +133,7 @@ class editAction
 		$asset =& $this->getAsset();
 	
 		// Instantiate the wizard, then add our steps.
-		$wizard =& new Wizard(_("Edit Asset"));
-		$_SESSION[$cacheName] =& $wizard;
-		
+		$wizard =& new Wizard(_("Edit Asset"));		
 		
 		// :: Name and Description ::
 		$step =& $wizard->createStep(_("Name & Description"));

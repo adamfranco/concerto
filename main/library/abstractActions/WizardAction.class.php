@@ -73,7 +73,8 @@ class WizardAction
 	 * in {@link runWizard()} and does not need to be implemented here.
 	 * 
 	 * @param string $cacheName
-	 * @return void
+	 * @return boolean TRUE if save was successful and tear-down/cleanup of the
+	 *		Wizard should ensue.
 	 * @access public
 	 * @since 4/28/05
 	 */
@@ -149,8 +150,8 @@ class WizardAction
 		$harmoni =& $this->getHarmoni();
 		
 		if ($wizard->isSaveRequested()) {		
-			$this->saveWizard($cacheName);
-			$this->cancelWizard($cacheName);
+			if ($this->saveWizard($cacheName))
+				$this->cancelWizard($cacheName);
 		} 
 		else if ($wizard->isCancelRequested()) {
 			$this->cancelWizard($cacheName);	
