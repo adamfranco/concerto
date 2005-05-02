@@ -103,11 +103,23 @@ class WizardAction
 	 * @since 4/28/05
 	 */
 	function cancelWizard ( $cacheName ) {
+		$this->closeWizard($cacheName);
+		header("Location: ".$this->getReturnUrl());
+	}
+	
+	/**
+	 * Close the Wizard. This will tear down the Wizard.
+	 * 
+	 * @param string $cacheName
+	 * @return void
+	 * @access public
+	 * @since 4/28/05
+	 */
+	function closeWizard ( $cacheName ) {
 		$wizard =& $this->getWizard($cacheName);
 		$wizard = NULL;
 		unset ($_SESSION[$cacheName]);
 		unset ($wizard);
-		header("Location: ".$this->getReturnUrl());
 	}
 	
 	/**

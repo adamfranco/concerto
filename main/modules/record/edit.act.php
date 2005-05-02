@@ -57,17 +57,6 @@ class editAction
 	}
 	
 	/**
-	 * Return the heading text for this action, or an empty string.
-	 * 
-	 * @return string
-	 * @access public
-	 * @since 4/26/05
-	 */
-	function getHeadingText () {
-		return '';
-	}
-	
-	/**
 	 * Build the content for this action
 	 * 
 	 * @return boolean
@@ -77,91 +66,106 @@ class editAction
 	function buildContent () {
 		$harmoni =& $this->getHarmoni();
 		$centerPane =& $this->getCenterPane();
-		$asset =& $this->getAsset();
-		$assetId =& $this->getAssetId();
-		$repositoryId =& $this->getRepositoryId();
 		$idManager =& Services::getService("Id");
 		$recordId =& $idManager->getId($harmoni->pathInfoParts[4]);
+		$cacheName = 'edit_record_wizard_'.$recordId->getIdString();
 		
-		// Create the wizard.
-		 if ($_SESSION['edit_record_wizard_'.$recordId->getIdString()]) {
-			$wizard =& $_SESSION['edit_record_wizard_'.$recordId->getIdString()];
-		 } else {
-		 
-			$record =& $asset->getRecord($recordId);
-			$structure =& $record->getRecordStructure();
-			$structureId =& $structure->getId();
+		$this->runWizard ( $cacheName, $centerPane );
+	}
+	
+	/**
+	 * Create a new Wizard for this action. Caching of this Wizard is handled by
+	 * {@link getWizard()} and does not need to be implemented here.
+	 * 
+	 * @return object Wizard
+	 * @access public
+	 * @since 4/28/05
+	 */
+	function &createWizard () {
+		$harmoni =& $this->getHarmoni();
+		$idManager =& Services::getService("Id");
+		$recordId =& $idManager->getId($harmoni->pathInfoParts[4]);
+		$asset =& $this->getAsset();
+		$record =& $asset->getRecord($recordId);
+		$structure =& $record->getRecordStructure();
+		$structureId =& $structure->getId();
+	
+		// Instantiate the wizard, then add our steps.
+		$wizard =& new Wizard(_("Edit Record"));
 		
-			// Instantiate the wizard, then add our steps.
-			$wizard =& new Wizard(_("Edit Record"));
-			$_SESSION['edit_record_wizard_'.$recordId->getIdString()] =& $wizard;
+		// First get the set for this structure and start with the partStructure in the set.
+		$setManager =& Services::getService("Sets");
+		$partStructureSet =& $setManager->getSet($structureId);
+		
+		$moduleManager =& Services::getService("InOutModules");
+		// if we are dealing with ordered partStructures, order them
+		if ($partStructureSet->count()) {
+			$orderedPartStructuresToPrint = array();
+			$partStructuresToPrint = array();
+			$allPartStructures = array();
 			
-			// First get the set for this structure and start with the partStructure in the set.
-			$setManager =& Services::getService("Sets");
-			$partStructureSet =& $setManager->getSet($structureId);
-			
-			$moduleManager =& Services::getService("InOutModules");
-			// if we are dealing with ordered partStructures, order them
-			if ($partStructureSet->count()) {
-				$orderedPartStructuresToPrint = array();
-				$partStructuresToPrint = array();
-				$allPartStructures = array();
+			// get the partStructures and break them up into ordered and unordered arrays.
+			$partStructures =& $structure->getPartStructures();
+			while ($partStructures->hasNext()) {
+				$partStructure =& $partStructures->next();
+				$partStructureId =& $partStructure->getId();
 				
-				// get the partStructures and break them up into ordered and unordered arrays.
-				$partStructures =& $structure->getPartStructures();
-				while ($partStructures->hasNext()) {
-					$partStructure =& $partStructures->next();
-					$partStructureId =& $partStructure->getId();
-					
-					$allPartStructures[] =& $partStructure;
-					
-					if ($partStructureSet->isInSet($partStructureId)) {
-						$orderedPartStructuresToPrint[] =& $partStructureId;
-					} else {
-						$partStructuresToPrint[] =& $partStructureId;
-					}
+				$allPartStructures[] =& $partStructure;
+				
+				if ($partStructureSet->isInSet($partStructureId)) {
+					$orderedPartStructuresToPrint[] =& $partStructureId;
+				} else {
+					$partStructuresToPrint[] =& $partStructureId;
 				}
-				
-				$moduleManager->createWizardStepsForPartStructures($record, $wizard, $allPartStructures);
 			}
 			
-			// Otherwise just add steps for all partStructures.
-			else {
-				$moduleManager->createWizardSteps($record, $wizard);
-			}
+			$moduleManager->createWizardStepsForPartStructures($record, $wizard, $allPartStructures);
 		}
 		
-		// Prepare the return URL so that we can get back to where we were.
-		// $currentPathInfo = array();
-		// for ($i = 3; $i < count($harmoni->pathInfoParts); $i++) {
-		// 	$currentPathInfo[] = $harmoni->pathInfoParts[$i];
-		// }
-		// $returnURL = MYURL."/".implode("/",$currentPathInfo);
-		$returnURL = MYURL."/asset/editview/".$repositoryId->getIdString()."/".$assetId->getIdString()."/";
-		
-		if ($wizard->isSaveRequested()) {
-		
-			$record =& $asset->getRecord($recordId);
-			
-			$moduleManager =& Services::getService("InOutModules");
-			
-			$moduleManager->updateFromWizard($record, $wizard);
-			
-			$wizard = NULL;
-			unset ($_SESSION['edit_record_wizard_'.$recordId->getIdString()]);
-			unset ($wizard);
-			
-			header("Location: ".$returnURL);
-			
-		} else if ($wizard->isCancelRequested()) {
-			$wizard = NULL;
-			unset ($_SESSION['edit_record_wizard_'.$recordId->getIdString()]);
-			unset ($wizard);
-			header("Location: ".$returnURL);
-			
+		// Otherwise just add steps for all partStructures.
+		else {
+			$moduleManager->createWizardSteps($record, $wizard);
 		}
 		
-		$wizardLayout =& $wizard->getLayout($harmoni);
-		$centerPane->add($wizardLayout, null, null, CENTER, CENTER);
+		return $wizard;
+	}
+	
+	/**
+	 * Save our results. Tearing down and unsetting the Wizard is handled by
+	 * in {@link runWizard()} and does not need to be implemented here.
+	 * 
+	 * @param string $cacheName
+	 * @return boolean TRUE if save was successful and tear-down/cleanup of the
+	 *		Wizard should ensue.
+	 * @access public
+	 * @since 4/28/05
+	 */
+	function saveWizard ( $cacheName ) {
+		$wizard =& $this->getWizard($cacheName);
+		$harmoni =& $this->getHarmoni();
+		$idManager =& Services::getService("Id");
+		$recordId =& $idManager->getId($harmoni->pathInfoParts[4]);
+		$asset =& $this->getAsset();
+		$record =& $asset->getRecord($recordId);
+		
+		$record =& $asset->getRecord($recordId);
+		$moduleManager =& Services::getService("InOutModules");
+		$moduleManager->updateFromWizard($record, $wizard);
+		
+		return TRUE;
+	}
+	
+	/**
+	 * Return the URL that this action should return to when completed.
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 4/28/05
+	 */
+	function getReturnUrl () {
+		$repositoryId =& $this->getRepositoryId();
+		$assetId =& $this->getAssetId();
+		return MYURL."/asset/editview/".$repositoryId->getIdString()
+				."/".$assetId->getIdString()."/";
 	}
 }

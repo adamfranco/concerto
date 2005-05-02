@@ -71,7 +71,7 @@ class browseAction
 	/**
 	 * Build the content for this action
 	 * 
-	 * @return boolean
+	 * @return void
 	 * @access public
 	 * @since 4/26/05
 	 */

@@ -57,7 +57,7 @@ class editAction
 	/**
 	 * Build the content for this action
 	 * 
-	 * @return boolean
+	 * @return void
 	 * @access public
 	 * @since 4/26/05
 	 */
@@ -68,9 +68,11 @@ class editAction
 		
 		// Move to Schema creation if that button is pressed.
 		if ($_REQUEST['create_schema'] && $this->saveWizard($cacheName)) {
+			$this->closeWizard($cacheName);
 			$harmoni =& $this->getHarmoni();
 			header("Location: ".MYURL."/schema/create/".$repositoryId->getIdString()
 				."/".implode("/",$harmoni->pathInfoParts));
+			return TRUE;
 		}
 		
 		$this->runWizard ( $cacheName, $centerPane );
