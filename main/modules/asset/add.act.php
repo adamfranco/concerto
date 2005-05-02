@@ -219,19 +219,24 @@ class addAction
 		
 		// Create the properties.
 		$property =& $step->createProperty("parent", new AlwaysTrueValidatorRule);
-		$property->setDefaultValue("NONE");
+		$harmoni =& $this->getHarmoni();
 		
+		if ($_REQUEST['parent'])
+			$property->setDefaultValue($_REQUEST['parent']);
+		else
+			$property->setDefaultValue("NONE");
+				
 		// Create the step text
 		ob_start();
 		print "\n<h2>"._("Parent <em>Asset</em>")."</h2>";
 		print "\n"._("Select one of the <em>Assets</em> below if you wish to make this new asset a child of another asset: ");
 		print "\n<br /><select name='parent'>";
-		print "\n\t<option value='NONE' [[parent=='NONE'|checked='checked'|]]>None</option>";
+		print "\n\t<option value='NONE' [['parent'=='NONE'|selected='selected'|]]>None</option>";
 		$assets =& $repository->getAssets();
 		while ($assets->hasNext()) {
 			$asset =& $assets->next();
 			$assetId =& $asset->getId();
-			print "\n\t<option value='".$assetId->getIdString()."' [[parent=='".$assetId->getIdString()."'|checked='checked'|]]>Id: ".$assetId->getIdString()." - ".$asset->getDisplayName()."</option>";
+			print "\n\t<option value='".$assetId->getIdString()."' [['parent'=='".$assetId->getIdString()."'|selected='selected'|]]>Id: ".$assetId->getIdString()." - ".$asset->getDisplayName()."</option>";
 		}
 			
 		print "\n</select>";

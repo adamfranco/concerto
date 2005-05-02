@@ -129,7 +129,7 @@ class AssetPrinter {
 		
 		if ($authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $asset->getId())) {
 			if (ereg("^asset\..*$", $actionString) && $harmoni->pathInfoParts[3] == $assetId->getIdString()) {
-				$links[] = "<a href='".MYURL."/asset/addchild/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>";
+				$links[] = "<a href='".MYURL."/asset/add/".$repositoryId->getIdString()."/?&parent=".$assetId->getIdString()."'>";
 				$links[count($links) - 1] .= _("add child asset")."</a>";
 			}
 		}
