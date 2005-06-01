@@ -26,15 +26,29 @@ require_once(OKI2."/osid/OsidContext.php");
 	$context->assignContext('harmoni', $harmoni);
 
 
-// :: setup the ActionHandler ::
-	function callback_action(&$harmoni) {
-		return $harmoni->pathInfoParts[0] . "." . $harmoni->pathInfoParts[1];
-	}
-	$harmoni->setActionCallbackFunction( "callback_action" );
+/******************************************************************************
+ * Set up the ActionHandler
+ *
+ * The ActionHandler provides a logical navigation-control system
+ ******************************************************************************/
+ 
+ 	// First we need to assign a RequestHandler to Harmoni for generating URLs, 
+ 	// getting request data (ie, $_REQUEST variables) from the browser, and getting
+ 	// the requested module/action pair.
+ 
+ 	// the GETMethodRequestHandler uses standard GET query strings for information
+ 	// transfer.
+ 	require_once(HARMONI."/architecture/request/GETMethodRequestHandler.class.php");
+	$harmoni->request->assignRequestHandler( new GETMethodRequestHandler() );
+	
+	// Next we need to tell the ActionHandler where to find our modules/actions
+	// and what type those are (FlatFile-Actions, ClassMethod-Actions, or
+	// Class-Actions.
 	$harmoni->ActionHandler->addActionSource(	
-				new ClassesActionSource(realpath(MYDIR."/main/modules"), 
-										 ".act.php",
-										 "Action"));
+				new FlatFileActionSource(realpath(MYDIR."/main/modules"), 
+										 ".act.php"));
+	// Our Authentication and Language-switching actions are already written
+	// and reside in the Polyphony package:
 	$harmoni->ActionHandler->addActionSource(	
 				new FlatFileActionSource(realpath(POLYPHONY."/main/modules"), 
 										 ".act.php"));
@@ -84,7 +98,7 @@ require_once(OKI2."/osid/OsidContext.php");
 //		serialize(new Type ("Authentication", "Middlebury College", "Concerto DB")) 
 //			=> new BasicFormNamePassTokenCollector,
 		serialize(new Type ("Authentication", "Middlebury College", "Concerto DB")) 
-			=> new FormActionNamePassTokenCollector(MYURL."/auth/username_password_form/".implode("/",$harmoni->pathInfoParts)),
+			=> new FormActionNamePassTokenCollector($harmoni->request->quickURL("auth","username_password_form")),
 	);
 	$configuration->addProperty('token_collectors', $tokenCollectors);
 	Services::startManagerAsService("AuthenticationManager", $context, $configuration);
