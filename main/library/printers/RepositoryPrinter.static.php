@@ -55,28 +55,31 @@ class RepositoryPrinter {
 		
 		$links = array();
 		
-// 		$links[] = "<a href='".MYURL."/collection/view/".$repositoryId->getIdString()."/'>";
-// 		$links[count($links) - 1] .= _("view")."</a>";
-		
 		$actionString = $harmoni->getCurrentAction();
+		$url =& $harmoni->request->mkURL();	
+		$url->setValue("collection_id", $repositoryId->getIdString());
 		
 		if ($authZ->isUserAuthorized($idManager->getId(AZ_ACCESS), $repositoryId)) {
+			
 			if ($actionString != "collection.browse") {
-				$links[] = "<a href='".MYURL."/collection/browse/".$repositoryId->getIdString()."/'>";
+				$url->setModuleAction("collection", "browse");
+				$links[] = "<a href='".$url->write()."'>";
 				$links[count($links) - 1] .= _("browse")."</a>";
 			} else {
 				$links[] = _("browse");
 			}
 			
 			if ($actionString != "collection.typebrowse") {
-				$links[] = "<a href='".MYURL."/collection/typebrowse/".$repositoryId->getIdString()."/'>";
+				$url->setModuleAction("collection", "typebrowse");
+				$links[] = "<a href='".$url->write()."'>";
 				$links[count($links) - 1] .= _("browse by type")."</a>";
 			} else {
 				$links[] = _("browse by type");
 			}
 			
 			if ($actionString != "collection.search") {
-				$links[] = "<a href='".MYURL."/collection/search/".$repositoryId->getIdString()."/'>";
+				$url->setModuleAction("collection", "search");
+				$links[] = "<a href='".$url->write()."'>";
 				$links[count($links) - 1] .= _("search")."</a>";
 			} else {
 				$links[] = _("search");
@@ -84,12 +87,14 @@ class RepositoryPrinter {
 		}
 		
 		if ($authZ->isUserAuthorized($idManager->getId(AZ_EDIT), $repositoryId)) {
-			$links[] = "<a href='".MYURL."/collection/edit/".$repositoryId->getIdString()."/'>";
+			$url->setModuleAction("collection", "edit");
+				$links[] = "<a href='".$url->write()."'>";
 			$links[count($links) - 1] .= _("edit")."</a>";
 		}
 	 	
 	 	if ($authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $repositoryId)) {
-			$links[] = "<a href='".MYURL."/asset/add/".$repositoryId->getIdString()."/".implode("/",$harmoni->pathInfoParts)."'>";
+			$url->setModuleAction("asset", "add");
+				$links[] = "<a href='".$url->write()."'>";
 			$links[count($links) - 1] .= _("add asset")."</a>";
 		}
 		

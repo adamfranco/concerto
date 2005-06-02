@@ -76,7 +76,9 @@ class displayAction {
 		// Language Bar
 		$harmoni->history->markReturnURL("polyphony/language/change");
 		$languageText = "\n<form action='".$harmoni->request->quickURL("language", "change")."' method='post'>";
-		$languageText .= "\n\t<div>\n\t<select name='".$harmoni->request->getName("polyphony/language")."'>";
+	$harmoni->request->startNamespace("polyphony");
+	$languageText .= "\n\t<div>\n\t<select name='".$harmoni->request->getName("language")."'>";
+	$harmoni->request->endNamespace();
 		$langLoc =& Services::getService('Lang');
 		$currentCode = $langLoc->getLanguage();
 		$languages = $langLoc->getLanguages();
@@ -110,8 +112,7 @@ class displayAction {
 				
 				while($authTypes->hasNextType()) {
 					$authType =& $authTypes->nextType();
-					$typeString = $authType->getDomain()."::".$authType->getAuthority()
-						."::".$authType->getKeyword();
+					$typeString = HarmoniType::typeToString($authType);
 					print "\n\t<tr>";
 					print "\n\t\t<td>";
 					print "<a href='#' title='$typeString' onClick='alert(\"$typeString\")'>";
@@ -126,20 +127,26 @@ class displayAction {
 					print $userAgent->getDisplayName();
 					print "\n\t\t</td>";
 					print "\n\t\t<td>";
+					$harmoni->request->startNamespace("polyphony");
 					if ($authNManager->isUserAuthenticated($authType)) {
-						$url = $harmoni->request->quickURL("auth",
+						$url = $harmoni->request->quickURL(
+							"auth",
 							"logout_type",
-							array("polyphony/type"=>urlencode($typeString)));
+							array("type"=>urlencode($typeString))
+						);
 						print "<a href='".$url."'>Log Out</a>";
 					} else {
 						$harmoni->history->markReturnURL("polyphony/login");
-						$url = $harmoni->request->quickURL("auth",
+						$url = $harmoni->request->quickURL(
+							"auth",
 							"login_type",
-							array("polyphony/type"=>urlencode($typeString)));
+							array("type"=>urlencode($typeString))
+						);
 						print "<a href='".$url."'>Log In</a>";
 					}
-				print "\n\t\t</td>";
-				print "\n\t</tr>";
+					$harmoni->request->endNamespace();
+					print "\n\t\t</td>";
+					print "\n\t</tr>";
 				}
 			print "\n</table>";
 		

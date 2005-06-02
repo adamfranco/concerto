@@ -54,20 +54,26 @@ class mainAction
 	 */
 	function buildContent () {
 		$actionRows =& $this->getActionRows();
+		
+		$harmoni =& Harmoni::instance();
 
 		ob_start();
-		print "";
-		//print "\n<img src='".MYPATH."/main/modules/home/flower.jpg' alt='A flower. &copy;2003 Adam Franco - Creative Commons Attribution-ShareAlike 1.0 - http://creativecommons.org/licenses/by-sa/1.0/' align='right' style='margin: 10px;' />";
 		print "<p>";
 		print _("<em>Collections</em> are containers for <em>Assets</em>. <em>Assets</em> can in turn contain other Assets. Each collection can have its own cataloging schema.");
 		print "</p>\n<ul>";
-		print "\n\t<li><a href='".MYURL."/collections/namebrowse/'>";
+		print "\n\t<li><a href='";
+			print $harmoni->request->quickURL("collections", "namebrowse");
+			print "'>";
 		print _("Browse <em>Collections</em> by Name");
 		print "</a></li>";
-		print "\n\t<li><a href='".MYURL."/collections/typebrowse/'>";
+		print "\n\t<li><a href='";
+			print $harmoni->request->quickURL("collections", "typebrowse");
+			print "'>";
 		print _("Browse <em>Collections</em> by Type");
 		print "</a></li>";
-		print "\n\t<li><a href='".MYURL."/collections/search/'>";
+		print "\n\t<li><a href='";
+			print $harmoni->request->quickURL("collections", "search");
+			print "'>";
 		print _("Search <em>Collections</em> for <em> Assets</em>");
 		print "</a></li>";
 		print "</ul>\n<p>";
@@ -76,7 +82,9 @@ class mainAction
 		
 		// If the user is authorized, allow them to create a new collection.
 		// @todo - add authorization.
-		print "\n<ul>\n<li><a href='".MYURL."/collection/create/'>";
+		print "\n<ul>\n<li><a href='";
+			print $harmoni->request->quickURL("collection", "create");
+			print "'>";
 		print _("Create a new <em>Collection</em>");
 		print "</a>\n</li>\n</ul>";
 		
