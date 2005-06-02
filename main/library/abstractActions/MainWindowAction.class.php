@@ -9,6 +9,15 @@
  */ 
 
 require_once(dirname(__FILE__)."/WizardAction.class.php");
+require_once(HARMONI."GUIManager/Container.class.php");
+require_once(HARMONI."GUIManager/Layouts/XLayout.class.php");
+require_once(HARMONI."GUIManager/Layouts/YLayout.class.php");
+require_once(HARMONI."GUIManager/Components/Block.class.php");
+require_once(HARMONI."GUIManager/Components/Menu.class.php");
+require_once(HARMONI."GUIManager/Components/MenuItemHeading.class.php");
+require_once(HARMONI."GUIManager/Components/MenuItemLink.class.php");
+require_once(HARMONI."GUIManager/Components/Heading.class.php");
+require_once(HARMONI."GUIManager/Components/Footer.class.php");
 
 /**
  * The MainWindowAction is an abstract class that provides a standard way of setting
@@ -52,20 +61,19 @@ class MainWindowAction
 		
 		$pageTitle = 'Concerto';
 		
-		// Generarate our window template
-		$this->generateWindow();
+		// Our Rows for action content
+		$actionRows =& $this->getActionRows();
 		
 		// Check authorization
 		if (!$this->isAuthorizedToExecute()) {
-			$centerPane =& $this->getCenterPane();
-			$centerPane->add(new Block($this->getUnauthorizedMessage(), 3),
+			$actionRows->add(new Block($this->getUnauthorizedMessage(), 3),
 				"100%", null, CENTER, CENTER);
-			return $this->_mainScreen;
+			return $actionRows;
 		}
 		
 		// Add a heading if specified
 		if ($headingText = $this->getHeadingText()) {
-			$this->_actionRows->add(
+			$actionRows->add(
 				new Heading($headingText, 2),
 				"100%",
 				null, 
@@ -88,41 +96,7 @@ class MainWindowAction
 		// Pass content generation off to our child classes
 		$this->buildContent();
 		
-		return $this->_mainScreen;
-	}
-	
-	/**
-	 * Generate the main window containing menus and such
-	 * 
-	 * @return void
-	 * @access public
-	 * @since 4/26/05
-	 */
-	function generateWindow () {
-		// Get the Layout compontents. See core/modules/moduleStructure.txt
-		// for more info. 
-		$harmoni =& $this->getHarmoni();
-		$harmoni->ActionHandler->execute("window", "screen");
-		$this->_mainScreen =& $this->_harmoni->getAttachedData('mainScreen');
-		$this->_statusBar =& $this->_harmoni->getAttachedData('statusBar');
-		$this->_centerPane =& $this->_harmoni->getAttachedData('centerPane');
-		 
-		
-		// Our Rows for action content
-		$yLayout =& new YLayout();
-		$this->_actionRows =& new Container($yLayout,OTHER,1);
-		$this->_centerPane->add($this->_actionRows, null, null, CENTER, TOP);
-	}
-	
-	/**
-	 * Return the center container
-	 * 
-	 * @return object Container
-	 * @access public
-	 * @since 4/26/05
-	 */
-	function &getCenterPane () {
-		return $this->_centerPane;
+		return $actionRows;
 	}
 	
 	/**
@@ -133,29 +107,10 @@ class MainWindowAction
 	 * @since 4/26/05
 	 */
 	function &getActionRows () {
+		if (!is_object($this->_actionRows))
+			$this->_actionRows =& new Container(new YLayout(), OTHER, 1);
+		
 		return $this->_actionRows;
-	}
-	
-	/**
-	 * Return the getStatusBar container
-	 * 
-	 * @return object Container
-	 * @access public
-	 * @since 4/26/05
-	 */
-	function &getStatusBar () {
-		return $this->_statusBar;
-	}
-	
-	/**
-	 * Return the mainScreen container
-	 * 
-	 * @return object Container
-	 * @access public
-	 * @since 4/26/05
-	 */
-	function &getMainScreen () {
-		return $this->_mainScreen;
 	}
 }
 

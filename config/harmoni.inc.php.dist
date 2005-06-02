@@ -22,6 +22,26 @@ require_once(OKI2."/osid/OsidContext.php");
 	$harmoni->config->set("sessionCookiePath","/");
 	$harmoni->config->set("sessionCookieDomain","middlebury.edu");
 	
+	// tell harmoni to post-process all actions with this specified action.
+	// the action takes the result from previous actions and builds a display
+	// screen from it.
+	
+	// until polyphony has been updated to use this functionality, we must ignore
+	// it.
+	$postProcessIgnoreList = array(
+									"*.*",
+									"auth.*",
+									"agents.*",
+									"authorization.*",
+									"language.*",
+									"repository.*",
+									
+									// and our special no-theme action
+									"example.no_theme"
+								);
+	
+	$harmoni->setPostProcessAction("window.display", $postProcessIgnoreList);
+	
 	$context =& new OsidContext;
 	$context->assignContext('harmoni', $harmoni);
 
@@ -45,8 +65,8 @@ require_once(OKI2."/osid/OsidContext.php");
 	// and what type those are (FlatFile-Actions, ClassMethod-Actions, or
 	// Class-Actions.
 	$harmoni->ActionHandler->addActionSource(	
-				new FlatFileActionSource(realpath(MYDIR."/main/modules"), 
-										 ".act.php"));
+				new ClassesActionSource(realpath(MYDIR."/main/modules"), 
+										 ".act.php", "Action"));
 	// Our Authentication and Language-switching actions are already written
 	// and reside in the Polyphony package:
 	$harmoni->ActionHandler->addActionSource(	
