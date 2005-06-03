@@ -8,7 +8,7 @@
  * @version $Id$
  */ 
  
- require_once(dirname(__FILE__)."/MainWindowAction.class.php");
+require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
 
 /**
  * The RepositoryAction provides common methods for accessing repositories by the
