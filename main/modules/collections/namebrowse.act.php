@@ -71,12 +71,18 @@ class namebrowseAction
 		$repositoryManager =& Services::getService("Repository");
 		$allRepositories =& $repositoryManager->getRepositories();
 		
+		$exhibitionRepositoryType =& new Type ('System Repositories', 
+											'Concerto', 'Exhibitions');
+		
 		// put the drs into an array and order them.
 		// @todo, do authorization checking
 		$repositoryArray = array();
 		while($allRepositories->hasNext()) {
 			$repository =& $allRepositories->next();
-			$repositoryArray[$repository->getDisplayName()] =& $repository;
+			
+			// include all but Exhibitions repository.
+			if (!$exhibitionRepositoryType->isEqual($repository->getType()))
+				$repositoryArray[$repository->getDisplayName()] =& $repository;
 		}
 		ksort($repositoryArray);
 		

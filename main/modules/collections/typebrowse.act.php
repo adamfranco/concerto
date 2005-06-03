@@ -66,6 +66,9 @@ class typebrowseAction
 		$actionRows->add(new Block(ob_get_contents(),3), "100%", null, CENTER, CENTER);
 		ob_end_clean();
 		
+		$exhibitionRepositoryType =& new Type ('System Repositories', 
+											'Concerto', 'Exhibitions');
+		
 		$repositoryManager =& Services::getService("Repository");
 		
 		// Get all the types
@@ -74,7 +77,10 @@ class typebrowseAction
 		$typeArray = array();
 		while($types->hasNext()) {
 			$type =& $types->next();
-			$typeArray[$type->getDomain()." ".$type->getAuthority()." ".$type->getKeyword()] =& $type;
+			
+			// include all but Exhibitions repository.
+			if (!$exhibitionRepositoryType->isEqual($type))
+				$typeArray[HarmoniType::typeToString($type)] =& $type;
 		}
 		ksort($typeArray);
 		
@@ -89,12 +95,13 @@ class typebrowseAction
 // Callback function for printing Repositories
 function printTypeShort(& $type) {
 	ob_start();
-	
-	$typeString = $type->getDomain()." :: " .$type->getAuthority()." :: ".$type->getKeyword();
-
-	print "<a href='".MYURL."/collections/browsetype/".urlencode($typeString)."'>";
+	$harmoni =& Harmoni::instance();
+	print "<a href='";
+	print $harmoni->request->quickURL('collections', 'browsetype', 
+			array('type' => urlencode(HarmoniType::typeToString($type))));
+	print "'>";
 	print "\n\t<strong>";
-	print $typeString;
+	print HarmoniType::typeToString($type, " :: ");
 	print "</strong>";
 	print "</a>";
 	
