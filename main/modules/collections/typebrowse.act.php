@@ -8,7 +8,7 @@
  * @version $Id$
  */ 
 
-require_once(MYDIR."/main/library/abstractActions/MainWindowAction.class.php");
+require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
 
 /**
  * 

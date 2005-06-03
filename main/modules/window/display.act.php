@@ -8,7 +8,7 @@
  * @version $Id$
  */ 
 
-require_once(MYDIR."/main/library/abstractActions/Action.class.php");
+require_once(POLYPHONY."/main/library/AbstractActions/Action.class.php");
 
 /**
  * build the frame of the window

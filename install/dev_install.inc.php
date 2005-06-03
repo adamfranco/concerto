@@ -19,6 +19,22 @@
 
 
 /*********************************************************
+ * Check for existing data in the database
+ *********************************************************/
+$dbHandler = Services::getService("DatabaseManager");
+$query = new GenericSQLQuery();
+$query->addSQLQuery("SHOW TABLES");
+$genericResult =& $dbHandler->query($query, $dbID);
+$result =& $genericResult->returnAsSelectQueryResult();
+if ($result->hasNext()) {
+	print "<h2>Tables exist in the database. Not creating tables.</h2>";
+	print "<h2>If you have just run the installer, comment out it's line in the config to start using Concerto.</h2>";
+	exit;
+}
+
+print "<h1>Creating tables and default data set.</h1>";
+
+/*********************************************************
  * Create the needed database tables
  *********************************************************/
 $sqlFiles = array (
@@ -54,11 +70,11 @@ foreach ($sqlFiles as $file) {
 			TRUE,
 			FALSE);
 		$hierarchyId =& $hierarchy->getId();
-		print "<h1>RepositoryHierarchy Id, to enter in config: ".$hierarchyId->getIdString()."</h1>";
+		print "<h2>RepositoryHierarchy Id, to enter in config: ".$hierarchyId->getIdString()."</h2>";
 		// Create nodes for Qualifiers
 		$allOfConcertoId =& $idManager->createId();
 		$collectionsId =& $idManager->createId();
-		print "<h1>Repository-DefaultParent Id, to enter in config: ".$collectionsId->getIdString()."</h1>";
+		print "<h2>Repository-DefaultParent Id, to enter in config: ".$collectionsId->getIdString()."</h2>";
 		$hierarchy->createRootNode($allOfConcertoId, new DefaultQualifierType, "All of Concerto", "The top level of all of Concerto.");
 		$hierarchy->createNode($collectionsId, $allOfConcertoId, new DefaultQualifierType, "Concerto Collections", "All Collections in Concerto.");
 
