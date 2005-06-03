@@ -8,6 +8,8 @@
  * @version $Id$
  */ 
 
+require_once(MYDIR."/main/library/abstractActions/Action.class.php");
+
 /**
  * build the frame of the window
  * 
@@ -18,7 +20,9 @@
  *
  * @version $Id$
  */
-class displayAction {
+class displayAction 
+	extends Action
+{
 		
 	/**
 	 * Execute the Action
@@ -127,7 +131,12 @@ class displayAction {
 					print $userAgent->getDisplayName();
 					print "\n\t\t</td>";
 					print "\n\t\t<td>";
+					
 					$harmoni->request->startNamespace("polyphony");
+					
+					if ($this->requestedModule() != 'auth')
+						$harmoni->history->markReturnURL("polyphony/login");
+						
 					if ($authNManager->isUserAuthenticated($authType)) {
 						$url = $harmoni->request->quickURL(
 							"auth",
@@ -136,7 +145,6 @@ class displayAction {
 						);
 						print "<a href='".$url."'>Log Out</a>";
 					} else {
-						$harmoni->history->markReturnURL("polyphony/login");
 						$url = $harmoni->request->quickURL(
 							"auth",
 							"login_type",
@@ -145,6 +153,7 @@ class displayAction {
 						print "<a href='".$url."'>Log In</a>";
 					}
 					$harmoni->request->endNamespace();
+					
 					print "\n\t\t</td>";
 					print "\n\t</tr>";
 				}

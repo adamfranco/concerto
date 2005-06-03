@@ -66,6 +66,34 @@ class Action {
 	function setHarmoni ( &$harmoni ) {
 		$this->_harmoni =& $harmoni;
 	}
+	
+	/**
+	 * Answer the requested module, maybe other than this action's module if this
+	 * action was chained onto another's request.
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 6/3/05
+	 */
+	function requestedModule () {
+		$harmoni =& Harmoni::instance();
+		list($module, $action) = explode(".", $harmoni->request->getRequestedModuleAction());
+		return $module;
+	}
+	
+	/**
+	 * Answer the requested action, maybe other than this action's action if this
+	 * action was chained onto another's request.
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 6/3/05
+	 */
+	function requestedAction () {
+		$harmoni =& Harmoni::instance();
+		list($module, $action) = explode(".", $harmoni->request->getRequestedModuleAction());
+		return $action;
+	}
 }
 
 ?>
