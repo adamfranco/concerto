@@ -81,12 +81,14 @@ class mainAction
 		print "</p>";
 		
 		// If the user is authorized, allow them to create a new collection.
-		// @todo - add authorization.
-		print "\n<ul>\n<li><a href='";
-			print $harmoni->request->quickURL("collection", "create");
-			print "'>";
-		print _("Create a new <em>Collection</em>");
-		print "</a>\n</li>\n</ul>";
+		require_once(MYDIR."/main/modules/collection/create.act.php");
+		if (createAction::isAuthorizedToExecute()) {
+			print "\n<ul>\n<li><a href='";
+				print $harmoni->request->quickURL("collection", "create");
+				print "'>";
+			print _("Create a new <em>Collection</em>");
+			print "</a>\n</li>\n</ul>";
+		}
 		
 		$actionRows->add(new Block(ob_get_contents(), 3), "100%", null, CENTER, CENTER);
 		ob_end_clean();
