@@ -165,7 +165,17 @@ class displayAction {
 		$centerPane->add($mainMenu,"140px",null, LEFT, TOP);
 		
 		// use the result from previous actions
-		$centerPane->add($harmoni->result, null, null, TOP, CENTER); 
+		if ($harmoni->printedResult) {
+			$contentDestination =& new Container($yLayout, OTHER, 1);
+			$centerPane->add($contentDestination, null, null, LEFT, TOP);
+			$contentDestination->add(new Block($harmoni->printedResult, 1), null, null, TOP, CENTER);
+			$harmoni->printedResult = '';
+		} else {
+			$contentDestination =& $centerPane;
+		}
+		
+		// use the result from previous actions
+		$contentDestination->add($harmoni->result, null, null, TOP, CENTER); 
 		
 		
 		

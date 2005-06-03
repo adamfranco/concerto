@@ -53,6 +53,8 @@ class welcomeAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
+		print "Hello";
+		
 		$actionRows =& $this->getActionRows();
 		ob_start();
 		print "<p>";
