@@ -6,55 +6,81 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
  *
  * @version $Id$
+ */ 
+
+require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
+
+/**
+ * 
+ * 
+ * @package concerto.modules.collections
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
+ * @version $Id$
  */
+class browsetypeAction 
+	extends MainWindowAction
+{
+	/**
+	 * Check Authorizations
+	 * 
+	 * @return boolean
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function isAuthorizedToExecute () {
+		return TRUE;
+	}
+	
+	/**
+	 * Return the heading text for this action, or an empty string.
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function getHeadingText () {
+		return _("Browse Collections with Type").": \n<br />".
+				urldecode(RequestContext::value('type'));
+	}
+	
+	/**
+	 * Build the content for this action
+	 * 
+	 * @return boolean
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function buildContent () {
+		$actionRows =& $this->getActionRows();
+		$harmoni =& Harmoni::instance();
+		
+		$type =& HarmoniType::stringToType(urldecode(RequestContext::value('type')));
 
-// Get the Layout compontents. See core/modules/moduleStructure.txt
-// for more info. 
-$harmoni->ActionHandler->execute("window", "screen");
-$mainScreen =& $harmoni->getAttachedData('mainScreen');
-$centerPane =& $harmoni->getAttachedData('centerPane');
- 
-
-// Our
-$yLayout =& new YLayout();
-$actionRows =& new Container($yLayout,OTHER,1);
-$centerPane->add($actionRows, null, null, CENTER, TOP);
-
-
-$typeString = urldecode($harmoni->pathInfoParts[2]);
-$typeParts = explode(" :: ", $typeString);
-$type =& new HarmoniType($typeParts[0],$typeParts[1],$typeParts[2]);
-
-
-// Intro
-$introHeader =& new Heading(_("Browse Collections with Type").": \n<br />".$typeString, 2);
-$actionRows->add($introHeader, "100%" ,null, LEFT, CENTER);
-
-
-$repositoryManager =& Services::getService("Repository");
-
-
-// Get the Repositories
-$allRepositories =& $repositoryManager->getRepositoriesByType($type);
-
-// put the repositories into an array and order them.
-// @todo, do authorization checking
-$repositoryArray = array();
-while($allRepositories->hasNext()) {
-	$repository =& $allRepositories->next();
-	$repositoryArray[$repository->getDisplayName()] =& $repository;
+		$repositoryManager =& Services::getService("Repository");
+		
+		
+		// Get the Repositories
+		$allRepositories =& $repositoryManager->getRepositoriesByType($type);
+		
+		// put the repositories into an array and order them.
+		// @todo, do authorization checking
+		$repositoryArray = array();
+		while($allRepositories->hasNext()) {
+			$repository =& $allRepositories->next();
+			$repositoryArray[$repository->getDisplayName()] =& $repository;
+		}
+		ksort($repositoryArray);
+		
+		
+		// print the Results
+		$resultPrinter =& new ArrayResultPrinter($repositoryArray, 2, 20, "printrepositoryShort", $harmoni);
+		$resultLayout =& $resultPrinter->getLayout($harmoni);
+		$actionRows->add($resultLayout, null, null, CENTER, CENTER);
+	}
 }
-ksort($repositoryArray);
-
-// print the Results
-$resultPrinter =& new ArrayResultPrinter($repositoryArray, 2, 20, "printrepositoryShort", $harmoni);
-$resultLayout =& $resultPrinter->getLayout($harmoni);
-$actionRows->add($resultLayout, null, null, CENTER, CENTER);
-
-
-
-// return the main layout.
-return $mainScreen;
 
 
 // Callback function for printing repositorys
