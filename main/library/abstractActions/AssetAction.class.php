@@ -33,7 +33,7 @@ class AssetAction
 	 * @since 4/26/05
 	 */
 	function &getAssetId () {
-		$harmoni =& $this->getHarmoni();
+		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
 		return $idManager->getId($harmoni->pathInfoParts[3]);
 	}

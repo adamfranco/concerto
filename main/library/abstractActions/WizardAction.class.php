@@ -159,7 +159,7 @@ class WizardAction
 	 */
 	function runWizard ( $cacheName, &$container) {
 		$wizard =& $this->getWizard($cacheName);
-		$harmoni =& $this->getHarmoni();
+		$harmoni =& Harmoni::instance();
 		
 		if ($wizard->isSaveRequested()) {		
 			if ($this->saveWizard($cacheName))

@@ -219,7 +219,7 @@ class addAction
 		
 		// Create the properties.
 		$property =& $step->createProperty("parent", new AlwaysTrueValidatorRule);
-		$harmoni =& $this->getHarmoni();
+		$harmoni =& Harmoni::instance();
 		
 		if ($_REQUEST['parent'])
 			$property->setDefaultValue($_REQUEST['parent']);

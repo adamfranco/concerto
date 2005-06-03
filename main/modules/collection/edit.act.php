@@ -69,7 +69,7 @@ class editAction
 		// Move to Schema creation if that button is pressed.
 		if ($_REQUEST['create_schema'] && $this->saveWizard($cacheName)) {
 			$this->closeWizard($cacheName);
-			$harmoni =& $this->getHarmoni();
+			$harmoni =& Harmoni::instance();
 			header("Location: ".MYURL."/schema/create/".$repositoryId->getIdString()
 				."/".implode("/",$harmoni->pathInfoParts));
 			return TRUE;
@@ -89,7 +89,7 @@ class editAction
 	function &createWizard () {
 		$repository =& $this->getRepository();
 		$repositoryId =& $this->getRepositoryId();
-		$harmoni =& $this->getHarmoni();
+		$harmoni =& Harmoni::instance();
 	
 		// Instantiate the wizard, then add our steps.
 		$wizard =& new Wizard(_("Edit a Collection"));

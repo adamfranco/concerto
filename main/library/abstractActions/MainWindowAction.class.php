@@ -56,9 +56,7 @@ class MainWindowAction
 	 * @access public
 	 * @since 4/25/05
 	 */
-	function execute ( &$harmoni ) {
-		$this->setHarmoni($harmoni);
-		
+	function execute ( &$harmoni ) {		
 		$pageTitle = 'Concerto';
 		
 		// Our Rows for action content

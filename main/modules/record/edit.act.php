@@ -64,7 +64,7 @@ class editAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$harmoni =& $this->getHarmoni();
+		$harmoni =& Harmoni::instance();
 		$centerPane =& $this->getCenterPane();
 		$idManager =& Services::getService("Id");
 		$recordId =& $idManager->getId($harmoni->pathInfoParts[4]);
@@ -82,7 +82,7 @@ class editAction
 	 * @since 4/28/05
 	 */
 	function &createWizard () {
-		$harmoni =& $this->getHarmoni();
+		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
 		$recordId =& $idManager->getId($harmoni->pathInfoParts[4]);
 		$asset =& $this->getAsset();
@@ -142,7 +142,7 @@ class editAction
 	 */
 	function saveWizard ( $cacheName ) {
 		$wizard =& $this->getWizard($cacheName);
-		$harmoni =& $this->getHarmoni();
+		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
 		$recordId =& $idManager->getId($harmoni->pathInfoParts[4]);
 		$asset =& $this->getAsset();

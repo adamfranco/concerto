@@ -76,7 +76,7 @@ class deleteAction
 	 */
 	function buildContent () {
 		$asset =& $this->getAsset();
-		$harmoni =& $this->getHarmoni();
+		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
 		$recordId =& $idManager->getId($harmoni->pathInfoParts[4]);
 

@@ -128,7 +128,7 @@ class editAction
 	 * @since 4/28/05
 	 */
 	function &createWizard () {
-		$harmoni =& $this->getHarmoni();
+		$harmoni =& Harmoni::instance();
 		$assetId =& $this->getAssetId();
 		$asset =& $this->getAsset();
 	

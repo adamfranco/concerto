@@ -54,7 +54,7 @@ class searchAction
 	 */
 	function buildContent () {
 		$actionRows =& $this->getActionRows();
-		$harmoni =& $this->getHarmoni();
+		$harmoni =& Harmoni::instance();
 
 		// Get the Repository
 		$repositoryManager =& Services::getService("Repository");

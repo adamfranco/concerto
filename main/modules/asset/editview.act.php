@@ -77,7 +77,7 @@ class editviewAction
 	 */
 	function buildContent () {
 		$actionRows =& $this->getActionRows();
-		$harmoni =& $this->getHarmoni();
+		$harmoni =& Harmoni::instance();
 		
 		$asset =& $this->getAsset();
 		$repositoryId =& $this->getRepositoryId();

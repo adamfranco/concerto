@@ -54,7 +54,7 @@ class typebrowseAction
 	 */
 	function buildContent () {
 		$actionRows =& $this->getActionRows();
-		$harmoni =& $this->getHarmoni();
+		$harmoni =& Harmoni::instance();
 		
 		ob_start();
 		print "<p>";

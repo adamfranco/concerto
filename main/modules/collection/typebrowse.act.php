@@ -79,7 +79,7 @@ class typebrowseAction
 	 */
 	function buildContent () {
 		$actionRows =& $this->getActionRows();
-		$harmoni =& $this->getHarmoni();
+		$harmoni =& Harmoni::instance();
 		
 		$repository =& $this->getRepository();
 

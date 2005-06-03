@@ -302,7 +302,7 @@ class createAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
-		$harmoni =& $this->getHarmoni();
+		$harmoni =& Harmoni::instance();
 		$repositoryId =& $this->getRepositoryId();
 		return MYURL."/"
 			.implode("/", array_slice($harmoni->pathInfoParts, 3))

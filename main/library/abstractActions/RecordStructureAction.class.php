@@ -33,7 +33,7 @@ class RecordStructureAction
 	 * @since 4/26/05
 	 */
 	function &getRecordStructureId () {
-		$harmoni =& $this->getHarmoni();
+		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
 		return $idManager->getId($harmoni->pathInfoParts[3]);
 	}

@@ -76,7 +76,7 @@ class viewAction
 	 */
 	function buildContent () {
 		$centerPane =& $this->getCenterPane();
-		$harmoni =& $this->getHarmoni();
+		$harmoni =& Harmoni::instance();
 		$recordStructureId =& $this->getRecordStructureId();
 		$recordStructure =& $this->getRecordStructure();
 		$setManager =& Services::getService("Sets");

@@ -45,29 +45,6 @@ class Action {
 	}
 	
 	/**
-	 * Return the harmoni object
-	 * 
-	 * @return object Harmoni
-	 * @access public
-	 * @since 4/26/05
-	 */
-	function &getHarmoni () {
-		return $this->_harmoni;
-	}
-	
-	/**
-	 * Set the harmoni object
-	 * 
-	 * @param object Harmoni $harmoni
-	 * @return void
-	 * @access public
-	 * @since 4/28/05
-	 */
-	function setHarmoni ( &$harmoni ) {
-		$this->_harmoni =& $harmoni;
-	}
-	
-	/**
 	 * Answer the requested module, maybe other than this action's module if this
 	 * action was chained onto another's request.
 	 * 
