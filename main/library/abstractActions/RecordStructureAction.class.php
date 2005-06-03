@@ -35,7 +35,7 @@ class RecordStructureAction
 	function &getRecordStructureId () {
 		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
-		return $idManager->getId($harmoni->pathInfoParts[3]);
+		return $idManager->getId($harmoni->request->get('recordstructure_id'));
 	}
 	
 	/**

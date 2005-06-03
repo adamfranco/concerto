@@ -73,14 +73,13 @@ class ConcertoMenuGenerator {
 			
 			// Collection root
 			if (ereg("^(collection|asset)$", $module)) {
-				$harmoni->request->startNamespace("concerto-collection");
 				// Name browse
 				$mainMenu_item5 =& new MenuItemLink("<span style='font-size: small'> - - ".
 						_("Collection")."</span>", 
-						$harmoni->request->mkURL("collection", "browse"), // May need to add the collection ID here. not sure.
+						$harmoni->request->quickURL("collection", "browse",
+							array('collection_id' => $harmoni->request->get('collection_id'))),
 						($module == "collection")?TRUE:FALSE,1
 				);
-				$harmoni->request->endNamespace();
 				$mainMenu->add($mainMenu_item5, "100%", null, LEFT, CENTER);
 			}
 		}

@@ -35,7 +35,7 @@ class RepositoryAction
 	function &getRepositoryId () {
 		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
-		return $idManager->getId($harmoni->pathInfoParts[2]);
+		return $idManager->getId($harmoni->request->get('collection_id'));
 	}
 	
 	/**

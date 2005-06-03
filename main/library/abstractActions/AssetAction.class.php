@@ -35,7 +35,7 @@ class AssetAction
 	function &getAssetId () {
 		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
-		return $idManager->getId($harmoni->pathInfoParts[3]);
+		return $idManager->getId($harmoni->request->get('asset_id'));
 	}
 	
 	/**
