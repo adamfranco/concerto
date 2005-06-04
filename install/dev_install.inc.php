@@ -209,5 +209,18 @@ foreach ($sqlFiles as $file) {
 		$function =& $authZManager->createFunction($id, "Delete Groups", "Delete Groups at qualifier.", $type, $qualifierHierarchyId);
 		$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 
+/***************************************
+ * Exhibitions repository
+ **************************************/
+$repositoryManager =& Services::getService("Repository");
+$iterator = $repositoryManager->getRepositoriesByType(new HarmoniType ('System Repositories', 'Concerto', 'Exhibitions','A Repository for holding Exhibitions, their Slide-Shows and Slides'));
+if(!($iterator->hasNextRepository())){
+  $t =& new HarmoniType ('System Repositories', 'Concerto', 'Exhibitions',
+			 'A Repository for holding Exhibitions, their Slide-Shows and Slides');
+  $repository =& $repositoryManager->createRepository(
+						      "Exhibitions Repository", "Exhibition",
+						      $t);
+}
+
 exit;
 ?>
