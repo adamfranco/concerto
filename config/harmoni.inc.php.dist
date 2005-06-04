@@ -29,8 +29,6 @@ require_once(OKI2."/osid/OsidContext.php");
 	// until polyphony has been updated to use this functionality, we must ignore
 	// it.
 	$postProcessIgnoreList = array(
-									"*.*",
-									"auth.*",
 									"agents.*",
 									"authorization.*",
 									"language.*",
@@ -80,10 +78,8 @@ require_once(OKI2."/osid/OsidContext.php");
 	
 	//Set up the database connection
 	$databaseManager =& Services::getService("DatabaseManager");
-	$dbName = "ben_concerto";
-	$dbID = $databaseManager->addDatabase( new MySQLDatabase("localhost", $dbName,"testuser","*******") );
-
-
+	$dbName = "adam_concerto";
+	$dbID = $databaseManager->addDatabase( new MySQLDatabase("localhost", $dbName,"test","test") );
 	$databaseManager->pConnect($dbID);
 	unset($databaseManager); // done with that for now
 
@@ -377,3 +373,14 @@ define("AZ_DELETE_GROUPS", 'dev_id-33');
 // print "<pre>";
 // print_r($_SESSION);
 // print "</pre>";
+
+$repositoryManager =& Services::getService("Repository");
+$iterator = $repositoryManager->getRepositoriesByType(new HarmoniType ('System Repositories', 'Concerto', 'Exhibitions',
+				       'A Repository for holding Exhibitions, their Slide-Shows and Slides'));
+if(!($iterator->hasNextRepository())){
+  $t =& new HarmoniType ('System Repositories', 'Concerto', 'Exhibitions',
+			 'A Repository for holding Exhibitions, their Slide-Shows and Slides');
+  $repository =& $repositoryManager->createRepository(
+						      "Exhibitions Repository", "Exhibition",
+						      $t);
+}
