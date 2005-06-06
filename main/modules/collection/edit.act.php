@@ -62,16 +62,16 @@ class editAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$centerPane =& $this->getCenterPane();
+		$centerPane =& $this->getActionRows();
 		$repositoryId =& $this->getRepositoryId();
 		$cacheName = 'edit_collection_wizard_'.$repositoryId->getIdString();
 		
 		// Move to Schema creation if that button is pressed.
-		if ($_REQUEST['create_schema'] && $this->saveWizard($cacheName)) {
+		if (RequestContext::value('create_schema') && $this->saveWizard($cacheName)) {
 			$this->closeWizard($cacheName);
 			$harmoni =& Harmoni::instance();
-			header("Location: ".MYURL."/schema/create/".$repositoryId->getIdString()
-				."/".implode("/",$harmoni->pathInfoParts));
+			header("Location: ".$harmoni->request->quickURL("schema", "create", array(
+					"collection_id" => $repositoryId->getIdString())));
 			return TRUE;
 		}
 		
@@ -97,22 +97,25 @@ class editAction
 		// :: Step One ::
 		$stepOne =& $wizard->createStep(_("Name &amp; Description"));
 		
-		// Create the properties.
-		$displayNameProp =& $stepOne->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
-		$displayNameProp->setDefaultValue($repository->getDisplayName());
-		$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
-		
-		$descriptionProp =& $stepOne->createProperty("description", new RegexValidatorRule(".*"));
-		$descriptionProp->setDefaultValue($repository->getDescription());
 		
 		// Create the step text
 		ob_start();
+		
+		$fieldname = RequestContext::name('display_name');
+		$displayNameProp =& $stepOne->createProperty($fieldname, new RegexValidatorRule("^[^ ]{1}.*$"));
+		$displayNameProp->setDefaultValue($repository->getDisplayName());
+		$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
 		print "\n<h2>"._("Name")."</h2>";
 		print "\n"._("The Name for this <em>Collection</em>: ");
-		print "\n<br /><input type='text' name='display_name' value=\"[[display_name]]\" />[[display_name|Error]]";
+		print "\n<br /><input type='text' name='$fieldname' value=\"[[$fieldname]]\" />[[$fieldname|Error]]";
+		
+		
+		$fieldname = RequestContext::name('description');
+		$descriptionProp =& $stepOne->createProperty($fieldname, new RegexValidatorRule(".*"));
+		$descriptionProp->setDefaultValue($repository->getDescription());
 		print "\n<h2>"._("Description")."</h2>";
 		print "\n"._("The Description for this <em>Collection</em>: ");
-		print "\n<br /><textarea name='description' rows='5' cols='30'>[[description]]</textarea>[[description|Error]]";
+		print "\n<br /><textarea name='$fieldname' rows='5' cols='30'>[[$fieldname]]</textarea>[[$fieldname|Error]]";
 		print "\n<div style='width: 400px'> &nbsp; </div>";
 		$stepOne->setText(ob_get_contents());
 		ob_end_clean();
@@ -155,29 +158,36 @@ class editAction
 			
 			// Create the properties.
 			// 'in set' property
-			$property =& $selectStep->createProperty("schema_".$recordStructureId->getIdString(), new RegexValidatorRule(".*"), FALSE);
+			$fieldname = RequestContext::name("schema_".$recordStructureId->getIdString());
+			$property =& $selectStep->createProperty($fieldname, new RegexValidatorRule(".*"), FALSE);
 			if ($set->isInSet($recordStructureId))
 				$property->setDefaultValue(1);
 			else
 				$property->setDefaultValue(0);
 			
 			// Order property
-			$property =& $selectStep->createProperty("schema_".$recordStructureId->getIdString()."_position", new RegexValidatorRule(".*"), FALSE);
+			$orderFieldname = RequestContext::name("schema_".$recordStructureId->getIdString()."_position");
+			$property =& $selectStep->createProperty($orderFieldname, new RegexValidatorRule(".*"), FALSE);
 			if ($set->isInSet($recordStructureId))
 				$property->setDefaultValue($set->getPosition($recordStructureId)+1);
 			else
 				$property->setDefaultValue(0);
 			
 			print "\n<tr><td valign='top'>";
-			print "\n\t<input type='checkbox' name='schema_".$recordStructureId->getIdString()."' value='1' [['schema_".$recordStructureId->getIdString()."' == TRUE|checked='checked'|]] />";
+			print "\n\t<input type='checkbox' name='$fieldname' value='1' [['$fieldname' == TRUE|checked='checked'|]] />";
 			print "\n\t<strong>".$recordStructure->getDisplayName()."</strong>";
 			print "\n</td><td valign='top'>\n\t<em>".$recordStructure->getDescription()."</em>";
-			print " <a href='".MYURL."/schema/view/".$repositoryId->getIdString()."/".$recordStructureId->getIdString()."/".implode("/", $harmoni->pathInfoParts)."?__skip_to_step=2'>more...</a>";
+			print " <a href='";
+			print $harmoni->request->quickURL("schema", "view", array(
+						"collection_id" => $repositoryId->getIdString(),
+						"recordstructure_id" => $recordStructureId->getIdString(),
+						"__skip_to_step" => 2));
+			print "'>more...</a>";
 			print "\n</td><td valign='top'>";
 			
-			print "\n\t<select name='schema_".$recordStructureId->getIdString()."_position'>";
+			print "\n\t<select name='$orderFieldname'>";
 			for ($i=0; $i <= $numRecordStructures; $i++) {
-				print "\n\t\t<option value='$i' [['schema_".$recordStructureId->getIdString()."_position' == '$i'|selected='selected'|]]>".(($i)?$i:"")."</option>";
+				print "\n\t\t<option value='$i' [['$orderFieldname' == '$i'|selected='selected'|]]>".(($i)?$i:"")."</option>";
 			}
 			print "\n\t</select>";
 			

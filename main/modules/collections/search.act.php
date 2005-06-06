@@ -82,9 +82,7 @@ class searchAction
 			while ($searchTypes->hasNext()) {
 				$searchType =& $searchTypes->next();
 				
-				$typeString = $searchType->getDomain()
-								."::".$searchType->getAuthority()
-								."::".$searchType->getKeyword();
+				$typeString = HarmoniType::typeToString($searchType);
 				
 				if (!$searchArray[$typeString])
 					$searchArray[$typeString] =& $searchType;
@@ -95,7 +93,11 @@ class searchAction
 		foreach (array_keys($searchArray) as $typeString) {
 			$searchType =& $searchArray[$typeString];
 			print "\n<h3>".$typeString."</h3>";
-			print "\n".$searchModules->createSearchForm($searchType, MYURL."/collections/searchresults/".urlencode($typeString)."/");
+			
+			$harmoni =& Harmoni::instance();
+			print "\n".$searchModules->createSearchForm($searchType, 
+				$harmoni->request->quickURL("collections", "searchresults",
+					array("search_type" => urlencode($typeString))));
 		}
 		
 		

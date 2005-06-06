@@ -62,7 +62,7 @@ class createAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$centerPane =& $this->getCenterPane();
+		$centerPane =& $this->getActionRows();
 		$cacheName = 'create_collection_wizard';
 		
 		$this->runWizard ( $cacheName, $centerPane );
@@ -84,21 +84,28 @@ class createAction
 		$stepOne =& $wizard->createStep(_("Name & Description"));
 		
 		// Create the properties.
-		$displayNameProp =& $stepOne->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
+		$displayNameProp =& $stepOne->createProperty(
+				RequestContext::name('display_name'), 
+				new RegexValidatorRule("^[^ ]{1}.*$"));
 		$displayNameProp->setDefaultValue(_("Default Collection Name"));
-		$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
+		$displayNameProp->setErrorString(" <span style='color: #f00'>* "
+				._("The name must not start with a space.")."</span>");
 		
-		$descriptionProp =& $stepOne->createProperty("description", new RegexValidatorRule(".*"));
+		$descriptionProp =& $stepOne->createProperty(
+				RequestContext::name('description'), new RegexValidatorRule(".*"));
 		$descriptionProp->setDefaultValue(_("Default Collection description."));
 		
 		// Create the step text
 		ob_start();
 		print "\n<h2>"._("Name")."</h2>";
 		print "\n"._("The Name for this <em>Collection</em>: ");
-		print "\n<br /><input type='text' name='display_name' value=\"[[display_name]]\" />[[display_name|Error]]";
+		$fieldName = RequestContext::name('display_name');
+		print "\n<br /><input type='text' name='$fieldName' value=\"[[$fieldName]]\" />[[$fieldName|Error]]";
+		
 		print "\n<h2>"._("Description")."</h2>";
 		print "\n"._("The Description for this <em>Collection</em>: ");
-		print "\n<br /><textarea name='description'>[[description]]</textarea>[[description|Error]]";
+		$fieldName = RequestContext::name('description');
+		print "\n<br /><textarea name='$fieldName'>[[$fieldName]]</textarea>[[$fieldName|Error]]";
 		print "\n<div style='width: 400px'> &nbsp; </div>";
 		$stepOne->setText(ob_get_contents());
 		ob_end_clean();
@@ -106,16 +113,16 @@ class createAction
 		// :: Step Two ::
 		$stepTwo =& $wizard->createStep(_("Type"));
 		// Create the properties.
-		$property =& $stepTwo->createProperty("type_domain", new RegexValidatorRule(".*"));
+		$property =& $stepTwo->createProperty(RequestContext::name("type_domain"), new RegexValidatorRule(".*"));
 		$property->setDefaultValue(_("Collections"));
 		
-		$property =& $stepTwo->createProperty("type_authority", new RegexValidatorRule(".*"));
+		$property =& $stepTwo->createProperty(RequestContext::name("type_authority"), new RegexValidatorRule(".*"));
 		$property->setDefaultValue(_("Concerto"));
 		
-		$property =& $stepTwo->createProperty("type_keyword", new RegexValidatorRule(".*"));
+		$property =& $stepTwo->createProperty(RequestContext::name("type_keyword"), new RegexValidatorRule(".*"));
 		$property->setDefaultValue(_("Generic Collection"));
 		
-		$property =& $stepTwo->createProperty("type_description", new RegexValidatorRule(".*"));
+		$property =& $stepTwo->createProperty(RequestContext::name("type_description"), new RegexValidatorRule(".*"));
 		$property->setDefaultValue(_("This is a <em>Collection</em> of unspecified type."));
 		
 		// create the text
@@ -123,30 +130,39 @@ class createAction
 		print "<h2>"._("Type")."</h2>";
 		print "\n"._("All <em>Collections</em> have an immutable type. This type can be used to catagorize <em>Collections</em>, but is not necessary.");
 		print "\n<table>";
+
 		print "\n\t<tr>\n\t\t<td>";
 		print "<strong>"._("Domain").": </strong>";
 		print "\n\t\t</td>";
 		print "\n\t\t<td>";
-		print "\n<input type='text' name='type_domain' value=\"[[type_domain]]\" />";
+		$fieldName = RequestContext::name('type_domain');
+		print "\n<input type='text' name='$fieldName' value=\"[[$fieldName]]\" />";
 		print "\n\t\t</td>\n\t</tr>";
+		
 		print "\n\t<tr>\n\t\t<td>";
 		print "<strong>"._("Authority").": </strong>";
 		print "\n\t\t</td>";
 		print "\n\t\t<td>";
-		print "\n<input type='text' name='type_authority' value=\"[[type_authority]]\" />";
+		$fieldName = RequestContext::name('type_authority');
+		print "\n<input type='text' name='$fieldName' value=\"[[$fieldName]]\" />";
 		print "\n\t\t</td>\n\t</tr>";
+		
 		print "\n\t<tr>\n\t\t<td>";
 		print "<strong>"._("Keyword").": </strong>";
 		print "\n\t\t</td>";
 		print "\n\t\t<td>";
-		print "\n<input type='text' name='type_keyword' value=\"[[type_keyword]]\" />";
+		$fieldName = RequestContext::name('type_keyword');
+		print "\n<input type='text' name='$fieldName' value=\"[[$fieldName]]\" />";
 		print "\n\t\t</td>\n\t</tr>";
+		
 		print "\n\t<tr>\n\t\t<td>";
 		print "<strong>"._("Description").": </strong>";
 		print "\n\t\t</td>";
 		print "\n\t\t<td>";
-		print "\n<textarea name='type_description'>[[type_description]]</textarea>";
+		$fieldName = RequestContext::name('type_description');
+		print "\n<textarea name='$fieldName'>[[$fieldName]]</textarea>";
 		print "\n\t\t</td>\n\t</tr>";
+		
 		print "\n</table>";
 		$stepTwo->setText(ob_get_contents());
 		ob_end_clean();
@@ -174,13 +190,13 @@ class createAction
 			
 			// Create the repository and get its id.
 			$repositoryManager =& Services::getService("Repository");
-			$type =& new HarmoniType($properties['type_domain']->getValue(),
-									$properties['type_authority']->getValue(),
-									$properties['type_keyword']->getValue(),
-									$properties['type_description']->getValue());
+			$type =& new HarmoniType($properties[RequestContext::name('type_domain')]->getValue(),
+									$properties[RequestContext::name('type_authority')]->getValue(),
+									$properties[RequestContext::name('type_keyword')]->getValue(),
+									$properties[RequestContext::name('type_description')]->getValue());
 			$repository =& $repositoryManager->createRepository(
-								$properties['display_name']->getValue(),
-								$properties['description']->getValue(), $type);
+								$properties[RequestContext::name('display_name')]->getValue(),
+								$properties[RequestContext::name('description')]->getValue(), $type);
 			
 			$this->repositoryId =& $repository->getId();
 			
@@ -197,10 +213,13 @@ class createAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
+		$harmoni =& Harmoni::instance();
+		
 		if ($this->repositoryId)
-			return MYURL."/collection/edit/"
-				.$this->repositoryId->getIdString()."/?__skip_to_step=2";
+			return $harmoni->request->quickURL("collection", "edit", array(
+						"collection_id" => $this->repositoryId->getIdString(), 
+						"__skip_to_step" => 2));
 		else
-			return MYURL."/collections/main/";
+			return $harmoni->request->quickURL("collections", "main");
 	}
 }
