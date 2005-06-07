@@ -64,7 +64,11 @@ class AssetPrinter {
 		
 		if ($authZ->isUserAuthorized($idManager->getId(AZ_VIEW), $asset->getId())) {
 			if ($actionString != "asset.view") {
-				$links[] = "<a href='".MYURL."/asset/view/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>";
+				$links[] = "<a href='"
+					.$harmoni->request->quickURL("asset", "view",
+						array("collection_id" => $repositoryId->getIdString(),
+						"asset_id" => $assetId->getIdString()))
+					."'>";
 				$links[count($links) - 1] .= _("view")."</a>";
 			} else {
 				$links[] = _("view");
@@ -74,8 +78,14 @@ class AssetPrinter {
 		if ($authZ->isUserAuthorized($idManager->getId(AZ_ACCESS), $asset->getId())) {
 			$children =& $asset->getAssets();
 			if ($children->hasNext()) {
-				if ($actionString != "asset.browse" || $assetId->getIdString() != $harmoni->pathInfoParts[3]) {
-					$links[] = "<a href='".MYURL."/asset/browse/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>";
+				if ($actionString != "asset.browse" 
+					|| $assetId->getIdString() != $harmoni->request->get('asset_id')) 
+				{
+					$links[] = "<a href='"
+						.$harmoni->request->quickURL("asset", "browse", 
+							array("collection_id" => $repositoryId->getIdString(),
+							"asset_id" => $assetId->getIdString()))
+						."'>";
 					$links[count($links) - 1] .= _("browse")."</a>";
 				} else {
 					$links[] = _("browse");
@@ -92,7 +102,11 @@ class AssetPrinter {
 		
 		if ($authZ->isUserAuthorized($idManager->getId(AZ_EDIT), $asset->getId())) {
 			if ($actionString != "asset.editview") {
-				$links[] = "<a href='".MYURL."/asset/editview/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>";
+				$links[] = "<a href='"
+					.$harmoni->request->quickURL("asset", "editview", 
+						array("collection_id" => $repositoryId->getIdString(), 
+						"asset_id" => $assetId->getIdString()))
+					."'>";
 				$links[count($links) - 1] .= _("edit")."</a>";
 			} else {
 				$links[] = _("edit");
@@ -109,11 +123,11 @@ class AssetPrinter {
 				print "\n<script type='text/javascript'>\n//<![CDATA[";
 				print "\n	function deleteAsset".$assetId->getIdString()."From".$repositoryId->getIdString()."() {";
 				print "\n	var url;";
-				print "\n		url = '".MYURL."/asset/delete/".$repositoryId->getIdString()."/".$assetId->getIdString()."/";
-				if (ereg("^asset\..*$", $actionString))
-					print "collection/browse/".$repositoryId->getIdString()."/';";
-				else
-					print implode("/", $harmoni->pathInfoParts)."/';";
+				print "\n		url = '";
+				print $harmoni->request->quickURL("asset", "delete", 	
+						array("collection_id" => $repositoryId->getIdString(),
+						"asset_id", $assetId->getIdString()));
+				print "';";
 				print "\n		if (confirm(\""._("Are you sure you want to delete this Asset?")."\")) {";
 				print "\n			window.location = url;";
 				print "\n		}";
@@ -128,8 +142,14 @@ class AssetPrinter {
 		}
 		
 		if ($authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $asset->getId())) {
-			if (ereg("^asset\..*$", $actionString) && $harmoni->pathInfoParts[3] == $assetId->getIdString()) {
-				$links[] = "<a href='".MYURL."/asset/add/".$repositoryId->getIdString()."/?&parent=".$assetId->getIdString()."'>";
+			if (ereg("^asset\..*$", $actionString) 
+				&& $harmoni->request->get("asset_id") == $assetId->getIdString()) 
+			{
+				$links[] = "<a href='"
+					.$harmoni->request->quickURL("asset", "add",
+						array("collection_id" => $repositoryId->getIdString(),
+						"parent" => $assetId->getIdString()))
+					."'>";
 				$links[count($links) - 1] .= _("add child asset")."</a>";
 			}
 		}

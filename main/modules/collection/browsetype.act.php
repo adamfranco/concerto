@@ -78,16 +78,11 @@ class browsetypeAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
-		
+		$actionRows =& $this->getActionRows();		
 		$repository =& $this->getRepository();
 
-
 		// The type
-		$typeString = urldecode($harmoni->pathInfoParts[3]);
-		$typeParts = explode(" :: ", $typeString);
-		$type =& new HarmoniType($typeParts[0],$typeParts[1],$typeParts[2]);
+		$type =& HarmoniType::stringToType(urldecode(RequestContext::value('type')));
 		
 		// function links
 		ob_start();

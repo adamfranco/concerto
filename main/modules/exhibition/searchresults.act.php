@@ -42,10 +42,8 @@ $actionRows =& new Container($yLayout, OTHER, 1);
 $centerPane->add($actionRows, null, null, CENTER, CENTER);
 
 // get the search type.
-$typeString = urldecode($harmoni->pathInfoParts[3]);
-if (!ereg("^(.+)::(.+)::(.+)$", $typeString, $parts))
-	throwError(new Error("Invalid Search Type, '$typeString'", "Concerto::searchresults", true));
-$searchType =& new HarmoniType($parts[1], $parts[2], $parts[3]);
+$searchType =& HarmoniType::stringToType(urldecode(
+    	$harmoni->request->get('search_type')));
 
 // Get the Search criteria
 $searchModules =& Services::getService("RepositorySearchModules");

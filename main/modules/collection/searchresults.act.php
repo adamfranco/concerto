@@ -85,10 +85,8 @@ class searchresultsAction
 
 
 		// get the search type.
-		$typeString = urldecode($harmoni->pathInfoParts[3]);
-		if (!ereg("^(.+)::(.+)::(.+)$", $typeString, $parts))
-			throwError(new Error("Invalid Search Type, '$typeString'", "Concerto::searchresults", true));
-		$searchType =& new HarmoniType($parts[1], $parts[2], $parts[3]);
+		$searchType =& HarmoniType::stringToType(urldecode(
+			RequestContext::value('search_type')));
 		
 		// Get the Search criteria
 		$searchModules =& Services::getService("RepositorySearchModules");
