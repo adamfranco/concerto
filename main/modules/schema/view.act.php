@@ -75,7 +75,7 @@ class viewAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$centerPane =& $this->getCenterPane();
+		$centerPane =& $this->getActionRows();
 		$harmoni =& Harmoni::instance();
 		$recordStructureId =& $this->getRecordStructureId();
 		$recordStructure =& $this->getRecordStructure();
@@ -85,19 +85,11 @@ class viewAction
 		ob_start();
 		
 		// Prepare the return URL so that we can get back to where we were.
-		$currentPathInfo = array();
-		for ($i = 4; $i < count($harmoni->pathInfoParts); $i++) {
-			$currentPathInfo[] = $harmoni->pathInfoParts[$i];
-		}
-		$returnURL = MYURL."/".implode("/",$currentPathInfo);
-		
-		print "<a href='".$returnURL;
-		if (count($_GET)) {
-			print "?";
-			foreach ($_GET as $key => $val) {
-				print "&".$key."=".$val;
-			}
-		}
+		print "<a href='";
+		$repositoryId =& $this->getRepositoryId();
+		$returnUrl =& $harmoni->history->getReturnURL(
+			"concerto/collection/edit/".$repositoryId->getIdString());
+		print $returnUrl->write();
 		print "'><-- "._("Return")."</a>";
 		
 		

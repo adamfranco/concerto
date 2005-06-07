@@ -90,6 +90,9 @@ class editAction
 		$repository =& $this->getRepository();
 		$repositoryId =& $this->getRepositoryId();
 		$harmoni =& Harmoni::instance();
+		
+		$harmoni->history->markReturnURL(
+			"concerto/collection/edit/".$repositoryId->getIdString());
 	
 		// Instantiate the wizard, then add our steps.
 		$wizard =& new Wizard(_("Edit a Collection"));
@@ -104,7 +107,8 @@ class editAction
 		$fieldname = RequestContext::name('display_name');
 		$displayNameProp =& $stepOne->createProperty($fieldname, new RegexValidatorRule("^[^ ]{1}.*$"));
 		$displayNameProp->setDefaultValue($repository->getDisplayName());
-		$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
+		$displayNameProp->setErrorString(" <span style='color: #f00'>* "
+			._("The name must not start with a space.")."</span>");
 		print "\n<h2>"._("Name")."</h2>";
 		print "\n"._("The Name for this <em>Collection</em>: ");
 		print "\n<br /><input type='text' name='$fieldname' value=\"[[$fieldname]]\" />[[$fieldname|Error]]";
@@ -306,6 +310,7 @@ class editAction
 	 */
 	function getReturnUrl () {
 		$repositoryId =& $this->getRepositoryId();
-		return MYURL."/collection/browse/".$repositoryId->getIdString()."/";
+		$harmoni =& Harmoni::instance();
+		return $harmoni->request->quickURL("collection", "browse", array("collection_id" => $repositoryId->getIdString()));
 	}
 }
