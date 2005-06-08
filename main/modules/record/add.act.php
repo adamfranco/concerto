@@ -77,10 +77,12 @@ class addAction
 	function buildContent () {
 		$asset =& $this->getAsset();
 		$idManager =& Services::getService("Id");
-		$recordStructureId =& $idManager->getId($_REQUEST['structure']);
+		$harmoni =& Harmoni::instance();
+		
+		$recordStructureId =& $idManager->getId($harmoni->request->get('structure'));
 		
 		$asset->createRecord($recordStructureId);
 		
-		header("Location: ".$_REQUEST['return_url']);
+		$harmoni->history->goBack("concerto/asset/editview");
 	}
 }

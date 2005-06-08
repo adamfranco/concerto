@@ -115,6 +115,7 @@ class AssetPrinter {
 		
 		if ($authZ->isUserAuthorized($idManager->getId(AZ_DELETE), $asset->getId())) {
 			if ($actionString != "asset.delete") {
+				$harmoni->history->markReturURL("concerto/asset/delete-return");
 				ob_start();
 				print "<a href='Javascript:deleteAsset".$assetId->getIdString()."From".$repositoryId->getIdString()."();'";
 				print ">";

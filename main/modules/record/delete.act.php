@@ -78,14 +78,10 @@ class deleteAction
 		$asset =& $this->getAsset();
 		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
-		$recordId =& $idManager->getId($harmoni->pathInfoParts[4]);
+		$recordId =& $idManager->getId($harmoni->request->get('record_id'));
 
 		$asset->deleteRecord($recordId);
 		
-		$repositoryId =& $this->getRepositoryId();
-		$assetId =& $this->getAssetId();
-		header("Location: ".MYURL."/asset/editview/"
-			.$repositoryId->getIdString()."/"
-			.$assetId->getIdString()."/");
+		$harmoni->history->goBack("concerto/asset/editview");
 	}
 }

@@ -15,7 +15,7 @@ if (!defined("AZ_DELETE"))
 // Get the Repository
 $repositoryManager =& Services::getService("Repository");
 $idManager =& Services::getService("Id");
-$assetId =& $idManager->getId($harmoni->pathInfoParts[3]);
+$assetId =& $idManager->getId($harmoni->request->get('asset_id'));
 $asset =& $repositoryManager->getAsset($assetId);
 $repository =& $asset->getRepository();
 $repositoryId =& $repository->getId();
@@ -26,22 +26,10 @@ $idManager =& Services::getService("Id");
 if (!$authZ->isUserAuthorized($idManager->getId(AZ_DELETE), $assetId)) {
 	// Get the Layout compontents. See core/modules/moduleStructure.txt
 	// for more info. 
-	$harmoni->ActionHandler->execute("window", "screen");
-	$mainScreen =& $harmoni->getAttachedData('mainScreen');
-	$centerPane =& $harmoni->getAttachedData('centerPane');
-
-	$errorLayout =& new Block(_("You are not authorized to delete this <em>Asset</em> here."),2);
-	$centerPane->add($errorLayout, null, null, CENTER, CENTER);
-	return $mainScreen;
+	return new Block(_("You are not authorized to delete this <em>Asset</em> here."), 2);
 }
 
 // Delete the asset
 $repository->deleteAsset($assetId);
 
-// Head back to where we were
-$returnURL = MYURL."/";
-for($i = 4; $i < count($harmoni->pathInfoParts); $i++) {
-	$returnURL .= $harmoni->pathInfoParts[$i]."/";
-}
-
-header("Location: ".$returnURL);
+$harmoni->history->goBack("concerto/asset/delete-return");

@@ -161,18 +161,20 @@ m>";
       //***********************************
 	// Info Record Addition
 	//***********************************
+	$harmoni->history->markReturnURL("concerto/exhibition/editview");
 	ob_start();
 	print "\n<hr />";
-	print "\n<form action='".MYURL."/record/add/".$repositoryId->getIdString()."/".$assetId->getIdString()."/' me\
-thod='post'>";
-	print "\n<div>";
+	print "\n<form action='";
+		print $harmoni->request->quickURL("record", "add", 
+			array("collection_id" => $repositoryId->getIdString(),
+				"asset_id" => $assetId->getIdString()));
+		print "' method='post'>";
+		print "\n<div>";
 
-	print "\n<input type='hidden' name='return_url' value='".MYURL."/".implode("/", $harmoni->pathInfoParts)."' /\
->";
 	print "\n<input type='submit' value='"._("Add")."' /> ";
 	print "\n"._("a new Record for the ");
 
-	print "\n<select name='structure'>";
+	print "\n<select name='".$harmoni->request->name('structure')."'>";
 
 	$structSet->reset();
 	$i=1;
@@ -219,8 +221,10 @@ thod='post'>";
 
 	    // Info and links
 	    print "\n<strong>"._("Asset Content")."</strong>";
-	    print "\n<br /><a href='".MYURL."/asset/edit/".$repositoryId->getIdString()."/".$assetId->getIdString\
-	      ()."/'>"._("edit")."</a>";
+	    print $harmoni->request->quickURL("asset", "edit", 
+				array("collection_id" => $repositoryId->getIdString(),
+					"asset_id" => $assetId->getIdString()));
+			print "'>"._("edit")."</a>";
 
 	    print "\n\t</td>\n\t</tr>";
 	    print "\n</table>";
@@ -238,45 +242,53 @@ thod='post'>";
 //***********************************
 
 function printRecord(& $record, & $assetId, & $repositoryId) {
-  $recordStructure =& $record->getRecordStructure();
-  $structureId =& $recordStructure->getId();
-  $recordId =& $record->getId();
+	$recordStructure =& $record->getRecordStructure();
+	$structureId =& $recordStructure->getId();
+	$recordId =& $record->getId();
+	
+	// Print out the parts/partstructures for this recordstructure
+	$setManager =& Services::getService("Sets");
+	$partStructureSet =& $setManager->getSet($structureId);
+	
+	$partsStructureArray = array();
+	// Print out the ordered parts/fields
+	$partStructureSet->reset();
+	while ($partStructureSet->hasNext()) {
+	$partStructureId =& $partStructureSet->next();
+	$partStructureArray[] =& $recordStructure->getPartStructure($partStructureId);
+	}
+	// Get the rest of the parts (the unordered ones);
+	$partStructureIterator =& $recordStructure->getPartStructures();
+	while ($partStructureIterator->hasNext()) {
+	$partStructure =& $partStructureIterator->next();
+	if (!$partStructureSet->isInSet($partStructure->getId()))
+		$partStructureArray[] =& $partStructure;
+	}
+	
+	print "\n<table width='100%'>";
+	print "\n\t<tr>\n\t<td>";
+	
+	$moduleManager =& Services::getService("InOutModules");
+	print $moduleManager->generateDisplayForPartStructures($repositoryId, $assetId, $record, $partStructureArray);
+	
+	print "\n\t</td>\n\t<td style='border-left: 1px solid; padding-left: 10px;' valign='top'>";
 
-  // Print out the parts/partstructures for this recordstructure
-  $setManager =& Services::getService("Sets");
-  $partStructureSet =& $setManager->getSet($structureId);
-
-  $partsStructureArray = array();
-  // Print out the ordered parts/fields
-  $partStructureSet->reset();
-  while ($partStructureSet->hasNext()) {
-    $partStructureId =& $partStructureSet->next();
-    $partStructureArray[] =& $recordStructure->getPartStructure($partStructureId);
-  }
-  // Get the rest of the parts (the unordered ones);
-  $partStructureIterator =& $recordStructure->getPartStructures();
-  while ($partStructureIterator->hasNext()) {
-    $partStructure =& $partStructureIterator->next();
-    if (!$partStructureSet->isInSet($partStructure->getId()))
-      $partStructureArray[] =& $partStructure;
-  }
-
-  print "\n<table width='100%'>";
-  print "\n\t<tr>\n\t<td>";
-
-  $moduleManager =& Services::getService("InOutModules");
-  print $moduleManager->generateDisplayForPartStructures($repositoryId, $assetId, $record, $partStructureArray);
-
-  print "\n\t</td>\n\t<td style='border-left: 1px solid; padding-left: 10px;' valign='top'>";
-
-  // Info and links
-  print "\n<strong>".$recordStructure->getDisplayName()."</strong>";
-  print "\n<br /><em>".$recordStructure->getDescription()."</em>";
-  print "\n<br /><a href='".MYURL."/record/edit/".$repositoryId->getIdString()."/".$assetId->getIdString()."/".$recordI\
-    d->getIdString()."/'>"._("edit")."</a>";
-  print "\n | <a href='".MYURL."/record/delete/".$repositoryId->getIdString()."/".$assetId->getIdString()."/".$recordId\
-    ->getIdString()."/'>"._("delete")."</a>";
-
-  print "\n\t</td>\n\t</tr>";
-  print "\n</table>";
+ 	// Info and links
+	print "\n<strong>".$recordStructure->getDisplayName()."</strong>";
+	print "\n<br /><em>".$recordStructure->getDescription()."</em>";
+	print "\n<br /><a href='";
+	print $harmoni->request->quickURL("record", "edit", 
+		array("collection_id" => $repositoryId->getIdString(),
+			"asset_id" => $assetId->getIdString(),
+			"record_id" => $recordId->getIdString()));
+	print "'>"._("edit")."</a>";
+	print "\n | <a href='";
+	print $harmoni->request->quickURL("record", "delete", 
+		array("collection_id" => $repositoryId->getIdString(),
+			"asset_id" => $assetId->getIdString(),
+			"record_id" => $recordId->getIdString()));
+	print "'>"._("delete")."</a>";
+	
+	print "\n\t</td>\n\t</tr>";
+	print "\n</table>";
 }

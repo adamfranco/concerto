@@ -67,7 +67,7 @@ class editAction
 		$harmoni =& Harmoni::instance();
 		$centerPane =& $this->getCenterPane();
 		$idManager =& Services::getService("Id");
-		$recordId =& $idManager->getId($harmoni->pathInfoParts[4]);
+		$recordId =& $idManager->getId($harmoni->request->get("record_id"));
 		$cacheName = 'edit_record_wizard_'.$recordId->getIdString();
 		
 		$this->runWizard ( $cacheName, $centerPane );
@@ -84,7 +84,7 @@ class editAction
 	function &createWizard () {
 		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
-		$recordId =& $idManager->getId($harmoni->pathInfoParts[4]);
+		$recordId =& $idManager->getId($harmoni->request->get("record_id"));
 		$asset =& $this->getAsset();
 		$record =& $asset->getRecord($recordId);
 		$structure =& $record->getRecordStructure();
@@ -144,7 +144,7 @@ class editAction
 		$wizard =& $this->getWizard($cacheName);
 		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
-		$recordId =& $idManager->getId($harmoni->pathInfoParts[4]);
+		$recordId =& $idManager->getId($harmoni->request->get('repository_id'));
 		$asset =& $this->getAsset();
 		$record =& $asset->getRecord($recordId);
 		
@@ -163,9 +163,8 @@ class editAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
-		$repositoryId =& $this->getRepositoryId();
-		$assetId =& $this->getAssetId();
-		return MYURL."/asset/editview/".$repositoryId->getIdString()
-				."/".$assetId->getIdString()."/";
+		$harmoni =& Harmoni::instance();
+		$url =& $harmoni->history->getReturnURL("concerto/asset/editview");
+		return $url->write();
 	}
 }

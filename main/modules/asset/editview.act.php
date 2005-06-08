@@ -113,11 +113,16 @@ class editviewAction
 			
 			// Edit Links
 			ob_start();
-			print "\n\t<table>\n\t<tr><td style='border-left: 1px solid; padding-left: 10px;' valign='top'>";
+			print "\n\t<table>";
+			print "\n\t<tr><td style='border-left: 1px solid; padding-left: 10px;' valign='top'>";
 			
 			// Info and links
 			print "\n<strong>"._("Asset Information")."</strong>";
-			print "\n<br /><a href='".MYURL."/asset/edit/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>"._("edit")."</a>";
+			print "\n<br /><a href='";
+			print $harmoni->request->quickURL("asset", "edit", 
+				array("collection_id" => $repositoryId->getIdString(),
+					"asset_id" => $assetId->getIdString()));
+			print "'>"._("edit")."</a>";
 			
 			print "\n\t</td>\n\t</tr>";
 			print "\n</table>";
@@ -159,16 +164,20 @@ class editviewAction
 		//***********************************
 		// Info Record Addition
 		//***********************************
+		$harmoni->history->markReturnURL("concerto/asset/editview");
 		ob_start();
 		print "\n<hr />";
-		print "\n<form action='".MYURL."/record/add/".$repositoryId->getIdString()."/".$assetId->getIdString()."/' method='post'>";
+		print "\n<form action='";
+		print $harmoni->request->quickURL("record", "add", 
+			array("collection_id" => $repositoryId->getIdString(),
+				"asset_id" => $assetId->getIdString()));
+		print "' method='post'>";
 		print "\n<div>";
 		
-		print "\n<input type='hidden' name='return_url' value='".MYURL."/".implode("/", $harmoni->pathInfoParts)."' />";
 		print "\n<input type='submit' value='"._("Add")."' /> ";
 		print "\n"._("a new Record for the ");
 		
-		print "\n<select name='structure'>";
+		print "\n<select name='".$harmoni->request->name('structure')."'>";
 		
 		$structSet->reset();
 		$i=1;
@@ -215,7 +224,11 @@ class editviewAction
 			
 			// Info and links
 			print "\n<strong>"._("Asset Content")."</strong>";
-			print "\n<br /><a href='".MYURL."/asset/edit/".$repositoryId->getIdString()."/".$assetId->getIdString()."/'>"._("edit")."</a>";
+			print "\n<br /><a href='";
+			print $harmoni->request->quickURL("asset", "edit", 
+				array("collection_id" => $repositoryId->getIdString(),
+					"asset_id" => $assetId->getIdString()));
+			print "'>"._("edit")."</a>";
 			
 			print "\n\t</td>\n\t</tr>";
 			print "\n</table>";
@@ -267,8 +280,18 @@ function printRecord(& $record, & $assetId, & $repositoryId) {
 	// Info and links
 	print "\n<strong>".$recordStructure->getDisplayName()."</strong>";
 	print "\n<br /><em>".$recordStructure->getDescription()."</em>";
-	print "\n<br /><a href='".MYURL."/record/edit/".$repositoryId->getIdString()."/".$assetId->getIdString()."/".$recordId->getIdString()."/'>"._("edit")."</a>";
-	print "\n | <a href='".MYURL."/record/delete/".$repositoryId->getIdString()."/".$assetId->getIdString()."/".$recordId->getIdString()."/'>"._("delete")."</a>";
+	print "\n<br /><a href='";
+	print $harmoni->request->quickURL("record", "edit", 
+		array("collection_id" => $repositoryId->getIdString(),
+			"asset_id" => $assetId->getIdString(),
+			"record_id" => $recordId->getIdString()));
+	print "'>"._("edit")."</a>";
+	print "\n | <a href='";
+	print $harmoni->request->quickURL("record", "delete", 
+		array("collection_id" => $repositoryId->getIdString(),
+			"asset_id" => $assetId->getIdString(),
+			"record_id" => $recordId->getIdString()));
+	print "'>"._("delete")."</a>";
 	
 	print "\n\t</td>\n\t</tr>";
 	print "\n</table>";

@@ -90,29 +90,44 @@ class createAction
 		
 		
 		// Create the properties.
-		$displayNameProp =& $stepOne->createProperty("schema_display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
+		$displayNameProp =& $stepOne->createProperty(
+			RequestContext::name("schema_display_name"), 
+			new RegexValidatorRule("^[^ ]{1}.*$"));
 		$displayNameProp->setDefaultValue("");
 		$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
 		
-		$descriptionProp =& $stepOne->createProperty("schema_description", new RegexValidatorRule(".*"));
+		$descriptionProp =& $stepOne->createProperty(
+			RequestContext::name("schema_description"), 
+			new RegexValidatorRule(".*"));
 		$descriptionProp->setDefaultValue("");
 		
-		$formatProp =& $stepOne->createProperty("format", new RegexValidatorRule(".*"));
+		$formatProp =& $stepOne->createProperty(
+			RequestContext::name("format"),
+			new RegexValidatorRule(".*"));
 		$formatProp->setDefaultValue("Plain Text - UTF-8 encoding");
 		
 		
 		// Create the step text
 		ob_start();
+		
 		print "\n<h2>"._("Name")."</h2>";
 		print "\n"._("The Name for this Schema: ");
-		print "\n<br /><input type='text' name='schema_display_name' value=\"[[schema_display_name]]\" />[[schema_display_name|Error]]";
+		$fieldName = RequestContext::name('schema_display_name');
+		print "\n<br /><input type='text' name='$fieldName' value=\"[[$fieldName]]\" />[[$fieldName|Error]]";
+		
+		
 		print "\n<h2>"._("Description")."</h2>";
 		print "\n"._("The Description for this Schema: ");
-		print "\n<br /><textarea name='schema_description'>[[schema_description]]</textarea>[[schema_description|Error]]";
+		$fieldName = RequestContext::name('schema_description');
+		print "\n<br /><textarea name='$fieldName'>[[$fieldName]]</textarea>[[$fieldName|Error]]";
+		
+		
 		print "\n<h2>"._("Format")."</h2>";
 		print "\n"._("The format of data that is entered into the fields: ");
 		print "\n<br /><em>"._("'Plain Text - ASCII encoding', 'XML', etc.")."</em>";
-		print "\n<br /><input type='text' name='format' value=\"[[format]]\" size='25' />[[format|Error]]";
+		$fieldName = RequestContext::name('format');
+		print "\n<br /><input type='text' name='$fieldName' value=\"[[$fieldName]]\" size='25' />[[$fieldName|Error]]";
+		
 		print "\n<div style='width: 400px'> &nbsp; </div>";
 		$stepOne->setText(ob_get_contents());
 		ob_end_clean();
@@ -121,23 +136,36 @@ class createAction
 		// :: Add Elements ::
 		$elementStep =& $wizard->addStep(new MultiValuedWizardStep(_("Add Elements"), "elements"));
 		
-		$property =& $elementStep->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
+		$property =& $elementStep->createProperty(
+			RequestContext::name("display_name"), 
+			new RegexValidatorRule("^[^ ]{1}.*$"));
 		$property->setDefaultValue("");
 		$property->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
 		
-		$property =& $elementStep->createProperty("description", new RegexValidatorRule(".*"));
+		$property =& $elementStep->createProperty(
+			RequestContext::name("description"), 
+			new RegexValidatorRule(".*"));
 		$property->setDefaultValue("");
 		
-		$property =& $elementStep->createProperty("type", new RegexValidatorRule(".*"));
-		$property->setDefaultValue("Repository/Harmoni/string");
+		$property =& $elementStep->createProperty(
+			RequestContext::name("type"), 
+			new RegexValidatorRule(".*"));
+		$defaultType =& new Type ("Repository", "Harmoni", "string");
+		$property->setDefaultValue(HarmoniType::typeToString($defaultType));
 		
-		$property =& $elementStep->createProperty("mandatory", new RegexValidatorRule(".*"));
+		$property =& $elementStep->createProperty(
+			RequestContext::name("mandatory"), 
+			new RegexValidatorRule(".*"));
 		$property->setDefaultValue("FALSE");
 		
-		$property =& $elementStep->createProperty("repeatable", new RegexValidatorRule(".*"));
+		$property =& $elementStep->createProperty(
+			RequestContext::name("repeatable"), 
+			new RegexValidatorRule(".*"));
 		$property->setDefaultValue("FALSE");
 		
-		$property =& $elementStep->createProperty("populatedbydr", new RegexValidatorRule(".*"));
+		$property =& $elementStep->createProperty(
+			RequestContext::name("populatedbydr"), 
+			new RegexValidatorRule(".*"));
 		$property->setDefaultValue("FALSE");
 		
 		// We don't have any PartStructures yet, so we can't get them.
@@ -147,20 +175,26 @@ class createAction
 		print "\n<p>"._("If none of the schemata listed below fit your needs, please click the button below to save your changes and create a new schema.")."</p>";
 		
 		print "\n<table border=\"0\">";
+			
 			print "\n<tr><td>";
 				print _("DisplayName").": ";
 			print "\n</td><td>";
-				print "<input type='text' name='display_name' value=\"[[display_name]]\" />[[display_name|Error]]";
+				$fieldName = RequestContext::name('display_name');
+				print "<input type='text' name='$fieldName' value=\"[[$fieldName]]\" />[[$fieldName|Error]]";
 			print "\n</td></tr>";
+			
 			print "\n<tr><td>";
 				print _("Description").": ";
 			print "\n</td><td>";
-				print "<textarea name=\"description\" rows=\"3\" cols=\"25\">[[description]]</textarea>[[description|Error]]";
+				$fieldName = RequestContext::name('description');
+				print "<textarea name=\"$fieldName\" rows=\"3\" cols=\"25\">[[$fieldName]]</textarea>[[$fieldName|Error]]";
 			print "\n</td></tr>";
+			
 			print "\n<tr><td>";
 				print _("Select a Type")."... ";
 			print "\n</td><td>";
-				print "\n<select name=\"type\">";
+				$fieldName = RequestContext::name('type');
+				print "\n<select name=\"$fieldName\">";
 				// We are going to assume that all RecordStructures have the same PartStructureTypes
 				// in this Repository. This will allow us to list PartStructureTypes before
 				// the RecordStructure is actually created.
@@ -176,36 +210,38 @@ class createAction
 						$types =& $recordStructure->getPartStructureTypes();
 						while ($types->hasNext()) {
 							$type =& $types->next();
-							$typeString = urlencode($type->getDomain())."/".urlencode($type->getAuthority())."/".urlencode($type->getKeyword());
-							print "\n<option value=\"".$typeString."\" [['type'=='".$typeString."'| selected='selected'|]]>";
-							print $type->getDomain()." :: ".$type->getAuthority()." :: ".$type->getKeyword();
+							print "\n<option value=\"".HarmoniType::typeToString($type)."\" [['$fieldName'=='".$typeString."'| selected='selected'|]]>";
+							print HarmoniType::typeToString($type, " :: ");
 							print "</option>";
 						}
 						break;
 					}
 				}
-				print "\n</select>[[type|Error]]";
+				print "\n</select>[[$fieldName|Error]]";
 			print "\n</td></tr>";
 	
 			print "\n<tr><td>";
 				print _("isMandatory? ");
 			print "\n</td><td>";
-				print "<input type=\"radio\" name='mandatory' value='TRUE' [['mandatory'=='TRUE'| checked='checked'|]] />TRUE / ";
-				print "<input type=\"radio\" name='mandatory' value='FALSE' [['mandatory'=='FALSE'| checked='checked'|]] /> FALSE";
+				$fieldName = RequestContext::name('mandatory');
+				print "<input type=\"radio\" name='$fieldName' value='TRUE' [['$fieldName'=='TRUE'| checked='checked'|]] />TRUE / ";
+				print "<input type=\"radio\" name='$fieldName' value='FALSE' [['$fieldName'=='FALSE'| checked='checked'|]] /> FALSE";
 			print "\n</td></tr>";
 			
 			print "\n<tr><td>";
 				print _("isRepeatable? ");
 			print "\n</td><td>";
-				print "<input type=\"radio\" name='repeatable' value='TRUE' [['repeatable'=='TRUE'| checked='checked'|]] />TRUE / ";
-				print "<input type=\"radio\" name='repeatable' value='FALSE' [['repeatable'=='FALSE'| checked='checked'|]] /> FALSE";
+				$fieldName = RequestContext::name('repeatable');
+				print "<input type=\"radio\" name='$fieldName' value='TRUE' [['$fieldName'=='TRUE'| checked='checked'|]] />TRUE / ";
+				print "<input type=\"radio\" name='$fieldName' value='FALSE' [['$fieldName'=='FALSE'| checked='checked'|]] /> FALSE";
 			print "\n</td></tr>";
 			
 			print "\n<tr><td>";
 				print _("isPopulatedByRepository? ");
 			print "\n</td><td>";
-				print "<input type=\"radio\" name='populatedbydr' value='TRUE' [['populatedbydr'=='TRUE'| checked='checked'|]] />TRUE / ";
-				print "<input type=\"radio\" name='populatedbydr' value='FALSE' [['populatedbydr'=='FALSE'| checked='checked'|]] /> FALSE";
+				$fieldName = RequestContext::name('populatedbydr');
+				print "<input type=\"radio\" name='$fieldName' value='TRUE' [['$fieldName'=='TRUE'| checked='checked'|]] />TRUE / ";
+				print "<input type=\"radio\" name='$fieldName' value='FALSE' [['$fieldName'=='FALSE'| checked='checked'|]] /> FALSE";
 			print "\n</td></tr>";
 			
 			print "</table>";
@@ -217,12 +253,12 @@ class createAction
 		print "[List]\n<tr>";
 		print "\n<td valign='top'>[ListButtons]<br />[ListMoveButtons]</td>";
 		print "\n<td style='padding-bottom: 20px'>";
-		print "\n\t<strong>"._("DisplayName").":</strong> [[display_name]]";
-		print "\n\t<br /><strong>"._("Description").":</strong> [[description]]";
-		print "\n\t<br /><strong>"._("Type").":</strong> [[type]]";
-		print "\n\t<br /><strong>"._("isMandatory").":</strong> [[mandatory]]";
-		print "\n\t<br /><strong>"._("isRepeatable").":</strong> [[repeatable]]";
-		print "\n\t<br /><strong>"._("isPopulatedByRepository").":</strong> [[populatedbydr]]";
+		print "\n\t<strong>"._("DisplayName").":</strong> [[".RequestContext::name('display_name')."]]";
+		print "\n\t<br /><strong>"._("Description").":</strong> [[".RequestContext::name('description')."]]";
+		print "\n\t<br /><strong>"._("Type").":</strong> [[".RequestContext::name('type')."]]";
+		print "\n\t<br /><strong>"._("isMandatory").":</strong> [[".RequestContext::name('mandatory')."]]";
+		print "\n\t<br /><strong>"._("isRepeatable").":</strong> [[".RequestContext::name('repeatable')."]]";
+		print "\n\t<br /><strong>"._("isPopulatedByRepository").":</strong> [[".RequestContext::name('populatedbydr')."]]";
 		print "</td>\n</tr>[/List]\n</table>";
 	
 		$elementStep->setText(ob_get_contents());
@@ -251,10 +287,10 @@ class createAction
 			$repository =& $this->getRepository();
 			
 			// Create the info Structure
-			$recordStructure =& $repository->createRecordStructure($properties['schema_display_name']->getValue(), 
-									$properties['schema_description']->getValue(), 
-									$properties['format']->getValue(),
-									$properties['schema_display_name']->getValue());
+			$recordStructure =& $repository->createRecordStructure($properties[RequestContext::name('schema_display_name')]->getValue(), 
+									$properties[RequestContext::name('schema_description')]->getValue(), 
+									$properties[RequestContext::name('format')]->getValue(),
+									$properties[RequestContext::name('schema_display_name')]->getValue());
 			Debug::printAll();
 			$recordStructureId =& $recordStructure->getId();
 			
@@ -269,16 +305,15 @@ class createAction
 			// Create the PartStructures
 			$partStructureProperties =& $properties['elements'];
 			foreach (array_keys($partStructureProperties) as $index) {
-				$typeString = urldecode($partStructureProperties[$index]['type']->getValue());
-				$typeParts = explode("/", $typeString);
-				$type =& new HarmoniType($typeParts[0], $typeParts[1], $typeParts[2], $typeParts[3]);
+				$type =& HarmoniType::stringToType(urldecode(
+					$partStructureProperties[$index][RequestContext::name('type')]->getValue()));
 				$partStructure =& $recordStructure->createPartStructure(
-								$partStructureProperties[$index]['display_name']->getValue(),
-								$partStructureProperties[$index]['description']->getValue(),
+								$partStructureProperties[$index][RequestContext::name('display_name')]->getValue(),
+								$partStructureProperties[$index][RequestContext::name('description')]->getValue(),
 								$type,
-								(($partStructureProperties[$index]['mandatory']->getValue())?TRUE:FALSE),
-								(($partStructureProperties[$index]['repeatable']->getValue())?TRUE:FALSE),
-								(($partStructureProperties[$index]['populatedbydr']->getValue())?TRUE:FALSE)
+								(($partStructureProperties[$index][RequestContext::name('mandatory')]->getValue())?TRUE:FALSE),
+								(($partStructureProperties[$index][RequestContext::name('repeatable')]->getValue())?TRUE:FALSE),
+								(($partStructureProperties[$index][RequestContext::name('populatedbydr')]->getValue())?TRUE:FALSE)
 								);
 				
 				$partStructureId =& $partStructure->getId();
@@ -303,9 +338,7 @@ class createAction
 	 */
 	function getReturnUrl () {
 		$harmoni =& Harmoni::instance();
-		$repositoryId =& $this->getRepositoryId();
-		return MYURL."/"
-			.implode("/", array_slice($harmoni->pathInfoParts, 3))
-			."?__skip_to_step=2";
+		return $harmoni->request->quickURL("collection", "edit",
+			array("__skip_to_step" => 2));
 	}
 }
