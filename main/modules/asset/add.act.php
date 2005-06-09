@@ -221,8 +221,8 @@ class addAction
 		$property =& $step->createProperty("parent", new AlwaysTrueValidatorRule);
 		$harmoni =& Harmoni::instance();
 		
-		if ($_REQUEST['parent'])
-			$property->setDefaultValue($_REQUEST['parent']);
+		if (RequestContext::value('parent'))
+			$property->setDefaultValue(RequestContext::value('parent'));
 		else
 			$property->setDefaultValue("NONE");
 				

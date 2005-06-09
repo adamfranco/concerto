@@ -23,7 +23,7 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 // Get the Repository
 $repositoryManager =& Services::getService("Repository");
 $idManager =& Services::getService("Id");
-$repositoryId =& $idManager->getId($harmoni->pathInfoParts[2]);
+$repositoryId =& $idManager->getId($harmoni->request->get('collection_id'));
 $repository =& $repositoryManager->getRepository($repositoryId);
 
 
