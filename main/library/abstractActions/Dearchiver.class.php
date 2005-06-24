@@ -12,7 +12,7 @@
  */ 
 
 /**
- * Uncompresses and dearchives files from the input file.
+* Uncompresses and dearchives files from the input file.
  *
  * @package concerto.modules
  *
@@ -22,10 +22,13 @@
  * @version $Id$
  */
 
+require_once("Archive/Tar.php");
+require_once(MYDIR."concerto/main/library/abstractActions/mkdirr.fcn.php");
+
 class Dearchiver {
 	
 	/**
-	 * Figures out the type of archive.
+	* Figures out the type of archive.
 	 * 
 	 * @param string filename
 	 * @return string the extension of the file (zip, gz, bz2, tar.gz, tar.bz2)
@@ -36,19 +39,70 @@ class Dearchiver {
 	function _getFileType($filename) {
 		$filenameParts = explode(".", $filename);
 		$filenamePartsCount = count($filenameParts);
-		if($filenameParts[$filenamePartsCount-2] == "tar") {
-			if($filenameParts[$filenamePartsCount-1] == "gz")
+		if (strcasecmp($filenameParts[$filenamePartsCount-1], "tgz") == 0)
+			return "tar.gz";
+		else if (strcasecmp($filenameParts[$filenamePartsCount-1], "tbz2") == 0)
+			return "tar.bz2";
+		else if(strcasecmp($filenameParts[$filenamePartsCount-2], "tar") == 0) {
+			if(strcasecmp($filenameParts[$filenamePartsCount-1], "gz") == 0)
 				return "tar.gz";
-			if($filenameParts[$filenamePartsCount-1] == "bz2")
+			else if(strcasecmp($filenameParts[$filenamePartsCount-1], "bz2") == 0)
 				return "tar.bz2";			
 		}
 		else {
-			return $filenameParts[$filenamePartsCount-1];
+			return strtolower($filenameParts[$filenamePartsCount-1]);
 		}
 	}
+	
+	/** Function to unzip $file in $dir to $destination with $permissions
+ 	* 
+ 	* modified  candido1212 at yahoo dot com dot br's code on php.net manual
+ 	* http://us3.php.net/zip
+ 	* @param path, filename, destination, permissions (refer to mkdir)
+ 	*/
 
+	function unzip($dir, $file, $destination="", $permissions = 0755)
+	{
+		if (substr($dir, -1) != DIRECTORY_SEPARATOR) $dir .= DIRECTORY_SEPARATOR;
+		if (substr($destination, -1) != DIRECTORY_SEPARATOR) $destination .= DIRECTORY_SEPARATOR;
+		$path_file = $dir . $file;
+		$zip = zip_open($path_file);
+		$_tmp = array();
+		if ($zip)
+		{
+			while ($zip_entry = zip_read($zip))
+			{
+				if (zip_entry_open($zip, $zip_entry, "r"))
+				{
+					if($destination)
+					{
+						$path_file = $destination . zip_entry_name($zip_entry);
+					}
+					else
+					{
+						$path_file = $dir . zip_entry_name($zip_entry);
+					}
+					$new_dir = dirname($path_file);
+
+					// Create Recursive Directory
+					mkdirr($new_dir, $permissions);
+					//change: do not try to read file if is a directory
+					if (!(substr(zip_entry_name($zip_entry), -1) == "/")) {
+						$fp = fopen($path_file, "w");
+						while ($buf = zip_entry_read($zip_entry, 4096))
+							fwrite($fp, $buf, 4096);
+						fclose($fp);
+						$_tmp[] = $path_file;
+					}
+					zip_entry_close($zip_entry);
+				}
+			}
+			zip_close($zip);
+		}
+		return $_tmp;
+	}
 	/**
-	 * Uncompresses the archive appropriate to its filetype to the given path.
+	* Uncompresses the archive appropriate to its filetype to the given path.
 	 * 
 	 * @param string $filename
 	 * @access public
@@ -58,64 +112,43 @@ class Dearchiver {
 	function uncompressFile($filename, $path) {
 		$fileType = $this->_getFileType($filename);
 		switch ($fileType) {
-			//case "tar":
+			case "tar":
+				$tar = new Archive_Tar($filename);
+				$tar->extract($path);
+				break;
 			case "tar.gz":
-				$tar = Archive_Tar($filename, "gz");
-				$tar->extract($path);//MYDIR."/../concerto_data/import");
+				$tar = new Archive_Tar($filename, "gz");
+				$tar->extract($path);
 				break;
 			case "tar.bz2":
-				$tar = Archive_Tar($filename, "bz2");
-				$tar->extract($path);//MYDIR."/..concerto_data/import");
+				$tar = new Archive_Tar($filename, "bz2");
+				$tar->extract($path);
 				break;
 			case "zip":
-				$zip = zip_open($filename);
-				
-				mkdir($path."/data");//"/www/cshubert/uncompressor/test/data");
-				
-				while ($zip_entry = zip_read($zip)) {
-					
-					$entry_name = zip_entry_name($zip_entry);
-					$base_name = basename($entry_name);
-					
-					if ($base_name == "metadata.txt")
-						$outFile = fopen($path."/metadata.txt", "wb");//"/www/cshubert/uncompressor/test/metadata.txt", "wb");
-					else if($base_name == "data")
-						$outFile = FALSE;
-					else 
-						$outFile = fopen($path."/data/".basename($entry_name), "wb");//"/www/cshubert/uncompressor/test/data/".basename($entry_name), "wb");
-					
-					if ($outFile) {
-						zip_entry_open($zip, $zip_entry, "rb");
-						while ($buffer = zip_entry_read($zip_entry, 1024))
-							fwrite($outFile, $buffer, 1024);
-						fclose($outFile);
-						zip_entry_close($zip_entry);
-					}
-				}
+				unzip(dirname($filename), basename($filename), $path, 0700);
 				break;
 			case "gz":
 				$file = gzopen($filename, "rb");
-				$outFile = fopen($path, "wb");//MYDIR."../concerto_data/import/", "wb");
-				//echo "wrote outFile<br />";
+				$outFile = fopen($path, "wb");
 				while (!gzeof($file)) {
-					$buffer = gzread($file, 1024);
-					fwrite ($outFile, $buffer, 1024);
+					$buffer = gzread($file, 4096);
+					fwrite ($outFile, $buffer, 4096);
 				}
-				//echo "done gunzipping<br />";
 				gzclose($file);
 				fclose($outFile);
-				//echo "closed up shop<br />";
 				break;
 			case "bz2":
 				$file = bzopen($filename, "rb");
-				$outFile = fopen($path. "wb");//MYDIR."../concerto_data/import/", "wb");
-				while ($buffer = bzread($file, 1024)) 
-					fwrite($outFile, $buffer, 1024);
-				fclose($outFile);
+				$outFile = fopen($path. "wb");
+				while ($buffer = bzread($file, 4096)) 
+					fwrite($outFile, $buffer, 4096);
+					fclose($outFile);
 				bzclose($file);
 				break;
+			default:
+				//throwError(new Error("Invalid File Type: ".$fileType);
+				die("Invalid File Type: ".$fileType);
 		}
-		//return MYDIR."/../concerto_data/import/";
 	}
 }
 ?>
