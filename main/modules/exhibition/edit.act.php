@@ -68,7 +68,7 @@ class editAction
    * @since 4/26/05
    */
   function buildContent () {
-    $centerPane =& $this->getCenterPane();
+    $centerPane =& $this->getActionRows();
     $assetId =& $this->getAssetId();
                 $cacheName = 'edit_asset_wizard_'.$assetId->getIdString();
 

@@ -65,7 +65,7 @@ class editAction
 	 */
 	function buildContent () {
 		$harmoni =& Harmoni::instance();
-		$centerPane =& $this->getCenterPane();
+		$centerPane =& $this->getActionRows();
 		$idManager =& Services::getService("Id");
 		$recordId =& $idManager->getId($harmoni->request->get("record_id"));
 		$cacheName = 'edit_record_wizard_'.$recordId->getIdString();

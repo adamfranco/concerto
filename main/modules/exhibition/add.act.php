@@ -51,7 +51,7 @@ class addAction
    * @since 4/26/05
    */
   function buildContent () {
-    $centerPane =& $this->getCenterPane();
+    $centerPane =& $this->getActionRows();
     $repositoryId =& $this->getRepositoryId();
     $cacheName = 'add_asset_wizard_'.$repositoryId->getIdString();
 
