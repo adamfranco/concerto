@@ -64,7 +64,7 @@ class createAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$centerPane =& $this->getCenterPane();
+		$centerPane =& $this->getActionRows();
 		$repositoryId =& $this->getRepositoryId();
 		$cacheName = 'create_schema_wizard_'.$repositoryId->getIdString();
 		
