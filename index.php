@@ -10,7 +10,7 @@
  * @version $Id$
  */
  
- error_reporting(E_ALL & ~E_NOTICE);
+error_reporting(E_ALL);
 
 // Define a Constant reference to this application directory.
 
