@@ -104,7 +104,7 @@ class typebrowseAction
 		ksort($typeArray);
 		
 		// print the Results
-		$resultPrinter =& new ArrayResultPrinter($typeArray, 2, 20, "printTypeShort", $repositoryId);
+		$resultPrinter =& new ArrayResultPrinter($typeArray, 2, 20, "printTypeShort", $repository->getId());
 		$resultLayout =& $resultPrinter->getLayout($harmoni);
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 	}

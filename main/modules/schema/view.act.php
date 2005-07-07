@@ -87,9 +87,8 @@ class viewAction
 		// Prepare the return URL so that we can get back to where we were.
 		print "<a href='";
 		$repositoryId =& $this->getRepositoryId();
-		$returnUrl =& $harmoni->history->getReturnURL(
-			"concerto/collection/edit/".$repositoryId->getIdString());
-		print $returnUrl->write();
+		print $harmoni->history->getReturnURL(
+			"collection", "edit", array("collection_id" => $repositoryId->getIdString()));
 		print "'><-- "._("Return")."</a>";
 		
 		
