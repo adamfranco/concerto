@@ -13,9 +13,10 @@
  error_reporting(E_ALL & ~E_NOTICE);
 
 // Define a Constant reference to this application directory.
+
 define("MYDIR",dirname(__FILE__));
-define("MYPATH",str_replace($_SERVER['DOCUMENT_ROOT'], "", str_replace("\\", "/", dirname(__FILE__))));
-define("MYURL",str_replace($_SERVER['DOCUMENT_ROOT'], "", str_replace("\\", "/", dirname(__FILE__)))."/index.php");
+define("MYPATH", str_replace("\\", "/", dirname($_SERVER['PHP_SELF'])));
+define("MYURL", $_SERVER['PHP_SELF']);
 
 define("OKI_VERSION", 2);
 define("LOAD_THEMES", false);
