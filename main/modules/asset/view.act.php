@@ -101,10 +101,12 @@ class viewAction
 			print  "\n\t<br /><strong>"._("ID#").":</strong> ".$assetId->getIdString();
 		
 			$effectDate =& $asset->getEffectiveDate();
-			print  "\n\t<br /><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->toString()."</em>";
+			if(is_Object($effectdate))
+				print  "\n\t<br /><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->toString()."</em>";
 		
 			$expirationDate =& $asset->getExpirationDate();
-			print  "\n\t<br /><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->toString()."</em>";
+			if(is_Object($expirationDate))
+				print  "\n\t<br /><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->toString()."</em>";
 		
 			$layout =& new Block(ob_get_contents(), 3);
 			ob_end_clean();
