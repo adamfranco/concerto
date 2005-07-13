@@ -97,13 +97,13 @@ class editAction
     $asset->updateContent($content);
 
 
-    // Update the effective/expiration dates
-    if ($properties['effective_date']->getValue())
-      $asset->updateEffectiveDate(
-				  new Time($properties['effective_date']->getValue()));
-    if ($properties['expiration_date']->getValue())
-      $asset->updateExpirationDate(
-				   new Time($properties['expiration_date']->getValue()));
+	// Update the effective/expiration dates
+	if ($properties['effective_date']->getValue())
+		$asset->updateEffectiveDate(
+			DateAndTime::fromString($properties['effective_date']->getValue()));
+	if ($properties['expiration_date']->getValue())
+		$asset->updateExpirationDate(
+			DateAndTime::fromString($properties['expiration_date']->getValue()));
 
     return TRUE;
   }
