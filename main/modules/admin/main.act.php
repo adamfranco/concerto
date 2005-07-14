@@ -54,24 +54,44 @@ class mainAction
 	 */
 	function buildContent () {
 		$actionRows =& $this->getActionRows();
+		$harmoni =& Harmoni::instance();
+		
+		$actionRows->add(new Block("<span style='font-size: larger'><b>" . _("Agents &amp; Groups") . "</b></span>" , 2));
 		
 		ob_start();
 		print "\n<ul>";
-		print "\n\t<li><a href='".MYURL."/agents/group_membership/'>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("agents","group_membership")."'>";
 		print _("Edit Group Membership");
 		print "</a></li>";
-		print "\n\t<li><a href='".MYURL."/authorization/browse_authorizations/'>";
-		print _("Browse authorizations");
-		print "</a></li>";
-		print "\n\t<li><a href='".MYURL."/authorization/choose_agent/'>";
-		print _("Edit authorizations");
-		print "</a></li>";
-		print "\n\t<li><a href='".MYURL."/agents/create_agent/'>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("agents","create_agent")."'>";
 		print _("Create User");
+		print "</a></li>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("authorization","choose_agent")."'>";
+		print _("Edit Agent Authorizations &amp; Details");
 		print "</a></li>";
 		print "\n</ul>";
 		
-		$actionRows->add(new Block(ob_get_contents(), 3), "100%", null, CENTER, CENTER);
+		$introText =& new Block(ob_get_contents(),3);
+		$actionRows->add($introText, "100%", null, CENTER, CENTER);
+		ob_end_clean();
+		
+		$actionRows->add(new Block("<span style='font-size: larger'><b>" . _("Authorizations") . "</b></span>" , 2));
+		
+		ob_start();
+		print "\n<ul>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("authorization","browse_authorizations")."'>";
+		print _("Browse Authorizations");
+		print "</a></li>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("authorization","choose_agent")."'>";
+		print _("Edit Agent Authorizations &amp; Details");
+		print "</a></li>";
+		// print "\n\t<li><a href='".$harmoni->request->quickURL("agents","create_agent")."'>";
+		// print _("Create User");
+		// print "</a></li>";
+		print "\n</ul>";
+		
+		$introText =& new Block(ob_get_contents(),3);
+		$actionRows->add($introText, "100%", null, CENTER, CENTER);
 		ob_end_clean();
 	}
 }
