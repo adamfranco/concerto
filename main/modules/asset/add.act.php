@@ -31,15 +31,12 @@ class addAction
 	 * @since 4/26/05
 	 */
 	function isAuthorizedToExecute () {
-		if (!defined("AZ_ADD_CHILDREN"))
-			throwError(new Error("You must define an id for AZ_ADD_CHILDREN", "concerto.asset", true));
-		
 		// Check that the user can create an asset here.
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
 		
 		return $authZ->isUserAuthorized(
-			$idManager->getId(AZ_ADD_CHILDREN),
+			$idManager->getId("edu.middlebury.authorization.add_children"),
 			$this->getRepositoryId());
 	}
 	
@@ -272,7 +269,7 @@ class addAction
 		if (!$properties['parent']->getValue() 
 			|| $properties['parent']->getValue() == 'NONE'
 			|| ($parentId =& $idManager->getId($properties['parent']->getValue())
-				&& $authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $parentId)))
+				&& $authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.add_children"), $parentId)))
 		{
 			
 			// Get the type from the select if one is specified

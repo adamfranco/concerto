@@ -38,17 +38,6 @@ class AssetPrinter {
 	 * @date 8/6/04
 	 */
 	function printAssetFunctionLinks (& $harmoni, & $asset, $repositoryId = NULL) {
-		if (!defined("AZ_ACCESS"))
-			throwError(new Error("You must define an id for AZ_ACCESS", "concerto.collection", true));
-		if (!defined("AZ_VIEW"))
-			throwError(new Error("You must define an id for AZ_VIEW", "concerto.collection", true));
-		if (!defined("AZ_EDIT"))
-			throwError(new Error("You must define an id for AZ_EDIT", "concerto.collection", true));
-		if (!defined("AZ_DELETE"))
-			throwError(new Error("You must define an id for AZ_DELETE", "concerto.collection", true));
-		if (!defined("AZ_ADD_CHILDREN"))
-			throwError(new Error("You must define an id for AZ_ADD_CHILDREN", "concerto.collection", true));
-
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
 		
@@ -62,7 +51,7 @@ class AssetPrinter {
 		
 		$actionString = $harmoni->getCurrentAction();
 		
-		if ($authZ->isUserAuthorized($idManager->getId(AZ_VIEW), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId())) {
 			if ($actionString != "asset.view") {
 				$links[] = "<a href='"
 					.$harmoni->request->quickURL("asset", "view",
@@ -75,7 +64,7 @@ class AssetPrinter {
 			}
 		}
 		
-		if ($authZ->isUserAuthorized($idManager->getId(AZ_ACCESS), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $asset->getId())) {
 			$children =& $asset->getAssets();
 			if ($children->hasNext()) {
 				if ($actionString != "asset.browse" 
@@ -100,7 +89,7 @@ class AssetPrinter {
 			}
 		}
 		
-		if ($authZ->isUserAuthorized($idManager->getId(AZ_EDIT), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $asset->getId())) {
 			if ($actionString != "asset.editview") {
 				$links[] = "<a href='"
 					.$harmoni->request->quickURL("asset", "editview", 
@@ -113,7 +102,7 @@ class AssetPrinter {
 			}
 		}
 		
-		if ($authZ->isUserAuthorized($idManager->getId(AZ_DELETE), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.delete"), $asset->getId())) {
 			if ($actionString != "asset.delete") {
 				$harmoni->history->markReturnURL("concerto/asset/delete-return");
 				ob_start();
@@ -142,7 +131,7 @@ class AssetPrinter {
 			}
 		}
 		
-		if ($authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.add_children"), $asset->getId())) {
 			if (ereg("^asset\..*$", $actionString) 
 				&& $harmoni->request->get("asset_id") == $assetId->getIdString()) 
 			{

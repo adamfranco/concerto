@@ -7,13 +7,7 @@
  *
  * @version $Id$
  */
-
-// Check for our authorization function definitions
-if (!defined("AZ_ACCESS"))
-	throwError(new Error("You must define an id for AZ_ACCESS", "concerto.exhibition", true));
-if (!defined("AZ_VIEW"))
-	throwError(new Error("You must define an id for AZ_VIEW", "concerto.exhibition", true));
-
+ 
 // Get the Layout compontents. See core/modules/moduleStructure.txt
 // for more info.
 $harmoni->ActionHandler->execute("window", "screen");
@@ -30,7 +24,7 @@ $repository =& $repositoryManager->getRepository($repositoryId);
 // Check that the user can access this collection
 $authZ =& Services::getService("AuthZ");
 $idManager =& Services::getService("Id");
-if (!$authZ->isUserAuthorized($idManager->getId(AZ_ACCESS), $repositoryId)) {
+if (!$authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $repositoryId)) {
 	$errorLayout =& new Block(_("You are not authorized to access this <em>Exhibition</em>."),2);
 	$centerPane->add($errorLayout, null, null, CENTER, CENTER);
 	return $mainScreen;

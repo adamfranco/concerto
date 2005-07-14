@@ -31,15 +31,11 @@ class createAction
 	 * @since 4/26/05
 	 */
 	function isAuthorizedToExecute () {
-		// Check for our authorization function definitions
-		if (!defined("AZ_ADD_CHILDREN"))
-			throwError(new Error("You must define an id for AZ_ADD_CHILDREN", "concerto.collection", true));
-		
 		// Check that the user can access this collection
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
 		return $authZ->isUserAuthorized(
-					$idManager->getId(AZ_ADD_CHILDREN), 
+					$idManager->getId("edu.middlebury.authorization.add_children"), 
 					$idManager->getId(REPOSITORY_NODE_ID));
 	}
 	

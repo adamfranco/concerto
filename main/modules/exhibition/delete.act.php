@@ -22,17 +22,11 @@ class deleteAction extends AssetAction
      * @since 4/26/05
      */
     function isAuthorizedToExecute () {
-      // Check for our authorization function definitions
- if (!defined("AZ_DELETE"))
-   throwError(new Error("You must define an id for AZ_DELETE", "concerto.exhibition", true));
- if (!defined("AZ_VIEW"))
-   throwError(new Error("You must define an id for AZ_VIEW", "concerto.collection", true));
-
- // Check that the user can access this collection
- $authZ =& Services::getService("AuthZ");
- $idManager =& Services::getService("Id");
- return $authZ->isUserAuthorized(
-				 $idManager->getId(AZ_EDIT),
+		// Check that the user can access this collection
+		$authZ =& Services::getService("AuthZ");
+		$idManager =& Services::getService("Id");
+		return $authZ->isUserAuthorized(
+				 $idManager->getId("edu.middlebury.authorization.modify"),
 				 $this->getAssetId());
     }
 

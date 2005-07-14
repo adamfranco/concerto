@@ -116,8 +116,8 @@ function printAssetShort(& $asset, &$harmoni) {
    $authZ =& Services::getService("AuthZ");
    $idManager =& Services::getService("Id");
    
-   if ($authZ->isUserAuthorized($idManager->getId(AZ_ACCESS), $asset->getId())
-       || $authZ->isUserAuthorized($idManager->getId(AZ_VIEW), $asset->getId()))
+   if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $asset->getId())
+       || $authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
      {
        return TRUE;
      } else {

@@ -31,17 +31,11 @@ class editviewAction
    * @since 4/26/05
    */
   function isAuthorizedToExecute () {
-    // Check for our authorization function definitions
-    if (!defined("AZ_EDIT"))
-      throwError(new Error("You must define an id for AZ_EDIT", "concerto.exhibition", true));
-    if (!defined("AZ_VIEW"))
-      throwError(new Error("You must define an id for AZ_VIEW", "concerto.exhibition", true));
-
     // Check that the user can access this exhibition
     $authZ =& Services::getService("AuthZ");
     $idManager =& Services::getService("Id");
     return $authZ->isUserAuthorized(
-				    $idManager->getId(AZ_EDIT),
+				    $idManager->getId("edu.middlebury.authorization.modify"),
 				    $this->getAssetId());
   }
 

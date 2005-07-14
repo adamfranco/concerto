@@ -37,18 +37,7 @@ class RepositoryPrinter {
 	 * @access public
 	 * @date 8/6/04
 	 */
-	function printRepositoryFunctionLinks (& $harmoni, & $repository) {
-		if (!defined("AZ_ACCESS"))
-			throwError(new Error("You must define an id for AZ_ACCESS", "concerto.collection", true));
-		if (!defined("AZ_VIEW"))
-			throwError(new Error("You must define an id for AZ_VIEW", "concerto.collection", true));
-		if (!defined("AZ_EDIT"))
-			throwError(new Error("You must define an id for AZ_EDIT", "concerto.collection", true));
-		if (!defined("AZ_DELETE"))
-			throwError(new Error("You must define an id for AZ_DELETE", "concerto.collection", true));
-		if (!defined("AZ_ADD_CHILDREN"))
-			throwError(new Error("You must define an id for AZ_ADD_CHILDREN", "concerto.collection", true));
-		
+	function printRepositoryFunctionLinks (& $harmoni, & $repository) {		
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
 		$repositoryId =& $repository->getId();
@@ -59,7 +48,7 @@ class RepositoryPrinter {
 		$url =& $harmoni->request->mkURL();	
 		$url->setValue("collection_id", $repositoryId->getIdString());
 		
-		if ($authZ->isUserAuthorized($idManager->getId(AZ_ACCESS), $repositoryId)) {
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $repositoryId)) {
 			
 			if ($actionString != "collection.browse") {
 				$url->setModuleAction("collection", "browse");
@@ -86,13 +75,13 @@ class RepositoryPrinter {
 			}
 		}
 		
-		if ($authZ->isUserAuthorized($idManager->getId(AZ_EDIT), $repositoryId)) {
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $repositoryId)) {
 			$url->setModuleAction("collection", "edit");
 				$links[] = "<a href='".$url->write()."'>";
 			$links[count($links) - 1] .= _("edit")."</a>";
 		}
 	 	
-	 	if ($authZ->isUserAuthorized($idManager->getId(AZ_ADD_CHILDREN), $repositoryId)) {
+	 	if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.add_children"), $repositoryId)) {
 			$url->setModuleAction("asset", "add");
 				$links[] = "<a href='".$url->write()."'>";
 			$links[count($links) - 1] .= _("add asset")."</a>";
