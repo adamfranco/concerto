@@ -103,11 +103,11 @@ class editviewAction
 		
 			$effectDate =& $asset->getEffectiveDate();
 			if(is_Object($effectDate))
-				print  "\n\t<br /><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->toString()."</em>";
+				print  "\n\t<br /><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->asString()."</em>";
 		
 			$expirationDate =& $asset->getExpirationDate();
 			if(is_Object($expirationDate))
-				print  "\n\t<br /><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->toString()."</em>";
+				print  "\n\t<br /><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->asString()."</em>";
 		
 			$layout =& new Block(ob_get_contents(), 3);
 			ob_end_clean();
@@ -214,7 +214,7 @@ class editviewAction
 		// 	of data.
 		//***********************************
 		$content =& $asset->getContent();
-		if ($string = $content->toString()) {
+		if ($string = $content->asString()) {
 			ob_start();
 			
 			print "\n<table width='100%'>";

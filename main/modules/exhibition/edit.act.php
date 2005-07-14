@@ -168,8 +168,8 @@ class editAction
                 $property =& $step->createProperty("content",new RegexValidatorRule(".*"));
                 $content =& $asset->getContent();
 
-                if ($content->toString())
-		  $property->setDefaultValue($content->toString());
+                if ($content->asString())
+		  $property->setDefaultValue($content->asString());
 
                 // Create the step text
                 ob_start();

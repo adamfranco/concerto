@@ -102,10 +102,10 @@ class editviewAction
     print  "\n\t<br /><strong>"._("ID#").":</strong> ".$assetId->getIdString();
 
     $effectDate =& $asset->getEffectiveDate();
-    print  "\n\t<br /><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->toString()."</em>";
+    print  "\n\t<br /><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->asString()."</em>";
 
     $expirationDate =& $asset->getExpirationDate();
-    print  "\n\t<br /><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->toString()."</e\
+    print  "\n\t<br /><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->asString()."</e\
 m>";
 
     $layout =& new Block(ob_get_contents(), 3);
@@ -209,7 +209,7 @@ m>";
 	  //      of data.
 	  //***********************************
 	  $content =& $asset->getContent();
-	  if ($string = $content->toString()) {
+	  if ($string = $content->asString()) {
 	    ob_start();
 
 	    print "\n<table width='100%'>";
