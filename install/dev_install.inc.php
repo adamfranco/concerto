@@ -63,18 +63,18 @@ foreach ($sqlFiles as $file) {
 		
 		// Create the Hierarchy
 		$nodeTypes = array();
+		$hierarchyId =& $idManager->getId("edu.middlebury.concerto.hierarchy");
 		$hierarchy =& $hierarchyManager->createHierarchy(
 			"Concerto Qualifier Hierarchy", 
 			$nodeTypes,
 			"A Hierarchy to hold all Qualifiers known to Concerto.",
 			TRUE,
-			FALSE);
-		$hierarchyId =& $hierarchy->getId();
-		print "<h2>RepositoryHierarchy Id, to enter in config: ".$hierarchyId->getIdString()."</h2>";
+			FALSE,
+			$hierarchyId);
+
 		// Create nodes for Qualifiers
-		$allOfConcertoId =& $idManager->createId();
-		$collectionsId =& $idManager->createId();
-		print "<h2>Repository-DefaultParent Id, to enter in config: ".$collectionsId->getIdString()."</h2>";
+		$allOfConcertoId =& $idManager->getId("edu.middlebury.concerto.concerto_root");
+		$collectionsId =& $idManager->getId("edu.middlebury.concerto.collections_root");;
 		$hierarchy->createRootNode($allOfConcertoId, new DefaultQualifierType, "All of Concerto", "The top level of all of Concerto.");
 		$hierarchy->createNode($collectionsId, $allOfConcertoId, new DefaultQualifierType, "Concerto Collections", "All Collections in Concerto.");
 
@@ -131,18 +131,15 @@ foreach ($sqlFiles as $file) {
 	// View/Use Functions
 		$type =& new Type ("Authorization", "Concerto", "View/Use", "Functions for viewing and using.");
 	
-		$id =& $idManager->createId();
-		print "<h2>Function id for Access: ".$id->getIdString()."</h2>\n";
+		$id =& $idManager->getId("edu.middlebury.authorization.access");
 		$function =& $authZManager->createFunction($id, "Access", "Access a qualifier.", $type, $qualifierHierarchyId);
 		$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 		
-		$id =& $idManager->createId();
-		print "<h2>Function id for View: ".$id->getIdString()."</h2>\n";
+		$id =& $idManager->getId("edu.middlebury.authorization.view");
 		$function =& $authZManager->createFunction($id, "View", "View a qualifier.", $type, $qualifierHierarchyId);
 		$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 		
-		$id =& $idManager->createId();
-		print "<h2>Function id for Comment: ".$id->getIdString()."</h2>\n";
+		$id =& $idManager->getId("edu.middlebury.authorization.comment");
 		$function =& $authZManager->createFunction($id, "Comment", "Comment on a qualifier.", $type, $qualifierHierarchyId);
 		$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 		
@@ -150,18 +147,15 @@ foreach ($sqlFiles as $file) {
 	// Editing Functions
 		$type =& new Type ("Authorization", "Concerto", "Editing", "Functions for editing.");
 	
-		$id =& $idManager->createId();
-		print "<h2>Function id for Edit: ".$id->getIdString()."</h2>\n";
-		$function =& $authZManager->createFunction($id, "Edit", "Edit a qualifier.", $type, $qualifierHierarchyId);
+		$id =& $idManager->getId("edu.middlebury.authorization.modify");
+		$function =& $authZManager->createFunction($id, "Modify", "Modify a qualifier.", $type, $qualifierHierarchyId);
 		$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 		
-		$id =& $idManager->createId();
-		print "<h2>Function id for Delete: ".$id->getIdString()."</h2>\n";
+		$id =& $idManager->getId("edu.middlebury.authorization.delete");
 		$function =& $authZManager->createFunction($id, "Delete", "Delete a qualifier.", $type, $qualifierHierarchyId);
 		$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 		
-		$id =& $idManager->createId();
-		print "<h2>Function id for Add Children: ".$id->getIdString()."</h2>\n";
+		$id =& $idManager->getId("edu.middlebury.authorization.add_children");
 		$function =& $authZManager->createFunction($id, "Add Children", "Add children to this qualifier.", $type, $qualifierHierarchyId);
 		$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 		
@@ -169,58 +163,38 @@ foreach ($sqlFiles as $file) {
 	// Administration Functions
 		$type =& new Type ("Authorization", "Concerto", "Administration", "Functions for administering.");
 	
-		$id =& $idManager->createId();
-		print "<h2>Function id for View Authorizations: ".$id->getIdString()."</h2>\n";
+		$id =& $idManager->getId("edu.middlebury.authorization.view_authorizations");
 		$function =& $authZManager->createFunction($id, "View Authorizations", "View Authorizations at a qualifier.", $type, $qualifierHierarchyId);
 		$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 		
-		$id =& $idManager->createId();
-		print "<h2>Function id for Modify Authorizations: ".$id->getIdString()."</h2>\n";
+		$id =& $idManager->getId("edu.middlebury.authorization.modify_authorizations");
 		$function =& $authZManager->createFunction($id, "Modify Authorizations", "Modify Authorizations at qualifier.", $type, $qualifierHierarchyId);
 		$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 		
-		$id =& $idManager->createId();
-		print "<h2>Function id for Create Agents: ".$id->getIdString()."</h2>\n";
+		$id =& $idManager->getId("edu.middlebury.authorization.create_agents");
 		$function =& $authZManager->createFunction($id, "Create Agents", "Create Agents at qualifier.", $type, $qualifierHierarchyId);
 		$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 		
-		$id =& $idManager->createId();
-		print "<h2>Function id for Modify Agents: ".$id->getIdString()."</h2>\n";
+		$id =& $idManager->getId("edu.middlebury.authorization.modify_agents");
 		$function =& $authZManager->createFunction($id, "Modify Agents", "Modify Agents at qualifier.", $type, $qualifierHierarchyId);
 		$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 		
-		$id =& $idManager->createId();
-		print "<h2>Function id for Delete Agents: ".$id->getIdString()."</h2>\n";
+		$id =& $idManager->getId("edu.middlebury.authorization.delete_agents");
 		$function =& $authZManager->createFunction($id, "Delete Agents", "Delete Agents at qualifier.", $type, $qualifierHierarchyId);
 		$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 		
-		$id =& $idManager->createId();
-		print "<h2>Function id for Create Groups: ".$id->getIdString()."</h2>\n";
+		$id =& $idManager->getId("edu.middlebury.authorization.create_groups");
 		$function =& $authZManager->createFunction($id, "Create Groups", "Create Groups at qualifier.", $type, $qualifierHierarchyId);
 		$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 				
-		$id =& $idManager->createId();
-		print "<h2>Function id for Modify Groups: ".$id->getIdString()."</h2>\n";
+		$id =& $idManager->getId("edu.middlebury.authorization.modify_groups");
 		$function =& $authZManager->createFunction($id, "Modify Groups", "Modify Groups at qualifier.", $type, $qualifierHierarchyId);
 		$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 		
-		$id =& $idManager->createId();
-		print "<h2>Function id for Delete Groups: ".$id->getIdString()."</h2>\n";
+		$id =& $idManager->getId("edu.middlebury.authorization.delete_groups");
 		$function =& $authZManager->createFunction($id, "Delete Groups", "Delete Groups at qualifier.", $type, $qualifierHierarchyId);
 		$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 
-/***************************************
- * Exhibitions repository
- **************************************/
-$repositoryManager =& Services::getService("Repository");
-$iterator = $repositoryManager->getRepositoriesByType(new HarmoniType ('System Repositories', 'Concerto', 'Exhibitions','A Repository for holding Exhibitions, their Slide-Shows and Slides'));
-if(!($iterator->hasNextRepository())){
-  $t =& new HarmoniType ('System Repositories', 'Concerto', 'Exhibitions',
-			 'A Repository for holding Exhibitions, their Slide-Shows and Slides');
-  $repository =& $repositoryManager->createRepository(
-						      "Exhibitions Repository", "Exhibition",
-						      $t);
-}
-
+print "\n<br> ...done";
 exit;
 ?>
