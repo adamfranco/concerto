@@ -101,7 +101,7 @@ class viewAction
 			print  "\n\t<br /><strong>"._("ID#").":</strong> ".$assetId->getIdString();
 		
 			$effectDate =& $asset->getEffectiveDate();
-			if(is_Object($effectdate))
+			if(is_Object($effectDate))
 				print  "\n\t<br /><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->toString()."</em>";
 		
 			$expirationDate =& $asset->getExpirationDate();
