@@ -270,7 +270,7 @@ require_once(OKI2."/osid/OsidContext.php");
 
 
 // :: Set up the RepositoryManager ::
-	$repositoryHierarchyId = "edu.middlebury.concerto.concerto_root";
+	$repositoryHierarchyId = "edu.middlebury.concerto.hierarchy";
 	$defaultParentId = "edu.middlebury.concerto.collections_root";	
 	$configuration =& new ConfigurationProperties;
 	$configuration->addProperty('database_index', $dbID);
@@ -311,58 +311,7 @@ require_once(OKI2."/osid/OsidContext.php");
 /*********************************************************
  * Authorization Root node
  *********************************************************/
- define("AZ_ROOT_NODE", "edu.middlebury.concerto.concerto_root");
-
-/*********************************************************
- * View/Use AZs
- *********************************************************/
-// Can this qualifier and its children be accessed?
-define("AZ_ACCESS", 'edu.middlebury.authorization.access');
-
-// Can a qualifier be viewed?
-define("AZ_VIEW", 'edu.middlebury.authorization.view');
-
-// Can a qualifier be commented on?
-define("AZ_COMMENT", 'edu.middlebury.authorization.comment');
-
-/*********************************************************
- * Editing AZs
- *********************************************************/
-// Can a qualifier be edited?
-define("AZ_EDIT", 'edu.middlebury.authorization.modify');
-
-// Can a qualifier be deleted?
-define("AZ_DELETE", 'edu.middlebury.authorization.delete');
-
-// Can a a child be added to this qualifier?
-define("AZ_ADD_CHILDREN", 'edu.middlebury.authorization.add_children');
-
-/*********************************************************
- * Administration AZs
- *********************************************************/
- // Can the AZs of a qualifier be viewed?
-define("AZ_VIEW_AZS", 'edu.middlebury.authorization.view_authorizations');
-
- // Can the AZs of a qualifier be modified?
-define("AZ_MODIFY_AZS", 'edu.middlebury.authorization.modify_authorizations');
-
- // Can agents be created here?
-define("AZ_CREATE_AGENTS", 'edu.middlebury.authorization.create_agents');
-
- // Can agent properties be modified here?
-define("AZ_MODIFY_AGENTS", 'edu.middlebury.authorization.modify_agents');
-
- // Can agents be deleted here?
-define("AZ_DELETE_AGENTS", 'edu.middlebury.authorization.delete_agents');
-
- // Can groups be created here?
-define("AZ_CREATE_GROUPS", 'edu.middlebury.authorization.create_groups');
-
- // Can groups properties be modified here?
-define("AZ_MODIFY_GROUPS", 'edu.middlebury.authorization.modify_groups');
-
- // Can groups be deleted here?
-define("AZ_DELETE_GROUPS", 'edu.middlebury.authorization.delete_groups');
+ define("AZ_ROOT_NODE", "edu.middlebury.concerto.root");
 
 /*********************************************************
  * Hierarchy Ids

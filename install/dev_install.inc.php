@@ -73,7 +73,7 @@ foreach ($sqlFiles as $file) {
 			$hierarchyId);
 
 		// Create nodes for Qualifiers
-		$allOfConcertoId =& $idManager->getId("edu.middlebury.concerto.concerto_root");
+		$allOfConcertoId =& $idManager->getId("edu.middlebury.concerto.root");
 		$collectionsId =& $idManager->getId("edu.middlebury.concerto.collections_root");;
 		$hierarchy->createRootNode($allOfConcertoId, new DefaultQualifierType, "All of Concerto", "The top level of all of Concerto.");
 		$hierarchy->createNode($collectionsId, $allOfConcertoId, new DefaultQualifierType, "Concerto Collections", "All Collections in Concerto.");
