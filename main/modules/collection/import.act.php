@@ -1,5 +1,6 @@
 <?php
 //define("FILEID", "dev_id-");
+require_once("/home/cshubert/public_html/importer/domit/xml_domit_include.php");
 require_once(HARMONI."utilities/Dearchiver.class.php");
 require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
 class importAction extends RepositoryAction {
@@ -61,129 +62,187 @@ class importAction extends RepositoryAction {
 			ob_start();
 			if(isset($_REQUEST['submit'])) {
 				$path = $_FILES['userfile']['tmp_name'];
-				// append 0 for unique foldername
-				$newPath = $path."0";
 				$filename = $_FILES['userfile']['name'];
 				if($filename == "") {
 					throwError(new Error("Specify a file to upload", "concerto.collection", true));
 					//die ("Specify a file to upload");
 				}
-				// create unique folder
-				mkdir($newPath);
-				
-				// move uploaded file or lose uploaded file
-				move_uploaded_file($_FILES['userfile']['tmp_name'], $newPath.DIRECTORY_SEPARATOR.$filename);
-				$dearchiver =& new Dearchiver();
-				$dearchiver->uncompressFile($newPath.DIRECTORY_SEPARATOR.$filename, $newPath);
-				
-				// tab delim txt file with metadata
-				$meta = fopen($newPath."/metadata.txt", "r");
-				
-				//get the schema from the first line of the file
-				$schema = fgets($meta);
-				$schema = ereg_replace("[\n\r]*$","",$schema);
-				/*
-				$id = $idManager->getId("dev_id-38");
-				$dr =& $drManager->getRepository($id);
-				$schemas =& $dr->getRecordStructures();
-				while($schemas->hasNext()) {
-					$structure =& $schemas->next();
-					if($structure->getDisplayName() == $schema)
-					break;
-				}
-				*/
-				
-				//iterate through sructures and find the correct one
-				$structures =& $dr->getRecordStructures();
-				while($structures->hasNext()){
-					$testStructure = $structures->next();
-					if($testStructure->getDisplayName() == $schema)
-						$structure = $testStructure;
-					if($testStructure->getDisplayName() == "File")
-						$fileStr = $testStructure;
-				}
-				
-				//get the Filestructure
-				$fileStrId =& $fileStr->getId();
-				
-				// make sure it found the right schema
-				if (!$structure)
-					throwError(new Error("Schema <emph>".$schema. "</emph>does not exist in the collection", "concerto.collection", true));
-					//die ("Schema does not exist");
-
-				$structureId = $structure->getId();
-				
-				//the second row of the file is the partstructrues, get their ids
-				$titleline = ereg_replace("[\n\r]*$", "", fgets($meta));
-				$titles = explode ("\t", $titleline);
-				$partArray = array();
-				for($j=4; $j<count($titles); $j++) {
-					$partStructures =& $structure->getPartStructures();							
-					//iterate through partstructures and find corresponding to the title
-					while ($partStructures->hasNext()) {										
-						$partStructure = $partStructures->next();
-						if ($titles[$j] == $partStructure->getDisplayName())
+				uploadFile($path, $filename);
+				$fileStructureId =& $idManager->getId("FILE");																				// stored for all archive types!!
+				$i = 0;																														// counter for assets
+// WHICH FILETYPE?
+				switch ($ext) {
+					case "XML":
+						$import =& new DOMIT_Document();																					// instantiate new DOMIT_Document
+						
+						if ($import->loadXML($newPath."/metadata.xml")) {																	// parse the file
+							if (!($import->documentElement->hasChildNodes()))																// check for assets
+								throwError(new Error("There are no assets to import", "concerto.collection", true));
+						}
+						else 
+							throwError(new Error("XML parse failed", "concerto.collection", true));
+						// ASSET LOOP
+						foreach ($import->documentElement->childNodes as $asset) {
+							$assetInfo = array();
+							$assetInfo[0] = $asset->childNodes[0]->getText();
+								if ($name == "")
+									$assetInfo[0] = "asset".$i;
+							$assetInfo[1] = $iAsset->childNodes[1]->getText();																// description for asset
+							$assetInfo[2] = $iAsset->childNodes[2]->getText();																	// type for asset, check for empty
+								if ($assetInfo[2] == "")
+									$assetInfo[2] = new HarmoniType("Asset Types", "Concerto", "Generic Asset");
+								else
+									$assetInfo[2] = new HarmoniType("Asset Types", "Concerto", $assetInfo[2]);
+							$i++;																											// increment asset counter
+							$recordList = array();
+							foreach ($asset->childNodes as $record) {
+								$partArray = array();
+								if ($iRecord->nodeName == "record") {
+									$structureId = matchSchema($record->getAttribute("schema"), $dr);
+									foreach ($record->childNodes as $field)
+										$partArray[] = $field->getAttribute("name");
+									$partStructureIds = matchPartStructures($dr->getRecordStructure($structureId), $partArray);
+									
 						break;
-					}
-					
-					//verify the correct partstructure
-					if ($partStructure->getDisplayName() != $titles[$j]) 
-					throwError(new Error("Schema part <emph>".$titles[$j]."</emph>does not exist",
-										"concerto.collection", true));
-					//die ("Schema part does not exist");
-
-					// put part ids in array
-					$partArray[] = $partStructure->getId();
-				}
-				//create the assets
-				$i = 0;
-				while ($line = ereg_replace("[\n\r]*$","",fgets($meta))) {
-					// create assets in here
-					$metadata = explode("\t", $line);
-					if($metadata[0]==""){
-						//	$reqPath = explode("/", $metadata[3]);
-						//	$name = $reqPath[count($reqPath)-1];
-						$name = "asset".$i;
-					}
-					else
-					$name=$metadata[0];
-					$description = $metadata[1];
-					if($metadata[2] == "")
-					$type = new HarmoniType("Asset Types", "Concerto", "Generic Asset");
-					else
-					$type = new HarmoniType("Asset Types", "Concerto", $metadata[2]);
-					//printpre($metadata);
-					//exit;
-					// create asset
-					$asset =& $dr->createAsset($name, $description, $type);
-					
-					$assetRecord =& $asset->createRecord($structureId);
-					
-					// fill available data
-					for($k=0; $k<count($partArray);$k++)
-						$assetRecord->createPart($partArray[$k], new String($metadata[$k+4]));
-					$i++;
-					if($metadata[3] != "") {
-						$fileRecord =& $asset->createRecord($fileStrId);
-						$fileDataPart = $idManager->getId("FILE_DATA");
-						//$file = fopen($newPath."data/".$metadata[3], "rb");
-						$fileRecord->createPart($fileDataPart, file_get_contents($newPath."/data/".$metadata[3]));
-//						$fileNameId = $idManager->getId("FILE_NAME");
-$abcdefg = "filename";
-						$fileRecord->createPart($idManager->getId("FILE_NAME"), $abcdefg);
-						$fileRecord->createPart($idManager->getId("MIME_TYPE"), "file");
-						$fileRecord->createPart($idManager->getId("THUMBNAIL_DATA"), file_get_contents($newPath."/data/".$metadata[3]));
-						$fileRecord->createPart($idManager->getId("THUMBNAIL_MIME_TYPE"), "file");
+					case "TXT":
+						$meta = fopen($newPath."/metadata.txt", "r");
+						$schema = fgets($meta);
+						$schema = ereg_replace("[\n\r]*$","",$schema);
+						$structureId = matchSchema($schema, $dr);
+						if (!$structureId)
+							throwError(new Error("Schema <emph>".$schema. "</emph>does not exist in the collection", "concerto.collection", true));
 						
-					}
-					
+						$titleline = ereg_replace("[\n\r]*$", "", fgets($meta));
+						$titles = explode ("\t", $titleline);
+						$partStructureIds = matchPartStructures($dr->getRecordStructure($structureId), $titles);
+						if (!$partStructureIds)
+							throwError(new Error("Schema part <emph>".$titles[$j]."</emph>does not exist", "concerto.collection", true));
 						
-					// create record
+						// ASSET loop
+						while ($line = ereg_replace("[\n\r]*$","",fgets($meta))) {
+							$assetInfo = array();
+							$metadata = explode("\t", $line);
+							if($metadata[0]==""){
+								//	$reqPath = explode("/", $metadata[3]);
+								//	$name = $reqPath[count($reqPath)-1];
+								$assetInfo[0] = "asset".$i;
+							}
+							else
+								$assetInfo[0] = $metadata[0];
+							
+							$assetInfo[1] = $metadata[1];
+							
+							if($metadata[2] == "")
+								$assetInfo[2] = new HarmoniType("Asset Types", "Concerto", "Generic Asset");
+							else
+								$assetInfo[2] = new HarmoniType("Asset Types", "Concerto", $metadata[2]);
+							$i++;
+							
+							
+						break;
 				}
+//======================================================== ABOVE IS STAYING IN ==============================================================//
+					$iAssetList =& $import->documentElement->childNodes;															// according to DTD this should be an array of the assets
+					$i=0;																											// for checking assetnames
 
-				// store actual DATA specified by filename in asset
-				// delete files and folders in tmp (created by this process) ($newPath)
+					$fileStructureId =& $idManager->getId("FILE");																	// retain id for FILE records
+					
+					foreach ($iAssetList as $iAsset) {
+						$name = $iAsset->childNodes[0]->getText();																	// name for asset ("" => "asset#")
+						if ($name == "")
+							$name = "asset".$i;
+						$desc = $iAsset->childNodes[1]->upgetText();																	// description for asset
+						$type = $iAsset->childNodes[2]->getText();																	// type for asset, check for empty
+						if ($type == "")
+							$type = new HarmoniType("Asset Types", "Concerto", "Generic Asset");
+						else
+							$type = new HarmoniType("Asset Types", "Concerto", $type);
+						$i++;																										// increment asset counter
+//============================================== ABOVE IS ASSET INFO ====================================================================================//		
+						$iRecordList =& $iAsset->childNodes;																		// retain children of assets 
 
+						$recordList = array();																						// array for retaining records until creation of asset
+
+						foreach ($iRecordList as $iRecord) {
+							if ($iRecord->nodeName == "record") {
+								$record = array();																						// record array 0 -> RecordStructureId ; 1 -> PartStructureIds ; 2 -> Parts
+								
+								$schema = $iRecord->getAttribute("schema");																// retain schema
+								if ($schema != "File")	{																				// if not FILE find appropriate RecordStructure
+									$structures =& $dr->getRecordStructures();															
+									$stop = true;
+									while($structures->hasNext()) {
+										$testStructure = $structures->next();
+										if($testStructure->getDisplayName() == $schema) {
+											$stop = FALSE;
+											$record[] = $testStructure->getId();														// retain structureId
+											$partStructures =& $testStructure->getPartStructures();										// retain array of partStructures (ALL FOR RECORDSTRUCTURE)
+											break;
+										}
+									}
+									if ($stop)
+										throwError(new Error("Schema <emph>".$schema."</emph> does not exist in the collection", "concerto.collection", true));
+									
+									$iFields =& $iRecord->childNodes;																	// retain fields of record 
+									$partStructureIds = array();																		// structure for corresponding structureid's
+									$parts = array();																					// structure for corresponding data
+									
+									// find all populated field names and fill them?
+									foreach ($iFields as $iField) {
+										$go = FALSE;
+										$fieldName = $iField->getAttribute("name");														// retain field name (partStructure)
+										while ($partStructures->hasNext()) {															
+											$partStructure = $partStructures->next();			
+											if ($fieldName == $partStructure->getDisplayName()) {										// find the corresponding partStructure
+												$go = TRUE;																				// found it (no error)
+												$partStructureIds[] = $partStructure->getId();
+												$parts[] = $iField->getText();
+												break;
+											}
+										}
+										if (!$go)
+											throwError(new Error("Schema part <emph>".$fieldName."</emph> does not exist", "concerto.collection", true));
+									}
+									
+//========================================= Skip Asset or die on broken part? to skip need new if/else statement outside foreaches ===================================================//
+									
+									$record[] = $partStructureIds;																		// retain partstructureids
+									$record[] = $parts;																					// retain parts
+
+									$recordList[] = $record;																			// retain record
+								}
+								else {
+									$record[] = $fileStructureId;
+									if ("filename" == $iRecord->childNodes[0]->getAttribute("name"))
+										$filename = trim($iRecord->childNodes[0]->getText());
+									else
+										throwError(new Error("File record part <emph>".$filename."</emph> does not exist", "concerto.collection", true));
+									
+									$record[] = $filename;
+									$recordList[] = $record;
+								}
+							}
+						}
+						$asset =& $dr->createAsset($name, $desc, $type);															// CREATE ASSSET AT END OF DATA POPULATION
+						
+						foreach ($recordList as $entry) {
+							if ($entry[0] == $fileStructureId) {
+								$fileRecord =& $asset->createRecord($fileStructureId);
+								$fileRecord->createPart($idManager->getId("FILE_DATA"), file_get_contents($newPath."/data/".$entry[1]));
+								$fileRecord->createPart($idManager->getId("FILE_NAME"), $entry[1]);
+								$fileRecord->createPart($idManager->getId("THUMBNAIL_DATA"), file_get_contents($newPath."/data/".$entry[1]));
+							}
+							else {
+								$assetRecord =& $asset->createRecord($entry[0]);													// create record with stored id
+								$j = 0;																								// counter for parallel arrays
+								foreach ($entry[1] as $id) {
+									$assetRecord->createPart($id, new String($entry[2][$j]));										// access parallel arrays to create parts
+									$j++;																							// increment
+								}
+							}
+						}
+					}
+				}
 			}
 
 			else {
