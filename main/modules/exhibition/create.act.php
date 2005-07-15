@@ -18,7 +18,9 @@ $centerPane =& $harmoni->getAttachedData('centerPane');
 // Check that the user can create a collection here.
 $authZ =& Services::getService("AuthZ");
 $idManager =& Services::getService("Id");
-if (!$authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.add_children"), $idManager->getId(REPOSITORY_NODE_ID))) {
+if (!$authZ->isUserAuthorized(
+	$idManager->getId("edu.middlebury.authorization.add_children"),
+	$idManager->getId("edu.middlebury.concerto.collections_root"))) {
 	$errorLayout =& new Block(_("You are not authorized to create an <em>Exhibition</em>."),3);
 	$centerPane->add($errorLayout, null, null, CENTER, CENTER);
 	return $mainScreen;
