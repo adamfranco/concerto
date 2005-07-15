@@ -270,7 +270,7 @@ require_once(OKI2."/osid/OsidContext.php");
 
 
 // :: Set up the RepositoryManager ::
-	$repositoryHierarchyId = "edu.middlebury.concerto.hierarchy";
+	$repositoryHierarchyId = "edu.middlebury.authorization.hierarchy";
 	$defaultParentId = "edu.middlebury.concerto.collections_root";	
 	$configuration =& new ConfigurationProperties;
 	$configuration->addProperty('database_index', $dbID);
@@ -304,20 +304,6 @@ require_once(OKI2."/osid/OsidContext.php");
 // 		$repository->convertRecords($recordStructureOfBothRecords, $destinationRecordClass);
 // 	}
 /************************************************************************/
-
-
-
-
-/*********************************************************
- * Authorization Root node
- *********************************************************/
- define("AZ_ROOT_NODE", "edu.middlebury.concerto.root");
-
-/*********************************************************
- * Hierarchy Ids
- *********************************************************/
- // Digital Repository Id
- define("REPOSITORY_NODE_ID", "edu.middlebury.concerto.collections_root");
 
 // print "<pre>";
 // print_r($_SESSION);
