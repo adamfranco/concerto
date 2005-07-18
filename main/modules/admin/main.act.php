@@ -56,18 +56,15 @@ class mainAction
 		$actionRows =& $this->getActionRows();
 		$harmoni =& Harmoni::instance();
 		
-		$actionRows->add(new Block("<span style='font-size: larger'><b>" . _("Agents &amp; Groups") . "</b></span>" , 2));
+		$actionRows->add(new Block("<span style='font-size: larger'><b>" . _("Agents &amp; Groups") . "</b></span>" , 3));
 		
 		ob_start();
 		print "\n<ul>";
-		print "\n\t<li><a href='".$harmoni->request->quickURL("agents","group_membership")."'>";
-		print _("Edit Group Membership");
-		print "</a></li>";
 		print "\n\t<li><a href='".$harmoni->request->quickURL("agents","create_agent")."'>";
 		print _("Create User");
 		print "</a></li>";
-		print "\n\t<li><a href='".$harmoni->request->quickURL("authorization","choose_agent")."'>";
-		print _("Edit Agent Authorizations &amp; Details");
+		print "\n\t<li><a href='".$harmoni->request->quickURL("agents","group_membership")."'>";
+		print _("Edit Group Membership");
 		print "</a></li>";
 		print "\n</ul>";
 		
