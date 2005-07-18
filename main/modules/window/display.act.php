@@ -114,7 +114,7 @@ class displayAction
 					$typeString = HarmoniType::typeToString($authType);
 					print "\n\t<tr>";
 					print "\n\t\t<td>";
-					print "<a href='#' title='$typeString' onClick='alert(\"$typeString\")'>";
+					print "<a href='#' title='$typeString' onclick='alert(\"$typeString\")'>";
 					print $authType->getKeyword();
 					print "</a>";
 					print "\n\t\t</td>";
