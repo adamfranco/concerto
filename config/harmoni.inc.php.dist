@@ -30,7 +30,6 @@ require_once(OKI2."/osid/OsidContext.php");
 	// it.
 	$postProcessIgnoreList = array(
 									"agents.*",
-									"authorization.*",
 									"language.*",
 									"repository.*",
 									
@@ -68,8 +67,8 @@ require_once(OKI2."/osid/OsidContext.php");
 	// Our Authentication and Language-switching actions are already written
 	// and reside in the Polyphony package:
 	$harmoni->ActionHandler->addActionSource(	
-				new FlatFileActionSource(realpath(POLYPHONY."/main/modules"), 
-										 ".act.php"));
+				new ClassesActionSource(realpath(POLYPHONY."/main/modules"), 
+										 ".act.php", "Action"));
 	
 
 // :: Set up the DatabaseManager ::
