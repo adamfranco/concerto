@@ -54,12 +54,7 @@ class displayAction
 		require_once(HARMONI."GUIManager/Layouts/YLayout.class.php");
 		
 		require_once(HARMONI."GUIManager/StyleProperties/FloatSP.class.php");
-		
-		// Set a default title
-		$outputHandler =& $harmoni->getOutputHandler();
-		$outputHandler->setHead($outputHandler->getHead()."\n\t\t<title>Conc
-		erto</title>");		
-		
+				
 		$xLayout =& new XLayout();
 		$yLayout =& new YLayout();
 		
