@@ -29,7 +29,6 @@ require_once(OKI2."/osid/OsidContext.php");
 	// until polyphony has been updated to use this functionality, we must ignore
 	// it.
 	$postProcessIgnoreList = array(
-									"agents.*",
 									"language.*",
 									"repository.*",
 									

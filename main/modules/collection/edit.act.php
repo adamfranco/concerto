@@ -35,7 +35,7 @@ class editAction
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
 		return $authZ->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.edit"), 
+					$idManager->getId("edu.middlebury.authorization.modify"), 
 					$this->getRepositoryId());
 	}
 	
