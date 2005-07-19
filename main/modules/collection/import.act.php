@@ -295,7 +295,7 @@ class importAction extends RepositoryAction {
 					$i++;
 
 					$asset =& $dr->createAsset($assetInfo[0], $assetInfo[1], $assetInfo[2]);
-					$assetRecord = $asset->createRecord($structureId);
+					$assetRecord =& $asset->createRecord($structureId);
 
 					for($k=0;$k<count($partStructureIds); $k++) {
 						$type = $partStructureIds->getType();
