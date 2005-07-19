@@ -3,6 +3,7 @@
 require_once("/home/cshubert/public_html/importer/domit/xml_domit_include.php");
 require_once(HARMONI."utilities/Dearchiver.class.php");
 require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
+require_once(HARMONI."utilities/MIMETypes.class.php");
 class importAction extends RepositoryAction {
 	/**
 	* Check Authorizations
@@ -129,7 +130,7 @@ class importAction extends RepositoryAction {
 	 *
 	*/
 
-	function buildAsset($repository, $assetInfo, $recordList) {
+	function buildAsset($repository, $assetInfo, $recordList, $newPath) {
 		$idManager = Services::getService("Id");
 		$asset =& $repository->createAsset($assetInfo[0], $assetInfo[1], $assetInfo[2]);
 		foreach($recordList as $entry) {
@@ -141,8 +142,10 @@ class importAction extends RepositoryAction {
 				$j++;																							// increment
 			}
 			if ($entry[0] == $fileStructureId) {
+				$mimetype = getMIMETypeForFileName($newPath."/data/".$entry[1]);
 				$fileRecord =& $asset->createRecord($fileStructureId);
 				$fileRecord->createPart($idManager->getId("FILE_DATA"), file_get_contents($newPath."/data/".$entry[1]));
+				$fileRecord->createPart($idManager->getId("MIME_TYPE"), $mimetype);
 				$fileRecord->createPart($idManager->getId("THUMBNAIL_DATA"), file_get_contents($newPath."/data/".$entry[1]));
 			}
 		}
@@ -291,7 +294,7 @@ class importAction extends RepositoryAction {
 					}
 
 					if($metadata[3] != "") {
-
+						$newPath = $path."0";
 						if(!file_exists($newPath."/data/".$metadata[3]))
 						throwError(new Error("The file ".$metadata[3]." does not exist", "concerto.collection", true));
 
@@ -299,6 +302,7 @@ class importAction extends RepositoryAction {
 						$fileDataPart = $idManager->getId("FILE_DATA");
 						$fileRecord->createPart($fileDataPart, file_get_contents($newPath."/data/".$metadata[3]));
 						$fileRecord->createPart($idManager->getId("FILE_NAME"), $metadata[3]);
+						$fileRecord->createPart($idmanager->getId("MIME_TYPE"), getMIMETypeForFilename($newPath."/data/".$metadata[3]));
 						$fileRecord->createPart($idManager->getId("THUMBNAIL_DATA"), file_get_contents($newPath."/data/".$metadata[3]));
 
 					}
