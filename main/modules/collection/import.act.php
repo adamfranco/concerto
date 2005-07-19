@@ -12,18 +12,13 @@ class importAction extends RepositoryAction {
 	 * @since 6/08/05
 	 */
 	function isAuthorizedToExecute () {
-		// Check for our authorization function definitions
-		if (!defined("AZ_EDIT"))
-		throwError(new Error("You must define an id for AZ_EDIT", "concerto.collection", true));
-
 		// Check that the user can access this collection
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
 		return $authZ->isUserAuthorized(
-		$idManager->getId(AZ_EDIT),
-		$this->getRepositoryId());
+					$idManager->getId("edu.middlebury.authorization.modify"), 
+					$this->getRepositoryId());
 	}
-
 	/**
 	* Return the "unauthorized" string to print
 	 * 
@@ -47,7 +42,19 @@ class importAction extends RepositoryAction {
 		." <em>".$repository->getDisplayName()."</em> "
 		._(" Collection");
 	}
+	
+
+
+
 	/**
+	* Build the content for this action
+	 * 
+	 * @return void
+	 * @access public
+	 * @since 6/08/05
+	 */
+	function buildContent () {
+		/**
  * uncompress the archive in a unique folder for use by the importer
  * 
  * @access public
@@ -65,8 +72,7 @@ class importAction extends RepositoryAction {
 		$dearchiver->uncompressFile($newPath.DIRECTORY_SEPARATOR.$filename, $newPath);
 	}
 
-
-
+	
 	/**
 	 * tries to match given string to a schema with the same name.
 	 * 
@@ -130,7 +136,8 @@ class importAction extends RepositoryAction {
 			$assetRecord =& $asset->createRecord($entry[0]);													// create record with stored id
 			$j = 0;																								// counter for parallel arrays
 			foreach ($entry[1] as $id) {
-				$assetRecord->createPart($id, $entry[2][$j]);										// access parallel arrays to create parts
+				$partObject = getPartObject($id->getType(), $entry[2][$j]);
+				$assetRecord->createPart($id, $partObject);										// access parallel arrays to create parts
 				$j++;																							// increment
 			}
 			if ($entry[0] == $fileStructureId) {
@@ -141,14 +148,32 @@ class importAction extends RepositoryAction {
 		}
 	}
 
-	/**
-	* Build the content for this action
-	 * 
-	 * @return void
-	 * @access public
-	 * @since 6/08/05
-	 */
-	function buildContent () {
+	function getPartObject($type, $more) {
+	$typeString = $type->getKeyword();
+	switch($typeString) {
+		case "string":
+			return new String($more);
+			break;
+		case "integer":
+			return new Integer($more);
+			break;
+		case "boolean":
+			return new Boolean($more);
+			break;
+		case "shortstring":
+			return new ShortString($more);
+			break;
+		case "float":
+			return new Float($more);
+			break;
+		case "time":
+			return new Time($more);
+			break;
+		default:
+			return new OkiType($more);
+	}
+}
+	
 		$centerPane =& $this->getActionRows();
 		$dr =& $this->getRepository();
 		$idManager =& Services::getService("Id");
@@ -198,6 +223,8 @@ class importAction extends RepositoryAction {
 						$recordListElement = array();
 						if ($record->nodeName == "record") {
 							$structureId = matchSchema($record->getAttribute("schema"), $dr);
+							if(!$structureId)
+								throwError(new Error("the schema does not exist", "concerto.collection", true));
 							$recordListElement[] = $structureId;
 							$partArray = array();
 							$parts = array();
@@ -208,7 +235,7 @@ class importAction extends RepositoryAction {
 							$partStructureIds = matchPartStructures($dr->getRecordStructure($structureId), $partArray);
 
 							if(!$partStructureIds)
-							throwError(new Error("One or more of the Parts specified in the xml file is not valid.  The first".$i."assets were imported", "concerto.collection", true));
+								throwError(new Error("One or more of the Parts specified in the xml file is not valid.  The first".$i."assets were imported", "concerto.collection", true));
 
 							$recordListElement[] = $partStructureIds;
 							$recordListElement[] = $parts;
@@ -219,7 +246,7 @@ class importAction extends RepositoryAction {
 				}
 				break;
 				case "Tab-Delimited":
-				$meta = fopen($newPath."/metadata.txt", "r");
+				$meta = fopen($path."0/metadata.txt", "r");
 				$schema = fgets($meta);
 				$schema = ereg_replace("[\n\r]*$","",$schema);
 				$structureId = matchSchema($schema, $dr);
@@ -259,14 +286,14 @@ class importAction extends RepositoryAction {
 
 					for($k=0;$k<count($partStructureIds); $k++) {
 						$type = $partStructureIds->getType();
-						$type->getKeyword();
+						$partObject = getPartObject($type, $metadata[k+4]);
 						$assetRecord->createPart($partStructureIds[$k], $metadata[$k+4]);
 					}
 
 					if($metadata[3] != "") {
 
 						if(!file_exists($newPath."/data/".$metadata[3]))
-						throwError("The file ".$metadata[3]." does not exist", "concerto.collection", true);
+						throwError(new Error("The file ".$metadata[3]." does not exist", "concerto.collection", true));
 
 						$fileRecord =& $asset->createRecord($fileStructureId);
 						$fileDataPart = $idManager->getId("FILE_DATA");
