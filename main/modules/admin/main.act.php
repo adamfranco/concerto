@@ -63,6 +63,9 @@ class mainAction
 		print "\n\t<li><a href='".$harmoni->request->quickURL("agents","create_agent")."'>";
 		print _("Create User");
 		print "</a></li>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("agents","group_browse")."'>";
+		print _("Browse Agents and Groups");
+		print "</a></li>";
 		print "\n\t<li><a href='".$harmoni->request->quickURL("agents","group_membership")."'>";
 		print _("Edit Group Membership");
 		print "</a></li>";
@@ -82,9 +85,6 @@ class mainAction
 		print "\n\t<li><a href='".$harmoni->request->quickURL("authorization","choose_agent")."'>";
 		print _("Edit Agent Authorizations &amp; Details");
 		print "</a></li>";
-		// print "\n\t<li><a href='".$harmoni->request->quickURL("agents","create_agent")."'>";
-		// print _("Create User");
-		// print "</a></li>";
 		print "\n</ul>";
 		
 		$introText =& new Block(ob_get_contents(),3);
