@@ -66,7 +66,7 @@ class editAction
 		if (RequestContext::value('create_schema') && $this->saveWizard($cacheName)) {
 			$this->closeWizard($cacheName);
 			$harmoni =& Harmoni::instance();
-			header("Location: ".$harmoni->request->quickURL("schema", "create", array(
+			RequestContext::locationHeader($harmoni->request->quickURL("schema", "create", array(
 					"collection_id" => $repositoryId->getIdString())));
 			return TRUE;
 		}
