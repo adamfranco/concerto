@@ -60,6 +60,7 @@ class importAction extends RepositoryAction {
 		mkdir($newPath);
 
 		// move uploaded file or lose uploaded file
+
 		$userfile = move_uploaded_file($path, $newPath.DIRECTORY_SEPARATOR.$filename);
 		$dearchiver =& new Dearchiver();
 		$dearchiver->uncompressFile($newPath.DIRECTORY_SEPARATOR.$filename, $newPath);
@@ -133,6 +134,11 @@ class importAction extends RepositoryAction {
 			$assetRecord =& $asset->createRecord($entry[0]);													// create record with stored id
 			$j = 0;																								// counter for parallel arrays
 			foreach ($entry[1] as $id) {
+		//		=================================================
+		//		compare with tab delimited
+				
+				
+				
 				$partObject = importAction::getPartObject($id->getType(), $entry[2][$j]);
 				$assetRecord->createPart($id, $partObject);										// access parallel arrays to create parts
 				$j++;																							// increment
@@ -295,12 +301,16 @@ class importAction extends RepositoryAction {
 					$i++;
 
 					$asset =& $dr->createAsset($assetInfo[0], $assetInfo[1], $assetInfo[2]);
+
 					$assetRecord =& $asset->createRecord($structureId);
 
 					for($k=0;$k<count($partStructureIds); $k++) {
-						$type = $partStructureIds->getType();
-						$partObject = importAction::getPartObject($type, $metadata[k+4]);
-						$assetRecord->createPart($partStructureIds[$k], $metadata[$k+4]);
+						print "hello <br />";
+						$structure =& $dr->getRecordStructure($structureId);
+						$partStructure =& $structure->getPartStructure($partStructureIds[$k]);
+						$type = $partStructure->getType();
+						$partObject = importAction::getPartObject($type, $metadata[$k+4]);
+						$assetRecord->createPart($partStructureIds[$k], new String($metadata[$k+4]));//$partObject);
 					}
 
 					if($metadata[3] != "") {
@@ -311,7 +321,8 @@ class importAction extends RepositoryAction {
 						$fileDataPart = $idManager->getId("FILE_DATA");
 						$fileRecord->createPart($fileDataPart, file_get_contents($newPath."/data/".$metadata[3]));
 						$fileRecord->createPart($idManager->getId("FILE_NAME"), $metadata[3]);
-						$fileRecord->createPart($idmanager->getId("MIME_TYPE"), getMIMETypeForFilename($newPath."/data/".$metadata[3]));
+						$mimeTypes = new MIMETypes();
+						$fileRecord->createPart($idManager->getId("MIME_TYPE"), $mimeTypes->getMIMETypeForFileName($newPath."/data/".$metadata[3]));
 						$fileRecord->createPart($idManager->getId("THUMBNAIL_DATA"), file_get_contents($newPath."/data/".$metadata[3]));
 
 					}
