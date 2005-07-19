@@ -117,7 +117,7 @@ if ($wizard->isSaveRequested()) {
 
 		// Head off to editing our new collection.
 		$id =& $repository->getId();
-		RequestContext::locationHeader(MYURL."/exhibition/edit/".$id->getIdString()."/?__skip_to_step=2");
+		RequestContext::locationHeader($harmoni->request->quickURL("exhibition", "edit", array("exhibition_id" => $id->getIdString(), "__skip_to_step" => 2)));
 	}
 
 // Handle canceling if requested
@@ -125,7 +125,7 @@ if ($wizard->isSaveRequested()) {
 	$wizard = NULL;
 	unset ($_SESSION['create_exhibition_wizard']);
 	unset ($wizard);
-	RequestContext::locationHeader(MYURL."/exhibitions/main/");
+	RequestContext::locationHeader($harmoni->request->quickURL("exhibitions", "main");
 }
 
 $wizardLayout =& $wizard->getLayout($harmoni);

@@ -87,7 +87,6 @@ class mainAction
 
 //    print $harmoni->request->quickURL("exhibition", "add", "".$repositoryId->getIdString()."");
   //  print "'>";
-    //    print "\n<ul>\n<li><a href='".MYURL."/exhibition/add/".$repositoryId->getIdString()."'>";
     print _("Create a new <em>Exhibition</em>");
     print "</a></li>";
     print "</ul>\n";

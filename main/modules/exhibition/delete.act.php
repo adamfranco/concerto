@@ -54,7 +54,7 @@ class deleteAction extends AssetAction
       $repository =& $this->getRepository($repositoryId);
       $repository->deleteAsset($assetId);
 
-      return MYURL."/exhibition/browse/".$repositoryId->getIdString()."/";
+      return $harmoni->request->quickURL("exhibition", "browse", array("collection_id" => $repositoryId->getIdString()));
     }
   
 }

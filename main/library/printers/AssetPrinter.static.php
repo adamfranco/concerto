@@ -79,13 +79,6 @@ class AssetPrinter {
 				} else {
 					$links[] = _("browse");
 				}
-				
-	// 			if ($actionString != "asset.typebrowse") {
-	// 				$links[] = "<a href='".MYURL."/asset/typebrowse/".$assetId->getIdString()."/'>";
-	// 				$links[count($links) - 1] .= _("browse by type")."</a>";
-	// 			} else {
-	// 				$links[] = _("browse by type");
-	// 			}
 			}
 		}
 		
@@ -106,26 +99,20 @@ class AssetPrinter {
 			if ($actionString != "asset.delete") {
 				$harmoni->history->markReturnURL("concerto/asset/delete-return");
 				ob_start();
-				print "<a href='Javascript:deleteAsset".$assetId->getIdString()."From".$repositoryId->getIdString()."();'";
+				print "<a href='Javascript:deleteAsset(\"".$assetId->getIdString()."\", \"".$repositoryId->getIdString()."\", \"".$harmoni->request->quickURL("asset", "delete", array("collection_id" => $repositoryId->getIdString(), "asset_id" => $assetId->getIdString()))."\");'";
 				print ">";
 				print _("delete")."</a>";
 				
+				$links[] = ob_get_contents();
+				ob_end_clean();
+				
 				print "\n<script type='text/javascript'>\n//<![CDATA[";
-				print "\n	function deleteAsset".$assetId->getIdString()."From".$repositoryId->getIdString()."() {";
-				print "\n	var url;";
-				print "\n		url = '";
-				print $harmoni->request->quickURL("asset", "delete", 	
-						array("collection_id" => $repositoryId->getIdString(),
-						"asset_id", $assetId->getIdString()));
-				print "';";
+				print "\n	function deleteAsset(assetId, repositoryId, url) {";
 				print "\n		if (confirm(\""._("Are you sure you want to delete this Asset?")."\")) {";
 				print "\n			window.location = url;";
 				print "\n		}";
 				print "\n	}";
-				print "\n//]]>\n</script>";
-				
-				$links[] = ob_get_contents();
-				ob_end_clean();
+				print "\n//]]>\n</script>\n";
 			} else {
 				$links[] = _("delete");
 			}

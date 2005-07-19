@@ -109,8 +109,11 @@ class editAction
 	function getReturnUrl () {
 		$assetId =& $this->getAssetId();
 		$repositoryId =& $this->getRepositoryId();
-		return MYURL."/asset/editview/".$repositoryId->getIdString()
-			."/".$assetId->getIdString()."/";
+		$harmoni =& Harmoni::instance();
+		
+		return $harmoni->request->quickURL("asset", "editview", 
+					array("collection_id" => $repositoryId->getIdString(), 
+					"asset_id" => $assetId->getIdString()));
 	}
 	
 	/**

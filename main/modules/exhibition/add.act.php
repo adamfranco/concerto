@@ -169,11 +169,11 @@ class addAction
 	 $repositoryId =& $this->getRepositoryId();
 	 if ($this->_assetId){
 	   
-	   $returnURL = MYURL."/asset/editview/".$repositoryId->getIdString()."/".$this->_assetId->getIdString()."/";
+	   $returnURL = $harmoni->request->quickURL("asset", "editview", array("collection_id", $repositoryId->getIdString(), "asset_id" => $this->_assetId->getIdString()));
 	
 	 } else {
 	   
-	   return MYURL."/exhibition/browse/".$repositoryId->getIdString()."/";
+	   return $harmoni->request->quickURL("exhibition", "browse", array("collection_id" => $repositoryId->getIdString()));
 	 }
 	}
 }

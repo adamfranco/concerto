@@ -112,8 +112,7 @@ m>";
 
     // Info and links
     print "\n<strong>"._("Exhibition Information")."</strong>";
-    print "\n<br /><a href='".MYURL."/exhibition/edit/".$repositoryId->getIdString()."/".$assetId->getIdString\
-      ()."/'>"._("edit")."</a>";
+    print "\n<br /><a href='".$harmoni->request->quickURL("exhibition", "edit", array("collection_id" => $repositoryId->getIdString(), "asset_id" => $assetId->getIdString()))."/'>"._("edit")."</a>";
 
     print "\n\t</td>\n\t</tr>";
     print "\n</table>";

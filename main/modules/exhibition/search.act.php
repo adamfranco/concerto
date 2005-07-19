@@ -71,7 +71,7 @@ while ($searchTypes->hasNext()) {
 					."::".$searchType->getAuthority()
 					."::".$searchType->getKeyword();
 	print "\n<h3>".$typeString."</h3>";
-	print "\n".$searchModules->createSearchForm($searchType, MYURL."/exhibition/searchresults/".$repositoryId->getIdString()."/".urlencode($typeString)."/");
+	print "\n".$searchModules->createSearchForm($searchType, $harmoni->request->quickURL("exhibition", "searchresults", array("collection_id" => $repositoryId->getIdString(), "search_type" => urlencode($typeString))));
 }
 
 $searchFields =& new Block(ob_get_contents, 2);

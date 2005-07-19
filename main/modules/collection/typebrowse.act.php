@@ -109,9 +109,11 @@ class typebrowseAction
 function printTypeShort(& $type, & $repositoryId) {
 	ob_start();
 	
-	$typeString = $type->getDomain()." :: " .$type->getAuthority()." :: ".$type->getKeyword();
-
-	print "<a href='".MYURL."/collection/browsetype/".$repositoryId->getIdString()."/".urlencode($typeString)."'>";
+	$typeString = HarmoniType::typeToString($type, " :: ");
+	
+	$harmoni =& Harmoni::instance();
+	
+	print "<a href='".$harmoni->request->quickURL("collection", "browsetype", array("collection_id" => $repositoryId->getIdString(), "asset_type" => urlencode($typeString)))."'>";
 	print "\n\t<strong>";
 	print $typeString;
 	print "</strong>";

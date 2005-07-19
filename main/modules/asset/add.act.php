@@ -331,12 +331,15 @@ class addAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
+		$harmoni =& Harmoni::instance();
 		$repositoryId =& $this->getRepositoryId();
 		if ($this->_assetId) 
-			return MYURL."/asset/editview/".$repositoryId->getIdString()
-				."/".$this->_assetId->getIdString()."/";
+			return $harmoni->request->quickURL("asset", "editview", array(
+				"collection_id" => $repositoryId->getIdString(),
+				"asset_id" => $this->_assetId->getIdString()));
 		else
-			return MYURL."/collection/browse/".$repositoryId->getIdString()."/";
+			return $harmoni->request->quickURL("collection", "browse", array(
+				"collection_id" => $repositoryId->getIdString()));
 	}
 }
 

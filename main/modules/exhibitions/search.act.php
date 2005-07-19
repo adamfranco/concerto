@@ -100,7 +100,7 @@ class searchAction
     foreach (array_keys($searchArray) as $typeString) {
       $searchType =& $searchArray[$typeString];
       print "\n<h3>".$typeString."</h3>";
-      print "\n".$searchModules->createSearchForm($searchType, MYURL."/exhibitions/searchresults/".urlencode($typeString)."/");
+      print "\n".$searchModules->createSearchForm($searchType, $harmoni->request->quickURL("exhibitions", "searchresults", array("search_type" => urlencode($typeString))));
     }
 
 

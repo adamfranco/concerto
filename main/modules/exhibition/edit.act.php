@@ -113,8 +113,7 @@ class editAction
   function getReturnUrl () {
     $assetId =& $this->getAssetId();
     $repositoryId =& $this->getRepositoryId();
-                return MYURL."/exhibition/editview/".$repositoryId->getIdString()
-		  ."/".$assetId->getIdString()."/";
+                return $harmoni->request->quickURL("exhibition", "editview", array("collection_id" => $repositoryId->getIdString(), "asset_id" => $assetId->getIdString()));
   }
 
   /**
