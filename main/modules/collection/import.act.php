@@ -1,12 +1,13 @@
 <?php
-//define("FILEID", "dev_id-");
 require_once("/home/cshubert/public_html/importer/domit/xml_domit_include.php");
+//require_once(MYDIR."/domit/xml_domit_include.php");
 require_once(HARMONI."utilities/Dearchiver.class.php");
 require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
 require_once(HARMONI."utilities/MIMETypes.class.php");
+
 class importAction extends RepositoryAction {
 	/**
-	* Check Authorizations
+	 * Check Authorizations
 	 * 
 	 * @return boolean
 	 * @access public
@@ -17,11 +18,12 @@ class importAction extends RepositoryAction {
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
 		return $authZ->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.modify"), 
-					$this->getRepositoryId());
+		$idManager->getId("edu.middlebury.authorization.modify"),
+		$this->getRepositoryId());
 	}
+
 	/**
-	* Return the "unauthorized" string to print
+ 	 * Return the "unauthorized" string to print
 	 * 
 	 * @return string
 	 * @access public
@@ -30,8 +32,9 @@ class importAction extends RepositoryAction {
 	function getUnauthorizedMessage () {
 		return _("You are not authorized to edit this <em>Collection</em>.");
 	}
+
 	/**
-	* Return the heading text for this action, or an empty string.
+	 * Return the heading text for this action, or an empty string.
 	 * 
 	 * @return string
 	 * @access public
@@ -43,24 +46,13 @@ class importAction extends RepositoryAction {
 		." <em>".$repository->getDisplayName()."</em> "
 		._(" Collection");
 	}
-	
-
-
 
 	/**
-	* Build the content for this action
-	 * 
-	 * @return void
-	 * @access public
-	 * @since 6/08/05
+ 	 * uncompress the archive in a unique folder for use by the importer
+ 	 * 
+ 	 * @access public
+ 	 * @since 7/18/05
 	 */
-	function buildContent () {
-		/**
- * uncompress the archive in a unique folder for use by the importer
- * 
- * @access public
- * @since 7/18/05
- */
 
 	function uploadFile ($path, $filename) {
 		$newPath = $path."0";
@@ -68,19 +60,19 @@ class importAction extends RepositoryAction {
 		mkdir($newPath);
 
 		// move uploaded file or lose uploaded file
-		move_uploaded_file($_FILES['userfile']['tmp_name'], $newPath.DIRECTORY_SEPARATOR.$filename);
+		$userfile = move_uploaded_file($path, $newPath.DIRECTORY_SEPARATOR.$filename);
 		$dearchiver =& new Dearchiver();
 		$dearchiver->uncompressFile($newPath.DIRECTORY_SEPARATOR.$filename, $newPath);
 	}
 
-	
+
 	/**
 	 * tries to match given string to a schema with the same name.
 	 * 
 	 * @return false if no schema is matched, and the schemaId if matched
 	 * @access public
 	 * @since 7/18/05
-	*/
+	 */
 
 	function matchSchema ($schema, $repository) {
 		$structures =& $repository->getRecordStructures();
@@ -91,17 +83,20 @@ class importAction extends RepositoryAction {
 				$structureId = $testStructure->getId();														// retain structureId
 				return $structureId;
 			}
-			return false;
 		}
+		return false;
 	}
 
+
+
+
 	/**
- * tries to match the given array with partstructure in the given structure
- * 
- * @return false if not matched and an array of partstructure ids
- * @access public
- * @since 7/18/05
- */
+  	 * tries to match the given array with partstructure in the given structure
+ 	 * 
+ 	 * @return false if not matched and an array of partstructure ids
+ 	 * @access public
+ 	 * @since 7/18/05
+ 	 */
 
 	function matchPartStructures ($schema, $partArray) {
 		$partStructureIds = array();
@@ -111,12 +106,13 @@ class importAction extends RepositoryAction {
 			while ($partStructures->hasNext()) {
 				$partStructure = $partStructures->next();
 				if ($part == $partStructure->getDisplayName()) {										// find the corresponding partStructure
-				$partStructureIds[] = $partStructure->getId();
-				$stop = false;
-				break;
-				}
+					$partStructureIds[] = $partStructure->getId();
+					$stop = false;
+					print "good";
+					break;
+				}	
 			}
-			if ($stop)
+		if ($stop)
 			return false;
 		}
 		return $partStructureIds;
@@ -137,7 +133,7 @@ class importAction extends RepositoryAction {
 			$assetRecord =& $asset->createRecord($entry[0]);													// create record with stored id
 			$j = 0;																								// counter for parallel arrays
 			foreach ($entry[1] as $id) {
-				$partObject = getPartObject($id->getType(), $entry[2][$j]);
+				$partObject = importAction::getPartObject($id->getType(), $entry[2][$j]);
 				$assetRecord->createPart($id, $partObject);										// access parallel arrays to create parts
 				$j++;																							// increment
 			}
@@ -152,44 +148,56 @@ class importAction extends RepositoryAction {
 	}
 
 	function getPartObject($type, $more) {
-	$typeString = $type->getKeyword();
-	switch($typeString) {
-		case "string":
+		$typeString = $type->getKeyword();
+		switch($typeString) {
+			case "string":
 			return new String($more);
 			break;
-		case "integer":
+			case "integer":
 			return new Integer($more);
 			break;
-		case "boolean":
+			case "boolean":
 			return new Boolean($more);
 			break;
-		case "shortstring":
+			case "shortstring":
 			return new ShortString($more);
 			break;
-		case "float":
+			case "float":
 			return new Float($more);
 			break;
-		case "time":
+			case "time":
 			return new Time($more);
 			break;
-		default:
+			default:
 			return new OkiType($more);
+		}
 	}
-}
-	
-		$centerPane =& $this->getActionRows();
+
+	/**
+	 * Build the content for this action
+	 * 
+	 * @return void
+	 * @access public
+	 * @since 6/08/05
+	 */
+	function buildContent () {
 		$dr =& $this->getRepository();
+		$harmoni =& Harmoni::instance();
+		$harmoni->request->startNamespace("concerto/import");
+		$centerPane =& $this->getActionRows();
 		$idManager =& Services::getService("Id");
 		ob_start();
-		if(isset($_REQUEST['submit'])) {
-			$path = $_FILES['userfile']['tmp_name'];
-			$filename = $_FILES['userfile']['name'];
+		if(RequestContext::value("submit")){
+			$userfile = RequestContext::value("userfile");
+			$path = $userfile['tmp_name'];
+			$filename = $userfile['name'];
+			$newPath = $path."0";
 
 			if($filename == "")
 			throwError(new Error("Specify a file to upload", "concerto.collection", true));
 
-			$ext = $_REQUEST['archivetype'];
-			uploadFile($path, $filename);
+			$ext = RequestContext::value("archivetype");
+			importAction::uploadFile($path, $filename);
 			$fileStructureId =& $idManager->getId("FILE");																				// stored for all archive types!!
 			$i = 0;																														// counter for assets
 			// WHICH FILETYPE?
@@ -225,9 +233,9 @@ class importAction extends RepositoryAction {
 					foreach ($iRecordList as $record) {
 						$recordListElement = array();
 						if ($record->nodeName == "record") {
-							$structureId = matchSchema($record->getAttribute("schema"), $dr);
+							$structureId = importAction::matchSchema($record->getAttribute("schema"), $dr);
 							if(!$structureId)
-								throwError(new Error("the schema does not exist", "concerto.collection", true));
+							throwError(new Error("the schema does not exist", "concerto.collection", true));
 							$recordListElement[] = $structureId;
 							$partArray = array();
 							$parts = array();
@@ -235,34 +243,36 @@ class importAction extends RepositoryAction {
 								$partArray[] = $field->getAttribute("name");
 								$parts[] = $field->getText();
 							}
-							$partStructureIds = matchPartStructures($dr->getRecordStructure($structureId), $partArray);
+							$partStructureIds = importAction::matchPartStructures($dr->getRecordStructure($structureId), $partArray);
 
 							if(!$partStructureIds)
-								throwError(new Error("One or more of the Parts specified in the xml file is not valid.  The first".$i."assets were imported", "concerto.collection", true));
+							throwError(new Error("One or more of the Parts specified in the xml file is not valid.  The first".$i."assets were imported", "concerto.collection", true));
 
 							$recordListElement[] = $partStructureIds;
 							$recordListElement[] = $parts;
 						}
 						$recordList[]=$recordListElement;
 					}
-					buildAsset($assetInfo, $recordList);
+					importAction::buildAsset($dr, $assetInfo, $recordList, $newPath);
 				}
 				break;
 				case "Tab-Delimited":
-				$meta = fopen($path."0/metadata.txt", "r");
+				$meta = fopen($newPath."/metadata.txt", "r");
 				$schema = fgets($meta);
 				$schema = ereg_replace("[\n\r]*$","",$schema);
-				$structureId = matchSchema($schema, $dr);
+				$structureId = importAction::matchSchema($schema, $dr);
 
-				if (!$structureId)
-				throwError(new Error("Schema <emph>".$schema. "</emph>does not exist in the collection", "concerto.collection", true));
+				if ($structureId == false)
+				throwError(new Error("Schema <emph>".$schema. "</emph> does not exist in the collection", "concerto.collection", true));
 
 				$titleline = ereg_replace("[\n\r]*$", "", fgets($meta));
 				$titles = explode ("\t", $titleline);
-				$partStructureIds = matchPartStructures($dr->getRecordStructure($structureId), $titles);
+				$titlesSliced = array_slice($titles, 4);
+				printpre($titlesSliced);
+				$partStructureIds = importAction::matchPartStructures($dr->getRecordStructure($structureId), $titlesSliced);
 
 				if (!$partStructureIds)
-				throwError(new Error("Schema part <emph>".$titles[$j]."</emph>does not exist", "concerto.collection", true));
+				throwError(new Error("Schema part does not exist", "concerto.collection", true));
 
 				// ASSET loop
 				while ($line = ereg_replace("[\n\r]*$","",fgets($meta))) {
@@ -289,12 +299,11 @@ class importAction extends RepositoryAction {
 
 					for($k=0;$k<count($partStructureIds); $k++) {
 						$type = $partStructureIds->getType();
-						$partObject = getPartObject($type, $metadata[k+4]);
+						$partObject = importAction::getPartObject($type, $metadata[k+4]);
 						$assetRecord->createPart($partStructureIds[$k], $metadata[$k+4]);
 					}
 
 					if($metadata[3] != "") {
-						$newPath = $path."0";
 						if(!file_exists($newPath."/data/".$metadata[3]))
 						throwError(new Error("The file ".$metadata[3]." does not exist", "concerto.collection", true));
 
@@ -312,32 +321,37 @@ class importAction extends RepositoryAction {
 		}
 
 		else {
+			$archivetype = RequestContext::name("archivetype");
+			$userfile = RequestContext::name("userfile");
+			$submit = RequestContext::name("submit");
+
 			print <<<end
 			<table border='0' cellpadding='5' align = 'center'>
 			<tr><td colspan ='2'>Type in the address for or browse to file to import 
 				and click on the upload file button.</td></tr>
 				<form enctype ='multipart/form-data' action='' method='POST'>
-					<input type ='hidden', name='MAX_FILE_SIZE' value = '20000' />
-					<tr><td>Select the input archive type: </td><td><select name ='archivetype'>
+					<tr><td>Select the input archive type: </td><td><select name ='$archivetype'>
 					<option selected>Tab-Delimited</option>
 					<option>XML</option>
 					<option>Exif</option>
 					<option>File</option>
 					</select></td></tr>
-					<tr><td><input name='userfile' type='file' /></td>
-					<td><input type='submit' name ='submit' value ='upload file' /></td></tr>
+					<tr><td><input name='$userfile' type='file' /></td>
+					<td><input type='submit' name ='$submit' value ='upload file' /></td></tr>
 					</form>
 					</table>
 end;
 			$printText = new Block(ob_get_contents(), 3);
 			ob_end_clean();
 			$centerPane->add($printText, "100%", null, LEFT, CENTER);
-			
+
 		}
+
+		$harmoni->request->endNamespace();
 	}
-	
+
 	/**
-	* Return the URL that this action should return to when completed.
+	 * Return the URL that this action should return to when completed.
 	 * 
 	 * @return string
 	 * @access public
