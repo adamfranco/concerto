@@ -109,7 +109,6 @@ class importAction extends RepositoryAction {
 				if ($part == $partStructure->getDisplayName()) {										// find the corresponding partStructure
 					$partStructureIds[] = $partStructure->getId();
 					$stop = false;
-					print "good";
 					break;
 				}	
 			}
@@ -142,7 +141,7 @@ class importAction extends RepositoryAction {
 				$j++;																							// increment
 			}
 			if ($entry[0] == $fileStructureId) {
-				mimeTypes = new MIMETypes();
+				$mimeTypes = new MIMETypes();
 				$mimetype = getMIMETypeForFileName($newPath."/data/".$entry[1]);
 				$fileRecord =& $asset->createRecord($fileStructureId);
 				$fileRecord->createPart($idManager->getId("FILE_DATA"), file_get_contents($newPath."/data/".$entry[1]));
@@ -273,7 +272,6 @@ class importAction extends RepositoryAction {
 				$titleline = ereg_replace("[\n\r]*$", "", fgets($meta));
 				$titles = explode ("\t", $titleline);
 				$titlesSliced = array_slice($titles, 4);
-				printpre($titlesSliced);
 				$partStructureIds = importAction::matchPartStructures($dr->getRecordStructure($structureId), $titlesSliced);
 
 				if (!$partStructureIds)
@@ -304,7 +302,6 @@ class importAction extends RepositoryAction {
 					$assetRecord =& $asset->createRecord($structureId);
 
 					for($k=0;$k<count($partStructureIds); $k++) {
-						print "hello <br />";
 						$structure =& $dr->getRecordStructure($structureId);
 						$partStructure =& $structure->getPartStructure($partStructureIds[$k]);
 						$type = $partStructure->getType();

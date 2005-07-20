@@ -130,10 +130,12 @@ class editAction
 		$set =& $setManager->getSet($repositoryId);
 		
 		ob_start();
+		$fieldname = RequestContext::name('create_schema');
+		
 		print "<h2>"._("Select Cataloging Schemata")."</h2>";
 		print "\n<p>"._("Select which cataloging schemata you wish to appear during <em>Asset</em> creation and editing. <em>Assets</em> can hold data in any of the schemata, but only the ones selected here will be availible when adding new data.")."</p>";
 		print "\n<p>"._("If none of the schemata listed below fit your needs, please click the button below to save your changes and create a new schema.")."</p>";
-		print "\n<input type='submit' name='create_schema' value='"._("Save Changes and Create a new Schema")."' />";
+		print "\n<input type='submit' name='$fieldname' value='"._("Save Changes and Create a new Schema")."' />";
 	
 		
 		
@@ -219,7 +221,7 @@ class editAction
 		if ($wizard->updateLastStep()) {
 			$properties =& $wizard->getProperties();
 	// 		print "Now Saving: ";
-	// 		printpre($properties);
+	//		printpre($properties);
 			
 			// Save the Repository
 			$id =& $this->getRepositoryId();
