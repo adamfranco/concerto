@@ -133,23 +133,28 @@ class importAction extends RepositoryAction {
 			$assetRecord =& $asset->createRecord($entry[0]);													// create record with stored id
 			$j = 0;																								// counter for parallel arrays
 			foreach ($entry[1] as $id) {
-				$structure =& $repository->getRecordStructure($entry[0]);
-				$partStructure =& $structure->getPartStructure($id);
-				$type = $partStructure->getType();
-				$partObject = importAction::getPartObject($type, $entry[2][$j]);
-				$assetRecord->createPart($id, $partObject);										// access parallel arrays to create parts
-				$j++;																							// increment
-			}
-			if ($entry[0] == $fileStructureId) {
+				if($entry[0]->getIdString() != "FILE"){
+					$structure =& $repository->getRecordStructure($entry[0]);
+					$partStructure =& $structure->getPartStructure($id);
+					$type = $partStructure->getType();
+					$partObject = importAction::getPartObject($type, $entry[2][$j]);
+					$assetRecord->createPart($id, $partObject);										// access parallel arrays to create parts
+					$j++;																			// increment
+				}
+			else if ($entry[0]->getIdString() == "FILE") {
+			//if ($entry[0] == $fileStructureId) {
 				$mimeTypes = new MIMETypes();
-				$mimetype = getMIMETypeForFileName($newPath."/data/".$entry[1]);
-				$fileRecord =& $asset->createRecord($fileStructureId);
-				$fileRecord->createPart($idManager->getId("FILE_DATA"), file_get_contents($newPath."/data/".$entry[1]));
-				$fileRecord->createPart($idManager->getId("MIME_TYPE"), $mimetype);
-				$fileRecord->createPart($idManager->getId("THUMBNAIL_DATA"), file_get_contents($newPath."/data/".$entry[1]));
+				$mime = new MIMETypes();
+				$filename = trim($entry[2][0]);
+				$mimetype = $mime->getMIMETypeForFileName($newPath."/data/".$filename);
+				$assetRecord->createPart($idManager->getId("FILE_DATA"), file_get_contents($newPath."/data/".$filename));
+				$assetRecord->createPart($idManager->getId("FILE_NAME"), $filename);
+				$assetRecord->createPart($idManager->getId("MIME_TYPE"), $mimetype);
+				$assetRecord->createPart($idManager->getId("THUMBNAIL_DATA"), file_get_contents($newPath."/data/".$filename));
 			}
 		}
 	}
+		}
 
 	function getPartObject($type, $more) {
 		$typeString = $type->getKeyword();
@@ -218,11 +223,11 @@ class importAction extends RepositoryAction {
 				throwError(new Error("XML parse failed", "concerto.collection", true));
 
 				// ASSET LOOP
-				$iAssetList =& $import->documentElement->childnodes;
+				$iAssetList =& $import->documentElement->childNodes;
 				foreach ($iAssetList as $asset) {
 					$assetInfo = array();
 					$assetInfo[0] = $asset->childNodes[0]->getText();
-					if ($name == "")
+					if ($assetInfo[0] == "")
 					$assetInfo[0] = "asset".$i;
 					$assetInfo[1] = $asset->childNodes[1]->getText();																// description for asset
 					$assetInfo[2] = $asset->childNodes[2]->getText();																	// type for asset, check for empty
@@ -232,7 +237,8 @@ class importAction extends RepositoryAction {
 					$assetInfo[2] = new HarmoniType("Asset Types", "Concerto", $assetInfo[2]);
 					$i++;
 
-					$iRecordList =& $asset->childNodes;																											// increment asset counter
+					$iRecordList =& $asset->childNodes;
+					// increment asset counter
 					$recordList = array();
 					foreach ($iRecordList as $record) {
 						$recordListElement = array();
@@ -251,11 +257,12 @@ class importAction extends RepositoryAction {
 
 							if(!$partStructureIds)
 							throwError(new Error("One or more of the Parts specified in the xml file is not valid.  The first".$i."assets were imported", "concerto.collection", true));
-
+							
 							$recordListElement[] = $partStructureIds;
 							$recordListElement[] = $parts;
+							$recordList[]=$recordListElement;
 						}
-						$recordList[]=$recordListElement;
+						
 					}
 					importAction::buildAsset($dr, $assetInfo, $recordList, $newPath);
 				}
