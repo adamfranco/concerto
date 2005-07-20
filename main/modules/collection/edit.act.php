@@ -251,10 +251,11 @@ class editAction
 				$recordStructureId =& $recordStructure->getId();
 				
 				// If the box is checked, make sure that the ID is in the set
-				if ($properties["schema_".$recordStructureId->getIdString()]->getValue()) {
+				$fieldName = RequestContext::name("schema_".$recordStructureId->getIdString());
+				if ($properties[$fieldName]->getValue()) {
 					if (!$set->isInSet($recordStructureId))
 						$set->addItem($recordStructureId);
-					if ($position = $properties["schema_".$recordStructureId->getIdString()."_position"]->getValue())
+					if ($position = $properties[$fieldName."_position"]->getValue())
 						$positions[$position-1] =& $recordStructureId;
 					
 					// Store some info so that we can check that all structures are valid.

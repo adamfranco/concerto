@@ -134,16 +134,15 @@ class importAction extends RepositoryAction {
 			$assetRecord =& $asset->createRecord($entry[0]);													// create record with stored id
 			$j = 0;																								// counter for parallel arrays
 			foreach ($entry[1] as $id) {
-		//		=================================================
-		//		compare with tab delimited
-				
-				
-				
-				$partObject = importAction::getPartObject($id->getType(), $entry[2][$j]);
+				$structure =& $repository->getRecordStructure($entry[0]);
+				$partStructure =& $structure->getPartStructure($id);
+				$type = $partStructure->getType();
+				$partObject = importAction::getPartObject($type, $entry[2][$j]);
 				$assetRecord->createPart($id, $partObject);										// access parallel arrays to create parts
 				$j++;																							// increment
 			}
 			if ($entry[0] == $fileStructureId) {
+				mimeTypes = new MIMETypes();
 				$mimetype = getMIMETypeForFileName($newPath."/data/".$entry[1]);
 				$fileRecord =& $asset->createRecord($fileStructureId);
 				$fileRecord->createPart($idManager->getId("FILE_DATA"), file_get_contents($newPath."/data/".$entry[1]));
