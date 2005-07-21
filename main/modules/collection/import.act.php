@@ -1,6 +1,9 @@
 <?php
 require_once("/home/cshubert/public_html/importer/domit/xml_domit_include.php");
 //require_once(MYDIR."/domit/xml_domit_include.php");
+require_once(POLYPHONY."/main/library/RepositoryImporter/XMLRepositoryImporter.class.php");
+require_once(POLYPHONY."/main/library/RepositoryImporter/TabRepositoryImporter.class.php");
+
 require_once(HARMONI."utilities/Dearchiver.class.php");
 require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
 require_once(HARMONI."utilities/MIMETypes.class.php");
@@ -47,140 +50,7 @@ class importAction extends RepositoryAction {
 		._(" Collection");
 	}
 
-	/**
- 	 * uncompress the archive in a unique folder for use by the importer
- 	 * 
- 	 * @access public
- 	 * @since 7/18/05
-	 */
-
-	function uploadFile ($path, $filename) {
-		$newPath = $path."0";
-		// create unique folder
-		mkdir($newPath);
-
-		// move uploaded file or lose uploaded file
-
-		$userfile = move_uploaded_file($path, $newPath.DIRECTORY_SEPARATOR.$filename);
-		$dearchiver =& new Dearchiver();
-		$dearchiver->uncompressFile($newPath.DIRECTORY_SEPARATOR.$filename, $newPath);
-	}
-
-
-	/**
-	 * tries to match given string to a schema with the same name.
-	 * 
-	 * @return false if no schema is matched, and the schemaId if matched
-	 * @access public
-	 * @since 7/18/05
-	 */
-
-	function matchSchema ($schema, $repository) {
-		$structures =& $repository->getRecordStructures();
-		$stop = true;
-		while($structures->hasNext()) {
-			$testStructure = $structures->next();
-			if($testStructure->getDisplayName() == $schema) {
-				$structureId = $testStructure->getId();														// retain structureId
-				return $structureId;
-			}
-		}
-		return false;
-	}
-
-
-
-
-	/**
-  	 * tries to match the given array with partstructure in the given structure
- 	 * 
- 	 * @return false if not matched and an array of partstructure ids
- 	 * @access public
- 	 * @since 7/18/05
- 	 */
-
-	function matchPartStructures ($schema, $partArray) {
-		$partStructureIds = array();
-		foreach ($partArray as $part) {
-			$stop = true;
-			$partStructures =& $schema->getPartStructures();
-			while ($partStructures->hasNext()) {
-				$partStructure = $partStructures->next();
-				if ($part == $partStructure->getDisplayName()) {										// find the corresponding partStructure
-					$partStructureIds[] = $partStructure->getId();
-					$stop = false;
-					break;
-				}	
-			}
-		if ($stop)
-			return false;
-		}
-		return $partStructureIds;
-	}
-
-	/**
-	 * builds asset in repository from assetinfo and records from recordlist
-	 *
-	 * @access public
-	 * @since 7/18/05
-	 *
-	*/
-
-	function buildAsset($repository, $assetInfo, $recordList, $newPath) {
-		$idManager = Services::getService("Id");
-		$asset =& $repository->createAsset($assetInfo[0], $assetInfo[1], $assetInfo[2]);
-		foreach($recordList as $entry) {
-			$assetRecord =& $asset->createRecord($entry[0]);													// create record with stored id
-			$j = 0;																								// counter for parallel arrays
-			foreach ($entry[1] as $id) {
-				if($entry[0]->getIdString() != "FILE"){
-					$structure =& $repository->getRecordStructure($entry[0]);
-					$partStructure =& $structure->getPartStructure($id);
-					$type = $partStructure->getType();
-					$partObject = importAction::getPartObject($type, $entry[2][$j]);
-					$assetRecord->createPart($id, $partObject);										// access parallel arrays to create parts
-					$j++;																			// increment
-				}
-			else if ($entry[0]->getIdString() == "FILE") {
-			//if ($entry[0] == $fileStructureId) {
-				$mimeTypes = new MIMETypes();
-				$mime = new MIMETypes();
-				$filename = trim($entry[2][0]);
-				$mimetype = $mime->getMIMETypeForFileName($newPath."/data/".$filename);
-				$assetRecord->createPart($idManager->getId("FILE_DATA"), file_get_contents($newPath."/data/".$filename));
-				$assetRecord->createPart($idManager->getId("FILE_NAME"), $filename);
-				$assetRecord->createPart($idManager->getId("MIME_TYPE"), $mimetype);
-				$assetRecord->createPart($idManager->getId("THUMBNAIL_DATA"), file_get_contents($newPath."/data/".$filename));
-			}
-		}
-	}
-		}
-
-	function getPartObject($type, $more) {
-		$typeString = $type->getKeyword();
-		switch($typeString) {
-			case "string":
-			return new String($more);
-			break;
-			case "integer":
-			return new Integer($more);
-			break;
-			case "boolean":
-			return new Boolean($more);
-			break;
-			case "shortstring":
-			return new ShortString($more);
-			break;
-			case "float":
-			return new Float($more);
-			break;
-			case "time":
-			return new Time($more);
-			break;
-			default:
-			return new OkiType($more);
-		}
-	}
+	
 
 	/**
 	 * Build the content for this action
@@ -207,131 +77,10 @@ class importAction extends RepositoryAction {
 
 			$ext = RequestContext::value("archivetype");
 			importAction::uploadFile($path, $filename);
-			$fileStructureId =& $idManager->getId("FILE");																				// stored for all archive types!!
-			$i = 0;																														// counter for assets
-			// WHICH FILETYPE?
-			switch ($ext) {
-				case "XML":
-				$import =& new DOMIT_Document();																					// instantiate new DOMIT_Document
-
-				if ($import->loadXML($newPath."/metadata.xml")) {																	// parse the file
-				if (!($import->documentElement->hasChildNodes()))																// check for assets
-				throwError(new Error("There are no assets to import", "concerto.collection", true));
-				}
-
-				else
-				throwError(new Error("XML parse failed", "concerto.collection", true));
-
-				// ASSET LOOP
-				$iAssetList =& $import->documentElement->childNodes;
-				foreach ($iAssetList as $asset) {
-					$assetInfo = array();
-					$assetInfo[0] = $asset->childNodes[0]->getText();
-					if ($assetInfo[0] == "")
-					$assetInfo[0] = "asset".$i;
-					$assetInfo[1] = $asset->childNodes[1]->getText();																// description for asset
-					$assetInfo[2] = $asset->childNodes[2]->getText();																	// type for asset, check for empty
-					if ($assetInfo[2] == "")
-					$assetInfo[2] = new HarmoniType("Asset Types", "Concerto", "Generic Asset");
-					else
-					$assetInfo[2] = new HarmoniType("Asset Types", "Concerto", $assetInfo[2]);
-					$i++;
-
-					$iRecordList =& $asset->childNodes;
-					// increment asset counter
-					$recordList = array();
-					foreach ($iRecordList as $record) {
-						$recordListElement = array();
-						if ($record->nodeName == "record") {
-							$structureId = importAction::matchSchema($record->getAttribute("schema"), $dr);
-							if(!$structureId)
-							throwError(new Error("the schema does not exist", "concerto.collection", true));
-							$recordListElement[] = $structureId;
-							$partArray = array();
-							$parts = array();
-							foreach ($record->childNodes as $field) {
-								$partArray[] = $field->getAttribute("name");
-								$parts[] = $field->getText();
-							}
-							$partStructureIds = importAction::matchPartStructures($dr->getRecordStructure($structureId), $partArray);
-
-							if(!$partStructureIds)
-							throwError(new Error("One or more of the Parts specified in the xml file is not valid.  The first".$i."assets were imported", "concerto.collection", true));
-							
-							$recordListElement[] = $partStructureIds;
-							$recordListElement[] = $parts;
-							$recordList[]=$recordListElement;
-						}
-						
-					}
-					importAction::buildAsset($dr, $assetInfo, $recordList, $newPath);
-				}
-				break;
-				case "Tab-Delimited":
-				$meta = fopen($newPath."/metadata.txt", "r");
-				$schema = fgets($meta);
-				$schema = ereg_replace("[\n\r]*$","",$schema);
-				$structureId = importAction::matchSchema($schema, $dr);
-
-				if ($structureId == false)
-				throwError(new Error("Schema <emph>".$schema. "</emph> does not exist in the collection", "concerto.collection", true));
-
-				$titleline = ereg_replace("[\n\r]*$", "", fgets($meta));
-				$titles = explode ("\t", $titleline);
-				$titlesSliced = array_slice($titles, 4);
-				$partStructureIds = importAction::matchPartStructures($dr->getRecordStructure($structureId), $titlesSliced);
-
-				if (!$partStructureIds)
-				throwError(new Error("Schema part does not exist", "concerto.collection", true));
-
-				// ASSET loop
-				while ($line = ereg_replace("[\n\r]*$","",fgets($meta))) {
-					$assetInfo = array();
-					$metadata = explode("\t", $line);
-					if($metadata[0]==""){
-						//	$reqPath = explode("/", $metadata[3]);
-						//	$name = $reqPath[count($reqPath)-1];
-						$assetInfo[0] = "asset".$i;
-					}
-					else
-					$assetInfo[0] = $metadata[0];
-
-					$assetInfo[1] = $metadata[1];
-
-					if($metadata[2] == "")
-					$assetInfo[2] = new HarmoniType("Asset Types", "Concerto", "Generic Asset");
-					else
-					$assetInfo[2] = new HarmoniType("Asset Types", "Concerto", $metadata[2]);
-					$i++;
-
-					$asset =& $dr->createAsset($assetInfo[0], $assetInfo[1], $assetInfo[2]);
-
-					$assetRecord =& $asset->createRecord($structureId);
-
-					for($k=0;$k<count($partStructureIds); $k++) {
-						$structure =& $dr->getRecordStructure($structureId);
-						$partStructure =& $structure->getPartStructure($partStructureIds[$k]);
-						$type = $partStructure->getType();
-						$partObject = importAction::getPartObject($type, $metadata[$k+4]);
-						$assetRecord->createPart($partStructureIds[$k], new String($metadata[$k+4]));//$partObject);
-					}
-
-					if($metadata[3] != "") {
-						if(!file_exists($newPath."/data/".$metadata[3]))
-						throwError(new Error("The file ".$metadata[3]." does not exist", "concerto.collection", true));
-
-						$fileRecord =& $asset->createRecord($fileStructureId);
-						$fileDataPart = $idManager->getId("FILE_DATA");
-						$fileRecord->createPart($fileDataPart, file_get_contents($newPath."/data/".$metadata[3]));
-						$fileRecord->createPart($idManager->getId("FILE_NAME"), $metadata[3]);
-						$mimeTypes = new MIMETypes();
-						$fileRecord->createPart($idManager->getId("MIME_TYPE"), $mimeTypes->getMIMETypeForFileName($newPath."/data/".$metadata[3]));
-						$fileRecord->createPart($idManager->getId("THUMBNAIL_DATA"), file_get_contents($newPath."/data/".$metadata[3]));
-
-					}
-				}
-				break;
-			}
+			if ($ext == "Tab-Delimited") 
+				new TabRepositoryImporter($path."0/".$filename, $dr->getId());
+			else if ($ext == "XML") 
+				new XMLRepositoryImporter($path."0/".$filename, $dr->getId());
 		}
 
 		else {
@@ -363,7 +112,24 @@ end;
 
 		$harmoni->request->endNamespace();
 	}
+	
+	/**
+ 	 * uncompress the archive in a unique folder for use by the importer
+ 	 * 
+ 	 * @access public
+ 	 * @since 7/18/05
+	 */
 
+	function uploadFile ($path, $filename) {
+		$newPath = $path."0";
+		// create unique folder
+		mkdir($newPath);
+
+		// move uploaded file or lose uploaded file
+
+		$userfile = move_uploaded_file($path, $newPath.DIRECTORY_SEPARATOR.$filename);
+		
+	}
 	/**
 	 * Return the URL that this action should return to when completed.
 	 * 
