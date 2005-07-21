@@ -138,7 +138,7 @@ class editAction
 		$wizard =& $this->getWizard($cacheName);
 		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
-		$recordId =& $idManager->getId($harmoni->request->get('repository_id'));
+		$recordId =& $idManager->getId($harmoni->request->get('record_id'));
 		$asset =& $this->getAsset();
 		$record =& $asset->getRecord($recordId);
 		

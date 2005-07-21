@@ -233,7 +233,7 @@ require_once(OKI2."/osid/OsidContext.php");
 	$configuration->addProperty('use_gd', $arg1 = FALSE);
 	$configuration->addProperty('gd_formats', $arg2 = array());
 	$configuration->addProperty('use_imagemagick', $arg3 = TRUE);
-	$configuration->addProperty('imagemagick_path', $arg4 = "/usr/X11R6/bin");
+	$configuration->addProperty('imagemagick_path', $arg4 = "/usr/local/bin");
 	$configuration->addProperty('imagemagick_temp_dir', $arg5 = "/tmp");
 	$configuration->addProperty('imagemagick_formats', $arg2 = array());
 	unset ($arg0, $arg1, $arg2, $arg3, $arg4, $arg5);
