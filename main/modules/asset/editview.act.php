@@ -160,7 +160,8 @@ class editviewAction
 		//***********************************
 		// Info Record Addition
 		//***********************************
-		$harmoni->history->markReturnURL("concerto/asset/editview");
+		$harmoni->history->markReturnURL("concerto/asset/editview", 
+			$harmoni->request->mkURLWithPassthrough());
 		ob_start();
 		print "\n<hr />";
 		print "\n<form action='";

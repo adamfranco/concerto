@@ -158,7 +158,6 @@ class editAction
 	 */
 	function getReturnUrl () {
 		$harmoni =& Harmoni::instance();
-		$url =& $harmoni->history->getReturnURL("concerto/asset/editview");
-		return $url->write();
+		return $harmoni->history->getReturnURL("concerto/asset/editview");
 	}
 }
