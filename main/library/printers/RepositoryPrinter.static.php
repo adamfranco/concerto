@@ -75,16 +75,31 @@ class RepositoryPrinter {
 			}
 		}
 		
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $repositoryId)) {
+		if ($authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.modify"), 
+				$repositoryId)) 
+		{
 			$url->setModuleAction("collection", "edit");
 				$links[] = "<a href='".$url->write()."'>";
 			$links[count($links) - 1] .= _("edit")."</a>";
 		}
 	 	
-	 	if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.add_children"), $repositoryId)) {
+	 	if ($authZ->isUserAuthorized(
+	 			$idManager->getId("edu.middlebury.authorization.add_children"), 
+	 			$repositoryId)) 
+	 	{
 			$url->setModuleAction("asset", "add");
 				$links[] = "<a href='".$url->write()."'>";
 			$links[count($links) - 1] .= _("add asset")."</a>";
+		}
+		
+		if ($authZ->isUserAuthorized(
+	 			$idManager->getId("edu.middlebury.authorization.add_children"), 
+	 			$repositoryId)) 
+	 	{
+			$url->setModuleAction("collection", "import");
+				$links[] = "<a href='".$url->write()."'>";
+			$links[count($links) - 1] .= _("import assets")."</a>";
 		}
 		
 		print  implode("\n\t | ", $links);
