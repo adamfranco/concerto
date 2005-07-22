@@ -76,7 +76,7 @@ class browseAction
 		$harmoni =& Harmoni::instance();
 		
 		$repository =& $this->getRepository();
-
+		$harmoni->request->passthrough("collection_id");
 		
 		// If the Repository supports searching of root assets, just get those
 		$hasRootSearch = FALSE;
@@ -121,7 +121,7 @@ class browseAction
 		//***********************************
 		// print the results
 		//***********************************
-		$resultPrinter =& new IteratorResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
+		$resultPrinter =& new IteratorResultPrinter($assets, 3, 6, "printAssetShort", $harmoni);
 		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 	}
@@ -142,7 +142,12 @@ function printAssetShort(& $asset, &$harmoni) {
 	
 	$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($assetId);
 	if (!is_null($thumbnailURL)) {
-		print "\n\t<br /><img src='$thumbnailURL' alt='Thumbnail Image' />";
+		
+		print "\n\t<br /><a href='";
+		print $harmoni->request->quickURL("asset", "view", array('asset_id' => $assetId->getIdString()));
+		print "'>";
+		print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' />";
+		print "\n\t</a>";
 	}
 	
 	$xLayout =& new XLayout();
