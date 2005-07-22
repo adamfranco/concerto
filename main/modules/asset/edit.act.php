@@ -79,22 +79,22 @@ class editAction
 		$asset =& $this->getAsset();
 		$wizard =& $this->getWizard($cacheName);
 				
-		$properties =& $wizard->getProperties();
+		$properties =& $wizard->getAllValues();
 			
 		// Update the name and description
-		$asset->updateDisplayName($properties['display_name']->getValue());
-		$asset->updateDescription($properties['description']->getValue());
-		$content =& new Blob($properties['content']->getValue());
+		$asset->updateDisplayName($properties['namedescstep']['display_name']);
+		$asset->updateDescription($properties['namedescstep']['description']);
+		$content =& Blob::withValue($properties['contentstep']['content']);
 		$asset->updateContent($content);
 		
 		
 		// Update the effective/expiration dates
 		if ($properties['effective_date']->getValue())
 			$asset->updateEffectiveDate(
-				DateAndTime::fromString($properties['effective_date']->getValue()));
+				DateAndTime::fromString($properties['datestep']['effective_date']));
 		if ($properties['expiration_date']->getValue())
 			$asset->updateExpirationDate(
-				DateAndTime::fromString($properties['expiration_date']->getValue()));
+				DateAndTime::fromString($properties['datestep']['expiration_date']));
 		
 		return TRUE;
 	}
@@ -130,79 +130,91 @@ class editAction
 		$asset =& $this->getAsset();
 	
 		// Instantiate the wizard, then add our steps.
-		$wizard =& new Wizard(_("Edit Asset"));		
+		$wizard =& SimpleStepWizard::withDefaultLayout();		
 		
 		// :: Name and Description ::
-		$step =& $wizard->createStep(_("Name & Description"));
+		$step =& $wizard->addStep("namedescstep", new WizardStep());
+		$step->setDisplayName(_("Name & Description"));
 		
 		// Create the properties.
-		$displayNameProp =& $step->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
-		$displayNameProp->setDefaultValue($asset->getDisplayName());
-		$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
+		$displayNameProp =& $step->addComponent("display_name", new WTextField());
+		$displayNameProp->setValue($asset->getDisplayName());
+//		$displayNameProp =& $step->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
+//		$displayNameProp->setDefaultValue($asset->getDisplayName());
+//		$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
 		
-		$descriptionProp =& $step->createProperty("description", new RegexValidatorRule(".*"));
-		$descriptionProp->setDefaultValue($asset->getDescription());
+		$descriptionProp =& $step->addComponent("description", new WTextArea());
+		$descriptionProp->setValue($asset->getDescription());
+		$descriptionProp->setRows(3);
+		$descriptionProp->setColumns(70);
+//		$descriptionProp =& $step->createProperty("description", new RegexValidatorRule(".*"));
+//		$descriptionProp->setDefaultValue($asset->getDescription());
 		
 		// Create the step text
 		ob_start();
 		print "\n<h2>"._("Name")."</h2>";
 		print "\n"._("The Name for this <em>Asset</em>: ");
-		print "\n<br /><input type='text' name='display_name' value=\"[[display_name]]\" />[[display_name|Error]]";
+		print "\n<br />[[display_name]]";
 		print "\n<h2>"._("Description")."</h2>";
 		print "\n"._("The Description for this <em>Asset</em>: ");
-		print "\n<br /><textarea name='description'>[[description]]</textarea>[[description|Error]]";
+		print "\n<br />[[description]]";
 		print "\n<div style='width: 400px'> &nbsp; </div>";
-		$step->setText(ob_get_contents());
+		$step->setContent(ob_get_contents());
 		ob_end_clean();
 		
 		
 		// :: Content ::
-		$step =& $wizard->createStep(_("Content")." ("._("optional").")");
+		$step =& $wizard->addStep("contentstep", new WizardStep());
+		$step->setDisplayName(_("Content")." ("._("optional").")");
 		
-		$property =& $step->createProperty("content", new RegexValidatorRule(".*"));
+		$property =& $step->addComponent("content", new WTextArea());
+		$property->setRows(20);
+		$property->setColumns(70);
 		$content =& $asset->getContent();
 		
 		if ($content->asString())
-			$property->setDefaultValue($content->asString());
+			$property->setValue($content->asString());
 		
 		// Create the step text
 		ob_start();
 		print "\n<h2>"._("Content")."</h2>";
 		print "\n"._("This is an optional place to put content for this <em>Asset</em>. <br />If you would like more structure, you can create new schemas to hold the <em>Asset's</em> data.");
-		print "\n<br /><textarea name='content' cols='50' rows='20'>[[content]]</textarea>[[content|Error]]";
+		print "\n<br />[[content]]";
 		print "\n<div style='width: 400px'> &nbsp; </div>";
-		$step->setText(ob_get_contents());
+		$step->setContent(ob_get_contents());
 		ob_end_clean();
 		
 		
 		
 		// :: Effective/Expiration Dates ::
-		$step =& $wizard->createStep(_("Effective Dates")." ("._("optional").")");
+		$step =& $wizard->addStep("datestep", new WizardStep());
+		$step->setDisplayName(_("Effective Dates")." ("._("optional").")");
 		
 		// Create the properties.
-		$property =& $step->createProperty("effective_date", new RegexValidatorRule("^(([0-9]{4,8}))?$"));
+		$property =& $step->addComponent("effective_date", new WTextField());
+//		$property =& $step->createProperty("effective_date", new RegexValidatorRule("^(([0-9]{4,8}))?$"));
 		$date =& $asset->getEffectiveDate();
-		$property->setDefaultValue($date->getYear()
+		$property->setValue($date->getYear()
 			.(($date->getMonth()<10)?"0".intval($date->getMonth()):$date->getMonth())
 			.(($date->getDay()<10)?"0".intval($date->getDay()):$date->getDay()));
-		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
+//		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
 	
-		$property =& $step->createProperty("expiration_date", new RegexValidatorRule("^(([0-9]{4,8}))?$"));
+		$property =& $step->addComponent("expiration_date", new WTextField());
 		$date =& $asset->getExpirationDate();
-		$property->setDefaultValue($date->getYear()
+		$property->setValue($date->getYear()
 			.(($date->getMonth()<10)?"0".intval($date->getMonth()):$date->getMonth())
 			.(($date->getDay()<10)?"0".intval($date->getDay()):$date->getDay()));
-		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
+//		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
 		
 		// Create the step text
 		ob_start();
 		print "\n<h2>"._("Effective Date")."</h2>";
 		print "\n"._("The date that this <em>Asset</em> becomes effective: ");
-		print "\n<br /><input type='text' name='effective_date' value=\"[[effective_date]]\" />[[effective_date|Error]]";
+		print "\n<br />[[effective_date]]";
 		
 		print "\n<h2>"._("Expiration Date")."</h2>";
 		print "\n"._("The date that this <em>Asset</em> expires: ");
-		print "\n<br /><input type='text' name='expiration_date' value=\"[[expiration_date]]\" />[[expiration_date|Error]]";
+		print "\n<br />[[expiration_date]]";
 		$step->setText(ob_get_contents());
 		ob_end_clean();
 	
