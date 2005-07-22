@@ -78,9 +78,18 @@ class importAction extends RepositoryAction {
 			$ext = RequestContext::value("archivetype");
 			importAction::uploadFile($path, $filename);
 			if ($ext == "Tab-Delimited") 
-				new TabRepositoryImporter($path."0/".$filename, $dr->getId());
+				$importer =& new TabRepositoryImporter($path."0/".$filename, $dr->getId());
 			else if ($ext == "XML") 
-				new XMLRepositoryImporter($path."0/".$filename, $dr->getId());
+				$importer =& new XMLRepositoryImporter($path."0/".$filename, $dr->getId());
+			
+			if ($importer->isDataValid())
+				$importer->import();
+			else {
+				print <<<END
+				
+				<h1>Holy jeepers, Wilson! The data wasn't the right format!</h1>
+END;
+			}
 		}
 
 		else {
