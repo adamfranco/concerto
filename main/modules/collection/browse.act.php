@@ -139,6 +139,12 @@ function printAssetShort(& $asset, &$harmoni) {
 	print  "\n\t<br />";
 	
 	AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
+	
+	$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($assetId);
+	if (!is_null($thumbnailURL)) {
+		print "\n\t<br /><img src='$thumbnailURL' alt='Thumbnail Image' />";
+	}
+	
 	$xLayout =& new XLayout();
 	$layout =& new Container($xLayout, BLOCK, 4);
 	$layout2 =& new Block(ob_get_contents(), 3);
