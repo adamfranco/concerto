@@ -58,6 +58,8 @@ class editAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
+		$harmoni =& Harmoni::instance();
+		$harmoni->request->passthrough("collection_id", "asset_id");
 		$centerPane =& $this->getActionRows();
 		$assetId =& $this->getAssetId();
 		$cacheName = 'edit_asset_wizard_'.$assetId->getIdString();
@@ -89,10 +91,10 @@ class editAction
 		
 		
 		// Update the effective/expiration dates
-		if ($properties['effective_date']->getValue())
+		if ($properties['datestep']['effective_date'])
 			$asset->updateEffectiveDate(
 				DateAndTime::fromString($properties['datestep']['effective_date']));
-		if ($properties['expiration_date']->getValue())
+		if ($properties['datestep']['expiration_date'])
 			$asset->updateExpirationDate(
 				DateAndTime::fromString($properties['datestep']['expiration_date']));
 		
@@ -139,6 +141,8 @@ class editAction
 		// Create the properties.
 		$displayNameProp =& $step->addComponent("display_name", new WTextField());
 		$displayNameProp->setValue($asset->getDisplayName());
+		$displayNameProp->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
+		$displayNameProp->setErrorRule(new WECRegex("[\\w]+"));
 //		$displayNameProp =& $step->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
 //		$displayNameProp->setDefaultValue($asset->getDisplayName());
 //		$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
@@ -194,14 +198,14 @@ class editAction
 		$property =& $step->addComponent("effective_date", new WTextField());
 //		$property =& $step->createProperty("effective_date", new RegexValidatorRule("^(([0-9]{4,8}))?$"));
 		$date =& $asset->getEffectiveDate();
-		$property->setValue($date->getYear()
+		if ($date) $property->setValue($date->getYear()
 			.(($date->getMonth()<10)?"0".intval($date->getMonth()):$date->getMonth())
 			.(($date->getDay()<10)?"0".intval($date->getDay()):$date->getDay()));
 //		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
 	
 		$property =& $step->addComponent("expiration_date", new WTextField());
 		$date =& $asset->getExpirationDate();
-		$property->setValue($date->getYear()
+		if ($date) $property->setValue($date->getYear()
 			.(($date->getMonth()<10)?"0".intval($date->getMonth()):$date->getMonth())
 			.(($date->getDay()<10)?"0".intval($date->getDay()):$date->getDay()));
 //		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
@@ -215,7 +219,7 @@ class editAction
 		print "\n<h2>"._("Expiration Date")."</h2>";
 		print "\n"._("The date that this <em>Asset</em> expires: ");
 		print "\n<br />[[expiration_date]]";
-		$step->setText(ob_get_contents());
+		$step->setContent(ob_get_contents());
 		ob_end_clean();
 	
 		return $wizard;
