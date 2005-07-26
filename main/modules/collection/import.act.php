@@ -23,8 +23,8 @@ class importAction extends RepositoryAction {
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
 		return $authZ->isUserAuthorized(
-		$idManager->getId("edu.middlebury.authorization.modify"),
-		$this->getRepositoryId());
+			$idManager->getId("edu.middlebury.authorization.add_children"),
+			$this->getRepositoryId());
 	}
 
 	/**
@@ -35,7 +35,7 @@ class importAction extends RepositoryAction {
 	 * @since 6/08/05
 	 */
 	function getUnauthorizedMessage () {
-		return _("You are not authorized to edit this <em>Collection</em>.");
+		return _("You are not authorized to import assets into this <em>Collection</em>.");
 	}
 
 	/**
@@ -51,8 +51,6 @@ class importAction extends RepositoryAction {
 		." <em>".$repository->getDisplayName()."</em> "
 		._(" Collection");
 	}
-
-	
 
 	/**
 	 * Build the content for this action
@@ -74,8 +72,9 @@ class importAction extends RepositoryAction {
 			$filename = $userfile['name'];
 			$newPath = $path."0";
 
+// add this error to new wizard as a necessary field
 			if($filename == "")
-			throwError(new Error("Specify a file to upload", "concerto.collection", true));
+				throwError(new Error("Specify a file to upload", "concerto.collection", true));
 
 			$ext = RequestContext::value("archivetype");
 			importAction::uploadFile($path, $filename);
@@ -86,14 +85,15 @@ class importAction extends RepositoryAction {
 			else if ($ext == "Exif") 
 				$importer =& new ExifRepositoryImporter($path."0/".$filename, $dr->getId());
 			
-			if ($importer->isDataValid())
-				$importer->import();
-			else {
-				print <<<END
-				
-				<h1>Holy jeepers, Wilson! The data wasn't the right format!</h1>
-END;
+			$importer->import();
+			if ($importer->hasErrors()) {
+				print("The bad news is that some errors occured during import, they are:\n");
+				$errorArray = $importer->getErrors();
+				print_r($errorArray);
 			}
+			print("The good news is that some assets were created during import, they are:\n");
+			$goodAssetIds = $importer->getGoodAssetIds();
+			print_r($goodAssetIds);
 		}
 
 		else {
