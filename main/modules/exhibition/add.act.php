@@ -66,7 +66,7 @@ class addAction
 	function &createWizard () {
 		$repository =& $this->getRepository();
 		$t =& $repository->getType();
-		$s =& $t->getKeyword();
+		$s = $t->getKeyword();
 		
 		// Instantiate the wizard, then add our steps.
 		if($s != "Exhibitions"){
@@ -74,48 +74,51 @@ class addAction
 			print ("error... you have some repository that's not an exhibition... you shouldn't be here my friend");
 		
 		}else{
-				$wizard =& new Wizard(_("Add new Exhibition to the Exhibitions repository"));
-			   
-				// :: Name and Description ::
-				$step =& $wizard->createStep(_("Name &amp; Description"));
+			$wizard =& new Wizard(_("Add new Exhibition to the Exhibitions repository"));
 			
-				// Create the properties.
-				$displayNameProp =& $step->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
-			$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
+			// :: Name and Description ::
+			$step =& $wizard->addStep("namedesc", new WizardStep());
+			$step->setDisplayName(_("Name &amp; Description"));
 			
-			$descriptionProp =& $step->createProperty("description", new RegexValidatorRule(".*"));
+			// Create the properties.
+			$displayNameProp =& $step->addComponent("display_name", new WTextField());
+			$displayNameProp->setErrorString(_("A value is required for this field."));
+			$displayNameProp->setErrorRule(new WECRegex("[\\w]+"));
+			
+			$descriptionProp =& $step->addComponent("description", WTextArea::withRowsAndColumns(5,30));
 			
 			// Create the step text
 			ob_start();
 			print "\n<h2>"._("Name")."</h2>";
 			print "\n"._("The Name for this <em>Exhibition</em>: ");
-			print "\n<br /><input type='text' name='display_name' value=\"[[display_name]]\" />[[display_name|Error]]";
+			print "\n<br />[[display_name]]";
 			print "\n<h2>"._("Description")."</h2>";
 			print "\n"._("The Description for this <em>Exhibition</em>: ");
-			print "\n<br /><textarea rows='5' cols='30' name='description'>[[description]]</textarea>[[description|Error]]";
+			print "\n<br />[[description]]";
 			print "\n<div style='width: 400px'> &nbsp; </div>";
-			$step->setText(ob_get_contents());
+			$step->setContent(ob_get_contents());
 			ob_end_clean();
 			
 			// :: Effective/Expiration Dates ::
-			$step =& $wizard->createStep(_("Effective Dates")." ("._("optional").")");
+			$step =& $wizard->addStep("dates", new WizardStep());
+			$step->setDisplayName(_("Effective Dates")." ("._("optional").")");
 			
 			// Create the properties.
-			$property =& $step->createProperty("effective_date", new RegexValidatorRule("^(([0-9]{4,8}))?$"));
-			$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
+			$property =& $step->addComponent("effective_date", new WTextField());
+//			$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
 			
-			$property =& $step->createProperty("expiration_date", new RegexValidatorRule("^(([0-9]{4,8}))?$"));
-			$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
+			$property =& $step->addComponent("expiration_date", new WTextField());
+//			$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
 			// Create the step text
 			ob_start();
 			print "\n<h2>"._("Effective Date")."</h2>";
 			print "\n"._("The date that this <em>Exhibition</em> becomes effective: ");
-			print "\n<br /><input type='text' name='effective_date' value=\"[[effective_date]]\" />[[effective_date|Error]]";
+			print "\n<br />[[effective_date]]";
 			
 			print "\n<h2>"._("Expiration Date")."</h2>";
 			print "\n"._("The date that this <em>Exhibition</em> expires: ");
-			print "\n<br /><input type='text' name='expiration_date' value=\"[[expiration_date]]\" />[[expiration_date|Error]]";
-			$step->setText(ob_get_contents());
+			print "\n<br />[[expiration_date]]";
+			$step->setContent(ob_get_contents());
 			ob_end_clean();
 		}  
 		return $wizard;
@@ -143,19 +146,19 @@ class addAction
 	
 	   // Get the type
 	   $assetType =& new HarmoniType('System Exhibitions', 'Concerto', 'Exhibition', 'A new exhibition');
-	   $asset =& $repositoryManager->createAsset($properties['display_name']->getValue(),$properties['description']->getValue(),$assetType);
+	   $asset =& $repositoryManager->createAsset($properties['namedesc']['display_name'],$properties['namedesc']['description'],$assetType);
 	   $assetId =& $asset->getId();
 	   $this->_assetId =& $assetId;
 	   //	   $content =& new Blob($properties['content']->getValue());
 	   // $asset->updateContent($content);
 	
 		// Update the effective/expiration dates
-		if ($properties['effective_date']->getValue())
+		if ($properties['dates']['effective_date'])
 			$asset->updateEffectiveDate(
-				DateAndTime::fromString($properties['effective_date']->getValue()));
-		if ($properties['expiration_date']->getValue())
+				DateAndTime::fromString($properties['dates']['effective_date']));
+		if ($properties['dates']['expiration_date'])
 			$asset->updateExpirationDate(
-				DateAndTime::fromString($properties['expiration_date']->getValue()));
+				DateAndTime::fromString($properties['dates']['expiration_date']));
 		return FALSE; 
 	}
 	/**

@@ -88,41 +88,43 @@ class editAction
 		$harmoni =& Harmoni::instance();
 		
 		$harmoni->history->markReturnURL(
-			"concerto/collection/edit/".$repositoryId->getIdString());
+			$harmoni->request->quickURL("collection", "edit", array(
+					"collection_id" => $repositoryId->getIdString())));
 	
 		// Instantiate the wizard, then add our steps.
-		$wizard =& new Wizard(_("Edit a Collection"));
+		$wizard =& SimpleStepWizard::withTitleAndDefaultLayout(_("Edit a Collection"));
 		
 		// :: Step One ::
-		$stepOne =& $wizard->createStep(_("Name &amp; Description"));
-		
+		$stepOne =& $wizard->addStep("namedesc", new WizardStep());
+		$stepOne->setDisplayName(_("Name &amp; Description"));
 		
 		// Create the step text
 		ob_start();
 		
-		$fieldname = RequestContext::name('display_name');
-		$displayNameProp =& $stepOne->createProperty($fieldname, new RegexValidatorRule("^[^ ]{1}.*$"));
-		$displayNameProp->setDefaultValue($repository->getDisplayName());
-		$displayNameProp->setErrorString(" <span style='color: #f00'>* "
-			._("The name must not start with a space.")."</span>");
+		$displayNameProp =& $stepOne->addComponent("display_name", new WTextField());
+		$displayNameProp->setValue($repository->getDisplayName());
+		$displayNameProp->setErrorText(_("A value for this field is required."));
+		$displayNameProp->setErrorRule(new WECRegex("[\\w]+"));
+
 		print "\n<h2>"._("Name")."</h2>";
 		print "\n"._("The Name for this <em>Collection</em>: ");
-		print "\n<br /><input type='text' name='$fieldname' value=\"[[$fieldname]]\" />[[$fieldname|Error]]";
+		print "\n<br />[[display_name]]";
 		
 		
 		$fieldname = RequestContext::name('description');
-		$descriptionProp =& $stepOne->createProperty($fieldname, new RegexValidatorRule(".*"));
-		$descriptionProp->setDefaultValue($repository->getDescription());
+		$descriptionProp =& $stepOne->createProperty("description", WTextArea::withRowsAndColumns(3,50));
+		$descriptionProp->setValue($repository->getDescription());
 		print "\n<h2>"._("Description")."</h2>";
 		print "\n"._("The Description for this <em>Collection</em>: ");
-		print "\n<br /><textarea name='$fieldname' rows='5' cols='30'>[[$fieldname]]</textarea>[[$fieldname|Error]]";
+		print "\n<br />[[description]]";
 		print "\n<div style='width: 400px'> &nbsp; </div>";
-		$stepOne->setText(ob_get_contents());
+		$stepOne->setContent(ob_get_contents());
 		ob_end_clean();
 		
 		
 		// :: Schema Selection ::
-		$selectStep =& $wizard->createStep(_("Schema Selection"));
+		$selectStep =& $wizard->addStep("schema", new WizardStep());
+		$selectStep->setDisplayName(_("Schema Selection"));
 		
 		// get an iterator of all RecordStructures
 		$recordStructures =& $repository->getRecordStructures();
