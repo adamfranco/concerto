@@ -1,8 +1,10 @@
 <?php
 require_once("/home/cshubert/public_html/importer/domit/xml_domit_include.php");
+
 //require_once(MYDIR."/domit/xml_domit_include.php");
 require_once(POLYPHONY."/main/library/RepositoryImporter/XMLRepositoryImporter.class.php");
 require_once(POLYPHONY."/main/library/RepositoryImporter/TabRepositoryImporter.class.php");
+require_once(POLYPHONY."/main/library/RepositoryImporter/ExifRepositoryImporter.class.php");
 
 require_once(HARMONI."utilities/Dearchiver.class.php");
 require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
@@ -81,6 +83,8 @@ class importAction extends RepositoryAction {
 				$importer =& new TabRepositoryImporter($path."0/".$filename, $dr->getId());
 			else if ($ext == "XML") 
 				$importer =& new XMLRepositoryImporter($path."0/".$filename, $dr->getId());
+			else if ($ext == "Exif") 
+				$importer =& new ExifRepositoryImporter($path."0/".$filename, $dr->getId());
 			
 			if ($importer->isDataValid())
 				$importer->import();
