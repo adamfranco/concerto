@@ -144,7 +144,6 @@ class importAction extends RepositoryAction {
 		$dr =& $this->getRepository();
 		$wizard =& $this->getWizard($cacheName);
 		$properties =& $wizard->getAllValues();
-		printpre($properties['filename']);
 		
 		$path = $properties['filename']['tmp_name'];
 		$filename = $properties['filename']['name'];
@@ -183,5 +182,61 @@ class importAction extends RepositoryAction {
 		$harmoni =& Harmoni::instance();
 		return $harmoni->request->quickURL("collection", "browse", array("collection_id" => $repositoryId->getIdString()));
 	}
+	
+	/**
+	 * Run this Action's wizard and add it to the specified container. Cache
+	 * this Action's wizard with the specified cacheName.
+	 *
+	 * This is the only method that an Action needs to call to run itself, see
+	 * {@link editAction::buildContent()} for an example:
+	 * <code>
+	 * <?php
+	 *	...
+	 *	
+	 *	&#109;**
+	 *	 * Build the content for this action
+	 *	 * 
+	 *	 * @return boolean
+	 *	 * @access public
+	 *	 * @since 4/26/05
+	 *	 *&#109;
+	 *	function buildContent () {
+	 *		$centerPane =& $this->getCenterPane();
+	 *		$assetId =& $this->getAssetId();
+	 *		$cacheName = 'edit_asset_wizard_'.$assetId->getIdString();
+	 *		
+	 *		$this->runWizard ( $cacheName, $centerPane );
+	 *	}
+	 *	
+	 *	...
+	 *	?>
+	 *	</code>
+	 * 
+	 * @param string $cacheName The name to cache this Action's Wizard with.
+	 * @param object Container $container The container to put the Wizard's layout in.
+	 * @return void
+	 * @access public
+	 * @since 4/28/05
+	 */
+	function runWizard ( $cacheName, &$container) {
+		$wizard =& $this->getWizard($cacheName);
+		$harmoni =& Harmoni::instance();
+		
+		// tell the wizard to GO
+		$wizard->go();
+		
+		$listener =& $wizard->getChild("_savecancel_");
+		
+		if ($listener->isSaveRequested()) {
+			if ($this->saveWizard($cacheName))
+				$this->closeWizard($cacheName);
+		} 
+		else if ($listener->isCancelRequested()) {
+			$this->cancelWizard($cacheName);	
+		}
+		
+		if (isset($_SESSION[$cacheName])) $container->add($wizard->getLayout($harmoni), null, null, CENTER, CENTER);
+	}
+	
 }
 ?>
