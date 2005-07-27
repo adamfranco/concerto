@@ -157,13 +157,16 @@ class importAction extends RepositoryAction {
 		else if ($properties['importtype'] == "Exif") 
 			$importer =& new ExifRepositoryImporter($newName, $dr->getId());
 		
-		if ($importer->isDataValid())
-			$importer->import();
-		else {
-			print <<<END
-<h1>Holy jeepers, Wilson! The data wasn't the right format!</h1>
-END;
+		$importer->import();
+		if ($importer->hasErrors()) {
+			print("The bad news is that some errors occured during import, they are:\n");
+			$errorArray = $importer->getErrors();
+			print_r($errorArray);
 		}
+		print("The good news is that some assets were created during import, they are:\n");
+		$goodAssetIds = $importer->getGoodAssetIds();
+		print_r($goodAssetIds);
+
 		return TRUE;
 	}
 		
