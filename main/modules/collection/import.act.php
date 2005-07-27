@@ -52,97 +52,122 @@ class importAction extends RepositoryAction {
 		._(" Collection");
 	}
 
-	/**
-	 * Build the content for this action
-	 * 
-	 * @return void
-	 * @access public
-	 * @since 6/08/05
-	 */
 	function buildContent () {
 		$dr =& $this->getRepository();
 		$harmoni =& Harmoni::instance();
-		$harmoni->request->startNamespace("concerto/import");
 		$centerPane =& $this->getActionRows();
-		$idManager =& Services::getService("Id");
-		ob_start();
-		if(RequestContext::value("submit")){
-			$userfile = RequestContext::value("userfile");
-			$path = $userfile['tmp_name'];
-			$filename = $userfile['name'];
-			$newPath = $path."0";
+		
+		$repositoryId = $dr->getId();
+		$harmoni->request->passthrough("collection_id");
+		$cacheName = 'import_asset_wizard_'.$repositoryId->getIdString();
+		$this->runWizard($cacheName, $centerPane);
 
-// add this error to new wizard as a necessary field
-			if($filename == "")
-				throwError(new Error("Specify a file to upload", "concerto.collection", true));
-
-			$ext = RequestContext::value("archivetype");
-			importAction::uploadFile($path, $filename);
-			if ($ext == "Tab-Delimited") 
-				$importer =& new TabRepositoryImporter($path."0/".$filename, $dr->getId());
-			else if ($ext == "XML") 
-				$importer =& new XMLRepositoryImporter($path."0/".$filename, $dr->getId());
-			else if ($ext == "Exif") 
-				$importer =& new ExifRepositoryImporter($path."0/".$filename, $dr->getId());
-			
-			$importer->import();
-			if ($importer->hasErrors()) {
-				print("The bad news is that some errors occured during import, they are:\n");
-				$errorArray = $importer->getErrors();
-				print_r($errorArray);
-			}
-			print("The good news is that some assets were created during import, they are:\n");
-			$goodAssetIds = $importer->getGoodAssetIds();
-			print_r($goodAssetIds);
-		}
-
-		else {
-			$archivetype = RequestContext::name("archivetype");
-			$userfile = RequestContext::name("userfile");
-			$submit = RequestContext::name("submit");
-
-			print <<<end
-			<table border='0' cellpadding='5' align = 'center'>
-			<tr><td colspan ='2'>Type in the address for or browse to file to import 
-				and click on the upload file button.</td></tr>
-				<form enctype ='multipart/form-data' action='' method='POST'>
-					<tr><td>Select the input archive type: </td><td><select name ='$archivetype'>
-					<option selected>Tab-Delimited</option>
-					<option>XML</option>
-					<option>Exif</option>
-					<option>File</option>
-					</select></td></tr>
-					<tr><td><input name='$userfile' type='file' /></td>
-					<td><input type='submit' name ='$submit' value ='upload file' /></td></tr>
-					</form>
-					</table>
-end;
-			$printText = new Block(ob_get_contents(), 3);
-			ob_end_clean();
-			$centerPane->add($printText, "100%", null, LEFT, CENTER);
-
-		}
-
-		$harmoni->request->endNamespace();
 	}
 	
 	/**
- 	 * uncompress the archive in a unique folder for use by the importer
- 	 * 
+ 	 * Create a new Wizard for this action. Caching of this Wizard is handled by
+	 * {@link getWizard()} and does not need to be implemented here.
  	 * @access public
  	 * @since 7/18/05
 	 */
-
-	function uploadFile ($path, $filename) {
-		$newPath = $path."0";
-		// create unique folder
-		mkdir($newPath);
-
-		// move uploaded file or lose uploaded file
-
-		$userfile = move_uploaded_file($path, $newPath.DIRECTORY_SEPARATOR.$filename);
+	
+	function &createWizard () {
+		//$repository =& $this->getRepository();
+		$wizard =& SimpleWizard::withText(
+			"\n<h3>"._("Import type")."</h3>".
+			"\n"._("The type of archive to be imported: ").
+			"\n<br />[[importtype]]".
+			"\n<h3>"._("Select file to upload")."</h3>".
+			"\n"._("The archive to be uploaded: ").
+			"\n<br />[[filename]]".
+			"<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n" .
+			"<tr>\n" .
+			"<td align='left' width='50%'>\n" .
+			"[[_cancel]]".
+			"</td>\n" .
+			"<td align='right' width='50%'>\n" .
+			"[[_save]]".
+			"</td></tr></table>");
 		
+		// :: Name and Description ::
+		//$step =& $wizard->addStep("fileupload", new WizardStep());
+		//$step->setDisplayName(_("Archive Type and File Upload"));
+		
+		$select =& $wizard->addComponent("importtype", new WSelectList());
+		$select->addOption("Tab-Delimited", "Tab-Delimited");
+		$select->addOption("XML", "XML");
+		$select->addOption("Exif", "Exif");
+		$select->setValue("Tab-Delimited");
+		
+		$fileField =& $wizard->addComponent("filename", new WFileUploadField());
+		
+		$save =& $wizard->addComponent("_save", new WSaveButton());
+		$cancel =& $wizard->addComponent("_cancel", new WCancelButton());
+		//$fileField->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
+		//$fileField->setErrorRule(new WECRegex("[\\w]+"));
+		return $wizard;
 	}
+	
+	/**
+	 * moves the file returned by the wizard to a direcotory with a unique
+	 * name
+	 * 
+	 * @param string tmpPath
+	 * @param string $filename
+	 * @return returns the path to the moved file
+	 * @access public
+	 * @since 7/27/05
+	 */
+	
+	function moveArchive($tmpPath, $filename) {
+		$newPath = $tmpPath."0";
+		mkdir($newPath);
+		
+		rename($tmpPath, $newPath.DIRECTORY_SEPARATOR.$filename);
+		return $newPath.DIRECTORY_SEPARATOR.$filename;
+	}
+	
+	/**
+	 * Save our results. Tearing down and unsetting the Wizard is handled by
+	 * in {@link runWizard()} and does not need to be implemented here.
+	 * 
+	 * @param string $cacheName
+	 * @return boolean TRUE if save was successful and tear-down/cleanup of the
+	 *		Wizard should ensue.
+	 * @access public
+	 * @since 7/27/05
+	 */
+	
+	
+	function saveWizard($cacheName) {
+		$harmoni =& Harmoni::instance();
+		$dr =& $this->getRepository();
+		$wizard =& $this->getWizard($cacheName);
+		$properties =& $wizard->getAllValues();
+		printpre($properties['filename']);
+		
+		$path = $properties['filename']['tmp_name'];
+		$filename = $properties['filename']['name'];
+		$newName = importAction::moveArchive($path, $filename);
+		
+		if ($properties['importtype'] == "Tab-Delimited") 
+			$importer =& new TabRepositoryImporter($newName, $dr->getId());
+		else if ($properties['importtype'] == "XML") 
+			$importer =& new XMLRepositoryImporter($newName, $dr->getId());
+		else if ($properties['importtype'] == "Exif") 
+			$importer =& new ExifRepositoryImporter($newName, $dr->getId());
+		
+		if ($importer->isDataValid())
+			$importer->import();
+		else {
+			print <<<END
+<h1>Holy jeepers, Wilson! The data wasn't the right format!</h1>
+END;
+		}
+		return TRUE;
+	}
+		
+		
 	/**
 	 * Return the URL that this action should return to when completed.
 	 * 
