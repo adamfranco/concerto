@@ -145,9 +145,18 @@ class importAction extends RepositoryAction {
 		$dr =& $this->getRepository();
 		$wizard =& $this->getWizard($cacheName);
 		$properties =& $wizard->getAllValues();
+
+		$centerPane =& $this->getActionRows();
+		ob_start();
 		
 		$path = $properties['filename']['tmp_name'];
 		$filename = $properties['filename']['name'];
+		if ($properties['filename']['name'] == "") {
+			print("Please choose a file to upload!");
+			$centerPane->add(new Block(ob_get_contents(), 1));
+			ob_end_clean();
+			return FALSE;
+		}	
 		$newName = importAction::moveArchive($path, $filename);
 		
 		if ($properties['importtype'] == "Tab-Delimited") 
@@ -157,10 +166,8 @@ class importAction extends RepositoryAction {
 		else if ($properties['importtype'] == "Exif") 
 			$importer =& new ExifRepositoryImporter($newName, $dr->getId());
 
-		$centerPane =& $this->getActionRows();
-		ob_start();
-
 		$importer->import();
+	
 		if ($importer->hasErrors()) {
 			print("The bad news is that some errors occured during import, they are: <br />");
 			$errorArray = $importer->getErrors();
