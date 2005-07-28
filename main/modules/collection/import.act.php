@@ -80,7 +80,7 @@ class importAction extends RepositoryAction {
 			"\n<h3>"._("Select file to upload")."</h3>".
 			"\n"._("The archive to be uploaded: ").
 			"\n<br />[[filename]]".
-			"<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n" .
+			"<table width='100%' border='0' style='margin-top:20px' >\n" .
 			"<tr>\n" .
 			"<td align='left' width='50%'>\n" .
 			"[[_cancel]]".
