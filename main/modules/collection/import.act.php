@@ -101,7 +101,8 @@ class importAction extends RepositoryAction {
 		
 		$fileField =& $wizard->addComponent("filename", new WFileUploadField());
 		
-		$save =& $wizard->addComponent("_save", new WSaveButton());
+		$save =& $wizard->addComponent("_save", 
+			WSaveButton::withLabel("Import"));
 		$cancel =& $wizard->addComponent("_cancel", new WCancelButton());
 		//$fileField->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 		//$fileField->setErrorRule(new WECRegex("[\\w]+"));
