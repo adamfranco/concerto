@@ -155,20 +155,50 @@ class importAction extends RepositoryAction {
 			$importer =& new XMLRepositoryImporter($newName, $dr->getId());
 		else if ($properties['importtype'] == "Exif") 
 			$importer =& new ExifRepositoryImporter($newName, $dr->getId());
-		
+
+		$centerPane =& $this->getActionRows();
+		ob_start();
+
 		$importer->import();
 		if ($importer->hasErrors()) {
-			print("The bad news is that some errors occured during import, they are:\n");
+			print("The bad news is that some errors occured during import, they are: <br />");
 			$errorArray = $importer->getErrors();
-			print_r($errorArray);
+			$this->printErrorMessages($errorArray);
 		}
-		print("The good news is that some assets were created during import, they are:\n");
-		$goodAssetIds = $importer->getGoodAssetIds();
-		print_r($goodAssetIds);
-
+		if ($importer->hasAssets()) {
+			print("The good news is that some assets were created during import, they are: <br />");
+			$goodAssetIds = $importer->getGoodAssetIds();
+			$this->printGoodAssetIds($goodAssetIds);
+		}
+		$centerPane->add(new Block(ob_get_contents(), 1));
+		ob_end_clean();
 		return TRUE;
 	}
-		
+
+	/**
+	 * Print the AssetIds for Assets created properly by the importer
+	 *
+	 * @param array $goodAssetIds
+	 * @since 7/29/05
+	 */
+	 function printErrorMessages(&$errorArray) {
+	 	foreach ($errorArray as $errorString) {
+	 		print("Error: ".$errorString."<br />");
+	 	}
+	 }
+
+	
+	/**
+	 * Print the AssetIds for Assets created properly by the importer
+	 *
+	 * @param array $goodAssetIds
+	 * @since 7/29/05
+	 */
+	 function printGoodAssetIds(&$goodAssetIds) {
+	 	foreach ($goodAssetIds as $id) {
+	 		print("Asset: ".$id->getIdString()."<br />");
+	 	}
+	 }
 		
 	/**
 	 * Return the URL that this action should return to when completed.
