@@ -80,7 +80,7 @@ class browseAction
 		
 		// If the Repository supports searching of root assets, just get those
 		$hasRootSearch = FALSE;
-		$rootSearchType =& new HarmoniType("Repository","Harmoni","RootAssets", "");
+		$rootSearchType =& new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", "");
 		$searchTypes =& $repository->getSearchTypes();
 		while ($searchTypes->hasNext()) {
 			if ($rootSearchType->isEqual( $searchTypes->next() )) {

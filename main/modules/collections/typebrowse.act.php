@@ -67,7 +67,7 @@ class typebrowseAction
 		ob_end_clean();
 		
 		$exhibitionRepositoryType =& new Type ('System Repositories', 
-											'Concerto', 'Exhibitions');
+											'edu.middlebury.concerto', 'Exhibitions');
 		
 		$repositoryManager =& Services::getService("Repository");
 		

@@ -84,15 +84,15 @@ foreach ($sqlFiles as $file) {
 		$agentManager =& Services::getService("AgentManager");
 		$idManager =& Services::getService("IdManager");
 		
-		$groupType =& new Type ("System", "Concerto", "SystemGroups", "Groups for administrators and others with special privledges.");
-		$nullType =& new Type ("System", "Concerto", "NULL");
+		$groupType =& new Type ("System", "edu.middlebury.harmoni", "SystemGroups", "Groups for administrators and others with special privledges.");
+		$nullType =& new Type ("System", "edu.middlebury.harmoni", "NULL");
 		$properties =& new HarmoniProperties($nullType);
 		$adminGroup =& $agentManager->createGroup("Administrators", $groupType, "Users that have access to every function in the system.", $properties);
 		$auditorGroup =& $agentManager->createGroup("Auditors", $groupType, "Users that can view all content in the system but not modify it.", $properties);
 		
 		// default administrator account
 		$authNMethodManager =& Services::getService("AuthNMethodManager");
-		$dbAuthType =& new Type ("Authentication", "Middlebury College", "Concerto DB");
+		$dbAuthType =& new Type ("Authentication", "edu.middlebury.harmoni", "Concerto DB");
 		$dbAuthMethod =& $authNMethodManager->getAuthNMethodForType($dbAuthType);
 		// Create the representation
 		$tokensArray = array("username" => "jadministrator",
@@ -102,7 +102,7 @@ foreach ($sqlFiles as $file) {
 		$dbAuthMethod->addTokens($adminAuthNTokens);
 		
 		// Create an agent
-		$agentType =& new Type ("System", "Concerto", "Default Agents", "Default agents created for install and setup. They should be removed on production systems.");
+		$agentType =& new Type ("System", "edu.middlebury.harmoni", "Default Agents", "Default agents created for install and setup. They should be removed on production systems.");
 		require_once(HARMONI."oki2/shared/NonReferenceProperties.class.php");
 		$agentProperties =& new NonReferenceProperties($agentType);
 		$agentProperties->addProperty("name", "Administrator, John");
@@ -129,7 +129,7 @@ foreach ($sqlFiles as $file) {
 		
 		
 	// View/Use Functions
-		$type =& new Type ("Authorization", "Concerto", "View/Use", "Functions for viewing and using.");
+		$type =& new Type ("Authorization", "edu.middlebury.harmoni", "View/Use", "Functions for viewing and using.");
 	
 		$id =& $idManager->getId("edu.middlebury.authorization.access");
 		$function =& $authZManager->createFunction($id, "Access", "Access a qualifier.", $type, $qualifierHierarchyId);
@@ -145,7 +145,7 @@ foreach ($sqlFiles as $file) {
 		
 		
 	// Editing Functions
-		$type =& new Type ("Authorization", "Concerto", "Editing", "Functions for editing.");
+		$type =& new Type ("Authorization", "edu.middlebury.harmoni", "Editing", "Functions for editing.");
 	
 		$id =& $idManager->getId("edu.middlebury.authorization.modify");
 		$function =& $authZManager->createFunction($id, "Modify", "Modify a qualifier.", $type, $qualifierHierarchyId);
@@ -161,7 +161,7 @@ foreach ($sqlFiles as $file) {
 		
 		
 	// Administration Functions
-		$type =& new Type ("Authorization", "Concerto", "Administration", "Functions for administering.");
+		$type =& new Type ("Authorization", "edu.middlebury.harmoni", "Administration", "Functions for administering.");
 	
 		$id =& $idManager->getId("edu.middlebury.authorization.view_authorizations");
 		$function =& $authZManager->createFunction($id, "View Authorizations", "View Authorizations at a qualifier.", $type, $qualifierHierarchyId);

@@ -72,7 +72,7 @@ class namebrowseAction
 		$allRepositories =& $repositoryManager->getRepositories();
 		
 		$exhibitionRepositoryType =& new Type ('System Repositories', 
-											'Concerto', 'Exhibitions');
+											'edu.middlebury.concerto', 'Exhibitions');
 		
 		// put the drs into an array and order them.
 		// @todo, do authorization checking

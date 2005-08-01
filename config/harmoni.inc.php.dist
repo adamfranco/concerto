@@ -109,9 +109,9 @@ require_once(OKI2."/osid/OsidContext.php");
 // :: Start the AuthenticationManager OSID Impl.
 	$configuration =& new ConfigurationProperties;
 	$tokenCollectors = array(
-//		serialize(new Type ("Authentication", "Middlebury College", "Concerto DB")) 
+//		serialize(new Type ("Authentication", "edu.middlebury.harmoni", "Concerto DB")) 
 //			=> new BasicFormNamePassTokenCollector,
-		serialize(new Type ("Authentication", "Middlebury College", "Concerto DB")) 
+		serialize(new Type ("Authentication", "edu.middlebury.harmoni", "Concerto DB")) 
 			=> new FormActionNamePassTokenCollector($harmoni->request->quickURL("auth","username_password_form")),
 	);
 	$configuration->addProperty('token_collectors', $tokenCollectors);
@@ -124,7 +124,7 @@ require_once(OKI2."/osid/OsidContext.php");
 		// set up a Database Authentication Method
 		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/SQLDatabaseAuthNMethod.class.php");
 		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/SQLDatabaseMD5UsernamePasswordAuthNTokens.class.php");
-		$dbAuthType =& new Type ("Authentication", "Middlebury College", "Concerto DB");
+		$dbAuthType =& new Type ("Authentication", "edu.middlebury.harmoni", "Concerto DB");
 		$dbMethodConfiguration =& new ConfigurationProperties;
 		$dbMethodConfiguration->addProperty('tokens_class', $arg0 = 'SQLDatabaseMD5UsernamePasswordAuthNTokens');
 		$dbMethodConfiguration->addProperty('database_id', $dbID);
@@ -148,7 +148,7 @@ require_once(OKI2."/osid/OsidContext.php");
 		// set up LDAPAuthentication Method
 // 		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/LDAPAuthNMethod.class.php");
 // 		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/LDAPAuthNTokens.class.php");	
-// 		$ldapAuthType =& new Type ("Authentication", "Middlebury College", "Middlebury LDAP");
+// 		$ldapAuthType =& new Type ("Authentication", "edu.middlebury.harmoni", "Middlebury LDAP");
 // 		$ldapConfiguration =& new ConfigurationProperties;
 // 		$ldapConfiguration->addProperty('tokens_class', $arg0 = 'LDAPAuthNTokens');
 // 		$ldapConfiguration->addProperty("LDAPHost", $arg1 = "ad.middlebury.edu");
@@ -308,12 +308,28 @@ require_once(OKI2."/osid/OsidContext.php");
 // print "</pre>";
 
 $repositoryManager =& Services::getService("Repository");
-$iterator = $repositoryManager->getRepositoriesByType(new HarmoniType ('System Repositories', 'Concerto', 'Exhibitions',
-				       'A Repository for holding Exhibitions, their Slide-Shows and Slides'));
-if(!($iterator->hasNextRepository())){
-  $t =& new HarmoniType ('System Repositories', 'Concerto', 'Exhibitions',
+$idManager =& Services::getService("Id");
+$exhibitionRepositoryId =& $idManager->getId("edu.middlebury.concerto.exhibition_repository");
+
+$repositories =& $repositoryManager->getRepositories();
+$exhibitionRepositoryExists = FALSE;
+while ($repositories->hasNext()) {
+	$repository =& $repositories->next();
+	if ($exhibitionRepositoryId->isEqual($repository->getId())) {
+		$exhibitionRepositoryExists = TRUE;
+		break;
+	}
+}
+
+if (!$exhibitionRepositoryExists) {
+	$exhibitionRepositoryType =& new Type (
+					'System Repositories', 
+					'edu.middlebury.concerto', 
+					'Exhibitions',
 			 'A Repository for holding Exhibitions, their Slide-Shows and Slides');
   $repository =& $repositoryManager->createRepository(
-						      "Exhibitions Repository", "Exhibition",
-						      $t);
+						      "All Exhibitions",
+						      "This is a Repository that holds all of the Exhibitions in Concerto.",
+						      $exhibitionRepositoryType,
+						      $exhibitionRepositoryId);
 }

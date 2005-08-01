@@ -144,7 +144,7 @@ class createAction
 		$property =& $elementStep->createProperty(
 			RequestContext::name("type"), 
 			new RegexValidatorRule(".*"));
-		$defaultType =& new Type ("Repository", "Harmoni", "string");
+		$defaultType =& new Type ("Repository", "edu.middlebury.harmoni", "string");
 		$property->setDefaultValue(HarmoniType::typeToString($defaultType));
 		
 		$property =& $elementStep->createProperty(
