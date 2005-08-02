@@ -85,7 +85,7 @@ class ConcertoMenuGenerator {
 		}
 		
 		$mainMenu_item6 =& new MenuItemLink("<span style='font-size: large'>"._("Exhibitions")."</span>", 
-			$harmoni->request->quickURL("exhibitions", "main"), 
+			$harmoni->request->quickURL("exhibitions", "browse"), 
 			(ereg("^exhibition.*",$module))?TRUE:FALSE,1);
 		$mainMenu->add($mainMenu_item6, "100%", null, LEFT, CENTER);
 		
