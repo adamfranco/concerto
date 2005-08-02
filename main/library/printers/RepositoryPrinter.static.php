@@ -47,9 +47,7 @@ class RepositoryPrinter {
 		$actionString = $harmoni->getCurrentAction();
 		$url =& $harmoni->request->mkURL();	
 		$url->setValue("collection_id", $repositoryId->getIdString());
-		
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $repositoryId)) {
-			
 			if ($actionString != "collection.browse") {
 				$url->setModuleAction("collection", "browse");
 				$links[] = "<a href='".$url->write()."'>";
