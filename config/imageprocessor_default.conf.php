@@ -3,7 +3,7 @@
 /**
  * Set up the ImageProcessor service for generating thumbnails
  *
- * 
+ * USAGE: Copy this file to imageprocessor.conf.php to set custom values.
  *
  * @package concerto.config
  * 

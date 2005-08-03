@@ -3,7 +3,7 @@
 /**
  * Set up the DataManager
  *
- * 
+ * USAGE: Copy this file to datamanager.conf.php to set custom values.
  *
  * @package concerto.config
  * 

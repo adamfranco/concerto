@@ -3,7 +3,7 @@
 /**
  * Set up the LanguageLocalization system
  *
- * 
+ * USAGE: Copy this file to language.conf.php to set custom values.
  *
  * @package concerto.config
  * 

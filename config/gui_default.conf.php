@@ -3,7 +3,7 @@
 /**
  * Set up the GUIManager
  *
- * 
+ * USAGE: Copy this file to gui.conf.php to set custom values.
  *
  * @package concerto.config
  * 

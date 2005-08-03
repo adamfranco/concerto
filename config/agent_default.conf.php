@@ -3,7 +3,7 @@
 /**
  * Set up the AgentManager
  *
- * 
+ * USAGE: Copy this file to agent.conf.php to set custom values.
  *
  * @package concerto.config
  * 

@@ -3,7 +3,7 @@
 /**
  * Set up the SetsManager
  *
- * 
+ * USAGE: Copy this file to sets.conf.php to set custom values.
  *
  * @package concerto.config
  * 

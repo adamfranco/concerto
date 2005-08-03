@@ -3,7 +3,7 @@
 /**
  * Set up the MIME service for sniffing mime types
  *
- * 
+ * USAGE: Copy this file to mime.conf.php to set custom values.
  *
  * @package concerto.config
  * 

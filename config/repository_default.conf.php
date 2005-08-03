@@ -3,7 +3,7 @@
 /**
  * Set up the RepositoryManager
  *
- * 
+ * USAGE: Copy this file to repository.conf.php to set custom values.
  *
  * @package concerto.config
  * 

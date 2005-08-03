@@ -3,7 +3,7 @@
 /**
  * Set up the HierarchyManager
  *
- * 
+ * USAGE: Copy this file to hierarchy.conf.php to set custom values.
  *
  * @package concerto.config
  * 

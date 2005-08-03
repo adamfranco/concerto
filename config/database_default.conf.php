@@ -3,7 +3,7 @@
 /**
  * Set up the DatabaseHandler
  *
- * 
+ * USAGE: Copy this file to database.conf.php to set custom values.
  *
  * @package concerto.config
  * 

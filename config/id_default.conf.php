@@ -3,7 +3,7 @@
 /**
  * Set up the IdManager as this is required for the ID service
  *
- * 
+ * USAGE: Copy this file to id.conf.php to set custom values.
  *
  * @package concerto.config
  * 

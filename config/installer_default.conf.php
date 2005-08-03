@@ -4,6 +4,7 @@
  * A 'config' which calls the installer script at the appropriate place in the
  * in the configuration sequence.
  *
+ *
  * @package concerto.config
  * 
  * @copyright Copyright &copy; 2005, Middlebury College

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Set up the ActionHandler
+ * Set up the ActionHandler. The ActionHandler provides a logical navigation-control system.
  *
- * The ActionHandler provides a logical navigation-control system
+ * USAGE: Copy this file to action.conf.php to set custom values.
  *
  * @package concerto.config
  * 

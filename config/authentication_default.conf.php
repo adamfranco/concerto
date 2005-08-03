@@ -3,7 +3,7 @@
 /**
  * Set up the AuthenticationManager and associated Authentication modules
  *
- * 
+ * USAGE: Copy this file to authentication.conf.php to set custom values.
  *
  * @package concerto.config
  * 

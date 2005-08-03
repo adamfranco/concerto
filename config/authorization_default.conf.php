@@ -3,7 +3,7 @@
 /**
  * Set up the AuthorizationManager
  *
- * 
+ * USAGE: Copy this file to authorization.conf.php to set custom values.
  *
  * @package concerto.config
  * 

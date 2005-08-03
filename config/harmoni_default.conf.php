@@ -3,6 +3,8 @@
 /**
  * The main configuration file.
  *
+ * USAGE: Copy this file to harmoni.conf.php to set custom values.
+ *
  * @package concerto.config
  * 
  * @copyright Copyright &copy; 2005, Middlebury College
