@@ -115,7 +115,7 @@ class browseAction
 		} 
 		// Otherwise, just get all the assets
 		else {
-			$assets =& $asset->getAssets();
+			$assets =& $repository->getAssets();
 		}
 		
 		//***********************************
