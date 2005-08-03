@@ -75,6 +75,8 @@ class mainAction
 		$actionRows->add($introText, "100%", null, CENTER, CENTER);
 		ob_end_clean();
 		
+		
+		
 		$actionRows->add(new Block("<span style='font-size: larger'><b>" . _("Authorizations") . "</b></span>" , 2));
 		
 		ob_start();
@@ -84,6 +86,21 @@ class mainAction
 		print "</a></li>";
 		print "\n\t<li><a href='".$harmoni->request->quickURL("authorization","choose_agent")."'>";
 		print _("Edit Agent Authorizations &amp; Details");
+		print "</a></li>";
+		print "\n</ul>";
+		
+		$introText =& new Block(ob_get_contents(),3);
+		$actionRows->add($introText, "100%", null, CENTER, CENTER);
+		ob_end_clean();
+		
+		
+		
+		$actionRows->add(new Block("<span style='font-size: larger'><b>" . _("Development") . "</b></span>" , 2));
+		
+		ob_start();
+		print "\n<ul>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("admin","main", array('reset_concerto' => 'TRUE'))."'>";
+		print _("Reset Concerto");
 		print "</a></li>";
 		print "\n</ul>";
 		

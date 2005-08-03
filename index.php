@@ -67,17 +67,58 @@ require_once(HARMONI."GUIManager/Themes/SimpleLinesTheme.class.php");
 $harmoni->startSession();
 
 
+/*********************************************************
+ * If we pressed a button to reset concerto, clear the session
+ * and delete our tables.
+ *********************************************************/
+if (isset($_REQUEST["reset_concerto"])) {
+	$_SESSION = array();
+	if (file_exists('config/database.conf.php'))
+		require_once ('config/database.conf.php');
+	else
+		require_once ('config/database_default.conf.php');
+	
+	$dbc =& Services::getService("DatabaseManager");
+	$tableList = $dbc->getTableList($dbID);
+	if (count($tableList)) {
+		$queryString = "DROP TABLE `".implode("`, `", $tableList)."`;";
+		print $queryString;
+		$query =& new GenericSQLQuery($queryString);
+		$dbc->query($query, $dbID);
+	}
+}
+
 /******************************************************************************
  * Include our configs
  ******************************************************************************/
-$configPath = "config/harmoni.inc.php";
-if (!file_exists($configPath)) {
-	print "<h2>The configuration file was not found in the specified location, '";
-	print $configPath;
-	print "'. Please copy the sample config: 'config/harmoni.inc.php.dist' to '$configPath'.</h2>";
-}
-require_once ($configPath);
+require_once(HARMONI."/oki2/shared/ConfigurationProperties.class.php");
+require_once(OKI2."/osid/OsidContext.php");
 
+$configs = array(	'harmoni',
+					'action',
+					'database',
+					'id',
+					'agent',
+					'authentication',
+					'gui',
+					'language',
+					'authorization',
+					'sets',
+					'mime',
+					'imageprocessor',
+					'hierarchy',
+					'installer',
+					'datamanager',
+					'repository',
+					'post_config_setup'
+				);
+
+foreach ($configs as $config) {
+	if (file_exists('config/'.$config.'.conf.php'))
+		require_once ('config/'.$config.'.conf.php');
+	else
+		require_once ('config/'.$config.'_default.conf.php');
+}
 
 /******************************************************************************
  * 	Execute our actions
