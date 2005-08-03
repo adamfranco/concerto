@@ -80,6 +80,9 @@ class importAction extends RepositoryAction {
 			"\n<h3>"._("Select file to upload")."</h3>".
 			"\n"._("The archive to be uploaded: ").
 			"\n<br />[[filename]]".
+			"\n<br /><h3>"._("Stop on any Error: ")."</h3>".
+			"\n"._("Do not import subsequent assets after the first asset with error.").
+			"\n<br />[[dieonerror]]".
 			"<table width='100%' border='0' style='margin-top:20px' >\n" .
 			"<tr>\n" .
 			"<td align='left' width='50%'>\n" .
@@ -100,6 +103,8 @@ class importAction extends RepositoryAction {
 		$select->setValue("Tab-Delimited");
 		
 		$fileField =& $wizard->addComponent("filename", new WFileUploadField());
+		
+		$dieOnError =& $wizard->addComponent("dieonerror", new WCheckBox());
 		
 		$save =& $wizard->addComponent("_save", 
 			WSaveButton::withLabel("Import"));
@@ -158,13 +163,15 @@ class importAction extends RepositoryAction {
 			return FALSE;
 		}	
 		$newName = importAction::moveArchive($path, $filename);
-		
+		if($properties['dieonerror'] = "on")
+			$dieonError = true;
+		else $dieonError = false;
 		if ($properties['importtype'] == "Tab-Delimited") 
-			$importer =& new TabRepositoryImporter($newName, $dr->getId());
+			$importer =& new TabRepositoryImporter($newName, $dr->getId(), $dieonError);
 		else if ($properties['importtype'] == "XML") 
-			$importer =& new XMLRepositoryImporter($newName, $dr->getId());
+			$importer =& new XMLRepositoryImporter($newName, $dr->getId(), $dieonError);
 		else if ($properties['importtype'] == "Exif") 
-			$importer =& new ExifRepositoryImporter($newName, $dr->getId());
+			$importer =& new ExifRepositoryImporter($newName, $dr->getId(), $dieonError);
 
 		$importer->import();
 	
