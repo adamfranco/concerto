@@ -61,15 +61,8 @@ class editAction
 		$centerPane =& $this->getActionRows();
 		$repositoryId =& $this->getRepositoryId();
 		$cacheName = 'edit_collection_wizard_'.$repositoryId->getIdString();
-		
-		// Move to Schema creation if that button is pressed.
-		if (RequestContext::value('create_schema') && $this->saveWizard($cacheName)) {
-			$this->closeWizard($cacheName);
-			$harmoni =& Harmoni::instance();
-			RequestContext::locationHeader($harmoni->request->quickURL("schema", "create", array(
-					"collection_id" => $repositoryId->getIdString())));
-			return TRUE;
-		}
+		$harmoni =& Harmoni::instance();
+		$harmoni->request->passthrough("collection_id");
 		
 		$this->runWizard ( $cacheName, $centerPane );
 	}
@@ -112,7 +105,7 @@ class editAction
 		
 		
 		$fieldname = RequestContext::name('description');
-		$descriptionProp =& $stepOne->createProperty("description", WTextArea::withRowsAndColumns(3,50));
+		$descriptionProp =& $stepOne->addComponent("description", WTextArea::withRowsAndColumns(3,50));
 		$descriptionProp->setValue($repository->getDescription());
 		print "\n<h2>"._("Description")."</h2>";
 		print "\n"._("The Description for this <em>Collection</em>: ");
@@ -133,11 +126,12 @@ class editAction
 		
 		ob_start();
 		$fieldname = RequestContext::name('create_schema');
+		$selectStep->addComponent("_create_schema", WSaveButton::withLabel(_("Save Changes and Create a New Schema")));
 		
 		print "<h2>"._("Select Cataloging Schemata")."</h2>";
 		print "\n<p>"._("Select which cataloging schemata you wish to appear during <em>Asset</em> creation and editing. <em>Assets</em> can hold data in any of the schemata, but only the ones selected here will be availible when adding new data.")."</p>";
 		print "\n<p>"._("If none of the schemata listed below fit your needs, please click the button below to save your changes and create a new schema.")."</p>";
-		print "\n<input type='submit' name='$fieldname' value='"._("Save Changes and Create a new Schema")."' />";
+		print "\n[[_create_schema]]";
 	
 		
 		
@@ -162,23 +156,23 @@ class editAction
 			
 			// Create the properties.
 			// 'in set' property
-			$fieldname = RequestContext::name("schema_".$recordStructureId->getIdString());
-			$property =& $selectStep->createProperty($fieldname, new RegexValidatorRule(".*"), FALSE);
+			$fieldname = "schema_".$recordStructureId->getIdString();
+			$property =& $selectStep->addComponent($fieldname, new WCheckBox());
 			if ($set->isInSet($recordStructureId))
-				$property->setDefaultValue(1);
+				$property->setChecked(true);
 			else
-				$property->setDefaultValue(0);
+				$property->setChecked(false);
 			
 			// Order property
-			$orderFieldname = RequestContext::name("schema_".$recordStructureId->getIdString()."_position");
-			$property =& $selectStep->createProperty($orderFieldname, new RegexValidatorRule(".*"), FALSE);
+			$orderFieldName = "schema_".$recordStructureId->getIdString()."_position";
+			$property =& $selectStep->addComponent($orderFieldName, new WSelectList());
 			if ($set->isInSet($recordStructureId))
-				$property->setDefaultValue($set->getPosition($recordStructureId)+1);
+				$property->setValue($set->getPosition($recordStructureId)+1);
 			else
-				$property->setDefaultValue(0);
+				$property->setValue(0);
 			
 			print "\n<tr><td valign='top'>";
-			print "\n\t<input type='checkbox' name='$fieldname' value='1' [['$fieldname' == TRUE|checked='checked'|]] />";
+			print "\n\t[[$fieldname]]";
 			print "\n\t<strong>".$recordStructure->getDisplayName()."</strong>";
 			print "\n</td><td valign='top'>\n\t<em>".$recordStructure->getDescription()."</em>";
 			print " <a href='";
@@ -189,9 +183,10 @@ class editAction
 			print "'>more...</a>";
 			print "\n</td><td valign='top'>";
 			
-			print "\n\t<select name='$orderFieldname'>";
+			print "\n\t[[$orderFieldName]]";
 			for ($i=0; $i <= $numRecordStructures; $i++) {
-				print "\n\t\t<option value='$i' [['$orderFieldname' == '$i'|selected='selected'|]]>".(($i)?$i:"")."</option>";
+//				print "\n\t\t<option value='$i' [['$orderFieldname' == '$i'|selected='selected'|]]>".(($i)?$i:"")."</option>";
+				$property->addOption($i, $i?$i:"");
 			}
 			print "\n\t</select>";
 			
@@ -199,7 +194,7 @@ class editAction
 		}
 		print "\n</table>";
 		
-		$selectStep->setText(ob_get_contents());
+		$selectStep->setContent(ob_get_contents());
 		ob_end_clean();
 		
 		return $wizard;
@@ -220,8 +215,8 @@ class editAction
 		
 		// If all properties validate then go through the steps nessisary to
 		// save the data.
-		if ($wizard->updateLastStep()) {
-			$properties =& $wizard->getProperties();
+		if ($wizard->validate()) {
+			$properties =& $wizard->getAllValues();
 	// 		print "Now Saving: ";
 	//		printpre($properties);
 			
@@ -229,8 +224,8 @@ class editAction
 			$id =& $this->getRepositoryId();
 			$repository =& $this->getRepository();
 			
-			$repository->updateDisplayName($properties['display_name']->getValue());
-			$repository->updateDescription($properties['description']->getValue());
+			$repository->updateDisplayName($properties['namedesc']['display_name']);
+			$repository->updateDescription($properties['namedesc']['description']);
 			
 			
 		// Save the Schema settings.
@@ -255,11 +250,11 @@ class editAction
 				$recordStructureId =& $recordStructure->getId();
 				
 				// If the box is checked, make sure that the ID is in the set
-				$fieldName = RequestContext::name("schema_".$recordStructureId->getIdString());
-				if ($properties[$fieldName]->getValue()) {
+				$fieldName = "schema_".$recordStructureId->getIdString();
+				if ($properties['schema'][$fieldName]) {
 					if (!$set->isInSet($recordStructureId))
 						$set->addItem($recordStructureId);
-					if ($position = $properties[$fieldName."_position"]->getValue())
+					if ($position = $properties['schema'][$fieldName."_position"])
 						$positions[$position-1] =& $recordStructureId;
 					
 					// Store some info so that we can check that all structures are valid.
@@ -296,6 +291,15 @@ class editAction
 				}
 			}
 			
+			// Move to Schema creation if that button is pressed.
+			if ($properties['schema']['_create_schema']) {
+				$this->closeWizard($cacheName);
+				$harmoni =& Harmoni::instance();
+				RequestContext::locationHeader($harmoni->request->quickURL("schema", "create", array(
+						"collection_id" => $id->getIdString())));
+				exit(0);
+			}
+				
 			return TRUE;
 		} else {
 			return FALSE;
