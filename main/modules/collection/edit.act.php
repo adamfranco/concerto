@@ -156,15 +156,18 @@ class editAction
 			
 			// Create the properties.
 			// 'in set' property
-			$fieldname = "schema_".$recordStructureId->getIdString();
+			$fieldname = "schema_".str_replace(".","__",$recordStructureId->getIdString());
 			$property =& $selectStep->addComponent($fieldname, new WCheckBox());
 			if ($set->isInSet($recordStructureId))
 				$property->setChecked(true);
 			else
 				$property->setChecked(false);
+				
+			$property->setLabel($recordStructure->getDisplayName());
+			$property->setStyle("font-weight: 900;");
 			
 			// Order property
-			$orderFieldName = "schema_".$recordStructureId->getIdString()."_position";
+			$orderFieldName = $fieldname."_position";
 			$property =& $selectStep->addComponent($orderFieldName, new WSelectList());
 			if ($set->isInSet($recordStructureId))
 				$property->setValue($set->getPosition($recordStructureId)+1);
@@ -173,7 +176,7 @@ class editAction
 			
 			print "\n<tr><td valign='top'>";
 			print "\n\t[[$fieldname]]";
-			print "\n\t<strong>".$recordStructure->getDisplayName()."</strong>";
+//			print "\n\t<strong>".a."</strong>";
 			print "\n</td><td valign='top'>\n\t<em>".$recordStructure->getDescription()."</em>";
 			print " <a href='";
 			print $harmoni->request->quickURL("schema", "view", array(
@@ -250,7 +253,7 @@ class editAction
 				$recordStructureId =& $recordStructure->getId();
 				
 				// If the box is checked, make sure that the ID is in the set
-				$fieldName = "schema_".$recordStructureId->getIdString();
+				$fieldName = "schema_".str_replace(".","__",$recordStructureId->getIdString());
 				if ($properties['schema'][$fieldName]) {
 					if (!$set->isInSet($recordStructureId))
 						$set->addItem($recordStructureId);
