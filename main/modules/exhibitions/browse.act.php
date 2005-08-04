@@ -8,7 +8,8 @@
  * @version $Id$
  */ 
 
-require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
+require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
+require_once(MYDIR."/main/library/printers/ExhibitionPrinter.static.php");
 
 /**
  * 
@@ -119,7 +120,7 @@ class browseAction
 
 
 // Callback function for printing Assets
-function printAssetShort(& $asset, &$harmoni) {
+function printAssetShort(&$asset, &$harmoni) {
 	ob_start();
 	
 	$assetId =& $asset->getId();
@@ -127,7 +128,7 @@ function printAssetShort(& $asset, &$harmoni) {
 	print  "\n\t<br /><em>".$asset->getDescription()."</em>";	
 	print  "\n\t<br />";
 	
-	AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
+	ExhibitionPrinter::printFunctionLinks($asset);
 	
 	$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($assetId);
 	if (!is_null($thumbnailURL)) {

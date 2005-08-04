@@ -20,7 +20,7 @@ require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
  *
  * @version $Id$
  */
-class create_exhibitionAction 
+class modify_exhibitionAction 
 	extends MainWindowAction
 {
 	/**
@@ -31,13 +31,19 @@ class create_exhibitionAction
 	 * @since 4/26/05
 	 */
 	function isAuthorizedToExecute () {
-		// Check that the user can create an asset here.
+		$harmoni =& Harmoni::instance();
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
-		 
+		
+		$harmoni->request->startNamespace('modify_exhibition');
+		$harmoni->request->passthrough('exhibition_id');
+		$exhibitionId =& $idManager->getId(RequestContext::value('exhibition_id'));
+		$harmoni->request->endNamespace();
+		
+		// Check that the user can create an asset here.
 		return $authZ->isUserAuthorized(
 			$idManager->getId("edu.middlebury.authorization.add_children"),
-			$idManager->getId("edu.middlebury.concerto.exhibition_repository"));
+			$exhibitionId);
 	}
 	
 	/**
@@ -48,18 +54,7 @@ class create_exhibitionAction
 	 * @since 4/26/05
 	 */
 	function getUnauthorizedMessage () {
-		return _("You are not authorized to create an <em>Exhibition</em>.");
-	}
-	
-	/**
-	 * Return the heading text for this action, or an empty string.
-	 * 
-	 * @return string
-	 * @access public
-	 * @since 4/26/05
-	 */
-	function getHeadingText () {
-		return _("Browse all Exhibitions");
+		return _("You are not authorized to modify this <em>Exhibition</em>.");
 	}
 	
 	/**
@@ -70,10 +65,8 @@ class create_exhibitionAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$harmoni =& Harmoni::instance();
-		
 		$centerPane =& $this->getActionRows();
-		$cacheName = 'create_exhibition_wizard';
+		$cacheName = 'modify_exhibition_wizard';
 		
 		$this->runWizard ( $cacheName, $centerPane );
 	}
@@ -87,16 +80,23 @@ class create_exhibitionAction
 	 * @since 4/28/05
 	 */
 	function &createWizard () {
+		$harmoni =& Harmoni::instance();
+		$harmoni->request->startNamespace('modify_exhibition');
+		$harmoni->request->passthrough('exhibition_id');
+		
 		$idManager =& Services::getService("Id");
 		$repositoryManager =& Services::getService("Repository");
 		
 		$exhibitionRepositoryId =& $idManager->getId(
 				"edu.middlebury.concerto.exhibition_repository");
 		$repository =& $repositoryManager->getRepository($exhibitionRepositoryId);
-		
+		$asset =& $repository->getAsset(
+					$idManager->getId(RequestContext::value('exhibition_id')));
+
 		
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withTitleAndDefaultLayout(_("Create an Exhibition"));
+		$wizard =& SimpleStepWizard::withTitleAndDefaultLayout(
+			_("Modify the ")."<em>".$asset->getDisplayName()."</em>"._(" Exhibition"));
 		
 		// :: Name and Description ::
 		$step =& $wizard->addStep("namedescstep", new WizardStep());
@@ -106,8 +106,10 @@ class create_exhibitionAction
 		$displayNameProp =& $step->addComponent("display_name", new WTextField());
 		$displayNameProp->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 		$displayNameProp->setErrorRule(new WECRegex("[\\w]+"));
+		$displayNameProp->setValue($asset->getDisplayName());
 		
 		$descriptionProp =& $step->addComponent("description", WTextArea::withRowsAndColumns(5,30));
+		$descriptionProp->setValue($asset->getDescription());
 				
 		// Create the step text
 		ob_start();
@@ -127,7 +129,14 @@ class create_exhibitionAction
 		
 		// Create the properties.
 		$property =& $step->addComponent("effective_date", new WTextField());
+		$date =& $asset->getEffectiveDate();
+		if (is_object($date))
+			$property->setValue($date->asString());
+		
 		$property =& $step->addComponent("expiration_date", new WTextField());
+		$date =& $asset->getExpirationDate();
+		if (is_object($date))
+			$property->setValue($date->asString());
 		
 		// Create the step text
 		ob_start();
@@ -141,6 +150,7 @@ class create_exhibitionAction
 		$step->setContent(ob_get_contents());
 		ob_end_clean();
 		
+		$harmoni->request->endNamespace();
 		return $wizard;
 	}
 		
@@ -155,6 +165,10 @@ class create_exhibitionAction
 	 * @since 4/28/05
 	 */
 	function saveWizard ( $cacheName ) {
+		$harmoni =& Harmoni::instance();
+		$harmoni->request->startNamespace('modify_exhibition');
+		$harmoni->request->passthrough('exhibition_id');
+		
 		$wizard =& $this->getWizard($cacheName);
 		
 		// Make sure we have a valid Repository
@@ -165,6 +179,8 @@ class create_exhibitionAction
 		$exhibitionRepositoryId =& $idManager->getId(
 				"edu.middlebury.concerto.exhibition_repository");
 		$repository =& $repositoryManager->getRepository($exhibitionRepositoryId);
+		$asset = $repository->getAsset(
+					$idManager->getId(RequestContext::value('exhibition_id')));
 		
 		$properties =& $wizard->getAllValues();
 		
@@ -174,9 +190,8 @@ class create_exhibitionAction
 							"Exhibition Assets are containers for Slideshows.");
 		
 		
-		$asset =& $repository->createAsset($properties['namedescstep']['display_name'], 
-									$properties['namedescstep']['description'], 
-									$assetType);
+		$asset->updateDisplayName($properties['namedescstep']['display_name']);
+		$asset->updateDescription($properties['namedescstep']['description']);
 									
 		$assetId =& $asset->getId();
 		$this->_assetId =& $assetId;
@@ -189,6 +204,7 @@ class create_exhibitionAction
 			$asset->updateExpirationDate(
 				DateAndTime::fromString($properties['datestep']['expiration_date']));
 		
+		$harmoni->request->endNamespace();
 		return TRUE;
 	}
 	
