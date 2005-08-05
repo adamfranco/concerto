@@ -131,6 +131,17 @@ class AssetPrinter {
 			}
 		}
 		
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId())) {
+			$harmoni->request->startNamespace("basket");
+			$links[] = "<a href='"
+				.$harmoni->request->quickURL("basket", "add",
+					array("asset_id" => $assetId->getIdString()))
+				."'>";
+			$links[count($links) - 1] .= _("add to basket")."</a>";
+			$harmoni->request->endNamespace();
+			$harmoni->history->markReturnURL("polyphony/basket", $harmoni->request->mkURLWithPassthrough());
+		}
+		
 		print  implode("\n\t | ", $links);
 	}
 	
