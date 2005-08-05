@@ -275,7 +275,7 @@ class createAction
 			
 			// Create a set for the RecordStructure
 			$setManager =& Services::getService("Sets");
-			$set =& $setManager->getSet($recordStructureId);
+			$set =& $setManager->getPersistentSet($recordStructureId);
 
 			// Store up the positions for later setting after all of the ids have
 			// been added to the set and we can do checking to make sure that 

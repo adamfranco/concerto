@@ -135,7 +135,7 @@ class editviewAction
 		
 		// Get the set of RecordStructures so that we can print them in order.
 		$setManager =& Services::getService("Sets");
-		$structSet =& $setManager->getSet($repositoryId);
+		$structSet =& $setManager->getPersistentSet($repositoryId);
 		
 		// First, lets go through the info structures listed in the set and print out
 		// the info records for those structures in order.
@@ -249,7 +249,7 @@ function printRecord(& $record, & $assetId, & $repositoryId) {
 	
 	// Print out the parts/partstructures for this recordstructure
 	$setManager =& Services::getService("Sets");
-	$partStructureSet =& $setManager->getSet($structureId);
+	$partStructureSet =& $setManager->getPersistentSet($structureId);
 	
 	$partsStructureArray = array();
 	// Print out the ordered parts/fields

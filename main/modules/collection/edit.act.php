@@ -122,7 +122,7 @@ class editAction
 		// get an iterator of all RecordStructures
 		$recordStructures =& $repository->getRecordStructures();
 		$setManager =& Services::getService("Sets");
-		$set =& $setManager->getSet($repositoryId);
+		$set =& $setManager->getPersistentSet($repositoryId);
 		
 		ob_start();
 		$fieldname = RequestContext::name('create_schema');
@@ -235,7 +235,7 @@ class editAction
 			
 			// Get the set for this Repository
 			$setManager =& Services::getService("Sets");
-			$set =& $setManager->getSet($id);
+			$set =& $setManager->getPersistentSet($id);
 			
 			// get an iterator of all RecordStructures
 			$recordStructures =& $repository->getRecordStructures();

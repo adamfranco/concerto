@@ -38,6 +38,7 @@ require_once ($harmoniPath);
 /******************************************************************************
  * Include Polyphony
  ******************************************************************************/
+define("POLYPHONY_PATH", MYPATH."/../polyphony/");
 $polyphonyPath = "../polyphony/polyphony.inc.php";
 if (!file_exists($polyphonyPath)) {
 	print "<h2>Polyphony was not found in the specified location, '";

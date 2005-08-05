@@ -89,7 +89,7 @@ class editAction
 		
 		// First get the set for this structure and start with the partStructure in the set.
 		$setManager =& Services::getService("Sets");
-		$partStructureSet =& $setManager->getSet($structureId);
+		$partStructureSet =& $setManager->getPersistentSet($structureId);
 		
 		$moduleManager =& Services::getService("InOutModules");
 		// if we are dealing with ordered partStructures, order them

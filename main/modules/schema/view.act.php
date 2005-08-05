@@ -74,7 +74,7 @@ class viewAction
 		$recordStructureId =& $this->getRecordStructureId();
 		$recordStructure =& $this->getRecordStructure();
 		$setManager =& Services::getService("Sets");
-		$set =& $setManager->getSet($recordStructureId);
+		$set =& $setManager->getPersistentSet($recordStructureId);
 
 		ob_start();
 		
