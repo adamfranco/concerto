@@ -9,7 +9,7 @@
  */ 
 
 require_once(POLYPHONY."/main/library/AbstractActions/Action.class.php");
-require_once(POLYPHONY."/main/library/Basket/BasketPrinter.class.php");
+require_once(POLYPHONY."/main/library/Basket/BasketManager.class.php");
 
 /**
  * build the frame of the window
@@ -183,7 +183,7 @@ class displayAction
 		$contentDestination->add($harmoni->result, null, null, TOP, CENTER); 
 		
 		// Basket
-		$centerPane->add(BasketPrinter::getSmallBasketBlock(), "140px", null, LEFT, TOP);
+		$centerPane->add(BasketManager::getSmallBasketBlock(), "140px", null, LEFT, TOP);
 		
 	// :: Footer ::
 		$footerRow =& new Container($yLayout, OTHER, 1);
