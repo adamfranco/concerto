@@ -85,7 +85,7 @@ class editAction
 		$structureId =& $structure->getId();
 	
 		// Instantiate the wizard, then add our steps.
-		$wizard =& new Wizard(_("Edit Record"));
+		$wizard =& SimpleStepWizard::withTitleAndDefaultLayout(_("Edit Record"));
 		
 		// First get the set for this structure and start with the partStructure in the set.
 		$setManager =& Services::getService("Sets");
