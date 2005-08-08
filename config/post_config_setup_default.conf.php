@@ -17,7 +17,7 @@ if (!isset($_SESSION['post_config_setup_complete'])) {
 	$repositoryManager =& Services::getService("Repository");
 	$idManager =& Services::getService("Id");
 	$exhibitionRepositoryId =& $idManager->getId("edu.middlebury.concerto.exhibition_repository");
-	
+
 	$repositories =& $repositoryManager->getRepositories();
 	$exhibitionRepositoryExists = FALSE;
 	while ($repositories->hasNext()) {
@@ -29,6 +29,7 @@ if (!isset($_SESSION['post_config_setup_complete'])) {
 	}
 	
 	if (!$exhibitionRepositoryExists) {
+
 		$exhibitionRepositoryType =& new Type (
 						'System Repositories', 
 						'edu.middlebury.concerto', 
@@ -39,6 +40,15 @@ if (!isset($_SESSION['post_config_setup_complete'])) {
 								  "This is a Repository that holds all of the Exhibitions in Concerto.",
 								  $exhibitionRepositoryType,
 								  $exhibitionRepositoryId);
+
+
+		$slideSchemaId =& $idManager->getId("edu.middlebury.concerto.slide_record_structure");
+		$slideSchema =& $repository->createRecordStructure("Slide Schema", "This is the schema used for exhibition slides.", "text/plain", "", $slideSchemaId);
+		$slideSchema->createPartStructure("target id", "The Id of the asset that this slide is referencing.", new HarmoniType("Repository", "Harmoni", "string"), false, false, false);
+		$slideSchema->createPartStructure("text position", "The location of any text presented in the slide. (bottom, top, left, right)", new HarmoniType("Repository", "Harmoni", "string"), false, false, false);
+		$slideSchema->createPartStructure("display metadata", "Whether or not to display the metadata of the associated asset referenced by target id.", new HarmoniType("Repository", "Harmoni", "boolean"), false, false, false);
+
+
 	}
 	
 	

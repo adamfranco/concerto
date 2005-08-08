@@ -1,5 +1,4 @@
 <?php
-require_once("/home/cshubert/public_html/importer/domit/xml_domit_include.php");
 
 //require_once(MYDIR."/domit/xml_domit_include.php");
 require_once(POLYPHONY."/main/library/RepositoryImporter/XMLRepositoryImporter.class.php");
