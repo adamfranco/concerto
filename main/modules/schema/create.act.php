@@ -143,31 +143,35 @@ class createAction
 			"description", 
 			WTextArea::withRowsAndColumns(2, 30));
 		
+		
+		
 		$property =& $multField->addComponent(
 			"type", 
 			new WSelectList());
 		$defaultType =& new Type ("Repository", "edu.middlebury.harmoni", "string");
-		$property->setValue(HarmoniType::typeToString($defaultType));
-				// We are going to assume that all RecordStructures have the same PartStructureTypes
-				// in this Repository. This will allow us to list PartStructureTypes before
-				// the RecordStructure is actually created.
-				$recordStructures =& $repository->getRecordStructures();
-				if (!$recordStructures->hasNext())
-					throwError(new Error("No RecordStructures availible.", "Concerto"));
-					
-				while ($recordStructures->hasNext()) {
-					// we want just the datamanager structure types, so just 
-					// get the first structure that has Format "DataManagerPrimatives"
-					$recordStructure =& $recordStructures->next();
-					if ($recordStructure->getFormat() == "DataManagerPrimatives") {
-						$types =& $recordStructure->getPartStructureTypes();
-						while ($types->hasNext()) {
-							$type =& $types->next();
-							$property->addOption(urlencode(HarmoniType::typeToString($type, " :: ")),HarmoniType::typeToString($type, " :: "));
-						}
-						break;
-					}
+		$property->setValue(urlencode(HarmoniType::typeToString($defaultType, " :: ")));
+		
+		// We are going to assume that all RecordStructures have the same PartStructureTypes
+		// in this Repository. This will allow us to list PartStructureTypes before
+		// the RecordStructure is actually created.
+		$recordStructures =& $repository->getRecordStructures();
+		if (!$recordStructures->hasNext())
+			throwError(new Error("No RecordStructures availible.", "Concerto"));
+			
+		while ($recordStructures->hasNext()) {
+			// we want just the datamanager structure types, so just 
+			// get the first structure that has Format "DataManagerPrimatives"
+			$recordStructure =& $recordStructures->next();
+			if ($recordStructure->getFormat() == "DataManagerPrimatives") {
+				$types =& $recordStructure->getPartStructureTypes();
+				while ($types->hasNext()) {
+					$type =& $types->next();
+					$property->addOption(urlencode(HarmoniType::typeToString($type, " :: ")),HarmoniType::typeToString($type, " :: "));
 				}
+				break;
+			}
+		}
+		
 		
 		$property =& $multField->addComponent(
 			"mandatory", 
