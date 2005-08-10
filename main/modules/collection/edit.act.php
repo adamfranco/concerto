@@ -258,7 +258,7 @@ class editAction
 					if (!$set->isInSet($recordStructureId))
 						$set->addItem($recordStructureId);
 					if ($position = $properties['schema'][$fieldName."_position"])
-						$positions[$position-1] =& $recordStructureId;
+						$positions[$position-1] = $recordStructureId;
 					
 					// Store some info so that we can check that all structures are valid.
 					$existingStructures[] = $recordStructureId->getIdString();
@@ -302,7 +302,7 @@ class editAction
 						"collection_id" => $id->getIdString())));
 				exit(0);
 			}
-				
+			
 			return TRUE;
 		} else {
 			return FALSE;
