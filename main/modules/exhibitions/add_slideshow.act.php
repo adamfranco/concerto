@@ -143,7 +143,7 @@ class add_slideshowAction
 		$slideStep =& $wizard->addStep("slidestep",new WizardStep());
 		$slideStep->setDisplayName(_("Slides"));
 		
-		$multField =& new WOrderedRepeatableComponentCollection();
+		$multField =& new SlideOrderedRepeatableComponentCollection();
 		$slideStep->addComponent("slides", $multField);
 		$multField->setStartingNumber(0);
 		
