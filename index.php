@@ -9,7 +9,6 @@
  *
  * @version $Id$
  */
- 
 error_reporting(E_ALL);
 
 // Define a Constant reference to this application directory.
@@ -62,6 +61,11 @@ require_once "main/library/Wizard/SlideOrderedRepeatableComponentCollection.clas
  ******************************************************************************/
 require_once(HARMONI."GUIManager/Themes/SimpleLinesTheme.class.php");
 
+
+/*********************************************************
+ * Set a low debug level to not store up all queries.
+ *********************************************************/
+debug::level(-100);
 
 /******************************************************************************
  * Start the session so that we can use the session for storage.
