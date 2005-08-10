@@ -99,6 +99,7 @@ class add_slideshowAction
 	 * @since 4/28/05
 	 */
 	function &createWizard () {
+		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
 		$repositoryManager =& Services::getService("Repository");
 		$repository =& $repositoryManager->getRepository(
@@ -135,6 +136,85 @@ class add_slideshowAction
 		print "\n<div style='width: 400px'> &nbsp; </div>";
 		$step->setContent(ob_get_contents());
 		ob_end_clean();
+		
+		
+		
+		// :: Slides ::
+		$slideStep =& $wizard->addStep("slidestep",new WizardStep());
+		$slideStep->setDisplayName(_("Slides"));
+		
+		$multField =& new WOrderedRepeatableComponentCollection();
+		$slideStep->addComponent("slides", $multField);
+		$multField->setStartingNumber(0);
+		
+		$property =& $multField->addComponent(
+			"title", 
+			new WTextField());
+		$property->setSize(20);
+		
+		$property =& $multField->addComponent(
+			"caption", 
+			WTextArea::withRowsAndColumns(5, 30));
+		
+		
+		
+		$property =& $multField->addComponent(
+			"text_position", 
+			new WSelectList());
+		$property->setValue("right");
+		
+		$property->addOption("right", _("right"));
+		$property->addOption("left", _("left"));
+		$property->addOption("bottom", _("bottom"));
+		
+		
+		$property =& $multField->addComponent(
+			"show_target_metadata", 
+			new WCheckBox());
+		$property->setChecked(false);
+ 		$property->setLabel(_("Display Media Info?"));
+		
+		ob_start();
+		print "\n<table border=\"0\">";
+			
+			print "\n<tr><td>";
+				print _("Title").": ";
+			print "\n</td><td>";
+				print "[[title]]";
+			print "\n</td></tr>";
+			
+			print "\n<tr><td>";
+				print _("Caption").": ";
+			print "\n</td><td>";
+				print "[[caption]]";
+			print "\n</td></tr>";
+			
+			print "\n<tr><td>";
+				print _("Text Position").": ";
+			print "\n</td><td>";
+				print "[[text_position]]";
+			print "\n</td></tr>";
+	
+			print "\n<tr><td>";
+				print "[[show_target_metadata]]";
+			print "\n</td><td>";
+			print "\n</td></tr>";
+			
+			print "</table>";
+		
+		
+	
+		$multField->setElementLayout(ob_get_contents());
+		ob_end_clean();
+		
+		ob_start();
+		print "<h2>"._("Slides")."</h2>";
+		print "[[slides]]";
+		$harmoni->history->markReturnURL("create_slides");
+ 		print "\n<p><a href=''>"._("Create Slides from Assets in Basket")."</a></p>";
+		$slideStep->setContent(ob_get_contents());
+		ob_end_clean();		
+		
 		
 		
 		// :: Effective/Expiration Dates ::
@@ -239,14 +319,8 @@ class add_slideshowAction
 	 */
 	function getReturnUrl () {
 		$harmoni =& Harmoni::instance();
-		$repositoryId =& $this->getRepositoryId();
-		if ($this->_assetId) 
-			return $harmoni->request->quickURL("asset", "editview", array(
-				"collection_id" => $repositoryId->getIdString(),
-				"asset_id" => $this->_assetId->getIdString()));
-		else
-			return $harmoni->request->quickURL("collection", "browse", array(
-				"collection_id" => $repositoryId->getIdString()));
+		$url =& $harmoni->request->mkURLWithPassthrough("exhibitions", "browse_exhibition");
+		return $url->write();
 	}
 }
 
