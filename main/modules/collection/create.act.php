@@ -211,7 +211,7 @@ class createAction
 		if ($this->repositoryId)
 			return $harmoni->request->quickURL("collection", "edit", array(
 						"collection_id" => $this->repositoryId->getIdString(), 
-						"__skip_to_step" => 2));
+						"wizardSkipToStep" => "schema"));
 		else
 			return $harmoni->request->quickURL("collections", "main");
 	}

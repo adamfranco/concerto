@@ -59,6 +59,7 @@ class editAction
 	 */
 	function buildContent () {
 		$harmoni =& Harmoni::instance();
+		$harmoni->request->passthrough("collection_id","record_id","asset_id");
 		$centerPane =& $this->getActionRows();
 		$idManager =& Services::getService("Id");
 		$recordId =& $idManager->getId($harmoni->request->get("record_id"));
@@ -136,6 +137,8 @@ class editAction
 	 */
 	function saveWizard ( $cacheName ) {
 		$wizard =& $this->getWizard($cacheName);
+		if (!$wizard->validate()) return FALSE;
+
 		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
 		$recordId =& $idManager->getId($harmoni->request->get('record_id'));

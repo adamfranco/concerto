@@ -251,7 +251,7 @@ function printRecord(& $record, & $assetId, & $repositoryId) {
 	$setManager =& Services::getService("Sets");
 	$partStructureSet =& $setManager->getPersistentSet($structureId);
 	
-	$partsStructureArray = array();
+	$partStructureArray = array();
 	// Print out the ordered parts/fields
 	$partStructureSet->reset();
 	while ($partStructureSet->hasNext()) {

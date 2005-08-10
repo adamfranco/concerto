@@ -264,6 +264,8 @@ class addAction
 	function saveWizard ( $cacheName ) {
 		$wizard =& $this->getWizard($cacheName);
 		
+		if (!$wizard->validate()) return false;
+		
 		// Make sure we have a valid Repository
 		$idManager =& Services::getService("Id");
 		$authZ =& Services::getService("AuthZ");
@@ -286,10 +288,18 @@ class addAction
 			} 
 			// Otherwise, Generate the type from the specified fields
 			else {
-				$assetType = new HarmoniType($properties['typestep']['type_domain'], 
-											$properties['typestep']['type_authority'], 
-											$properties['typestep']['type_keyword'], 
-											$properties['typestep']['type_description']);
+				$domain = $properties['typestep']['type_domain'];
+				$authority = $properties['typestep']['type_authority'];
+				$keyword = $properties['typestep']['type_keyword'];
+				$description = $properties['typestep']['type_description'];
+				if (!($domain && $authority && $keyword)) {
+					$wizard->setStep("typestep");
+					return false;
+				}
+				$assetType = new HarmoniType($domain, 
+											$authority, 
+											$keyword, 
+											$description);
 			}
 			
 			$asset =& $repository->createAsset($properties['namedescstep']['display_name'], 

@@ -323,6 +323,6 @@ class createAction
 	function getReturnUrl () {
 		$harmoni =& Harmoni::instance();
 		return $harmoni->request->quickURL("collection", "edit",
-			array("__skip_to_step" => 2));
+			array("wizardSkipToStep" => "schema"));
 	}
 }
