@@ -210,8 +210,6 @@ class add_slideshowAction
 		ob_start();
 		print "<h2>"._("Slides")."</h2>";
 		print "[[slides]]";
-		$harmoni->history->markReturnURL("create_slides");
- 		print "\n<p><a href=''>"._("Create Slides from Assets in Basket")."</a></p>";
 		$slideStep->setContent(ob_get_contents());
 		ob_end_clean();		
 		
@@ -277,29 +275,93 @@ class add_slideshowAction
 				$exhibitionAsset->getId()))
 		{
 			
-			$assetType = new HarmoniType("exhibitions", 
+			$slideshowAssetType = new HarmoniType("exhibitions", 
 										"edu.middlebury.concerto", 
 										"slideshow", 
 										"Slide-Shows are ordered collections of slides that contain captions and may reference media Assets.");
 			
 			
-			$asset =& $repository->createAsset($properties['namedescstep']['display_name'], 
+			$slideshowAsset =& $repository->createAsset(
+										$properties['namedescstep']['display_name'], 
 										$properties['namedescstep']['description'], 
-										$assetType);
+										$slideshowAssetType);
 										
-			$assetId =& $asset->getId();
-			$this->_assetId =& $assetId;
-			
+			$slideshowAssetId =& $slideshowAsset->getId();
+			$this->_slideshowAssetId =& $slideshowAssetId;
 			
 			// Update the effective/expiration dates
 			if ($properties['datestep']['effective_date'])
-				$asset->updateEffectiveDate(
+				$slideshowAsset->updateEffectiveDate(
 					DateAndTime::fromString($properties['datestep']['effective_date']));
 			if ($properties['datestep']['expiration_date'])
-				$asset->updateExpirationDate(
+				$slideshowAsset->updateExpirationDate(
 					DateAndTime::fromString($properties['datestep']['expiration_date']));
 			
-			$exhibitionAsset->addAsset($assetId);
+			$exhibitionAsset->addAsset($slideshowAssetId);
+			
+			
+			// --- Slides ---
+			$slideAssetType = new HarmoniType("exhibitions", 
+										"edu.middlebury.concerto", 
+										"slide", 
+										"Slides are components of Slide-Shows that contain captions and may reference media Assets.");
+			$slideRecordStructId =& $idManager->getId(
+				"edu.middlebury.concerto.slide_record_structure");
+			$targetIdPartStructId =& $idManager->getId(
+				"edu.middlebury.concerto.slide_record_structure.target_id");
+			$textPositionPartStructId =& $idManager->getId(
+				"edu.middlebury.concerto.slide_record_structure.text_position");
+			$displayMetadataPartStructId =& $idManager->getId(
+				"edu.middlebury.concerto.slide_record_structure.display_metadata");
+				
+			$setManager =& Services::getService("Sets");
+			$slideOrder =& $setManager->getPersistentSet($slideshowAssetId);
+			
+			foreach ($properties['slidestep'] as $slideProperties) {
+				
+				// ---- Clean the inputs ----
+				if (isset($slideProperties['title']))
+					$title = $slideProperties['title'];
+				else
+					$title = '';
+					
+				if (isset($slideProperties['caption']))
+					$caption = $slideProperties['caption'];
+				else
+					$caption = '';
+				
+				if (isset($slideProperties['text_position']))
+					$textPosition = String::withValue($slideProperties['text_position']);
+				else
+					$textPosition = String::withValue('');
+				
+				if (isset($slideProperties['show_target_metadata']))
+					$displayMetadata = Boolean::withValue($slideProperties['show_target_metadata']);
+				else
+					$displayMetadata = Boolean::false();
+				
+				if (isset($slideProperties['_asset']))
+					$targetId = String::withValue($slideProperties['_asset']->getIdString());
+				else
+					$targetId = String::withValue('');
+
+				
+				// ---- Create the asset ----
+				$slideAsset =& $repository->createAsset(
+										$title, 
+										$caption, 
+										$slideAssetType);
+				$slideAssetId =& $slideAsset->getId();
+				$slideshowAsset->addAsset($slideAssetId);
+				$slideOrder->addItem($slideAssetId);
+				
+				// ---- Set the additional info ----
+				$slideRecord =& $slideAsset->createRecord($slideRecordStructId);
+				$slideRecord->createPart($textPositionPartStructId, $textPosition);
+				$slideRecord->createPart($displayMetadataPartStructId, $displayMetadata);
+				$slideRecord->createPart($targetIdPartStructId, $targetId);
+				
+			}			
 			
 			return TRUE;
 		} 
