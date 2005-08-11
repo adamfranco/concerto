@@ -54,6 +54,7 @@ require_once "main/library/ConcertoMenuGenerator.class.php";
 require_once "main/library/printers/AssetPrinter.static.php";
 require_once "main/library/printers/RepositoryPrinter.static.php";
 require_once "main/library/Wizard/SlideOrderedRepeatableComponentCollection.class.php";
+require_once "main/library/Wizard/AssetComponent.class.php";
 
 /******************************************************************************
  * Include any theme classes we want to use. They need to be included prior
