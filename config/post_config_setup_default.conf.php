@@ -43,10 +43,36 @@ if (!isset($_SESSION['post_config_setup_complete'])) {
 
 
 		$slideSchemaId =& $idManager->getId("edu.middlebury.concerto.slide_record_structure");
-		$slideSchema =& $repository->createRecordStructure("Slide Schema", "This is the schema used for exhibition slides.", "text/plain", "", $slideSchemaId);
-		$slideSchema->createPartStructure("target id", "The Id of the asset that this slide is referencing.", new HarmoniType("Repository", "Harmoni", "string"), false, false, false);
-		$slideSchema->createPartStructure("text position", "The location of any text presented in the slide. (bottom, top, left, right)", new HarmoniType("Repository", "Harmoni", "string"), false, false, false);
-		$slideSchema->createPartStructure("display metadata", "Whether or not to display the metadata of the associated asset referenced by target id.", new HarmoniType("Repository", "Harmoni", "boolean"), false, false, false);
+		$slideSchema =& $repository->createRecordStructure(
+							"Slide Schema", 
+							"This is the schema used for exhibition slides.", 
+							"text/plain", 
+							"", 
+							$slideSchemaId);
+		$slideSchema->createPartStructure(
+							"target id", 
+							"The Id of the asset that this slide is referencing.", 
+							new HarmoniType("Repository", "Harmoni", "string"), 
+							false, 
+							false, 
+							false,
+							$idManager->getId("edu.middlebury.concerto.slide_record_structure.target_id"));
+		$slideSchema->createPartStructure(
+							"text position", 
+							"The location of any text presented in the slide. (bottom, top, left, right)", 
+							new HarmoniType("Repository", "Harmoni", "string"), 
+							false, 
+							false, 
+							false,
+							$idManager->getId("edu.middlebury.concerto.slide_record_structure.text_position"));
+		$slideSchema->createPartStructure(
+							"display metadata", 
+							"Whether or not to display the metadata of the associated asset referenced by target id.", 
+							new HarmoniType("Repository", "Harmoni", "boolean"), 
+							false, 
+							false, 
+							false,
+							$idManager->getId("edu.middlebury.concerto.slide_record_structure.display_metadata"));
 
 
 	}
