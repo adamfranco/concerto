@@ -317,7 +317,8 @@ class add_slideshowAction
 			$setManager =& Services::getService("Sets");
 			$slideOrder =& $setManager->getPersistentSet($slideshowAssetId);
 			
-			foreach ($properties['slidestep'] as $slideProperties) {
+			
+			foreach ($properties['slidestep']['slides'] as $slideProperties) {
 				
 				// ---- Clean the inputs ----
 				if (isset($slideProperties['title']))
@@ -361,8 +362,8 @@ class add_slideshowAction
 				$slideRecord->createPart($displayMetadataPartStructId, $displayMetadata);
 				$slideRecord->createPart($targetIdPartStructId, $targetId);
 				
-			}			
-			
+			}
+						
 			return TRUE;
 		} 
 		// If we don't have authorization to add to the picked parent, send us back to
