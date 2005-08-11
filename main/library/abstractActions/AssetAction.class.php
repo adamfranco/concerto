@@ -51,6 +51,27 @@ class AssetAction
 		return $repository->getAsset($this->getAssetId());
 	}
 	
+	/**
+	 * Get the repository for the collection id specified in the context
+	 * 
+	 * @return object Repository
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function &getRepositoryId () {
+		$harmoni =& Harmoni::instance();
+		$idManager =& Services::getService("Id");
+		$repositoryManager =& Services::getService("Repository");
+
+		if (!is_null($harmoni->request->get('collection_id'))) {
+			return parent::getRepositoryId();
+		} else {
+			$asset =& $repositoryManager->getAsset($this->getAssetId());
+			$repository =& $asset->getRepository();
+			return $repository->getId();
+		}
+	}
+	
 }
 
 ?>
