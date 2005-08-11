@@ -10,6 +10,7 @@
 
 require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
 require_once(MYDIR."/main/library/printers/ExhibitionPrinter.static.php");
+require_once(MYDIR."/main/library/printers/SlideShowPrinter.static.php");
 
 /**
  * 
@@ -134,7 +135,7 @@ function printAssetShort(& $asset, &$harmoni) {
 	print  "\n\t<br /><em>".$asset->getDescription()."</em>";	
 	print  "\n\t<br />";
 	
-	ExhibitionPrinter::printFunctionLinks($asset);
+	SlideShowPrinter::printFunctionLinks($asset);
 	
 	$layout =& new Block(ob_get_contents(), 4);
 	ob_end_clean();

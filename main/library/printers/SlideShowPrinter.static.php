@@ -19,12 +19,12 @@
  * @version $Id$
  */
 
-class ExhibitionPrinter {
+class SlideShowPrinter {
 		
 	/**
 	 * Die constructor for static class
 	 */
-	function ExhibitionPrinter () {
+	function SlideShowPrinter () {
 		die("Static class AssetPrinter can not be instantiated.");
 	}
 	
@@ -52,29 +52,37 @@ class ExhibitionPrinter {
 		
 		$actionString = $harmoni->getCurrentAction();
 		
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId())) {
+			$links[] = "<a href='"
+					.$harmoni->request->quickURL("asset", "view", 
+						array("asset_id" => $assetId->getIdString()))
+					."'>";
+				$links[count($links) - 1] .= _("view as asset (temporary)")."</a>";
+		}
+		
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId())) {
 // 			$children =& $asset->getAssets();
 // 			if ($children->hasNext()) {
-				if ($actionString != "exhibitions.browse_exhibition" 
-					|| $assetId->getIdString() != $harmoni->request->get('exhibition_id')) 
+				if ($actionString != "exhibitions.view_slideshow" 
+					|| $assetId->getIdString() != $harmoni->request->get('slideshow_id')) 
 				{
 					$links[] = "<a href='"
-						.$harmoni->request->quickURL("exhibitions", "browse_exhibition", 
-							array("exhibition_id" => $assetId->getIdString()))
+						.$harmoni->request->quickURL("exhibitions", "view_slideshow", 
+							array("slideshow_id" => $assetId->getIdString()))
 						."'>";
-					$links[count($links) - 1] .= _("browse")."</a>";
+					$links[count($links) - 1] .= _("view")."</a>";
 				} else {
-					$links[] = _("browse");
+					$links[] = _("view");
 				}
 // 			}
 		}
 		
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $asset->getId())) {
-			$harmoni->request->startNamespace('modify_exhibition');
-			if ($actionString != "exhibitions.modify_exhibition") {
+			$harmoni->request->startNamespace('modify_slideshow');
+			if ($actionString != "exhibitions.modify_slideshow") {
 				$links[] = "<a href='"
-					.$harmoni->request->quickURL("exhibitions", "modify_exhibition", 
-						array("exhibition_id" => $assetId->getIdString()))
+					.$harmoni->request->quickURL("exhibitions", "modify_slideshow", 
+						array("slideshow_id" => $assetId->getIdString()))
 					."'>";
 				$links[count($links) - 1] .= _("modify")."</a>";
 			} else {
@@ -87,7 +95,7 @@ class ExhibitionPrinter {
 			if ($actionString != "exhibitions.delete") {
 				$harmoni->history->markReturnURL("concerto/exhibitions/delete-return");
 				ob_start();
-				print "<a href='Javascript:deleteExhibition(\"".$assetId->getIdString()."\", \"".$harmoni->request->quickURL("exhibitions", "delete", array("exhibition_id" => $assetId->getIdString()))."\");'";
+				print "<a href='Javascript:deleteSlideShow(\"".$assetId->getIdString()."\", \"".$harmoni->request->quickURL("exhibitions", "delete", array("exhibition_id" => $assetId->getIdString()))."\");'";
 				print ">";
 				print _("delete")."</a>";
 				
@@ -95,8 +103,8 @@ class ExhibitionPrinter {
 				ob_end_clean();
 				
 				print "\n<script type='text/javascript'>\n//<![CDATA[";
-				print "\n	function deleteExhibition(assetId, url) {";
-				print "\n		if (confirm(\""._("Are you sure you want to delete this Exhibition and all of its Slide-Shows?")."\")) {";
+				print "\n	function deleteSlideShow(assetId, url) {";
+				print "\n		if (confirm(\""._("Are you sure you want to delete this Slide-Show?")."\")) {";
 				print "\n			window.location = url;";
 				print "\n		}";
 				print "\n	}";
@@ -105,18 +113,6 @@ class ExhibitionPrinter {
 				$links[] = _("delete");
 			}
 		}
-		
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.add_children"), $asset->getId())) {
-// 			if (ereg("^exhibitions\..*$", $actionString) 
-// 				&& $harmoni->request->get("exhibition_id") == $assetId->getIdString()) 
-// 			{
-				$links[] = "<a href='"
-					.$harmoni->request->quickURL("exhibitions", "add_slideshow",
-						array("exhibition_id" => $assetId->getIdString()))
-					."'>";
-				$links[count($links) - 1] .= _("add a slideshow")."</a>";
-			}
-// 		}
 		
 		print  implode("\n\t | ", $links);
 	}

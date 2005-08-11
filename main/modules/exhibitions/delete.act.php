@@ -115,11 +115,12 @@ class deleteAction
 	 */
 	function recursiveDeleteAsset (&$asset) {
 		$children =& $asset->getAssets();
-		while ($children->hasNextAsset()) {
-			$child =& $children->nextAsset();
+		
+		while ($children->hasNext()) {
+			$child =& $children->next();
+			print "Deleting Child: "; printpre($child->getId());
 			$this->recursiveDeleteAsset($child);
 		}
-		unset($children);
 		
 		// Make sure that this asset now has no children.
 		// if it does not have children delete it.
@@ -128,11 +129,13 @@ class deleteAction
 		$idManager =& Services::getService("Id");
 
 		$children =& $asset->getAssets();
-		if (!$children->hasNextAsset()
+		if (!$children->hasNext()
 			&& $authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.delete"), 
 					$asset->getId()))
 		{
+			print "Deleting Asset: "; printpre($asset->getId());
+			
 			$repository =& $asset->getRepository();
 			$repository->deleteAsset($asset->getId());
 			return TRUE;
