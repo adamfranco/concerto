@@ -16,8 +16,10 @@ error_reporting(E_ALL);
  *********************************************************/
 
 define("MYDIR",dirname(__FILE__));
-define("MYPATH", str_replace("\\", "/", dirname($_SERVER['PHP_SELF'])));
-define("MYURL", $_SERVER['PHP_SELF']);
+define("MYPATH", "http://".$_SERVER['HTTP_HOST'].str_replace(
+												"\\", "/", 
+												dirname($_SERVER['PHP_SELF'])));
+define("MYURL", MYPATH."/index.php");
 
 define("OKI_VERSION", 2);
 define("LOAD_THEMES", false);
