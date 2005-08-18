@@ -101,9 +101,9 @@ class SlideShowPrinter {
 					.$harmoni->request->quickURL("exhibitions", "modify_slideshow", 
 						array("slideshow_id" => $assetId->getIdString()))
 					."'>";
-				$links[count($links) - 1] .= _("modify")."</a>";
+				$links[count($links) - 1] .= _("modify_slideshow")."</a>";
 			} else {
-				$links[] = _("modify");
+				$links[] = _("modify_slideshow");
 			}
 			$harmoni->request->endNamespace();
 		}
