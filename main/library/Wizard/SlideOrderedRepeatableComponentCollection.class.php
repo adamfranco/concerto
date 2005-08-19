@@ -50,6 +50,13 @@ class SlideOrderedRepeatableComponentCollection
 		$collection["_moveup"]->setParent($this);
 		$collection["_movedown"] =& WEventButton::withLabel(dgettext("polyphony", "Move Down"));
 		$collection["_movedown"]->setParent($this);
+		
+		// The AssetComponent
+		$collection['_asset'] =& new AssetComponent;
+		$collection['_asset']->setParent($this);
+		$collection['_asset']->setId($collection['assetId']);
+		unset($collection['assetId']);
+		
 		$this->_collections[$this->_nextId] =& $collection;
 		$idManager =& Services::getService("Id");
 		$this->_orderedSet->addItem($idManager->getId(strval($this->_nextId)));
