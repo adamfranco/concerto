@@ -22,6 +22,6 @@
 	$configuration->addProperty('default_parent_id', $defaultParentId);
 	$configuration->addProperty('version_control_all', $arg2 = TRUE);
 	$configuration->addProperty('use_filesystem_for_files', $arg3 = TRUE);
-	$configuration->addProperty('file_data_path', $arg4 = MYPATH."/../concerto_data");
+// 	$configuration->addProperty('file_data_path', $arg4 = MYPATH."/../concerto_data");
 	Services::startManagerAsService("RepositoryManager", $context, $configuration);
 	unset($arg0, $arg1, $arg2, $arg3, $arg4);
