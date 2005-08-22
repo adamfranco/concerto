@@ -11,6 +11,9 @@
 
 <changelog name="Concerto ChangeLog">
 	<version number="0.2.0" date="The Nebulous Future">
+		<new author='adam'>
+			New Exhibition/Slideshow sytem.
+		</new>
 		<fix author='adam'>
 			Converted remaining refernces to the 'MIDDLE' alignment to the new
 			'CENTER' alignment used by the GUIManager.
