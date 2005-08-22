@@ -21,9 +21,7 @@ define("MYPATH", "http://".$_SERVER['HTTP_HOST'].str_replace(
 												dirname($_SERVER['PHP_SELF'])));
 define("MYURL", MYPATH."/index.php");
 
-define("LOAD_THEMES", false);
 define("LOAD_GUI", true);
-define("LOAD_AUTHENTICATION", false);
 
 /*********************************************************
  * Include our libraries
