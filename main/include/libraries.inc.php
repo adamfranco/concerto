@@ -25,14 +25,16 @@ require_once ($harmoniPath);
 /******************************************************************************
  * Include Polyphony
  ******************************************************************************/
-define("POLYPHONY_PATH", MYDIR."/../polyphony/");
-if (!file_exists(POLYPHONY_PATH."/polyphony.inc.php")) {
+define("POLYPHONY_DIR", MYDIR."/../polyphony/");
+define("POLYPHONY_PATH", MYPATH."/../polyphony/");
+
+if (!file_exists(POLYPHONY_DIR."/polyphony.inc.php")) {
 	print "<h2>Polyphony was not found in the specified location, '";
-	print POLYPHONY_PATH;
+	print POLYPHONY_DIR;
 	print "'. Please install Polyphony there or change the location specifed.</h2>";
 	print "<h3>Polyphony is part of the Harmoni project and can be downloaded from <a href='http://sf.net/projects/harmoni/'>http://sf.net/projects/harmoni/</a></h3>";
 }
-require_once (POLYPHONY_PATH."/polyphony.inc.php");
+require_once (POLYPHONY_DIR."/polyphony.inc.php");
 
 /******************************************************************************
  * Include our libraries
