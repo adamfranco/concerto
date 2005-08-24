@@ -33,36 +33,20 @@ class SlideOrderedRepeatableComponentCollection
     	$this->_addFromBasketButton =& WEventButton::withLabel(dgettext("polyphony", "Create Slides from Assets in Basket"));
     	$this->_addFromBasketButton->setParent($this);
     }
-    
+	
 	/**
-	 * Adds a collection of {@link WizardComponent}s indexed by field name to the list of collections.
-	 * This is useful when pre-populating the list with old/previous values.
-	 * @param ref array $collection Indexed by field name.
-	 * @access public
+	 * Adds a new element to the end of the list.
+	 * @access private
 	 * @return void
 	 */
-	function addCollection (&$collection) {
-		// @todo - make sure that the correct fields/classes are represented
-		$collection["_remove"] =& WEventButton::withLabel(dgettext("polyphony", "Remove"));
-		$collection["_remove"]->setParent($this);
-		$collection["_remove"]->setOnClick("ignoreValidation(this.form);");
-		$collection["_moveup"] =& WEventButton::withLabel(dgettext("polyphony", "Move Up"));
-		$collection["_moveup"]->setParent($this);
-		$collection["_movedown"] =& WEventButton::withLabel(dgettext("polyphony", "Move Down"));
-		$collection["_movedown"]->setParent($this);
+	function &_addElement () {
+		$newArray =& parent::_addElement();
 		
-		// The AssetComponent
-		$collection['_asset'] =& new AssetComponent;
-		$collection['_asset']->setParent($this);
-		$collection['_asset']->setId($collection['assetId']);
-		unset($collection['assetId']);
+		$newArray['_assetId'] =& new AssetComponent;
+		$newArray['_assetId']->setParent($this);
 		
-		$this->_collections[$this->_nextId] =& $collection;
-		$idManager =& Services::getService("Id");
-		$this->_orderedSet->addItem($idManager->getId(strval($this->_nextId)));
-		$this->_nextId++;
-		$this->_num++;
-	}
+		return $newArray;
+	}	
 	
 	/**
 	 * Tells the wizard component to update itself - this may include getting
@@ -85,9 +69,9 @@ class SlideOrderedRepeatableComponentCollection
 			while ($basket->hasNext()) {
 				$assetId =& $basket->next();
 				$element =& $this->_addElement();
-				$element['_asset'] =& new AssetComponent;
-				$element['_asset']->setParent($this);
-				$element['_asset']->setId($assetId);
+				$element['_assetId'] =& new AssetComponent;
+				$element['_assetId']->setParent($this);
+				$element['_assetId']->setValue($assetId);
 			}
 			$basket->removeAllItems();
 		}
@@ -105,8 +89,10 @@ class SlideOrderedRepeatableComponentCollection
 	 */
 	function getMarkup ($fieldName) {
 		// check if we have min/max values that are appropriate, etc.
-		if ($this->_num < $this->_min) $this->_num = $this->_min;
-		if ($this->_max != -1 && $this->_num > $this->_max) $this->_num = $this->_max;
+		if ($this->_num < $this->_min)
+			$this->_num = $this->_min;
+		if ($this->_max != -1 && $this->_num > $this->_max)
+			$this->_num = $this->_max;
 		$this->_ensureNumber($this->_num);
 		
 		ob_start();
@@ -124,11 +110,16 @@ class SlideOrderedRepeatableComponentCollection
 			$this->_collections[$key]["_remove"]->setEnabled($includeRemove);
 			print "<tr><td valign='top' style='border-bottom: 1px solid #555;'>";
 			
-			print $this->_collections[$key]["_remove"]->getMarkup($fieldName."_".$key."__remove");
+			print $this->_collections[$key]["_remove"]->getMarkup(
+				$fieldName."_".$key."__remove");
 			if ($this->_orderedSet->getPosition($collectionId) > 0)
-				print "\n<br/>".$this->_collections[$key]["_moveup"]->getMarkup($fieldName."_".$key."__moveup");
+				print "\n<br/>".
+					$this->_collections[$key]["_moveup"]->getMarkup(
+					$fieldName."_".$key."__moveup");
 			if ($this->_orderedSet->hasNext())
-				print "\n<br/>".$this->_collections[$key]["_movedown"]->getMarkup($fieldName."_".$key."__movedown");
+				print "\n<br/>".
+					$this->_collections[$key]["_movedown"]->getMarkup(
+					$fieldName."_".$key."__movedown");
 			
 			print "</td><td style='border-bottom: 1px solid #555;'>";
 			
@@ -136,8 +127,8 @@ class SlideOrderedRepeatableComponentCollection
 			
 			print "</td><td style='border-bottom: 1px solid #555;'>";
 			
-			if (isset($this->_collections[$key]['_asset'])) {
-				print $this->_collections[$key]['_asset']->getMarkup($fieldName."_".$key."__asset");
+			if (isset($this->_collections[$key]['_assetId'])) {
+				print $this->_collections[$key]['_assetId']->getMarkup($fieldName."_".$key."__asset");
 			}
 			
 			print "</td></tr>\n";

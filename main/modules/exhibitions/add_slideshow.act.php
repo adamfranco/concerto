@@ -341,8 +341,8 @@ class add_slideshowAction
 				else
 					$displayMetadata = Boolean::false();
 				
-				if (isset($slideProperties['_asset']))
-					$targetId = String::withValue($slideProperties['_asset']->getIdString());
+				if (isset($slideProperties['_assetId']))
+					$targetId = String::withValue($slideProperties['_assetId']->getIdString());
 				else
 					$targetId = String::withValue('');
 

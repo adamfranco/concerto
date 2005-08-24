@@ -34,7 +34,7 @@ class AssetComponent
 	 * @access public
 	 * @return void
 	 */
-	function setId ( &$id ) {
+	function setValue ( &$id ) {
 		$this->_id = $id;
 	}
 	
