@@ -84,7 +84,7 @@ class searchAction
 				
 				$typeString = HarmoniType::typeToString($searchType);
 				
-				if (!$searchArray[$typeString])
+				if (!isset($searchArray[$typeString]))
 					$searchArray[$typeString] =& $searchType;
 			}
 		}
