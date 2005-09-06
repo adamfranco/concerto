@@ -26,9 +26,9 @@ class AssetAction
 {
 		
 	/**
-	 * Get the repository for the collection id specified in the context
+	 * Get the asset Id for the collection id specified in the context
 	 * 
-	 * @return object Repository
+	 * @return object Id
 	 * @access public
 	 * @since 4/26/05
 	 */
@@ -39,9 +39,9 @@ class AssetAction
 	}
 	
 	/**
-	 * Get the repository for the collection id specified in the context
+	 * Get the asset for the collection id specified in the context
 	 * 
-	 * @return object Repository
+	 * @return object Asset
 	 * @access public
 	 * @since 4/26/05
 	 */

@@ -97,10 +97,10 @@ class SlideShowPrinter {
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $asset->getId())) {
 			$harmoni->request->startNamespace('modify_slideshow');
 			if ($actionString != "exhibitions.modify_slideshow") {
-				$links[] = "<a href='"
-					.$harmoni->request->quickURL("exhibitions", "modify_slideshow", 
-						array("slideshow_id" => $assetId->getIdString()))
-					."'>";
+				$links[] = "<a href='".$harmoni->request->quickURL(
+					"exhibitions", "modify_slideshow",
+					array("slideshow_id" => $assetId->getIdString())).
+					"'>";
 				$links[count($links) - 1] .= _("modify_slideshow")."</a>";
 			} else {
 				$links[] = _("modify_slideshow");

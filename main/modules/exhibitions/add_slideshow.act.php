@@ -382,7 +382,7 @@ class add_slideshowAction
 	 */
 	function getReturnUrl () {
 		$harmoni =& Harmoni::instance();
-		$url =& $harmoni->request->mkURLWithPassthrough("exhibitions", "browse_exhibition");
+		$url =& $harmoni->request->mkURL("exhibitions", "browse_exhibition");
 		return $url->write();
 	}
 }
