@@ -14,6 +14,7 @@
 
 if (!isset($_SESSION['post_config_setup_complete'])) {
 
+	// Exhibition Repository
 	$repositoryManager =& Services::getService("Repository");
 	$idManager =& Services::getService("Id");
 	$exhibitionRepositoryId =& $idManager->getId("edu.middlebury.concerto.exhibition_repository");

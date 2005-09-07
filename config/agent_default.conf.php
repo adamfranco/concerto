@@ -17,12 +17,13 @@
 	$configuration =& new ConfigurationProperties;
 	// default agent Flavor is one that can be editted
 	$agentFlavor="HarmoniEditableAgent";
-	
-	$configuration->addProperty('database_index', $dbID);
-	$configuration->addProperty('database_name', $dbName);
+	$agentHierarchyId = "edu.middlebury.authorization.hierarchy";
+	$configuration->addProperty('hierarchy_id', $agentHierarchyId);
 	$configuration->addProperty('defaultAgentFlavor', $agentFlavor);
 	Services::startManagerAsService("AgentManager", $context, $configuration);
 
 // :: Set up PropertyManager ::
 	//the property manager operates in the same context as the AgentManager and is more or less an adjunct to it
+	$configuration->addProperty('database_index', $dbID);
+	$configuration->addProperty('database_name', $dbName);
 	Services::startManagerAsService("PropertyManager", $context, $configuration);
