@@ -213,7 +213,36 @@ if (!isset($_SESSION['table_setup_complete'])) {
 			$function =& $authZManager->createFunction($id, "Modify Authorizations", "Modify Authorizations at qualifier.", $type, $qualifierHierarchyId);
 			$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 
-	
+		// Administration Functions
+			$type =& new Type ("Authorization", "edu.middlebury.harmoni", "User Administration", "Functions for administering users.");
+
+			$id =& $idManager->getId("edu.middlebury.authorization.create_agent");
+			$function =& $authZManager->createFunction($id, "Create Agents", "Add Agents to the system.", $type, $qualifierHierarchyId);
+			$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
+
+			$id =& $idManager->getId("edu.middlebury.authorization.delete_agent");
+			$function =& $authZManager->createFunction($id, "Delete Agents", "Remove Agents from the system.", $type, $qualifierHierarchyId);
+			$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
+
+			$id =& $idManager->getId("edu.middlebury.authorization.modify_agent");
+			$function =& $authZManager->createFunction($id, "Modify Agents", "Modify Agent properties.", $type, $qualifierHierarchyId);
+			$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
+
+		// Administration Functions
+			$type =& new Type ("Authorization", "edu.middlebury.harmoni", "Group Administration", "Functions for administering groups.");
+
+			$id =& $idManager->getId("edu.middlebury.authorization.create_group");
+			$function =& $authZManager->createFunction($id, "Create Groups", "Add Groups to the system.", $type, $qualifierHierarchyId);
+			$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
+
+			$id =& $idManager->getId("edu.middlebury.authorization.delete_group");
+			$function =& $authZManager->createFunction($id, "Delete Groups", "Remove Groups from the system.", $type, $qualifierHierarchyId);
+			$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
+
+			$id =& $idManager->getId("edu.middlebury.authorization.modify_group_membership");
+			$function =& $authZManager->createFunction($id, "Modify Group Membership", "Modify Group membership.", $type, $qualifierHierarchyId);
+			$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);	
+
 	print "\n<br> ...done";
 	$_SESSION['table_setup_complete'] = TRUE;
 	

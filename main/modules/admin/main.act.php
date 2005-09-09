@@ -69,6 +69,9 @@ class mainAction
 		print "\n\t<li><a href='".$harmoni->request->quickURL("agents","group_membership")."'>";
 		print _("Edit Group Membership");
 		print "</a></li>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("agents","edit_agents")."'>";
+		print _("Edit Agents");
+		print "</a></li>";
 		print "\n</ul>";
 		
 		$introText =& new Block(ob_get_contents(),3);
