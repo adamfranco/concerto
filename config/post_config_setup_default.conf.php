@@ -53,7 +53,7 @@ if (!isset($_SESSION['post_config_setup_complete'])) {
 		$slideSchema->createPartStructure(
 							"target id", 
 							"The Id of the asset that this slide is referencing.", 
-							new HarmoniType("Repository", "Harmoni", "string"), 
+							new HarmoniType("Repository", "edu.middlebury.harmoni", "string"), 
 							false, 
 							false, 
 							false,
@@ -61,7 +61,7 @@ if (!isset($_SESSION['post_config_setup_complete'])) {
 		$slideSchema->createPartStructure(
 							"text position", 
 							"The location of any text presented in the slide. (bottom, top, left, right)", 
-							new HarmoniType("Repository", "Harmoni", "string"), 
+							new HarmoniType("Repository", "edu.middlebury.harmoni", "string"), 
 							false, 
 							false, 
 							false,
@@ -69,7 +69,7 @@ if (!isset($_SESSION['post_config_setup_complete'])) {
 		$slideSchema->createPartStructure(
 							"display metadata", 
 							"Whether or not to display the metadata of the associated asset referenced by target id.", 
-							new HarmoniType("Repository", "Harmoni", "boolean"), 
+							new HarmoniType("Repository", "edu.middlebury.harmoni", "boolean"), 
 							false, 
 							false, 
 							false,
