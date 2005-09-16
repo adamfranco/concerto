@@ -252,18 +252,18 @@ class modify_slideshowAction
 		$slideOrder =& $setManager->getPersistentSet($slideshowAsset->getId());
 		$orderedSlides = array();
 		$orderlessSlides = array();
-		
+
 		while ($slideIterator->hasNext()) {
 			$slideAsset =& $slideIterator->next();
 			$slideId =& $slideAsset->getId();
-			
+/*
 			// DEBUG
 			$records =& $slideAsset->getRecordsByRecordStructure($idManager->getId("edu.middlebury.concerto.slide_record_structure"));
 			$myCrapRecord =& $records->next();
 			require_once(POLYPHONY."/main/library/DataManagerGUI/SimpleRecordPrinter.class.php");
 			SimpleRecordPrinter::printRecord($myCrapRecord->_record);
 			// END
-			
+*/			
 			$collection = array();
 			$collection['slideId'] =& $slideId;//->getIdString();
 			$collection['title'] =& $slideAsset->getDisplayName();
@@ -293,16 +293,15 @@ class modify_slideshowAction
 				$orderedSlides[$slideOrder->getPosition($slideId)] =
 					$collection;
 			else 
-				$orderlessSlides = $collection;
+				$orderlessSlides[] = $collection;
 		}
-
 		// add them in order
-		foreach ($orderedSlides as $slide) 
+		foreach ($orderedSlides as $slide)
 			$multField->addValueCollection($slide);
-		
+			
 		foreach($orderlessSlides as $slide)
 			$multField->addValueCollection($slide);		
-		
+			
 		// :: Effective/Expiration Dates ::
 		$step =& $wizard->addStep("datestep", new WizardStep());
 		$step->setDisplayName(_("Effective Dates")." ("._("optional").")");
@@ -400,13 +399,16 @@ class modify_slideshowAction
 			$existingSlides = array();
 			while ($slideIterator->hasNext()) {
 				$currentSlide =& $slideIterator->next();
-//				$currentId =& $currentSlide->getId();
-				$existingSlides[] =& $currentSlide->getId();// $currentId->getIdString();
+				$id =& $currentSlide->getId();
+				$existingSlides[] =& $id->getIdString();
 			}
+
 			$pSlideOrder->removeAllItems();
+
 			foreach ($properties['slidestep']['slides'] as $slideProperties) {
-				if (in_array($slideProperties['slideId'], $existingSlides)) {
-	print "found the id in the array<br/>";
+				print get_class($slideProperties['slideId']).":";
+
+				if (in_array($slideProperties['slideId']->getIdString(), $existingSlides)) {
 					$slideAsset =& $repository->getAsset(
 						$slideProperties['slideId']);
 					$slideAsset->updateDisplayName($slideProperties['title']);
@@ -433,12 +435,8 @@ class modify_slideshowAction
 					$records =& $slideAsset->getRecordsByRecordStructure(
 						$slideRecordStructId);
 					$slideRecord =& $records->next();
-					require_once(POLYPHONY."/main/library/DataManagerGUI/SimpleRecordPrinter.class.php");
-					SimpleRecordPrinter::printRecord($slideRecord->_record);
-
 				}
 				else if (!isset($slideProperties['slideId'])) {
-	print "new slide to be created<br/>";
 					// ---- Clean the inputs ----
 					if (isset($slideProperties['title']))
 						$title = $slideProperties['title'];
@@ -489,13 +487,13 @@ class modify_slideshowAction
 				}
 			}
 			// ==== Remove slide assets no longer in slideshow ----
-			foreach($existingSlides as $old) {
+			foreach($existingSlides as $older) {
+				$old =& $idManager->getId($older);
 				if (!$pSlideOrder->isInSet($old)) {
 					$slideshowAsset->removeAsset($old, false);
 					$repository->deleteAsset($old);
 				}
 			}
-			exit;
 			return TRUE;
 		} 
 		// If we don't have authorization to add to the picked parent, send us back to
