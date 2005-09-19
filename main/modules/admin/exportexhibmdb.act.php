@@ -1,8 +1,9 @@
 <?php
 
 require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
-require_once("Archive/Tar.php");
-require_once(POLYPHONY."/main/library/RepositoryImporter/XMLRepositoryImporter.class.php");
+require_once(POLYPHONY."/main/library/Importer/XMLImporter.class.php");
+
+
 //apd_set_pprof_trace(); 
 
 class exportexhibmdbAction 
@@ -48,11 +49,6 @@ class exportexhibmdbAction
 		$n_C_Index = $dbHandler->addDatabase(
 			new MySQLDatabase("localhost", "niraj_concerto", "test", "test"));
 		$dbHandler->connect($n_C_Index);
-
-		$this->_exhibitionRepositoryId =& $idManager->getId(
-			"edu.middlebury.concerto.exhibition_repository");
-		$this->_importer =& new XMLRepositoryImporter("/tmp/mdbexhib.tar.gz",
-			$this->_exhibitionRepositoryId);
 		
 		$exhibitionsQuery =& new SelectQuery;
 		$exhibitionsQuery->addTable("pressets");
@@ -140,14 +136,14 @@ class exportexhibmdbAction
 		$centerPane =& $this->getActionRows();
 		ob_start();
 
-		if ($this->_importer->hasErrors()) {
-			print("The bad news is that some errors occured during import, they are: <br />");
-			$this->_importer->printErrorMessages();
-		}
-		if ($this->_importer->hasAssets()) {
-			print("The good news is that ".count($this->_importer->getGoodAssetIds())." assets were created during import, they are: <br />");
-			$this->_importer->printGoodAssetIds();
-		}
+// 		if ($this->_importer->hasErrors()) {
+// 			print("The bad news is that some errors occured during import, they are: <br />");
+// 			$this->_importer->printErrorMessages();
+// 		}
+// 		if ($this->_importer->hasAssets()) {
+// 			print("The good news is that ".count($this->_importer->getGoodAssetIds())." assets were created during import, they are: <br />");
+// 			$this->_importer->printGoodAssetIds();
+// 		}
 		
 		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();
@@ -168,11 +164,27 @@ class exportexhibmdbAction
 			"/home/cshubert/public_html/importer/importtest/metadata.xml",
 			"wt");
 		fwrite($this->_xmlFile, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-		fwrite($this->_xmlFile, "<import>\n");
-		fwrite($this->_xmlFile, "\t<asset>\n".
-			"\t\t<name>".$exhibition['exhibitionName']."</name>\n".
-			"\t\t<description></description>\n".
-			"\t\t<type>Exhibition</type>\n");
+		fwrite($this->_xmlFile, "<import type=\"insert\">\n");
+		fwrite($this->_xmlFile, "\t<repository 
+			id=\"edu.middlebury.concerto.exhibition_repository\">\n");
+// recordstructure
+		fwrite($this->_xmlFile, "\t\t<recordstructure id=\"edu.middlebury.concerto.slide_record_structure\" xml:id=\"slidestructure\">\n".
+			"\t\t\t<partstructure id=\"edu.middlebury.concerto.slide_record_structure.target_id\" xml:id=\"target id\" isMandatory=\"FALSE\" isRepeatable=\"FALSE\" isPopulated=\"FALSE\">
+			</partstructure>\n".
+			"\t\t\t<partstructure id=\"edu.middlebury.concerto.slide_record_structure.text_position\" xml:id=\"text position\" isMandatory=\"FALSE\" isRepeatable=\"FALSE\" isPopulated=\"FALSE\">
+			</partstructure>\n".
+			"\t\t\t<partstructure id=\"edu.middlebury.concerto.slide_record_structure.display_metadata\" xml:id=\"display metadata\" isMandatory=\"FALSE\" isRepeatable=\"FALSE\" isPopulated=\"FALSE\">
+			</partstructure>\n".
+		"\t\t</recordstructure>\n");
+// recordstructure
+		fwrite($this->_xmlFile, "\t\t<asset>\n".
+			"\t\t\t<name>".$exhibition['exhibitionName']."</name>\n".
+			"\t\t\t<description></description>\n".
+			"\t\t\t<type>\n".
+			"\t\t\t\t<domain>Asset Types</domain>\n".
+			"\t\t\t\t<authority>edu.middlebury.concerto</authority>\n".
+			"\t\t\t\t<keyword>Exhibition</keyword>\n".
+			"\t\t\t</type>\n");
 	}
 	
 	/**
@@ -182,11 +194,15 @@ class exportexhibmdbAction
 	 * @since 8/9/05
 	 */
 	function openSlideshow (&$slideshow) {
-		fwrite($this->_xmlFile, "\t\t<asset buildOrderedSet='TRUE'>\n".
-			"\t\t\t<name>".$slideshow['slideshowName']."</name>\n".
-			"\t\t\t<description><![CDATA[".$slideshow['slideshowDescription'].
+		fwrite($this->_xmlFile, "\t\t\t<asset maintainOrder=\"TRUE\">\n".
+			"\t\t\t\t<name>".$slideshow['slideshowName']."</name>\n".
+			"\t\t\t\t<description><![CDATA[".$slideshow['slideshowDescription'].
 				"]]></description>\n".
-			"\t\t\t<type>Slideshow</type>\n");
+			"\t\t\t\t<type>\n".
+			"\t\t\t\t\t<domain>Asset Types</domain>\n".
+			"\t\t\t\t\t<authority>edu.middlebury.concerto</authority>\n".
+			"\t\t\t\t\t<keyword>Slideshow</keyword>\n".
+			"\t\t\t\t</type>\n");
 	}
 	
 	/**
@@ -195,7 +211,7 @@ class exportexhibmdbAction
 	 * @since 8/9/05
 	 */
 	function closeSlideshow () {
-		fwrite($this->_xmlFile, "\t\t</asset>\n");
+		fwrite($this->_xmlFile, "\t\t\t</asset>\n");
 	}	
 	
 	/**
@@ -205,18 +221,22 @@ class exportexhibmdbAction
 	 * @since 8/9/05
 	 */
 	function addSlide (&$slide, &$asset_id) {
-	fwrite($this->_xmlFile, "\t\t\t<asset>\n".
-			"\t\t\t\t<name></name>\n".
-			"\t\t\t\t<description><![CDATA[".
+	fwrite($this->_xmlFile, "\t\t\t\t<asset>\n".
+			"\t\t\t\t\t<name></name>\n".
+			"\t\t\t\t\t<description><![CDATA[".
 				$slide['slideCaption']."]]></description>\n".
-			"\t\t\t\t<type>Slide</type>\n".
-			"\t\t\t\t<record schema=\"Slide Schema\">\n".
-			"\t\t\t\t\t<field name=\"target id\">".
-				$asset_id."</field>\n".
-			"\t\t\t\t\t<field name=\"text position\">right</field>\n".
-			"\t\t\t\t\t<field name=\"display metadata\">false</field>\n".
-			"\t\t\t\t</record>\n".
-			"\t\t\t</asset>\n");
+			"\t\t\t\t\t<type>\n".
+			"\t\t\t\t\t\t<domain>Asset Types</domain>\n".
+			"\t\t\t\t\t\t<authority>edu.middlebury.concerto</authority>\n".
+			"\t\t\t\t\t\t<keyword>Slide</keyword>\n".
+			"\t\t\t\t\t</type>\n".
+			"\t\t\t\t\t<record xml:id=\"slidestructure\">\n".
+			"\t\t\t\t\t\t<part xml:id=\"target id\">".
+				$asset_id."</part>\n".
+			"\t\t\t\t\t\t<part xml:id=\"text position\">right</part>\n".
+			"\t\t\t\t\t\t<part xml:id=\"display metadata\">false</part>\n".
+			"\t\t\t\t\t</record>\n".
+			"\t\t\t\t</asset>\n");
 	}
 
 	/**
@@ -225,17 +245,16 @@ class exportexhibmdbAction
 	 * @since 8/9/05
 	 */
 	function closeAndImportExhibition () {
-		fwrite($this->_xmlFile,	"\t</asset>\n".
+		fwrite($this->_xmlFile,	"\t\t</asset>\n".
+			"\t</repository>\n".
 			"</import>");
 		fclose($this->_xmlFile);
-		$tar = new Archive_Tar("/tmp/mdbexhib.tar.gz", "gz");
-		$fileArray = array(
-			"/home/cshubert/public_html/importer/importtest/metadata.xml");
-		$tar->createModify($fileArray, "", 
-			"/home/cshubert/public_html/importer/importtest");
-		
-		$this->_importer->import();
-		unset($tar);
+
+		if (isset($this->_importer))
+			unset($this->_importer);
+		$this->_importer =& new XMLImporter("/home/cshubert/public_html/importer/importtest/metadata.xml");
+
+		$this->_importer->parse();
 	}
 }
 ?>
