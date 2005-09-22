@@ -122,9 +122,9 @@ class displayAction
 					print "\n\t\t<td>";
 					$userId =& $authNManager->getUserId($authType);
 					$userAgent =& $agentManager->getAgent($userId);
-					print $userId->getIdString();
-					print ": ";
+					print '<a title=\''._("Agent Id").': '.$userId->getIdString().'\' onclick=\'Javascript:alert("'._("Agent Id").':\n\t'.$userId->getIdString().'");\'>';
 					print $userAgent->getDisplayName();
+					print "</a>";
 					print "\n\t\t</td>";
 					print "\n\t\t<td>";
 					
