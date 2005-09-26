@@ -183,7 +183,7 @@ class importAction extends RepositoryAction {
 			}
 		}
 		else if ($properties['importtype'] == "XML") { 
-			RepositoryImporter::decompress($newName);
+			$importer->decompress($newName);
 			$importer =& new XMLImporter($newName);
 			$importer->parse();
 		}
