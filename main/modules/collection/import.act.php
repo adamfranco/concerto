@@ -1,7 +1,7 @@
 <?php
 
 //require_once(MYDIR."/domit/xml_domit_include.php");
-require_once(POLYPHONY."/main/library/RepositoryImporter/XMLRepositoryImporter.class.php");
+require_once(POLYPHONY."/main/library/Importer/XMLImporters/XMLImporter.class.php");
 require_once(POLYPHONY."/main/library/RepositoryImporter/TabRepositoryImporter.class.php");
 require_once(POLYPHONY."/main/library/RepositoryImporter/ExifRepositoryImporter.class.php");
 
@@ -167,21 +167,27 @@ class importAction extends RepositoryAction {
 		else $dieonError = false;
 		if ($properties['importtype'] == "Tab-Delimited") 
 			$importer =& new TabRepositoryImporter($newName, $dr->getId(), $dieonError);
-		else if ($properties['importtype'] == "XML") 
-			$importer =& new XMLRepositoryImporter($newName, $dr->getId(), $dieonError);
 		else if ($properties['importtype'] == "Exif") 
 			$importer =& new ExifRepositoryImporter($newName, $dr->getId(), $dieonError);
 
-		$importer->import();
-	
-		if ($importer->hasErrors()) {
-			print("The bad news is that some errors occured during import, they are: <br />");
-			$importer->printErrorMessages();
+		if (isset($importer)) {
+			$importer->import();
+			
+			if ($importer->hasErrors()) {
+				print("The bad news is that some errors occured during import, they are: <br />");
+				$importer->printErrorMessages();
+			}
+			if ($importer->hasAssets()) {
+				print("The good news is that some assets were created during import, they are: <br />");
+				$importer->printGoodAssetIds();
+			}
 		}
-		if ($importer->hasAssets()) {
-			print("The good news is that some assets were created during import, they are: <br />");
-			$importer->printGoodAssetIds();
+		else if ($properties['importtype'] == "XML") { 
+			RepositoryImporter::decompress($newName);
+			$importer =& new XMLImporter($newName);
+			$importer->parse();
 		}
+
 		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();
 		return TRUE;
