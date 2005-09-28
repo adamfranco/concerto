@@ -53,45 +53,25 @@ class SlideShowPrinter {
 		$actionString = $harmoni->getCurrentAction();
 		
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId())) {
-			$links[] = "<a href='"
-					.$harmoni->request->quickURL("asset", "view", 
-						array("asset_id" => $assetId->getIdString()))
-					."'>";
-				$links[count($links) - 1] .= _("view as asset (temporary)")."</a>";
-		}
-		
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId())) {
 			$viewertheme = 'black';
 			ob_start();
-			print "<a href='Javascript:openViewer(";
+			print "<a href='#' onclick='Javascript:window.open(";
+			print '"'.VIEWER_URL."?&source=";
+			print urlencode($harmoni->request->quickURL("exhibitions", "slideshowxml", 
+						array("slideshow_id" => $assetId->getIdString())));
+			print '", ';
 			print '"'.$asset->getDisplayName().'", ';
-			print '"'.VIEWER_URL."?&vtheme=".$viewertheme."&inputtype=concerto_slideshow&input=".$assetId->getIdString().'"';
+			print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
 			print ")'>";
 			print _("view")."</a>";
 			
 			$links[] = ob_get_contents();
 			ob_end_clean();
 			
-			print "\n<script type='text/javascript'>\n//<![CDATA[";
-			print "\n	function openViewer(name, url) {";
-			print "\n		var win = window.open(\"\",name,";
-			print "\"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500\");";
-			print "\n		win.document.location=url;";
-			print "\n		win.focus();";
-			print "\n	}";
-			print "\n//]]>\n</script>\n";
-
-			if ($actionString != "exhibitions.view_slideshow" 
-				|| $assetId->getIdString() != $harmoni->request->get('slideshow_id')) 
-			{
-				$links[] = "<a href='"
-					.$harmoni->request->quickURL("exhibitions", "view_slideshow", 
+			$links[] = "<a href='"
+					.$harmoni->request->quickURL("exhibitions", "slideshowxml", 
 						array("slideshow_id" => $assetId->getIdString()))
-					."'>";
-				$links[count($links) - 1] .= _("view thumbnails")."</a>";
-			} else {
-				$links[] = _("view thumbnails");
-			}
+					."'>"._("view xml (debug)")."</a>";
 		}
 		
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $asset->getId())) {

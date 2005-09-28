@@ -1,6 +1,6 @@
 <?php
 /**
- * @package concerto.modules.asset
+ * @package concerto.modules.exhibitions
  * 
  * @copyright Copyright &copy; 2005, Middlebury College
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
@@ -13,7 +13,7 @@ require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php
 /**
  * 
  * 
- * @package concerto.modules.asset
+ * @package concerto.modules.exhibitions
  * 
  * @copyright Copyright &copy; 2005, Middlebury College
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
