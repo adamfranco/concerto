@@ -209,7 +209,7 @@ class modify_exhibitionAction
 		
 		$properties =& $wizard->getAllValues();
 		
-		$assetType = new Type("Assets Types",
+		$assetType = new Type("Asset Types",
 							"edu.middlebury.concerto",
 							"Exhibition",
 							"Exhibition Assets are containers for Slideshows.");
