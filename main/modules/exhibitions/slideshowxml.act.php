@@ -174,7 +174,7 @@ END;
 		// Caption
 		print "\t\t<caption><![CDATA[";
 		print $slideAsset->getDescription();
-		if ($displayMetadata->isEqualTo(Boolean::true())
+		if ($displayMetadata->isTrue()
 			&& isset($mediaId)
 			&& $authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.view"),
