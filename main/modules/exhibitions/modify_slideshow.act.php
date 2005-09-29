@@ -196,6 +196,7 @@ class modify_slideshowAction
 		$property->addOption("bottom", _("bottom"));
 		$property->addOption("top", _("top"));
 		$property->addOption("center", _("center/no-media"));
+		$property->addOption("none", _("none/media-only"));
 		
 		
 		$property =& $multField->addComponent(
