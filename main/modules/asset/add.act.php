@@ -70,6 +70,19 @@ class addAction
 	}
 		
 	/**
+	 * Return the heading text for this action, or an empty string.
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function getHeadingText () {
+		$repository =& $this->getRepository();
+	
+		return _("Add Asset to the ")."<em>".$repository->getDisplayName()."</em> "._("Collection");
+	}
+	
+	/**
 	 * Create a new Wizard for this action. Caching of this Wizard is handled by
 	 * {@link getWizard()} and does not need to be implemented here.
 	 * 
@@ -81,7 +94,7 @@ class addAction
 		$repository =& $this->getRepository();
 		
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withTitleAndDefaultLayout(_("Add Asset to the ")."<em>".$repository->getDisplayName()."</em> "._("Collection"));
+		$wizard =& SimpleStepWizard::withDefaultLayout();
 		
 		// :: Name and Description ::
 		$step =& $wizard->addStep("namedescstep", new WizardStep());

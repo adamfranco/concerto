@@ -59,7 +59,7 @@ class create_exhibitionAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		return _("Browse all Exhibitions");
+		return _("Create an <em>Exhibition</em>");
 	}
 	
 	/**
@@ -96,7 +96,7 @@ class create_exhibitionAction
 		
 		
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withTitleAndDefaultLayout(_("Create an Exhibition"));
+		$wizard =& SimpleStepWizard::withDefaultLayout();
 		
 		// :: Name and Description ::
 		$step =& $wizard->addStep("namedescstep", new WizardStep());

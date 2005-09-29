@@ -130,9 +130,7 @@ class modify_slideshowAction
 		
 		// Instantiate the wizard, then add our steps.
 		// fetch current slideshow slides HERE!!!
-		$wizard =& SimpleStepWizard::withTitleAndDefaultLayout(
-			_("Modify the ")."<em>".$slideshowAsset->getDisplayName().
-			"</em> "._("Slideshow"));
+		$wizard =& SimpleStepWizard::withDefaultLayout();
 		
 		// :: Name and Description ::
 		$step =& $wizard->addStep("namedescstep", new WizardStep());

@@ -66,6 +66,17 @@ class editAction
 		
 		$this->runWizard ( $cacheName, $centerPane );
 	}
+
+	/**
+	 * Return the heading text for this action, or an empty string.
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function getHeadingText () {
+		return _("Edit a Collection");
+	}
 	
 	/**
 	 * Create a new Wizard for this action. Caching of this Wizard is handled by
@@ -85,7 +96,7 @@ class editAction
 					"collection_id" => $repositoryId->getIdString())));
 	
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withTitleAndDefaultLayout(_("Edit a Collection"));
+		$wizard =& SimpleStepWizard::withDefaultLayout();
 		
 		// :: Step One ::
 		$stepOne =& $wizard->addStep("namedesc", new WizardStep());

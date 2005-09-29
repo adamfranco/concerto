@@ -65,6 +65,17 @@ class createAction
 	}
 	
 	/**
+	 * Return the heading text for this action, or an empty string.
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function getHeadingText () {
+		return _("Create a Collection");
+	}
+	
+	/**
 	 * Create a new Wizard for this action. Caching of this Wizard is handled by
 	 * {@link getWizard()} and does not need to be implemented here.
 	 * 
@@ -74,7 +85,7 @@ class createAction
 	 */
 	function &createWizard () {
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withTitleAndDefaultLayout(_("Create a Collection"));
+		$wizard =& SimpleStepWizard::withDefaultLayout();
 		
 		// :: Step One ::
 		$stepOne =& $wizard->addStep("namedesc", new WizardStep());

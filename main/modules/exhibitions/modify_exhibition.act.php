@@ -72,6 +72,32 @@ class modify_exhibitionAction
 	}
 		
 	/**
+	 * Return the heading text for this action, or an empty string.
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function getHeadingText () {
+		$idManager =& Services::getService("Id");
+		$repositoryManager =& Services::getService("Repository");
+		$repository =& $repositoryManager->getRepository(
+				$idManager->getId(
+					"edu.middlebury.concerto.exhibition_repository"));
+
+		$harmoni =& Harmoni::Instance();
+		$harmoni->request->startNamespace("modify_exhibition");
+	
+		$asset =& $repository->getAsset(
+				$idManager->getId(RequestContext::value('exhibition_id')));
+
+		$harmoni->request->endNamespace();
+
+		return _("Modifying the ")." <em>".$asset->getDisplayName().
+			"</em> "._("Exhibition");
+	}
+		
+	/**
 	 * Create a new Wizard for this action. Caching of this Wizard is handled by
 	 * {@link getWizard()} and does not need to be implemented here.
 	 * 
@@ -95,8 +121,7 @@ class modify_exhibitionAction
 
 		
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withTitleAndDefaultLayout(
-			_("Modify the ")."<em>".$asset->getDisplayName()."</em>"._(" Exhibition"));
+		$wizard =& SimpleStepWizard::withDefaultLayout();
 		
 		// :: Name and Description ::
 		$step =& $wizard->addStep("namedescstep", new WizardStep());

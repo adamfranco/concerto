@@ -66,7 +66,7 @@ class add_slideshowAction
 					"edu.middlebury.concerto.exhibition_repository"));
 		$asset =& $repository->getAsset(
 				$idManager->getId(RequestContext::value('exhibition_id')));
-		return _("Creating a SlideShow in the")." <em>".$asset->getDisplayName()."</em> "._("Exhibition");
+		return _("Add a SlideShow to the")." <em>".$asset->getDisplayName()."</em> "._("Exhibition");
 	}
 	
 	/**
@@ -109,7 +109,7 @@ class add_slideshowAction
 				$idManager->getId(RequestContext::value('exhibition_id')));
 		
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withTitleAndDefaultLayout(_("Add a SlideShow to the ")."<em>".$exhibitionAsset->getDisplayName()."</em> "._("Exhibition"));
+		$wizard =& SimpleStepWizard::withDefaultLayout();
 		
 		// :: Name and Description ::
 		$step =& $wizard->addStep("namedescstep", new WizardStep());

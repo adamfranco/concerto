@@ -66,6 +66,17 @@ class createAction
 		
 		$this->runWizard ( $cacheName, $centerPane );
 	}
+
+	/**
+	 * Return the heading text for this action, or an empty string.
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function getHeadingText () {
+		return _("Create a Schema");
+	}
 		
 	/**
 	 * Create a new Wizard for this action. Caching of this Wizard is handled by
@@ -79,7 +90,7 @@ class createAction
 		$repository =& $this->getRepository();
 	
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withTitleAndDefaultLayout(_("Create a Schema"));
+		$wizard =& SimpleStepWizard::withDefaultLayout();
 		
 		// :: Step One ::
 		$stepOne =& $wizard->addStep("namedesc", new WizardStep());

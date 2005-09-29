@@ -67,7 +67,18 @@ class editAction
 		
 		$this->runWizard ( $cacheName, $centerPane );
 	}
-	
+
+	/**
+	 * Return the heading text for this action, or an empty string.
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function getHeadingText () {
+		return _("Edit Record");
+	}
+
 	/**
 	 * Create a new Wizard for this action. Caching of this Wizard is handled by
 	 * {@link getWizard()} and does not need to be implemented here.
@@ -86,7 +97,7 @@ class editAction
 		$structureId =& $structure->getId();
 	
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withTitleAndDefaultLayout(_("Edit Record"));
+		$wizard =& SimpleStepWizard::withDefaultLayout();
 		
 		// First get the set for this structure and start with the partStructure in the set.
 		$setManager =& Services::getService("Sets");

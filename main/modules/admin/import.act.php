@@ -165,24 +165,13 @@ class importAction extends MainWindowAction {
 			return FALSE;
 		}	
 		$newName = $this->moveArchive($path, $filename);
-/*		if ($properties['importtype'] == "Tab-Delimited") 
-			$importer =& new TabRepositoryImporter($newName, $dr->getId(), $dieonError);
-		else*/ if ($properties['importtype'] == "XML") 
+		
+		if ($properties['importtype'] == "XML") 
 			$importer =& new XMLImporter($newName);
-/*		else if ($properties['importtype'] == "Exif") 
-			$importer =& new ExifRepositoryImporter($newName, $dr->getId(), $dieonError);
-*/
+
 		$importer->parse();
 	
-/*		if ($importer->hasErrors()) {
-			print("The bad news is that some errors occured during import, they are: <br />");
-			$importer->printErrorMessages();
-		}
-		if ($importer->hasAssets()) {
-			print("The good news is that some assets were created during import, they are: <br />");
-			$importer->printGoodAssetIds();
-		}
-*/		$centerPane->add(new Block(ob_get_contents(), 1));
+		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();
 		return TRUE;
 	}
