@@ -194,6 +194,8 @@ class modify_slideshowAction
 		$property->addOption("right", _("right"));
 		$property->addOption("left", _("left"));
 		$property->addOption("bottom", _("bottom"));
+		$property->addOption("top", _("top"));
+		$property->addOption("center", _("center/no-media"));
 		
 		
 		$property =& $multField->addComponent(
@@ -285,7 +287,9 @@ class modify_slideshowAction
 				$targetId);
 			if ($assetIdIterator->hasNext()) {
 				$id =& $assetIdIterator->next();
-				$collection['_assetId'] =& new HarmoniId($id->asString());
+				$rule =& NonzeroLengthStringValidatorRule::getRule();
+				if ($rule->check($id->asString()))
+					$collection['_assetId'] =& new HarmoniId($id->asString());
 			}
 			if ($slideOrder->isInSet($slideId))
 				$orderedSlides[$slideOrder->getPosition($slideId)] =
