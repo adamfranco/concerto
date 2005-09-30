@@ -143,16 +143,12 @@ class editAction
 		$displayNameProp->setValue($asset->getDisplayName());
 		$displayNameProp->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 		$displayNameProp->setErrorRule(new WECRegex("[\\w]+"));
-//		$displayNameProp =& $step->createProperty("display_name", new RegexValidatorRule("^[^ ]{1}.*$"));
-//		$displayNameProp->setDefaultValue($asset->getDisplayName());
-//		$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
+
 		
 		$descriptionProp =& $step->addComponent("description", new WTextArea());
 		$descriptionProp->setValue($asset->getDescription());
 		$descriptionProp->setRows(3);
 		$descriptionProp->setColumns(70);
-//		$descriptionProp =& $step->createProperty("description", new RegexValidatorRule(".*"));
-//		$descriptionProp->setDefaultValue($asset->getDescription());
 		
 		// Create the step text
 		ob_start();
@@ -196,19 +192,18 @@ class editAction
 		
 		// Create the properties.
 		$property =& $step->addComponent("effective_date", new WTextField());
-//		$property =& $step->createProperty("effective_date", new RegexValidatorRule("^(([0-9]{4,8}))?$"));
 		$date =& $asset->getEffectiveDate();
-		if ($date) $property->setValue($date->getYear()
-			.(($date->getMonth()<10)?"0".intval($date->getMonth()):$date->getMonth())
-			.(($date->getDay()<10)?"0".intval($date->getDay()):$date->getDay()));
-//		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
+		if ($date) {
+			$date =& $date->asDate();
+			$property->setValue($date->yyyymmddString());
+		}
 	
 		$property =& $step->addComponent("expiration_date", new WTextField());
 		$date =& $asset->getExpirationDate();
-		if ($date) $property->setValue($date->getYear()
-			.(($date->getMonth()<10)?"0".intval($date->getMonth()):$date->getMonth())
-			.(($date->getDay()<10)?"0".intval($date->getDay()):$date->getDay()));
-//		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
+		if ($date) {
+			$date =& $date->asDate();
+			$property->setValue($date->yyyymmddString());
+		}
 		
 		// Create the step text
 		ob_start();
