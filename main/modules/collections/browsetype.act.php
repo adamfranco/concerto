@@ -9,6 +9,7 @@
  */ 
 
 require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
+require_once(MYDIR."/main/library/printers/CollectionsPrinter.static.php");
 
 /**
  * 
@@ -56,6 +57,12 @@ class browsetypeAction
 	function buildContent () {
 		$actionRows =& $this->getActionRows();
 		$harmoni =& Harmoni::instance();
+		
+		ob_start();
+		CollectionsPrinter::printFunctionLinks();
+		$layout =& new Block(ob_get_contents(), 3);
+		ob_end_clean();
+		$actionRows->add($layout, null, null, CENTER, CENTER);
 		
 		$type =& HarmoniType::stringToType(urldecode(RequestContext::value('type')));
 

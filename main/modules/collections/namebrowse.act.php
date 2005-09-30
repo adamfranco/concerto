@@ -9,6 +9,7 @@
  */ 
 
 require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
+require_once(MYDIR."/main/library/printers/CollectionsPrinter.static.php");
 
 /**
  * 
@@ -57,6 +58,9 @@ class namebrowseAction
 		$harmoni =& Harmoni::instance();
 		
 		ob_start();
+		
+		CollectionsPrinter::printFunctionLinks();
+		
 		print "<p>";
 		print _("Below are listed the availible <em>Collections</em>, organized by name.");
 		print "</p>\n<p>";

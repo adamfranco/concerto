@@ -48,29 +48,13 @@ class ConcertoMenuGenerator {
 
 		$mainMenu_item2 =& new MenuItemLink(
 			"<span style='font-size: large'>"._("Collections")."</span>", 
-			$harmoni->request->quickURL("collections", "main"), 
+			$harmoni->request->quickURL("collections", "namebrowse"), 
 			($module == "collections" && $action == "main")?TRUE:FALSE,1);
 		$mainMenu->add($mainMenu_item2, "100%", null, LEFT, CENTER);
 		
 		// Collection browse links.
 		// Just show if we are not in a particular collection.
-		if (ereg("collection(s)?|asset", $module)) {
-			// Name browse
-			$mainMenu_item3 =& new MenuItemLink("<span style='font-size: medium'> - ".
-					_("By Name")."</span>", 
-					$harmoni->request->quickURL("collections", "namebrowse"), 
-					($module == "collections" && $action == "namebrowse")?TRUE:FALSE,1
-			);
-			$mainMenu->add($mainMenu_item3, "100%", null, LEFT, CENTER);
-			
-			// Type browse
-			$mainMenu_item4 =& new MenuItemLink("<span style='font-size: medium'> - ".
-					_("By Type")."</span>", 
-					$harmoni->request->quickURL("collections", "typebrowse"), 
-					($module == "collections" && ($action == "typebrowse" || $action == "browsetype"))?TRUE:FALSE,1
-			);
-			$mainMenu->add($mainMenu_item4, "100%", null, LEFT, CENTER);
-			
+		if (ereg("collection(s)?|asset", $module)) {			
 			// Collection root
 			if (ereg("^(collection|asset)$", $module)) {
 				// Name browse
