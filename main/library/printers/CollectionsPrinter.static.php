@@ -25,7 +25,7 @@ class CollectionsPrinter {
 	 * Die constructor for static class
 	 */
 	function CollectionsPrinter () {
-		die("Static class AssetPrinter can not be instantiated.");
+		die("Static class CollectionsPrinter can not be instantiated.");
 	}
 	
 	/**

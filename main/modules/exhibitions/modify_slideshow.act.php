@@ -32,9 +32,10 @@ class modify_slideshowAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can create an asset here.
+		$harmoni =& Harmoni::Instance();
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
-		$harmoni =& Harmoni::Instance();
+
 		$harmoni->request->startNamespace("modify_slideshow");
 
 		$return = $authZ->isUserAuthorized(
@@ -44,7 +45,6 @@ class modify_slideshowAction
 		$harmoni->request->endNamespace();
 		
 		return $return;
-		
 	}
 	
 	/**
@@ -66,13 +66,14 @@ class modify_slideshowAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
+		$harmoni =& Harmoni::Instance();
 		$idManager =& Services::getService("Id");
 		$repositoryManager =& Services::getService("Repository");
+
 		$repository =& $repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
 
-		$harmoni =& Harmoni::Instance();
 		$harmoni->request->startNamespace("modify_slideshow");
 	
 		$asset =& $repository->getAsset(
@@ -92,18 +93,18 @@ class modify_slideshowAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$harmoni =& Harmoni::instance();
+		$harmoni =& Harmoni::Instance();
 		$harmoni->request->startNamespace("modify_slideshow");
 		$harmoni->request->passthrough("slideshow_id");
 
 		$actionRows =& $this->getActionRows();
 		
-		$idManager =& Services::getService("Id");
-		$slideshowAssetId =& $idManager->getId(
-			RequestContext::value('slideshow_id'));
+// 		$idManager =& Services::getService("Id");
+// 		$slideshowAssetId =& $idManager->getId(
+// 			RequestContext::value('slideshow_id'));
 		
 		$cacheName = 'modify_slideshow_wizard_'.
-			$slideshowAssetId->getIdString();
+			RequestContext::value('slideshow_id');
 
 		$this->runWizard ( $cacheName, $actionRows );
 		$harmoni->request->endNamespace();
@@ -118,7 +119,6 @@ class modify_slideshowAction
 	 * @since 4/28/05
 	 */
 	function &createWizard () {
-		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");		
 		$setManager =& Services::getService("Sets");
 		$repositoryManager =& Services::getService("Repository");
@@ -345,7 +345,6 @@ class modify_slideshowAction
 	 * @since 4/28/05
 	 */
 	function saveWizard ( $cacheName ) {
-		$harmoni =& Harmoni::Instance();
 		$wizard =& $this->getWizard($cacheName);
 		
 		// Make sure we have a valid Repository

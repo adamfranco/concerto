@@ -25,7 +25,7 @@ class SlideShowPrinter {
 	 * Die constructor for static class
 	 */
 	function SlideShowPrinter () {
-		die("Static class AssetPrinter can not be instantiated.");
+		die("Static class SlideShowPrinter can not be instantiated.");
 	}
 	
 	/**
@@ -110,7 +110,18 @@ class SlideShowPrinter {
 				$links[] = _("delete");
 			}
 		}
-		
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $asset->getId())) {
+			$harmoni->request->startNamespace('export');
+			if ($actionString != "exhibitions.export_slideshow") {
+				$links[] = "<a href='".$harmoni->request->quickURL(
+					"exhibitions", "export_slideshow", array("slideshow_id" =>
+					$assetId->getIdString()))."'>";
+				$links[count($links) - 1] .= _("export")."</a>";
+			} else {
+				$links[] = _("export");
+			}
+			$harmoni->request->endNamespace();
+		}
 		print  implode("\n\t | ", $links);
 	}
 	

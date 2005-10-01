@@ -51,7 +51,7 @@ class AssetPrinter {
 		
 		$actionString = $harmoni->getCurrentAction();
 		
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $assetId)) {
 			if ($actionString != "asset.view") {
 				$links[] = "<a href='"
 					.$harmoni->request->quickURL("asset", "view",
@@ -64,7 +64,7 @@ class AssetPrinter {
 			}
 		}
 		
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $assetId)) {
 			$children =& $asset->getAssets();
 			if ($children->hasNext()) {
 				if ($actionString != "asset.browse" 
@@ -80,9 +80,18 @@ class AssetPrinter {
 					$links[] = _("browse");
 				}
 			}
+			$harmoni->request->startNamespace('export');
+			if ($actionString != "asset.export") {
+				$links[] = "<a href='".$harmoni->request->quickURL("asset",
+					"export", array("collection_id" => $repositoryId->getIdString(), "asset_id" => $assetId->getIdString()))."'>";
+				$links[count($links) - 1] .= _("export")."</a>";
+			} else {
+				$links[] = _("export");
+			}
+			$harmoni->request->endNamespace();
 		}
 		
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $assetId)) {
 			if ($actionString != "asset.editview") {
 				$links[] = "<a href='"
 					.$harmoni->request->quickURL("asset", "editview", 
@@ -95,7 +104,7 @@ class AssetPrinter {
 			}
 		}
 		
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.delete"), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.delete"), $assetId)) {
 			if ($actionString != "asset.delete") {
 				$harmoni->history->markReturnURL("concerto/asset/delete-return");
 				ob_start();
@@ -118,7 +127,7 @@ class AssetPrinter {
 			}
 		}
 		
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.add_children"), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.add_children"), $assetId)) {
 			if (ereg("^asset\..*$", $actionString) 
 				&& $harmoni->request->get("asset_id") == $assetId->getIdString()) 
 			{
@@ -131,7 +140,7 @@ class AssetPrinter {
 			}
 		}
 		
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId())) {
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $assetId)) {
 			$harmoni->request->startNamespace("basket");
 			ob_start();
 			print "<a href='"

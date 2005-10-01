@@ -71,6 +71,16 @@ class RepositoryPrinter {
 			} else {
 				$links[] = _("search");
 			}
+			
+			$harmoni->request->startNamespace('export');
+			if ($actionString != "collection.export") {
+				$url->setModuleAction("collection", "export");
+				$links[] = "<a href='".$url->write()."'>";
+				$links[count($links) - 1] .= _("export")."</a>";
+			} else {
+				$links[] = _("export");
+			}
+			$harmoni->request->endNamespace();
 		}
 		
 		if ($authZ->isUserAuthorized(

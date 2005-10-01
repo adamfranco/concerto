@@ -67,6 +67,16 @@ class ExhibitionPrinter {
 					$links[] = _("browse");
 				}
 // 			}
+			$harmoni->request->startNamespace('export');
+			if($actionString != "exhibitions.export") {
+				$links[] = "<a href='".$harmoni->request->quickURL(
+					"exhibitions", "export", array("exhibition_id" =>
+					$assetId->getIdString()))."'>";
+				$links[count($links) - 1] .= _("export")."</a>";
+			} else {
+				$links[] = _("export");
+			}
+			$harmoni->request->endNamespace('export');
 		}
 		
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $asset->getId())) {
