@@ -82,10 +82,13 @@ class importAction extends MainWindowAction {
 	function &createWizard () {
 		//$repository =& $this->getRepository();
 		$wizard =& SimpleWizard::withText(
-			"\n<h3>"._("Import type")."</h3>".
+			"\n<h3>"._("File type")."</h3>".
 			"\n"._("The type of file to be imported: ").
-			"\n<br />[[importtype]]".
-			"\n<h3>"._("Select file to import")."</h3>".
+			"\n<br />[[file_type]]".
+			"\n<h3>"._("Import type").
+			"\n"._("The type of import to execute: ").
+			"\n<br />[[import_type]]".
+			"\n<h3>"._("File")."</h3>".
 			"\n"._("The file to be imported: ").
 			"\n<br />[[filename]]".
 			"<table width='100%' border='0' style='margin-top:20px' >\n" .
@@ -101,11 +104,16 @@ class importAction extends MainWindowAction {
 		//$step =& $wizard->addStep("fileupload", new WizardStep());
 		//$step->setDisplayName(_("Archive Type and File Upload"));
 		
-		$select =& $wizard->addComponent("importtype", new WSelectList());
+		$select =& $wizard->addComponent("file_type", new WSelectList());
 //		$select->addOption("Tab-Delimited", "Tab-Delimited");
 		$select->addOption("XML", "XML");
 //		$select->addOption("Exif", "Exif");
 //		$select->setValue("Tab-Delimited");
+		
+		$type =& $wizard->addComponent("import_type", new WSelectList());
+		$type->addOption("update", "update");
+		$type->addOption("insert", "insert");
+		//$type->addOption("replace", "replace");
 		
 		$fileField =& $wizard->addComponent("filename", new WFileUploadField());
 				
@@ -166,8 +174,8 @@ class importAction extends MainWindowAction {
 		}	
 		$newName = $this->moveArchive($path, $filename);
 		
-		if ($properties['importtype'] == "XML") 
-			$importer =& new XMLImporter($newName);
+		if ($properties['file_type'] == "XML") 
+			$importer =& new XMLImporter($newName, $properties['import_type']);
 
 		$importer->parse();
 	
@@ -184,7 +192,7 @@ class importAction extends MainWindowAction {
 	 * @since 6/08/05
 	 */
 	function getReturnUrl () {
-		$repositoryId =& $this->getRepositoryId();
+
 		$harmoni =& Harmoni::instance();
 		return $harmoni->request->quickURL("admin", "main");
 	}

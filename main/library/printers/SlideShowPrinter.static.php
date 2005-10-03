@@ -111,7 +111,7 @@ class SlideShowPrinter {
 			}
 		}
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $asset->getId())) {
-			$harmoni->request->startNamespace('export');
+			$harmoni->request->startNamespace('export_slideshow');
 			if ($actionString != "exhibitions.export_slideshow") {
 				$links[] = "<a href='".$harmoni->request->quickURL(
 					"exhibitions", "export_slideshow", array("slideshow_id" =>
