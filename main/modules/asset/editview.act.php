@@ -96,12 +96,16 @@ class editviewAction
 			print  "\n\t<br /><strong>"._("ID#").":</strong> ".$assetId->getIdString();
 		
 			$effectDate =& $asset->getEffectiveDate();
-			if(is_Object($effectDate))
+			if(is_Object($effectDate)) {
+				$effectDate =& $effectDate->asDate();
 				print  "\n\t<br /><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->asString()."</em>";
+			}
 		
 			$expirationDate =& $asset->getExpirationDate();
-			if(is_Object($expirationDate))
+			if(is_Object($expirationDate)) {
+				$expirationDate =& $expirationDate->asDate();
 				print  "\n\t<br /><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->asString()."</em>";
+			}
 		
 			$layout =& new Block(ob_get_contents(), 3);
 			ob_end_clean();

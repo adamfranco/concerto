@@ -95,12 +95,16 @@ class viewAction
 			print  "\n\t<br /><strong>"._("ID#").":</strong> ".$assetId->getIdString();
 		
 			$effectDate =& $asset->getEffectiveDate();
-			if(is_object($effectDate))
+			if(is_Object($effectDate)) {
+				$effectDate =& $effectDate->asDate();
 				print  "\n\t<br /><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->asString()."</em>";
+			}
 		
 			$expirationDate =& $asset->getExpirationDate();
-			if(is_object($expirationDate))
+			if(is_Object($expirationDate)) {
+				$expirationDate =& $expirationDate->asDate();
 				print  "\n\t<br /><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->asString()."</em>";
+			}
 		
 			$layout =& new Block(ob_get_contents(), 3);
 			ob_end_clean();
