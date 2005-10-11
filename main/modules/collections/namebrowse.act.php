@@ -81,6 +81,7 @@ class namebrowseAction
 		// put the drs into an array and order them.
 		// @todo, do authorization checking
 		$repositoryArray = array();
+		$repositoryTitles = array();
 		while($allRepositories->hasNext()) {
 			$repository =& $allRepositories->next();
 
