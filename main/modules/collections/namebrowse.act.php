@@ -83,7 +83,7 @@ class namebrowseAction
 		$repositoryArray = array();
 		while($allRepositories->hasNext()) {
 			$repository =& $allRepositories->next();
-printpre($repository->getType());
+
 			// include all but Exhibitions repository.
 			if (!$exhibitionRepositoryType->isEqual($repository->getType())) {
 				$id =& $repository->getId();
