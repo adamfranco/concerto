@@ -83,12 +83,15 @@ class namebrowseAction
 		$repositoryArray = array();
 		while($allRepositories->hasNext()) {
 			$repository =& $allRepositories->next();
-			
+printpre($repository->getType());
 			// include all but Exhibitions repository.
-			if (!$exhibitionRepositoryType->isEqual($repository->getType()))
-				$repositoryArray[$repository->getDisplayName()] =& $repository;
+			if (!$exhibitionRepositoryType->isEqual($repository->getType())) {
+				$id =& $repository->getId();
+				$repositoryTitles[$id->getIdString()] = $repository->getDisplayName();
+				$repositoryArray[$id->getIdString()] =& $repository;
+			}
 		}
-		ksort($repositoryArray);
+		array_multisort($repositoryTitles, SORT_ASC, SORT_STRING, $repositoryArray);
 		
 		// print the Results
 		$resultPrinter =& new ArrayResultPrinter($repositoryArray, 2, 20, "printRepositoryShort", $harmoni);
