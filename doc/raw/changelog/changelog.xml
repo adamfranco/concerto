@@ -10,7 +10,16 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="0.2.0" date="The Nebulous Future">
+	<version number="0.2.0" date="2005-10-12">
+		<new author='adam'>
+			Lots of other changes that make this now a workable system.
+		</new>
+		<new author='gabe'>
+			Now uses new Wizard system.
+		</new>
+		<new author='chris'>
+			New XML importing system
+		</new>
 		<new author='adam'>
 			New Exhibition/Slideshow sytem.
 		</new>
@@ -65,6 +74,7 @@
 		<name short="nik">Nikitas Stamatopoulos</name>
 		<name short="niraj">Niraj Dhungel</name>
 		<name short="alex">Alex Chapin</name>
+		<name short="chris">Christopher Shubert</name>
 	</authors>
 	<groupid>82873</groupid>
 	<reftypes>

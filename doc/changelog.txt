@@ -3,6 +3,25 @@
 Name: Concerto ChangeLog
 
 
+v. 0.2.0 (2005-10-12)
+----------------------------------------------------
+		
+	* New feature: Lots of other changes that make this now a workable system. (Adam Franco)
+		
+	* New feature: Now uses new Wizard system. (Gabe Schine)
+		
+	* New feature: New XML importing system (Christopher Shubert)
+		
+	* New feature: New Exhibition/Slideshow sytem. (Adam Franco)
+		
+	* Bug Fix: Converted remaining refernces to the 'MIDDLE' alignment to the new 'CENTER' alignment used by the GUIManager. (Adam Franco)
+		
+	* Change: The default config now sets up the IdManager with a prefix 'dev_id-' to encourage testing of string-id support. (Adam Franco)
+		
+	* Change: Concerto Actions are now classes in order to allow for easier refactoring of common functionality via subclassing. (Adam Franco)
+		
+	* New feature: Can now add Assets as children of other Assets. (Adam Franco)
+	
 v. 0.1.2 (2005-04-14)
 ----------------------------------------------------
 		
