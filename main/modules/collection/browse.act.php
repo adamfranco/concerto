@@ -76,6 +76,7 @@ class browseAction
 		$harmoni =& Harmoni::instance();
 		
 		$repository =& $this->getRepository();
+				
 		$harmoni->request->passthrough("collection_id");
 		
 		// If the Repository supports searching of root assets, just get those
@@ -98,9 +99,75 @@ class browseAction
 		$actionRows->add($layout, "100%", null, CENTER, CENTER);
 		
 		ob_start();
-		print  "<p>";
-		print  _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
-		print  "</p>";
+		// Limit selection form
+		$currentUrl =& $harmoni->request->mkURL();
+		print "\n<form action='".$currentUrl->write()."' method='post'>";
+		
+		print "\n\t<input type='radio' onchange='this.form.submit();'";
+		print " name='".RequestContext::name("limit_by")."'";
+		print " value='all'";
+		if (!RequestContext::value("limit_type") || RequestContext::value("limit_by") == 'all' )
+			print " checked='checked'";
+		print ">"._("All")."\n<br/>";
+		
+		print "\n\t<input type='radio' onchange='this.form.submit();'";
+		print " name='".RequestContext::name("limit_by")."'";
+		print " value='type'";
+		if (RequestContext::value("limit_by") == 'type') {
+			print " checked='checked'";
+			print ">"._("Type").": ";
+			print "\n\t<select name='".RequestContext::name("type")."'";
+			print " onchange='this.form.submit();'>";
+				print "\n\t\t<option value=''";
+				if (!RequestContext::value("type"))
+					print " selected='selected'";
+				print ">All Types</option>";
+				$types =& $repository->getAssetTypes();
+				while ($types->hasNext()) {
+					$type =& $types->next();
+					print "\n\t\t<option value='".Type::typeToString($type)."'";
+					if (RequestContext::value("type") == Type::typeToString($type))
+						print " selected='selected'";
+					print ">".Type::typeToString($type)."</option>";
+				}			
+			print "\n\t</select>";
+			print "\n<br/>";
+		} else {
+			print ">"._("Type")."\n<br/>";
+		}
+		
+		print "\n\t<input type='radio' onchange='this.form.submit();'";
+		print " name='".RequestContext::name("limit_by")."'";
+		print " value='search'";
+		if (RequestContext::value("limit_by") == 'search') {
+			print " checked='checked'";
+			print ">"._("Search").": ";
+			print "\n\t<select name='".RequestContext::name("searchtype")."'";
+			print " onchange='this.form.submit();'>";
+				print "\n\t\t<option value=''";
+				if (!RequestContext::value("searchtype"))
+					print " selected='selected'";
+				print ">All Types</option>";
+				$types =& $repository->getSearchTypes();
+				while ($types->hasNext()) {
+					$type =& $types->next();
+					print "\n\t\t<option value='".Type::typeToString($type)."'";
+					if (RequestContext::value("searchtype") == Type::typeToString($type))
+						print " selected='selected'";
+					print ">".Type::typeToString($type)."</option>";
+				}			
+			print "\n\t</select>";
+			print "\n\t<input type='text'";
+			print " name='".RequestContext::name("searchstring")."'";
+			print " value='".RequestContext::value("searchstring")."'>";
+			print "\n\t<input type='submit'>";
+			print "\n<br/>";
+		} else {
+			print ">"._("Search")."\n<br/>";
+		}
+		
+		print "\n</form>";
+		
 		
 		$introText =& new Block(ob_get_contents(), 3);
 		ob_end_clean();
@@ -109,13 +176,34 @@ class browseAction
 		//***********************************
 		// Get the assets to display
 		//***********************************
-		if ($hasRootSearch) {
-			$criteria = NULL;
-			$assets =& $repository->getAssetsBySearch($criteria, $rootSearchType, $searchProperties = NULL);
-		} 
-		// Otherwise, just get all the assets
-		else {
-			$assets =& $repository->getAssets();
+		switch (RequestContext::value("limit_by")) {
+			case 'type':
+				if (RequestContext::value("type")) {
+					$assets =& $repository->getAssetsByType(Type::stringToType(RequestContext::value("type")));
+					break;
+				}
+				
+			case 'search':
+				if (RequestContext::value("searchtype") 
+					&& RequestContext::value("searchstring")) 
+				{
+					$searchString = RequestContext::value("searchstring");
+					$assets =& $repository->getAssetsBySearch(
+						$searchString,
+						Type::stringToType(RequestContext::value("searchtype")),
+						$searchProperties = NULL);
+					break;
+				}
+			
+			default:
+				if ($hasRootSearch) {
+					$criteria = NULL;
+					$assets =& $repository->getAssetsBySearch($criteria, $rootSearchType, $searchProperties = NULL);
+				} 
+				// Otherwise, just get all the assets
+				else {
+					$assets =& $repository->getAssets();
+				}
 		}
 		
 		//***********************************
@@ -124,6 +212,7 @@ class browseAction
 		$resultPrinter =& new IteratorResultPrinter($assets, 3, 6, "printAssetShort", $harmoni);
 		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
+		
 	}
 }
 

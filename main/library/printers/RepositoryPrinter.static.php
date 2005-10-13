@@ -56,21 +56,21 @@ class RepositoryPrinter {
 				$links[] = _("browse");
 			}
 			
-			if ($actionString != "collection.typebrowse") {
-				$url->setModuleAction("collection", "typebrowse");
-				$links[] = "<a href='".$url->write()."'>";
-				$links[count($links) - 1] .= _("browse by type")."</a>";
-			} else {
-				$links[] = _("browse by type");
-			}
-			
-			if ($actionString != "collection.search") {
-				$url->setModuleAction("collection", "search");
-				$links[] = "<a href='".$url->write()."'>";
-				$links[count($links) - 1] .= _("search")."</a>";
-			} else {
-				$links[] = _("search");
-			}
+// 			if ($actionString != "collection.typebrowse") {
+// 				$url->setModuleAction("collection", "typebrowse");
+// 				$links[] = "<a href='".$url->write()."'>";
+// 				$links[count($links) - 1] .= _("browse by type")."</a>";
+// 			} else {
+// 				$links[] = _("browse by type");
+// 			}
+// 			
+// 			if ($actionString != "collection.search") {
+// 				$url->setModuleAction("collection", "search");
+// 				$links[] = "<a href='".$url->write()."'>";
+// 				$links[count($links) - 1] .= _("search")."</a>";
+// 			} else {
+// 				$links[] = _("search");
+// 			}
 
 // 			$harmoni->request->startNamespace('export');
 // 			if ($actionString != "collection.export") {
