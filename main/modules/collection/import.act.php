@@ -1,15 +1,29 @@
 <?php
+/**
+ * @since 9/14/05
+ * @package concerto.admin
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
+ * @version $Id$
+ */ 
 
-//require_once(MYDIR."/domit/xml_domit_include.php");
-require_once(POLYPHONY."/main/library/Importer/XMLImporters/XMLImporter.class.php");
-require_once(POLYPHONY."/main/library/RepositoryImporter/TabRepositoryImporter.class.php");
-require_once(POLYPHONY."/main/library/RepositoryImporter/ExifRepositoryImporter.class.php");
+require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
+require_once(POLYPHONY."/main/library/Importer/XMLImporters/XMLRepositoryImporter.class.php");
 
-require_once(HARMONI."utilities/Dearchiver.class.php");
-require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
-require_once(HARMONI."utilities/MIMETypes.class.php");
-
-class importAction extends RepositoryAction {
+/**
+ * imports data into concerto (of many types)
+ * 
+ * @since 9/14/05
+ * @package concerto.admin
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
+ * @version $Id$
+ */
+class importAction extends MainWindowAction {
 	/**
 	 * Check Authorizations
 	 * 
@@ -18,12 +32,20 @@ class importAction extends RepositoryAction {
 	 * @since 6/08/05
 	 */
 	function isAuthorizedToExecute () {
-		// Check that the user can access this collection
+		$harmoni =& Harmoni::instance();
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
-		return $authZ->isUserAuthorized(
+		
+		$harmoni->request->startNamespace('import');
+
+		$return = $authZ->isUserAuthorized(
 			$idManager->getId("edu.middlebury.authorization.add_children"),
-			$this->getRepositoryId());
+			$idManager->getId(RequestContext::value('collection_id')));
+
+		$harmoni->request->endNamespace();
+		
+		// Check that the user can create an asset here.
+		return $return;
 	}
 
 	/**
@@ -34,7 +56,19 @@ class importAction extends RepositoryAction {
 	 * @since 6/08/05
 	 */
 	function getUnauthorizedMessage () {
-		return _("You are not authorized to import assets into this <em>Collection</em>.");
+		$harmoni =& Harmoni::Instance();
+		$idManager =& Services::getService("Id");
+		$rm =& Services::getService("Repository");
+		
+		$harmoni->request->startNamespace("import");
+		
+		$repository =& $rm->getRepository($idManager->getId(
+			$harmoni->request->get("collection_id")));
+		
+		$harmoni->request->endNamespace();
+		
+		return _("You are not authorized to import into the <em>".
+			$repository->getDisplayName()."</em> Collection.");
 	}
 
 	/**
@@ -45,22 +79,32 @@ class importAction extends RepositoryAction {
 	 * @since 6/08/05
 	 */
 	function getHeadingText () {
-		$repository =& $this->getRepository();
-		return _("Import Assets to the")
-		." <em>".$repository->getDisplayName()."</em> "
-		._(" Collection");
+		$harmoni =& Harmoni::Instance();
+		$idManager =& Services::getService("Id");
+		$rm =& Services::getService("Repository");
+		
+		$harmoni->request->startNamespace("import");
+		
+		$repository =& $rm->getRepository($idManager->getId(
+			$harmoni->request->get("collection_id")));
+		
+		$harmoni->request->endNamespace();
+
+		return _("Import data into the <em>".$repository->getDisplayName().
+			"</em> Collection");
 	}
 
 	function buildContent () {
-		$dr =& $this->getRepository();
 		$harmoni =& Harmoni::instance();
-		$centerPane =& $this->getActionRows();
-		
-		$repositoryId = $dr->getId();
+		$harmoni->request->startNamespace("import");
 		$harmoni->request->passthrough("collection_id");
-		$cacheName = 'import_asset_wizard_'.$repositoryId->getIdString();
+		
+		$centerPane =& $this->getActionRows();
+		$cacheName = 'import_concerto_data_wizard';
+		
 		$this->runWizard($cacheName, $centerPane);
-
+		
+		$harmoni->request->endNamespace();
 	}
 	
 	/**
@@ -73,15 +117,15 @@ class importAction extends RepositoryAction {
 	function &createWizard () {
 		//$repository =& $this->getRepository();
 		$wizard =& SimpleWizard::withText(
-			"\n<h3>"._("Import type")."</h3>".
-			"\n"._("The type of archive to be imported: ").
-			"\n<br />[[importtype]]".
-			"\n<h3>"._("Select file to upload")."</h3>".
-			"\n"._("The archive to be uploaded: ").
+			"\n<h3>"._("File type")."</h3>".
+			"\n"._("The type of file to be imported: ").
+			"\n<br />[[file_type]]".
+			"\n<h3>"._("Import type").
+			"\n"._("The type of import to execute: ").
+			"\n<br />[[import_type]]".
+			"\n<h3>"._("File")."</h3>".
+			"\n"._("The file to be imported: ").
 			"\n<br />[[filename]]".
-			"\n<br /><h3>"._("Stop on any Error: ")."</h3>".
-			"\n"._("Do not import subsequent assets after the first asset with error.").
-			"\n<br />[[dieonerror]]".
 			"<table width='100%' border='0' style='margin-top:20px' >\n" .
 			"<tr>\n" .
 			"<td align='left' width='50%'>\n" .
@@ -95,16 +139,19 @@ class importAction extends RepositoryAction {
 		//$step =& $wizard->addStep("fileupload", new WizardStep());
 		//$step->setDisplayName(_("Archive Type and File Upload"));
 		
-		$select =& $wizard->addComponent("importtype", new WSelectList());
-		$select->addOption("Tab-Delimited", "Tab-Delimited");
+		$select =& $wizard->addComponent("file_type", new WSelectList());
+//		$select->addOption("Tab-Delimited", "Tab-Delimited");
 		$select->addOption("XML", "XML");
-		$select->addOption("Exif", "Exif");
-		$select->setValue("Tab-Delimited");
+//		$select->addOption("Exif", "Exif");
+//		$select->setValue("Tab-Delimited");
+		
+		$type =& $wizard->addComponent("import_type", new WSelectList());
+		$type->addOption("update", "update");
+		$type->addOption("insert", "insert");
+		//$type->addOption("replace", "replace");
 		
 		$fileField =& $wizard->addComponent("filename", new WFileUploadField());
-		
-		$dieOnError =& $wizard->addComponent("dieonerror", new WCheckBox());
-		
+				
 		$save =& $wizard->addComponent("_save", 
 			WSaveButton::withLabel("Import"));
 		$cancel =& $wizard->addComponent("_cancel", new WCancelButton());
@@ -114,12 +161,12 @@ class importAction extends RepositoryAction {
 	}
 	
 	/**
-	 * moves the file returned by the wizard to a direcotory with a unique
+	 * moves the file returned by the wizard to a directory with a unique
 	 * name
 	 * 
-	 * @param string tmpPath
-	 * @param string $filename
-	 * @return returns the path to the moved file
+	 * @param string
+	 * @param string 
+	 * @return string
 	 * @access public
 	 * @since 7/27/05
 	 */
@@ -146,7 +193,8 @@ class importAction extends RepositoryAction {
 	
 	function saveWizard($cacheName) {
 		$harmoni =& Harmoni::instance();
-		$dr =& $this->getRepository();
+		$idManager =& Services::getService("Id");
+		$repositoryManager =& Services::getService("Repository");
 		$wizard =& $this->getWizard($cacheName);
 		$properties =& $wizard->getAllValues();
 
@@ -161,33 +209,18 @@ class importAction extends RepositoryAction {
 			ob_end_clean();
 			return FALSE;
 		}	
-		$newName = importAction::moveArchive($path, $filename);
-		if($properties['dieonerror'] = "on")
-			$dieonError = true;
-		else $dieonError = false;
-		if ($properties['importtype'] == "Tab-Delimited") 
-			$importer =& new TabRepositoryImporter($newName, $dr->getId(), $dieonError);
-		else if ($properties['importtype'] == "Exif") 
-			$importer =& new ExifRepositoryImporter($newName, $dr->getId(), $dieonError);
+		$newName = $this->moveArchive($path, $filename);
+		
+		if ($properties['file_type'] == "XML") 
+			$importer =& XMLRepositoryImporter::withObject(
+				$repositoryManager->getRepository(
+				$idManager->getId(
+				$harmoni->request->get('collection_id'))),
+				$newName,
+				$properties['import_type']);
 
-		if (isset($importer)) {
-			$importer->import();
-			
-			if ($importer->hasErrors()) {
-				print("The bad news is that some errors occured during import, they are: <br />");
-				$importer->printErrorMessages();
-			}
-			if ($importer->hasAssets()) {
-				print("The good news is that some assets were created during import, they are: <br />");
-				$importer->printGoodAssetIds();
-			}
-		}
-		else if ($properties['importtype'] == "XML") { 
-			$importer->decompress($newName);
-			$importer =& new XMLImporter($newName);
-			$importer->parse();
-		}
-
+		$importer->parseAndImportBelow();
+	
 		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();
 		return TRUE;
@@ -201,10 +234,11 @@ class importAction extends RepositoryAction {
 	 * @since 6/08/05
 	 */
 	function getReturnUrl () {
-		$repositoryId =& $this->getRepositoryId();
 		$harmoni =& Harmoni::instance();
-		return $harmoni->request->quickURL("collection", "browse", array("collection_id" => $repositoryId->getIdString()));
+		$harmoni->request->forget("collection_id");
+		
+		return $harmoni->request->quickURL("collections", "namebrowse");
 	}
-
+	
 }
 ?>

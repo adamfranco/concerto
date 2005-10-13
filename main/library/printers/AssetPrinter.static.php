@@ -80,15 +80,17 @@ class AssetPrinter {
 					$links[] = _("browse");
 				}
 			}
-			$harmoni->request->startNamespace('export');
-			if ($actionString != "asset.export") {
-				$links[] = "<a href='".$harmoni->request->quickURL("asset",
-					"export", array("collection_id" => $repositoryId->getIdString(), "asset_id" => $assetId->getIdString()))."'>";
-				$links[count($links) - 1] .= _("export")."</a>";
-			} else {
-				$links[] = _("export");
-			}
-			$harmoni->request->endNamespace();
+// 			$harmoni->request->startNamespace('export');
+// 			if ($actionString != "asset.export") {
+// 				$links[] = "<a href='".$harmoni->request->quickURL("asset",
+// 					"export", array(
+// 					"collection_id" => $repositoryId->getIdString(),
+// 					"asset_id" => $assetId->getIdString()))."'>";
+// 				$links[count($links) - 1] .= _("export")."</a>";
+// 			} else {
+// 				$links[] = _("export");
+// 			}
+// 			$harmoni->request->endNamespace();
 		}
 		
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $assetId)) {
@@ -137,6 +139,15 @@ class AssetPrinter {
 						"parent" => $assetId->getIdString()))
 					."'>";
 				$links[count($links) - 1] .= _("add child asset")."</a>";
+			
+
+				$harmoni->request->startNamespace("import");
+				$links[] = "<a href='".$harmoni->request->quickURL("asset",
+					"import", array("collection_id" =>
+					$repositoryId->getIdString(), 
+					"asset_id" => $assetId->getIdString())).
+					"'>"._("import child assets")."</a>";
+				$harmoni->request->endNamespace();
 			}
 		}
 		

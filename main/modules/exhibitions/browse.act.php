@@ -89,8 +89,16 @@ class browseAction
 			print  "\n<p>";
 			print "\n\t<a href='";
 			print $harmoni->request->quickURL("exhibitions","create_exhibition");
-			print "'>"._("Create a new Exhibition")."</a>";
+			print "'>"._("Create a new <em>Exhibition</em>")."</a>";
+			$harmoni->request->startNamespace("import");
+			print  "\t|\t<a href='".
+				$harmoni->request->quickURL("exhibitions", "import_exhibition").
+				"'>".
+				_("Import an <em>Exhibition</em>").
+				"</a>";
+			$harmoni->request->endNamespace();
 			print  "\n</p>";
+
 		}
 		
 		$introText =& new Block(ob_get_contents(), 3);
@@ -106,7 +114,7 @@ class browseAction
 		} 
 		// Otherwise, just get all the assets
 		else {
-			$assets =& $asset->getAssets();
+			$assets =& $repository->getAssets();
 		}
 		
 		//***********************************

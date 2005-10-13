@@ -67,16 +67,6 @@ class ExhibitionPrinter {
 					$links[] = _("browse");
 				}
 // 			}
-			$harmoni->request->startNamespace('export_exhibition');
-			if($actionString != "exhibitions.export_exhibition") {
-				$links[] = "<a href='".$harmoni->request->quickURL(
-					"exhibitions", "export", array("exhibition_id" =>
-					$assetId->getIdString()))."'>";
-				$links[count($links) - 1] .= _("export")."</a>";
-			} else {
-				$links[] = _("export");
-			}
-			$harmoni->request->endNamespace();
 		}
 		
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $asset->getId())) {
@@ -125,13 +115,32 @@ class ExhibitionPrinter {
 						array("exhibition_id" => $assetId->getIdString()))
 					."'>";
 				$links[count($links) - 1] .= _("add a slideshow")."</a>";
+			
+				$harmoni->request->startNamespace("import_slideshow");
+				$links[] = "<a href='".$harmoni->request->quickURL(
+					"exhibitions", "import_slideshow", array("exhibition_id"
+					=> $assetId->getIdString()))."'>"._("import a slideshow").
+					"</a>";
+				$harmoni->request->endNamespace();
 			}
 // 		}
 		
+	
+// 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId())) {
+// 			$harmoni->request->startNamespace('export_exhibition');
+// 			if($actionString != "exhibitions.export_exhibition") {
+// 				$links[] = "<a href='".$harmoni->request->quickURL(
+// 					"exhibitions", "export_exhibition", array("exhibition_id" =>
+// 					$assetId->getIdString()))."'>";
+// 				$links[count($links) - 1] .= _("export")."</a>";
+// 			} else {
+// 				$links[] = _("export");
+// 			}
+// 			$harmoni->request->endNamespace();
+// 		}
+
 		print  implode("\n\t | ", $links);
 	}
-	
-	
 	
 }
 

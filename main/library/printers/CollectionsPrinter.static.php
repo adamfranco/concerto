@@ -78,8 +78,29 @@ class CollectionsPrinter {
 				."'>"
 				._("Create a new <em>Collection</em>")
 				."</a>";
+
+			$links[] = "<a href='".
+				$harmoni->request->quickURL("collections", "import").
+				"'>".
+				_("Import a <em>Collection</em>").
+				"</a>";
+		} else {
+			$links[] = _("import");
 		}
-		
+			
+			
+/******************* FOR EXPORTING ALL THE COLLECTIONS??? ****************/	
+		if (/*admin*/FALSE) {
+			$harmoni->request->startNamespace('export');
+			if ($actionString != "collections.export") {
+				$links[] = "<a href='".$harmoni->request->quickURL(
+					"collections", "export")."'>";
+				$links[count($links) - 1] .= _("export")."</a>";
+			} else {
+				$links[] = _("export");
+			}
+			$harmoni->request->endNamespace();
+		}		
 		print  implode("\n\t | ", $links);
 	}
 	

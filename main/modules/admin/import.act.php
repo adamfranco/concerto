@@ -174,14 +174,15 @@ class importAction extends MainWindowAction {
 		}	
 		$newName = $this->moveArchive($path, $filename);
 		
-		if ($properties['file_type'] == "XML") 
-			$importer =& new XMLImporter($newName, $properties['import_type']);
+		if ($properties['file_type'] == "XML") {
+			$importer =& XMLImporter::withFile($newName, 
+				$properties['import_type']);
 
-		$importer->parse();
-	
+		$importer->parseAndImportBelow();
+		}
 		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();
-		return FALSE;
+		return TRUE;
 	}
 		
 	/**
