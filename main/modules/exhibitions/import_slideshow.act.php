@@ -240,10 +240,15 @@ class import_slideshowAction extends MainWindowAction {
 	 */
 	function getReturnUrl () {
 		$harmoni =& Harmoni::instance();
+		
 		$id = $harmoni->request->get("exhibition_id");
 		$harmoni->request->forget("exhibition_id");
-				
-		return $harmoni->request->quickURL("exhibitions", "browse");
+		$harmoni->request->endNamespace();
+		$url =& $harmoni->request->mkURL("exhibitions", "browse_exhibition",
+			array("exhibition_id" => $id));
+		$harmoni->request->startNamespace("import_slideshow");
+		
+		return $url->write();
 	}
 	
 }

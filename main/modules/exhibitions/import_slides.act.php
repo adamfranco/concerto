@@ -241,10 +241,26 @@ class import_slidesAction extends MainWindowAction {
 	 */
 	function getReturnUrl () {
 		$harmoni =& Harmoni::instance();
-		$id = $harmoni->request->get("exhibition_id");
-		$harmoni->request->forget("exhibition_id");
-				
-		return $harmoni->request->quickURL("exhibitions", "browse");
+		$idManager =& Services::getService("Id");
+		$repositoryManager =& Services::getService("Repository");
+		$repository =& $repositoryManager->getRepository(
+				$idManager->getId(
+				"edu.middlebury.concerto.exhibition_repository"));
+
+		$asset =& $repository->getAsset(
+			$idManager->getId(RequestContext::value('slideshow_id')));
+		$harmoni->request->forget('slideshow_id');
+		$harmoni->request->endNamespace();
+		$parents =& $asset->getParentsByType(new HarmoniType("Asset Types",
+			"edu.middlebury.concerto", "Exhibition"));
+		$parent =& $parents->next();
+		$parentId =& $parent->getId();
+		$url =& $harmoni->request->mkURL("exhibitions",
+			"browse_exhibition", array(
+			'exhibition_id' => $parentId->getIdString()));
+		$harmoni->request->startNamespace("import_slides");
+		
+		return $url->write();
 	}
 	
 }

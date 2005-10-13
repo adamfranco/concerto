@@ -235,9 +235,15 @@ class importAction extends MainWindowAction {
 	 */
 	function getReturnUrl () {
 		$harmoni =& Harmoni::instance();
+
+		$id = $harmoni->request->get("collection_id");
 		$harmoni->request->forget("collection_id");
+		$harmoni->request->endNamespace();
+		$url =& $harmoni->request->mkURL("collection", "browse",
+			array("collection_id" => $id));
+		$harmoni->request->startNamespace("import");
 		
-		return $harmoni->request->quickURL("collections", "namebrowse");
+		return $url->write();
 	}
 	
 }
