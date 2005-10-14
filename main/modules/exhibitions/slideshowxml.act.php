@@ -360,7 +360,7 @@ END;
 					$printedRecordIds[] = $recordId->getIdString();
 			
 					print "\t<div style='padding: 5px; border-top: 1px solid;'>\n";
-	 				$this->printRecord($repository->getId(), $assetId, $record);
+	 				slideshowxmlAction::printRecord($repository->getId(), $assetId, $record);
 					print "\t</div>\n";
 				}
 			}
