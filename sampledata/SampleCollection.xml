@@ -718,6 +718,11 @@ Copyright &copy; 2002 Adam Franco
 				]]></part>
 			</record>
 			<filerecord>
+				<filedimensionspart>
+					<width>90px</width>
+					<height>60px</height>
+					<filetype>video/quicktime</filetype>
+				</filedimensionspart>
 				<filepathpart>http://concerto.sourceforge.net/samplemedia/MooseFest2002clip_small.mov</filepathpart>
 			</filerecord>
 		</asset>
