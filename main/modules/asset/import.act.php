@@ -11,6 +11,7 @@
 
 require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
 require_once(POLYPHONY."/main/library/Importer/XMLImporters/XMLAssetImporter.class.php");
+require_once(POLYPHONY."/main/library/Importer/XMLImporters/XMLRepositoryImporter.class.php");
 
 /**
  * imports data into concerto (of many types)
@@ -220,7 +221,12 @@ class importAction extends MainWindowAction {
 		if ($properties['file_type'] == "XML") {
 			$repository =& $repositoryManager->getRepository($idManager->getId(
 				$harmoni->request->get('collection_id')));
-				
+			
+			$matrixMaker =& new XMLRepositoryImporter();
+			$matrixMaker->doIdMatrix();
+			
+			// recordstructures into idmatrix
+			
 			$importer =& XMLAssetImporter::withObject(
 				$repository->getAsset($idManager->getId(
 				$harmoni->request->get("asset_id"))),
@@ -228,6 +234,9 @@ class importAction extends MainWindowAction {
 				$properties['import_type']);
 
 			$importer->parseAndImportBelow();
+			
+			$matrixMaker->dropIdMatrix();
+			unset($matrixMaker);
 		}
 		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();
