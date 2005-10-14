@@ -218,7 +218,7 @@ class browseAction
 
 
 // Callback function for printing Assets
-function printAssetShort(& $asset, &$harmoni) {
+function printAssetShort(& $asset, &$harmoni, $num) {
 	ob_start();
 	
 	$assetId =& $asset->getId();
@@ -227,7 +227,7 @@ function printAssetShort(& $asset, &$harmoni) {
 	print  "\n\t<br /><em>".$asset->getDescription()."</em>";	
 	print  "\n\t<br />";
 	
-	AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
+	AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num);
 	
 	$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($assetId);
 	if (!is_null($thumbnailURL)) {

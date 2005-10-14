@@ -37,7 +37,7 @@ class AssetPrinter {
 	 * @access public
 	 * @date 8/6/04
 	 */
-	function printAssetFunctionLinks (& $harmoni, & $asset, $repositoryId = NULL) {
+	function printAssetFunctionLinks (& $harmoni, &$asset, $repositoryId = NULL, $assetNum = 0) {
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
 		
@@ -52,15 +52,34 @@ class AssetPrinter {
 		$actionString = $harmoni->getCurrentAction();
 		
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $assetId)) {
+			ob_start();
+			print "<a href='#' onclick='Javascript:window.open(";
+			print '"'.VIEWER_URL."?&source=";
+			print urlencode($harmoni->request->quickURL("collection", "browsexml",
+						array("collection_id" => $repositoryId->getIdString(),
+						"asset_id" => $assetId->getIdString(),
+						RequestContext::name("limit_by") => RequestContext::value("limit_by"),
+						RequestContext::name("type") => RequestContext::value("type"),
+						RequestContext::name("searchtype") => RequestContext::value("searchtype"),
+						RequestContext::name("searchstring") => RequestContext::value("searchstring"))));
+			print '&start='.($assetNum - 1).'", ';
+			print '"'.$asset->getDisplayName().'", ';
+			print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
+			print ")'>";
+			print _("view")."</a>";
+			
+			$links[] = ob_get_contents();
+			ob_end_clean();
+				
 			if ($actionString != "asset.view") {
 				$links[] = "<a href='"
 					.$harmoni->request->quickURL("asset", "view",
 						array("collection_id" => $repositoryId->getIdString(),
 						"asset_id" => $assetId->getIdString()))
 					."'>";
-				$links[count($links) - 1] .= _("view")."</a>";
+				$links[count($links) - 1] .= _("details")."</a>";
 			} else {
-				$links[] = _("view");
+				$links[] = _("details");
 			}
 		}
 		
