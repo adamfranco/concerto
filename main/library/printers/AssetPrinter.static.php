@@ -52,17 +52,36 @@ class AssetPrinter {
 		$actionString = $harmoni->getCurrentAction();
 		
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $assetId)) {
+			// If we are in an asset, the viewer should contain the asset followed
+			// by slides for each of its children
+			if (ereg("^asset\..*$", $actionString))	{
+				$xmlModule = 'asset';
+				$xmlAssetIdString = $harmoni->request->get("asset_id");
+				
+				if ($harmoni->request->get("asset_id") == $assetId->getIdString())
+					$xmlStart = 0;
+				else
+					$xmlStart = $assetNum;
+			} 
+			// Otherwise, the viewer should contain the asset allong with slides
+			// for the other assets in the collection.
+			else {
+				$xmlModule = 'collection';
+				$xmlAssetIdString = $assetId->getIdString();
+				$xmlStart = $assetNum - 1;
+			}
+			
 			ob_start();
 			print "<a href='#' onclick='Javascript:window.open(";
 			print '"'.VIEWER_URL."?&source=";
-			print urlencode($harmoni->request->quickURL("collection", "browsexml",
+			print urlencode($harmoni->request->quickURL($xmlModule, "browsexml",
 						array("collection_id" => $repositoryId->getIdString(),
-						"asset_id" => $assetId->getIdString(),
+						"asset_id" => $xmlAssetIdString,
 						RequestContext::name("limit_by") => RequestContext::value("limit_by"),
 						RequestContext::name("type") => RequestContext::value("type"),
 						RequestContext::name("searchtype") => RequestContext::value("searchtype"),
 						RequestContext::name("searchstring") => RequestContext::value("searchstring"))));
-			print '&start='.($assetNum - 1).'", ';
+			print '&start='.$xmlStart.'", ';
 			print '"'.$asset->getDisplayName().'", ';
 			print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
 			print ")'>";
