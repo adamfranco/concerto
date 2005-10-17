@@ -74,20 +74,47 @@ class browseAction
 		$harmoni =& Harmoni::instance();
 		
 		$asset =& $this->getAsset();
+		$assetId =& $asset->getId();
 
 		// function links
 		ob_start();
 		AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
-		$layout =& new Block(ob_get_contents(), 2);
+		$layout =& new Block(ob_get_contents(), 3);
 		ob_end_clean();
 		$actionRows->add($layout, null, null, CENTER, CENTER);
 		
 		ob_start();
-		print  "<p>";
-		print  _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
-		print  "</p>";
+		print "\n<table width='100%'>\n<tr><td style='text-align: left; vertical-align: top'>";				
 		
-		$actionRows->add(new Block(ob_get_contents(), 2), "100%", null, LEFT, CENTER);
+		print  "\n\t<strong>"._("Title").":</strong> \n<em>".$asset->getDisplayName()."</em>";
+		print  "\n\t<br /><strong>"._("Description").":</strong> \n<em>".$asset->getDescription()."</em>";
+		print  "\n\t<br /><strong>"._("ID#").":</strong> ".$assetId->getIdString();
+	
+		$effectDate =& $asset->getEffectiveDate();
+		if(is_Object($effectDate)) {
+			$effectDate =& $effectDate->asDate();
+			print  "\n\t<br /><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->asString()."</em>";
+		}
+	
+		$expirationDate =& $asset->getExpirationDate();
+		if(is_Object($expirationDate)) {
+			$expirationDate =& $expirationDate->asDate();
+			print  "\n\t<br /><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->asString()."</em>";
+		}
+		
+		
+		print "\n</td><td style='text-align: right; vertical-align: top'>";
+		
+		
+		$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($assetId);
+	if ($thumbnailURL !== FALSE) {
+			print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' align='right' />";
+		}
+		
+		print "\n</td></tr></table>";
+		print "\n\t<hr/>";
+		print  "\n\t<strong>"._("Child Assets").":</strong>";		
+		$actionRows->add(new Block(ob_get_contents(), 3), "100%", null, LEFT, CENTER);
 		ob_end_clean();
 		
 		
@@ -99,14 +126,14 @@ class browseAction
 		//***********************************
 		// print the results
 		//***********************************
-		$resultPrinter =& new IteratorResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
-		$resultLayout =& $resultPrinter->getLayout($harmoni);
+		$resultPrinter =& new IteratorResultPrinter($assets, 3, 6, "printAssetShort", $harmoni);
+		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 	}
 }
 
 // Callback function for printing Assets
-function printAssetShort(& $asset, &$harmoni) {
+function printAssetShort(& $asset, &$harmoni, $num) {
 	ob_start();
 	
 	$assetId =& $asset->getId();
@@ -115,9 +142,37 @@ function printAssetShort(& $asset, &$harmoni) {
 	print  "\n\t<br /><em>".$asset->getDescription()."</em>";	
 	print  "\n\t<br />";
 	
-	AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
+	AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num);
 	
-	$layout =& new Block(ob_get_contents(), 4);
+	$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($assetId);
+	if ($thumbnailURL !== FALSE) {
+		
+		print "\n\t<br /><a href='";
+		print $harmoni->request->quickURL("asset", "view", array('asset_id' => $assetId->getIdString()));
+		print "'>";
+		print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' />";
+		print "\n\t</a>";
+	}
+	
+	$xLayout =& new XLayout();
+	$layout =& new Container($xLayout, BLOCK, 4);
+	$layout2 =& new Block(ob_get_contents(), 3);
+	$layout->add($layout2, null, null, CENTER, CENTER);
+	//$layout->addComponent(new Content(ob_get_contents()));
 	ob_end_clean();
 	return $layout;
+}
+
+// Callback function for checking authorizations
+function canView( & $asset ) {
+	$authZ =& Services::getService("AuthZ");
+	$idManager =& Services::getService("Id");
+	
+	if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $asset->getId())
+		|| $authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
+	{
+		return TRUE;
+	} else {
+		return FALSE;
+	}
 }

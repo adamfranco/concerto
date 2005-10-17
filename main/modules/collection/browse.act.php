@@ -230,7 +230,7 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 	AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num);
 	
 	$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($assetId);
-	if (!is_null($thumbnailURL)) {
+	if ($thumbnailURL !== FALSE) {
 		
 		print "\n\t<br /><a href='";
 		print $harmoni->request->quickURL("asset", "view", array('asset_id' => $assetId->getIdString()));

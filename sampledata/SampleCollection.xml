@@ -541,48 +541,6 @@ Copyright &copy; 2005 Adam Franco
 			</filerecord>
 		</asset>
 		<asset>
-			<name>Wakeboarding</name>
-			<description>Josh spinning through the air on a wakeboard.</description>
-			<type>
-				<domain>Asset Types</domain>
-				<authority>edu.middlebury.concerto</authority>
-				<keyword>XML Imported Asset</keyword>
-			</type>
-			<record xml:id="dc">
-				<part xml:id="dc-title">Wakeboarding</part>
-				<part xml:id="dc-creator">Adam Franco</part>
-				<part xml:id="dc-subject">waterskiing</part>
-				<part xml:id="dc-subject">wakeboarding</part>
-				<part xml:id="dc-subject">lake</part>
-				<part xml:id="dc-description">Josh spinning through the air on a wakeboard.</part>
-				<part xml:id="dc-publisher">Adam Franco</part>
-				<part xml:id="dc-date">2005-08-27</part>
-				<part xml:id="dc-type">Image</part>
-				<part xml:id="dc-type">StillImage</part>
-				<part xml:id="dc-format">image/jpeg</part>
-				<part xml:id="dc-identifier"></part>
-				<part xml:id="dc-source">http://www.adamfranco.com</part>
-				<part xml:id="dc-language">en</part>
-				<part xml:id="dc-relation"></part>
-				<part xml:id="dc-coverage">Island Pond, Vermont, USA</part>
-				<part xml:id="dc-coverage">lat: 44.811192 lon: -71.875734</part>
-				<part xml:id="dc-rights"><![CDATA[
-Copyright &copy; 2005 Adam Franco
-<br/>Available under the following Creative Commons license: <a href='http://creativecommons.org/licenses/by-nc-sa/2.5/'>Attribution-NonCommercial-ShareAlike 2.5</a>
-<br/>
-
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/"><img alt="Creative Commons License" src="http://creativecommons.org/images/public/somerights20.png" border="0"/></a>
-
-
-
-
-				]]></part>
-			</record>
-			<filerecord>
-				<filepathpart>http://concerto.sourceforge.net/samplemedia/IMG_8653_small.jpg</filepathpart>
-			</filerecord>
-		</asset>
-		<asset>
 			<name>Mosque of Sultan Ahmed (Blue Mosque)</name>
 			<description>Exterior and interior viewes of the Blue Mosque.</description>
 			<type>
@@ -678,36 +636,83 @@ Copyright &copy; 2003 Allan Vilhan
 			</filerecord>
 		</asset>
 		<asset>
-			<name>MooseFest 2002 (Clip)</name>
-			<description>A short clip from Adam Franco's video of kayaking on the Moose River during the Moose River Festival, 2002.</description>
+			<name>Water-Sports</name>
+			<description>Photos and video of water-sports.</description>
 			<type>
 				<domain>Asset Types</domain>
 				<authority>edu.middlebury.concerto</authority>
-				<keyword>XML Imported Asset</keyword>
+				<keyword>collection</keyword>
 			</type>
-			<record xml:id="dc">
-				<part xml:id="dc-title">MooseFest 2002 (Clip)</part>
-				<part xml:id="dc-creator">Adam Franco</part>
-				<part xml:id="dc-contributor">Cargo Cult</part>
-				<part xml:id="dc-subject">kayaking</part>
-				<part xml:id="dc-subject">whitewater</part>
-				<part xml:id="dc-subject">waterfall</part>
-				<part xml:id="dc-subject">Moose River</part>
-				<part xml:id="dc-description">A short clip from Adam Franco's video of kayaking on the Moose River during the Moose River Festival, 2002.</part>
-				<part xml:id="dc-publisher">Adam Franco</part>
-				<part xml:id="dc-publisher">http://www.adamfranco.com</part>
-				<part xml:id="dc-date">2002-10-31</part>
-				<part xml:id="dc-type">MovingImage</part>
-				<part xml:id="dc-format">video/quicktime</part>
-				<part xml:id="dc-format">video/x-msvideo</part>
-				<part xml:id="dc-identifier"></part>
-				<part xml:id="dc-source">MooseFest 2002</part>
-				<part xml:id="dc-language">en</part>
-				<part xml:id="dc-relation">16-second clip from movie intro.</part>
-				<part xml:id="dc-coverage">Fowlersville Falls</part>
-				<part xml:id="dc-coverage">Moose River</part>
-				<part xml:id="dc-coverage">Old Forge, New York, USA</part>
-				<part xml:id="dc-rights"><![CDATA[
+			<asset>
+				<name>Wakeboarding</name>
+				<description>Josh spinning through the air on a wakeboard.</description>
+				<type>
+					<domain>Asset Types</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>XML Imported Asset</keyword>
+				</type>
+				<record xml:id="dc">
+					<part xml:id="dc-title">Wakeboarding</part>
+					<part xml:id="dc-creator">Adam Franco</part>
+					<part xml:id="dc-subject">waterskiing</part>
+					<part xml:id="dc-subject">wakeboarding</part>
+					<part xml:id="dc-subject">lake</part>
+					<part xml:id="dc-description">Josh spinning through the air on a wakeboard.</part>
+					<part xml:id="dc-publisher">Adam Franco</part>
+					<part xml:id="dc-date">2005-08-27</part>
+					<part xml:id="dc-type">Image</part>
+					<part xml:id="dc-type">StillImage</part>
+					<part xml:id="dc-format">image/jpeg</part>
+					<part xml:id="dc-identifier"></part>
+					<part xml:id="dc-source">http://www.adamfranco.com</part>
+					<part xml:id="dc-language">en</part>
+					<part xml:id="dc-relation"></part>
+					<part xml:id="dc-coverage">Island Pond, Vermont, USA</part>
+					<part xml:id="dc-coverage">lat: 44.811192 lon: -71.875734</part>
+					<part xml:id="dc-rights"><![CDATA[
+Copyright &copy; 2005 Adam Franco
+<br/>Available under the following Creative Commons license: <a href='http://creativecommons.org/licenses/by-nc-sa/2.5/'>Attribution-NonCommercial-ShareAlike 2.5</a>
+<br/>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/"><img alt="Creative Commons License" src="http://creativecommons.org/images/public/somerights20.png" border="0"/></a>
+	
+					]]></part>
+				</record>
+				<filerecord>
+					<filepathpart>http://concerto.sourceforge.net/samplemedia/IMG_8653_small.jpg</filepathpart>
+				</filerecord>
+			</asset>
+			<asset>
+				<name>MooseFest 2002 (Clip)</name>
+				<description>A short clip from Adam Franco's video of kayaking on the Moose River during the Moose River Festival, 2002.</description>
+				<type>
+					<domain>Asset Types</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>XML Imported Asset</keyword>
+				</type>
+				<record xml:id="dc">
+					<part xml:id="dc-title">MooseFest 2002 (Clip)</part>
+					<part xml:id="dc-creator">Adam Franco</part>
+					<part xml:id="dc-contributor">Cargo Cult</part>
+					<part xml:id="dc-subject">kayaking</part>
+					<part xml:id="dc-subject">whitewater</part>
+					<part xml:id="dc-subject">waterfall</part>
+					<part xml:id="dc-subject">Moose River</part>
+					<part xml:id="dc-description">A short clip from Adam Franco's video of kayaking on the Moose River during the Moose River Festival, 2002.</part>
+					<part xml:id="dc-publisher">Adam Franco</part>
+					<part xml:id="dc-publisher">http://www.adamfranco.com</part>
+					<part xml:id="dc-date">2002-10-31</part>
+					<part xml:id="dc-type">MovingImage</part>
+					<part xml:id="dc-format">video/quicktime</part>
+					<part xml:id="dc-format">video/x-msvideo</part>
+					<part xml:id="dc-identifier"></part>
+					<part xml:id="dc-source">MooseFest 2002</part>
+					<part xml:id="dc-language">en</part>
+					<part xml:id="dc-relation">16-second clip from movie intro.</part>
+					<part xml:id="dc-coverage">Fowlersville Falls</part>
+					<part xml:id="dc-coverage">Moose River</part>
+					<part xml:id="dc-coverage">Old Forge, New York, USA</part>
+					<part xml:id="dc-rights"><![CDATA[
 Copyright &copy; 2002 Adam Franco
 <br/>Available under the following Creative Commons license: <a href='http://creativecommons.org/licenses/by-nc-sa/2.5/'>Attribution-NonCommercial-ShareAlike 2.5</a>
 <br/>
@@ -715,16 +720,17 @@ Copyright &copy; 2002 Adam Franco
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/"><img alt="Creative Commons License" src="http://creativecommons.org/images/public/somerights20.png" border="0"/></a>
 
 
-				]]></part>
-			</record>
-			<filerecord>
-				<filedimensionspart>
-					<width>90px</width>
-					<height>60px</height>
-					<filetype>video/quicktime</filetype>
-				</filedimensionspart>
-				<filepathpart>http://concerto.sourceforge.net/samplemedia/MooseFest2002clip_small.mov</filepathpart>
-			</filerecord>
+					]]></part>
+				</record>
+				<filerecord>
+					<filedimensionspart>
+						<width>90px</width>
+						<height>60px</height>
+						<filetype>video/quicktime</filetype>
+					</filedimensionspart>
+					<filepathpart>http://concerto.sourceforge.net/samplemedia/MooseFest2002clip_small.mov</filepathpart>
+				</filerecord>
+			</asset>
 		</asset>
 	</repository>
 </import>

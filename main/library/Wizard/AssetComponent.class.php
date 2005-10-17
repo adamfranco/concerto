@@ -79,7 +79,7 @@ class AssetComponent
 			print "\n\t<tr>\n\t\t<td>";
 			
 			$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($this->_id);
-			if (!is_null($thumbnailURL)) {
+			if ($thumbnailURL !== FALSE) {
 				
 //				print "\n\t<br /><a href='".$assetViewUrl."'>";
 				print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' />";
