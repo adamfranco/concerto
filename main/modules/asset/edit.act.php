@@ -142,7 +142,7 @@ class editAction
 		$displayNameProp =& $step->addComponent("display_name", new WTextField());
 		$displayNameProp->setValue($asset->getDisplayName());
 		$displayNameProp->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
-		$displayNameProp->setErrorRule(new WECRegex("[\\w]+"));
+		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 
 		
 		$descriptionProp =& $step->addComponent("description", new WTextArea());

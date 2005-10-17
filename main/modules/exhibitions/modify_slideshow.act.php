@@ -142,7 +142,7 @@ class modify_slideshowAction
 		$displayNameProp->setValue($slideshowAsset->getDisplayName());
 		$displayNameProp->setErrorText("<nobr>".
 			_("A value for this field is required.")."</nobr>");
-		$displayNameProp->setErrorRule(new WECRegex("[\\w]+"));
+		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 	// 	$displayNameProp->setDefaultValue(_("Default Asset Name"));
 //		$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
 		

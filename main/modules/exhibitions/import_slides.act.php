@@ -160,7 +160,7 @@ class import_slidesAction extends MainWindowAction {
 			WSaveButton::withLabel("Import"));
 		$cancel =& $wizard->addComponent("_cancel", new WCancelButton());
 		//$fileField->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
-		//$fileField->setErrorRule(new WECRegex("[\\w]+"));
+		//$fileField->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		return $wizard;
 	}
 	

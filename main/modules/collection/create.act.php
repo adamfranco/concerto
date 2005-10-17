@@ -94,7 +94,7 @@ class createAction
 		// Create the properties.
 		$displayNameProp =& $stepOne->addComponent("display_name", new WTextField());
 		$displayNameProp->setErrorText(_("A value for this field is required."));
-		$displayNameProp->setErrorRule(new WECRegex("[\\w]+"));
+		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		
 		$descriptionProp =& $stepOne->addComponent("description", WTextArea::withRowsAndColumns(3, 50));
 		
@@ -117,17 +117,17 @@ class createAction
 		// Create the properties.
 		$property =& $stepTwo->addComponent("type_domain", new WTextField());
 		$property->setStartingDisplayText(_("Collections"));
-		$property->setErrorRule(new WECRegex("[\\w]+"));
+		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setErrorText(_("A value for this field is required."));
 		
 		$property =& $stepTwo->addComponent("type_authority", new WTextField());
 		$property->setStartingDisplayText(_("Concerto"));
-		$property->setErrorRule(new WECRegex("[\\w]+"));
+		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setErrorText(_("A value for this field is required."));
 		
 		$property =& $stepTwo->addComponent("type_keyword", new WTextField());
 		$property->setStartingDisplayText(_("Generic Collection"));
-		$property->setErrorRule(new WECRegex("[\\w]+"));
+		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setErrorText(_("A value for this field is required."));
 		
 		$property =& $stepTwo->addComponent("type_description", WTextArea::withRowsAndColumns(3, 50));

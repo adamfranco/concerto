@@ -130,7 +130,7 @@ class modify_exhibitionAction
 		// Create the properties.
 		$displayNameProp =& $step->addComponent("display_name", new WTextField());
 		$displayNameProp->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
-		$displayNameProp->setErrorRule(new WECRegex("[\\w]+"));
+		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$displayNameProp->setValue($asset->getDisplayName());
 		
 		$descriptionProp =& $step->addComponent("description", WTextArea::withRowsAndColumns(5,30));

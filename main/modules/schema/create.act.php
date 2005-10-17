@@ -99,7 +99,7 @@ class createAction
 		// Create the properties.
 		$displayNameProp =& $stepOne->addComponent("display_name",
 			new WTextField());
-		$displayNameProp->setErrorRule(new WECRegex("[\\w]+"));
+		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$displayNameProp->setErrorText(_("A value for this field is required."));
 		
 		$descriptionProp =& $stepOne->addComponent("description",
@@ -108,7 +108,7 @@ class createAction
 		$formatProp =& $stepOne->addComponent("format",
 			new WTextField());
 		$formatProp->setValue("Plain Text - UTF-8 encoding");
-		$formatProp->setErrorRule(new WECRegex("[\\w]+"));
+		$formatProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$formatProp->setErrorText(_("A value for this field is required."));
 		$formatProp->setSize(25);
 		
@@ -146,7 +146,7 @@ class createAction
 		$property =& $multField->addComponent(
 			"display_name", 
 			new WTextField());
-		$property->setErrorRule(new WECRegex("[\\w]+"));
+		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setErrorText(_("A value for this field is required."));
 		$property->setSize(20);
 		

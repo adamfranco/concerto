@@ -108,7 +108,7 @@ class editAction
 		$displayNameProp =& $stepOne->addComponent("display_name", new WTextField());
 		$displayNameProp->setValue($repository->getDisplayName());
 		$displayNameProp->setErrorText(_("A value for this field is required."));
-		$displayNameProp->setErrorRule(new WECRegex("[\\w]+"));
+		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 
 		print "\n<h2>"._("Name")."</h2>";
 		print "\n"._("The Name for this <em>Collection</em>: ");
