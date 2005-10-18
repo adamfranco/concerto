@@ -98,11 +98,18 @@ class browseAction
 		ob_end_clean();
 		$actionRows->add($layout, "100%", null, CENTER, CENTER);
 		
-		ob_start();
-		// Limit selection form
-		$currentUrl =& $harmoni->request->mkURL();
-		print "\n<form action='".$currentUrl->write()."' method='post'>";
 		
+		$searchBar =& new Container(new XLayout(), BLOCK, 2);
+		$actionRows->add($searchBar, "100%", null, CENTER, CENTER);
+		
+		
+		// Limit selection form
+		$currentUrl =& $harmoni->request->mkURL();	
+		$searchBar->setPreHTML(
+			"\n<form action='".$currentUrl->write()."' method='post'>");
+		$searchBar->setPostHTML("\n</form");
+		
+		ob_start();	
 		print "\n\t<input type='radio' onchange='this.form.submit();'";
 		print " name='".RequestContext::name("limit_by")."'";
 		print " value='all'";
@@ -121,7 +128,7 @@ class browseAction
 				print "\n\t\t<option value=''";
 				if (!RequestContext::value("type"))
 					print " selected='selected'";
-				print ">All Types</option>";
+				print ">"._("All Types")."</option>";
 				$types =& $repository->getAssetTypes();
 				while ($types->hasNext()) {
 					$type =& $types->next();
@@ -164,14 +171,50 @@ class browseAction
 			print "\n<br/>";
 		} else {
 			print ">"._("Search")."\n<br/>";
-		}
+		}		
 		
-		print "\n</form>";
-		
-		
-		$introText =& new Block(ob_get_contents(), 3);
+		$searchForm =& new Block(ob_get_contents(), 3);
 		ob_end_clean();
-		$actionRows->add($introText, "100%", null, CENTER, CENTER);
+		$searchBar->add($searchForm, "70%", null, LEFT, TOP);
+		
+		
+		// view options
+		ob_start();
+		print "\n<div style='text-align: right'>";
+		print "\n\t\t"._("Assets Per Page").": ";
+		
+		if (isset($_SESSION["assetsPerPage"]))
+			$defaultNumPerPage = $_SESSION["assetsPerPage"];
+		else
+			$defaultNumPerPage = 6;
+		
+		print "\n\t<select name='".RequestContext::name("num_per_page")."'";
+		print " onchange='this.form.submit();'>";			
+		for ($i = 1; $i < 20; $i++)
+			$this->printSelectOption("num_per_page", $defaultNumPerPage, $i);
+		for ($i = 20; $i < 100; $i=$i+10)
+			$this->printSelectOption("num_per_page", $defaultNumPerPage, $i);
+		for ($i = 100; $i <= 1000; $i=$i+100)
+			$this->printSelectOption("num_per_page", $defaultNumPerPage, $i);
+		print "\n\t</select>";
+		
+		print "\n\t\t"._("Columns").": ";
+		
+		if (isset($_SESSION["assetColumns"]))
+			$defaultCols = $_SESSION["assetColumns"];
+		else
+			$defaultCols = 3;
+		
+		print "\n\t<select name='".RequestContext::name("columns")."'";
+		print " onchange='this.form.submit();'>";
+		for ($i = 1; $i < 20; $i++)
+			$this->printSelectOption("columns", $defaultCols, $i);
+		print "\n\t</select>";
+		print "</div>";
+		
+		$searchForm =& new Block(ob_get_contents(), 3);
+		ob_end_clean();
+		$searchBar->add($searchForm, "30%", null, RIGHT, TOP);
 		
 		//***********************************
 		// Get the assets to display
@@ -209,10 +252,47 @@ class browseAction
 		//***********************************
 		// print the results
 		//***********************************
-		$resultPrinter =& new IteratorResultPrinter($assets, 3, 6, "printAssetShort", $harmoni);
+		if (RequestContext::value("num_per_page")) {
+			$numPerPage = RequestContext::value("num_per_page");
+			$_SESSION["assetsPerPage"] = $numPerPage;
+		} else if (isset($_SESSION["assetsPerPage"]))
+			$numPerPage = $_SESSION["assetsPerPage"];
+		else
+			$numPerPage = $defaultNumPerPage;
+			
+		if (RequestContext::value("columns")) {
+			$columns = RequestContext::value("columns");
+			$_SESSION["assetColumns"] = $columns;
+		} else if (isset($_SESSION["assetColumns"]))
+			$columns = $_SESSION["assetColumns"];
+		else
+			$columns = $defaultCols;
+			
+		$resultPrinter =& new IteratorResultPrinter($assets, $columns, $numPerPage, "printAssetShort", $harmoni);
 		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 		
+	}
+	
+	/**
+	 * Print out a select list option
+	 * 
+	 * @param string $fieldname
+	 * @param string $default
+	 * @param string $value
+	 * @return void
+	 * @access public
+	 * @since 10/18/05
+	 */
+	function printSelectOption ( $fieldname, $default, $value ) {
+		print "\n\t\t<option value='".$value."'";
+		if (RequestContext::value($fieldname) == $value
+			|| (!RequestContext::value($fieldname)
+				&& $value == $default)) 
+		{
+			print " selected='selected'";
+		}
+		print ">".$value."</option>";
 	}
 }
 
@@ -239,8 +319,7 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 		print "\n\t</a>";
 	}
 	
-	$xLayout =& new XLayout();
-	$layout =& new Container($xLayout, BLOCK, 4);
+	$layout =& new Container(new XLayout, BLOCK, 4);
 	$layout2 =& new Block(ob_get_contents(), 3);
 	$layout->add($layout2, null, null, CENTER, CENTER);
 	//$layout->addComponent(new Content(ob_get_contents()));
