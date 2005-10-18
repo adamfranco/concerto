@@ -9,6 +9,7 @@
  */ 
 
 require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
+require_once(HARMONI."GUIManager/StyleProperties/TextAlignSP.class.php");
 
 /**
  * 
@@ -299,32 +300,49 @@ class browseAction
 
 // Callback function for printing Assets
 function printAssetShort(& $asset, &$harmoni, $num) {
-	ob_start();
+	$container =& new Container(new YLayout, BLOCK, 4);
+	$fillContainerSC =& new StyleCollection("*.fillcontainer", "fillcontainer", "Fill Container", "Elements with this style will fill their container.");
+	$fillContainerSC->addSP(new HeightSP("85%"));
+// 	$fillContainerSC->addSP(new WidthSP("100%"));
+// 	$fillContainerSC->addSP(new BorderSP("3px", "solid", "#F00"));
+	$container->addStyle($fillContainerSC);
 	
+	$centered =& new StyleCollection("*.centered", "centered", "Centered", "Centered Text");
+	$centered->addSP(new TextAlignSP("center"));	
+	
+	ob_start();
 	$assetId =& $asset->getId();
-	print  "\n\t<strong>".$asset->getDisplayName()."</strong> - "._("ID#").": ".
-			$assetId->getIdString();
+	print "\n\t<strong>".$asset->getDisplayName()."</strong>";
+	print "\n\t<br/>"._("ID#").": ".$assetId->getIdString();
 	print  "\n\t<br /><em>".$asset->getDescription()."</em>";	
 	print  "\n\t<br />";
 	
-	AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num);
+	$component =& new Block(ob_get_contents(), 2);
+	ob_end_clean();
+	$container->add($component, "100%", null, LEFT, TOP);
 	
 	$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($assetId);
 	if ($thumbnailURL !== FALSE) {
-		
-		print "\n\t<br /><a href='";
+		ob_start();
+		print "\n\t<a href='";
 		print $harmoni->request->quickURL("asset", "view", array('asset_id' => $assetId->getIdString()));
 		print "'>";
 		print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' />";
 		print "\n\t</a>";
+		$component =& new Block(ob_get_contents(), 2);
+		$component->addStyle($centered);
+		ob_end_clean();
+		$container->add($component, "100%", null, CENTER, CENTER);
 	}
 	
-	$layout =& new Container(new XLayout, BLOCK, 4);
-	$layout2 =& new Block(ob_get_contents(), 3);
-	$layout->add($layout2, null, null, CENTER, CENTER);
-	//$layout->addComponent(new Content(ob_get_contents()));
+	ob_start();
+	AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num);
+	$component =& new Block(ob_get_contents(), 2);
+	$component->addStyle($centered);
 	ob_end_clean();
-	return $layout;
+	$container->add($component, "100%", null, CENTER, BOTTOM);
+	
+	return $container;
 }
 
 // Callback function for checking authorizations
