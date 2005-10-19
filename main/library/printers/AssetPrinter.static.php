@@ -252,9 +252,12 @@ class AssetPrinter {
 		var editURL = '$editURL';
 		var assetElements = document.getElementsByName('$checkboxName');
 		var numChecked = 0;
+		editURL += '&assets='
 		for (var i = 0; i < assetElements.length; i++) {
 			if (!assetElements[i].disabled && assetElements[i].checked == true) {
-				editURL += '&' + assetElements[i].value;
+				if (numChecked > 0)
+					editURL += ',';
+				editURL += assetElements[i].value;
 				numChecked++;
 			}
 		}
