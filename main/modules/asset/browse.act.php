@@ -120,9 +120,11 @@ class browseAction
 		ob_end_clean();
 		
 		
-		// Limit selection form
 		$searchBar =& new Container(new XLayout(), BLOCK, 2);
 		$actionRows->add($searchBar, "100%", null, CENTER, CENTER);
+		
+		
+		// Limit selection form
 		$currentUrl =& $harmoni->request->mkURL();	
 		$searchBar->setPreHTML(
 			"\n<form action='".$currentUrl->write()."' method='post'>");
@@ -132,7 +134,7 @@ class browseAction
 		print  "\n\t<strong>"._("Child Assets").":</strong>";		
 		$searchForm =& new Block(ob_get_contents(), 3);
 		ob_end_clean();
-		$searchBar->add($searchForm, "70%", null, LEFT, TOP);
+		$searchBar->add($searchForm, null, null, LEFT, TOP);
 		
 		// view options
 		ob_start();
@@ -154,7 +156,7 @@ class browseAction
 			$this->printSelectOption("num_per_page", $defaultNumPerPage, $i);
 		print "\n\t</select>";
 		
-		print "\n\t\t"._("Columns").": ";
+		print "\n\t\t<br/>"._("Columns").": ";
 		
 		if (isset($_SESSION["assetColumns"]))
 			$defaultCols = $_SESSION["assetColumns"];
@@ -170,7 +172,7 @@ class browseAction
 		
 		$searchForm =& new Block(ob_get_contents(), 3);
 		ob_end_clean();
-		$searchBar->add($searchForm, "30%", null, RIGHT, TOP);
+		$searchBar->add($searchForm, null, null, RIGHT, TOP);
 		
 		//***********************************
 		// Get the assets to display
@@ -197,8 +199,13 @@ class browseAction
 			$columns = $defaultCols;
 		
 		$resultPrinter =& new IteratorResultPrinter($assets, $columns, $numPerPage, "printAssetShort", $harmoni);
+		
 		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
+		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
+		$resultLayout->setPostHTML("</form>");
+		
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
+		
 	}
 	
 	/**
@@ -223,6 +230,7 @@ class browseAction
 	}
 }
 
+
 // Callback function for printing Assets
 function printAssetShort(& $asset, &$harmoni, $num) {
 	$container =& new Container(new YLayout, BLOCK, 4);
@@ -237,9 +245,9 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 	
 	ob_start();
 	$assetId =& $asset->getId();
-	print "\n\t<strong>".$asset->getDisplayName()."</strong>";
+	print "\n\t<strong>".htmlentities($asset->getDisplayName())."</strong>";
 	print "\n\t<br/>"._("ID#").": ".$assetId->getIdString();
-	print  "\n\t<br /><em>".$asset->getDescription()."</em>";	
+	print  "\n\t<br /><em>".htmlentities($asset->getDescription())."</em>";	
 	print  "\n\t<br />";
 	
 	$component =& new Block(ob_get_contents(), 2);
@@ -260,8 +268,22 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 		$container->add($component, "100%", null, CENTER, CENTER);
 	}
 	
+	
 	ob_start();
+	
+	$authZ =& Services::getService("AuthZ");
+	$idManager =& Services::getService("Id");
+	$harmoni->request->startNamespace("AssetMultiEdit");
+	print "<input type='checkbox'";
+	print " name='".RequestContext::name("asset")."'";
+	print " value='".$assetId->getIdString()."'";
+	if (!$authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $assetId))
+		print " disabled='disabled'";
+	print "/> | ";
+	$harmoni->request->endNamespace();
+	
 	AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num);
+	
 	$component =& new Block(ob_get_contents(), 2);
 	$component->addStyle($centered);
 	ob_end_clean();

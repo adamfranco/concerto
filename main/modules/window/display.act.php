@@ -182,8 +182,12 @@ class displayAction
 		// use the result from previous actions
 		$contentDestination->add($harmoni->result, null, null, TOP, CENTER); 
 		
+		// Right Column
+		$rightColumn =& $centerPane->add(new Container($yLayout, OTHER, 1), "140px", null, LEFT, TOP);
 		// Basket
-		$centerPane->add(BasketManager::getSmallBasketBlock(), "140px", null, LEFT, TOP);
+		$rightColumn->add(BasketManager::getSmallBasketBlock(), "100%", null, LEFT, TOP);
+		if (ereg("^(collection|asset)\.browse$", $harmoni->getCurrentAction()))
+			$rightColumn->add(AssetPrinter::getMultiEditOptionsBlock(), "100%", null, LEFT, TOP);
 		
 	// :: Footer ::
 		$footerRow =& new Container($yLayout, OTHER, 1);

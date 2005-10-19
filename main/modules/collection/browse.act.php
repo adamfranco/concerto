@@ -108,7 +108,7 @@ class browseAction
 		$currentUrl =& $harmoni->request->mkURL();	
 		$searchBar->setPreHTML(
 			"\n<form action='".$currentUrl->write()."' method='post'>");
-		$searchBar->setPostHTML("\n</form");
+		$searchBar->setPostHTML("\n</form>");
 		
 		ob_start();	
 		print "\n\t<input type='radio' onchange='this.form.submit();'";
@@ -116,14 +116,14 @@ class browseAction
 		print " value='all'";
 		if (!RequestContext::value("limit_type") || RequestContext::value("limit_by") == 'all' )
 			print " checked='checked'";
-		print ">"._("All")."\n<br/>";
+		print "/>"._("All")."\n<br/>";
 		
 		print "\n\t<input type='radio' onchange='this.form.submit();'";
 		print " name='".RequestContext::name("limit_by")."'";
 		print " value='type'";
 		if (RequestContext::value("limit_by") == 'type') {
 			print " checked='checked'";
-			print ">"._("Type").": ";
+			print "/>"._("Type").": ";
 			print "\n\t<select name='".RequestContext::name("type")."'";
 			print " onchange='this.form.submit();'>";
 				print "\n\t\t<option value=''";
@@ -141,7 +141,7 @@ class browseAction
 			print "\n\t</select>";
 			print "\n<br/>";
 		} else {
-			print ">"._("Type")."\n<br/>";
+			print "/>"._("Type")."\n<br/>";
 		}
 		
 		print "\n\t<input type='radio' onchange='this.form.submit();'";
@@ -149,7 +149,7 @@ class browseAction
 		print " value='search'";
 		if (RequestContext::value("limit_by") == 'search') {
 			print " checked='checked'";
-			print ">"._("Search").": ";
+			print "/>"._("Search").": ";
 			print "\n\t<select name='".RequestContext::name("searchtype")."'";
 			print " onchange='this.form.submit();'>";
 				print "\n\t\t<option value=''";
@@ -167,11 +167,11 @@ class browseAction
 			print "\n\t</select>";
 			print "\n\t<input type='text'";
 			print " name='".RequestContext::name("searchstring")."'";
-			print " value='".RequestContext::value("searchstring")."'>";
+			print " value='".RequestContext::value("searchstring")."'/>";
 			print "\n\t<input type='submit'>";
 			print "\n<br/>";
 		} else {
-			print ">"._("Search")."\n<br/>";
+			print "/>"._("Search")."\n<br/>";
 		}		
 		
 		$searchForm =& new Block(ob_get_contents(), 3);
@@ -270,7 +270,11 @@ class browseAction
 			$columns = $defaultCols;
 			
 		$resultPrinter =& new IteratorResultPrinter($assets, $columns, $numPerPage, "printAssetShort", $harmoni);
+		
 		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
+		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
+		$resultLayout->setPostHTML("</form>");
+		
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 		
 	}
@@ -312,9 +316,9 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 	
 	ob_start();
 	$assetId =& $asset->getId();
-	print "\n\t<strong>".$asset->getDisplayName()."</strong>";
+	print "\n\t<strong>".htmlentities($asset->getDisplayName())."</strong>";
 	print "\n\t<br/>"._("ID#").": ".$assetId->getIdString();
-	print  "\n\t<br /><em>".$asset->getDescription()."</em>";	
+	print  "\n\t<br /><em>".htmlentities($asset->getDescription())."</em>";	
 	print  "\n\t<br />";
 	
 	$component =& new Block(ob_get_contents(), 2);
@@ -335,8 +339,22 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 		$container->add($component, "100%", null, CENTER, CENTER);
 	}
 	
+	
 	ob_start();
+	
+	$authZ =& Services::getService("AuthZ");
+	$idManager =& Services::getService("Id");
+	$harmoni->request->startNamespace("AssetMultiEdit");
+	print "<input type='checkbox'";
+	print " name='".RequestContext::name("asset")."'";
+	print " value='".$assetId->getIdString()."'";
+	if (!$authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $assetId))
+		print " disabled='disabled'";
+	print "/> | ";
+	$harmoni->request->endNamespace();
+	
 	AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num);
+	
 	$component =& new Block(ob_get_contents(), 2);
 	$component->addStyle($centered);
 	ob_end_clean();

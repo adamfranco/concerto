@@ -73,7 +73,7 @@ class AssetPrinter {
 			
 			ob_start();
 			print "<a href='#' onclick='Javascript:window.open(";
-			print '"'.VIEWER_URL."?&source=";
+			print '"'.VIEWER_URL."?&amp;source=";
 			print urlencode($harmoni->request->quickURL($xmlModule, "browsexml",
 						array("collection_id" => $repositoryId->getIdString(),
 						"asset_id" => $xmlAssetIdString,
@@ -81,8 +81,8 @@ class AssetPrinter {
 						RequestContext::name("type") => RequestContext::value("type"),
 						RequestContext::name("searchtype") => RequestContext::value("searchtype"),
 						RequestContext::name("searchstring") => RequestContext::value("searchstring"))));
-			print '&start='.$xmlStart.'", ';
-			print '"'.$asset->getDisplayName().'", ';
+			print '&amp;start='.$xmlStart.'", ';
+			print '"'.htmlentities($asset->getDisplayName()).'", ';
 			print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
 			print ")'>";
 			print _("view")."</a>";
@@ -209,7 +209,80 @@ class AssetPrinter {
 	}
 	
 	
+	/**
+	 * Answer a GUI component that contains controls for editing all of the
+	 * selected Assets.
+	 * 
+	 * @return object Component
+	 * @access public
+	 * @since 10/19/05
+	 */
+	function getMultiEditOptionsBlock () {
+		$harmoni =& Harmoni::instance();
+		$harmoni->request->startNamespace("AssetMultiEdit");
+		
+		ob_start();
+		$idManager =& Services::getService("Id");
+		
+		$checkboxName = RequestContext::name("asset");
+		$editURL = str_replace("&amp;", "&", 
+			$harmoni->request->quickURL("asset", "multiedit"));
+		$pleaseSelectString = _("Please select some Assets.");
+		print<<<END
+
+<script type='text/javascript'>
+// <![CDATA[
 	
+	function checkAllAssets() {
+		var assetElements = document.getElementsByName('$checkboxName');
+		for (var i = 0; i < assetElements.length; i++) {
+			if (!assetElements[i].disabled)
+				assetElements[i].checked = true;
+		}
+	}
+	
+	function uncheckAllAssets() {
+		var assetElements = document.getElementsByName('$checkboxName');
+		for (var i = 0; i < assetElements.length; i++) {
+			assetElements[i].checked = false;
+		}
+	}
+	
+	function editCheckedAssets() {
+		var editURL = '$editURL';
+		var assetElements = document.getElementsByName('$checkboxName');
+		var numChecked = 0;
+		for (var i = 0; i < assetElements.length; i++) {
+			if (!assetElements[i].disabled && assetElements[i].checked == true) {
+				editURL += '&' + assetElements[i].value;
+				numChecked++;
+			}
+		}
+		
+		if (numChecked > 0)
+			window.location = editURL;
+		else
+			alert('$pleaseSelectString');
+	}
+	
+// ]]>
+</script>
+END;
+		
+		print "<input type='button' onclick='checkAllAssets();'";
+		print "value='"._("Check All")."'/>";
+		
+		print "\n<br/><input type='button' onclick='uncheckAllAssets();'";
+		print "value='"._("Un-Check All")."'/>";
+		
+		print "\n<br/><input type='button' onclick='editCheckedAssets();'";
+		print "value='"._("Edit Checked")."'/>";
+		
+		$block = new Block(ob_get_contents(), 4);
+		ob_end_clean();
+		$harmoni->request->endNamespace();
+		return $block;
+	}
 }
 
 ?>
