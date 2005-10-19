@@ -109,10 +109,10 @@ class mainAction
 			"import")."'>";
 		print _("Import");
 		print "</a></li>";
-// 		print "\n\t<li><a href='".$harmoni->request->quickURL("admin", 
-// 			"export")."'>";
-// 		print _("Export");
-// 		print "</a></li>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("admin", 
+			"export")."'>";
+		print _("Export");
+		print "</a></li>";
 		print "\n</ul>";
 		
 		$introText =& new Block(ob_get_contents(),3);

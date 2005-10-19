@@ -85,7 +85,9 @@ class importAction extends MainWindowAction {
 			"\n<h3>"._("File type")."</h3>".
 			"\n"._("The type of file to be imported: ").
 			"\n<br />[[file_type]]".
-			"\n<h3>"._("Import type").
+			"\n<br />\n<br />"._("Is this file an archive?").
+			"\n<br />[[is_archived]]".
+			"\n<h3>"._("Import type")."</h3>".
 			"\n"._("The type of import to execute: ").
 			"\n<br />[[import_type]]".
 			"\n<h3>"._("File")."</h3>".
@@ -109,6 +111,9 @@ class importAction extends MainWindowAction {
 		$select->addOption("XML", "XML");
 //		$select->addOption("Exif", "Exif");
 //		$select->setValue("Tab-Delimited");
+		
+		$archive =& $wizard->addComponent("is_archived", 
+			WCheckBox::withLabel("isArchived?"));
 		
 		$type =& $wizard->addComponent("import_type", new WSelectList());
 		$type->addOption("update", "update");
@@ -174,11 +179,20 @@ class importAction extends MainWindowAction {
 		}	
 		$newName = $this->moveArchive($path, $filename);
 		
+		
+		
 		if ($properties['file_type'] == "XML") {
-			$importer =& XMLImporter::withFile($newName, 
-				$properties['import_type']);
-
-		$importer->parseAndImportBelow();
+			$importer =& new XMLImporter();
+		if ($properties['is_archived'] == TRUE) {
+				$importer->decompress($newName);
+				$importer =& XMLImporter::withFile($newName."/metadata.xml", 
+					$properties['import_type']);
+			}
+			else
+				$importer =& XMLImporter::withFile($newName,
+					$properties['import_type']);
+					
+			$importer->parseAndImportBelow();
 		}
 		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();
