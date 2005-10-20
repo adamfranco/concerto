@@ -276,14 +276,6 @@ class multieditAction
 		print "\n<table class='edit_table' cellspacing='0'>";
 		
 		print "\n\t<tr>";
-		print "\n\t\t<th class='desc'>";
-		print "\n\t\t</th>";
-		print "\n\t\t<th class='desc'>";
-		print "\n\t\t\tNew Value";
-		print "\n\t\t</th>";
-		print "\n\t</tr>";
-		
-		print "\n\t<tr>";
 		print "\n\t\t<th>";
 		print "\n\t\t\t"._("Name");
 // 		print "\n"._("The Name for this <em>Asset</em>: ");
@@ -335,13 +327,24 @@ class multieditAction
 		$step =& $wizard->addStep("contentstep", new WizardStep());
 		$step->setDisplayName(_("Content")." ("._("optional").")");
 		
-		$property =& $step->addComponent("content", new WTextArea());
+		$property =& $step->addComponent("content", new WVerifiedChangeInput);
+		$property =& $property->setInputComponent(new WTextArea);
 		$property->setRows(20);
 		$property->setColumns(70);
-// 		$content =& $asset->getContent();
-// 		
-// 		if ($content->asString())
-// 			$property->setValue($content->asString());
+		
+		$content =& $assets[0]->getContent();
+		$multipleExist = FALSE;
+		for ($i = 1; $i < count($assets); $i++) {
+			if ($content->isEqualTo($assets[$i]->getContent())) {
+				$multipleExist = TRUE;
+				break;
+			}
+		}
+		if ($multipleExist) {
+			$property->setStartingDisplayText($multExistString);
+		} else {
+	 		$property->setValue($content->asString());
+	 	}
 		
 		// Create the step text
 		ob_start();
@@ -353,6 +356,117 @@ class multieditAction
 		ob_end_clean();
 		
 		
+	/*********************************************************
+	 *  :: Record Structures ::
+	 *********************************************************/
+	 	$repository =& $this->getRepository();
+	 	$repositoryId =& $this->getRepositoryId();
+	 	
+	 	// Get the set of RecordStructures so that we can print them in order.
+		$setManager =& Services::getService("Sets");
+		$recStructSet =& $setManager->getPersistentSet($repositoryId);
+		
+		// First, lets go through the info structures listed in the set and print out
+		// the info records for those structures in order.
+		while ($recStructSet->hasNext()) {
+			$recStructId =& $recStructSet->next();
+			if ($recStructId->getIdString() == 'FILE')
+				continue;
+			
+			$recStruct =& $repository->getRecordStructure($recStructId);
+			
+			$step =& $wizard->addStep($recStructId->getIdString(), new WizardStep());
+			$step->setDisplayName($recStruct->getDisplayName());
+			
+			ob_start();
+			print "\n<table class='edit_table' cellspacing='0'>";
+			
+			$partStructs =& $recStruct->getPartStructures();
+			while ($partStructs->hasNext()) {
+				$partStruct =& $partStructs->next();
+				$partStructId =& $partStruct->getId();
+			
+			// PartStructure
+				$property =& $step->addComponent($partStructId->getIdString(),
+					new WVerifiedChangeInput);
+				$property =& $property->setInputComponent(new WTextField);
+// 				$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
+// 				$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
+				$property->setSize(50);
+				
+			// Part Values
+				$value = NULL;
+				$hasNullParts = FALSE;
+				$multipleExist = FALSE;
+				for ($i = 0; $i < count($assets); $i++) {
+					$records =& $assets[$i]->getRecordsByRecordStructure($recStructId);
+					
+					while ($records->hasNext()) {
+						$record =& $records->next();
+						$parts =& $record->getPartsByPartStructure($partStructId);
+						
+						if (!$parts->hasNext()) {
+							$hasNullParts = TRUE;
+							
+							if ($value === NULL)
+								continue;
+							else {
+								$multipleExist = TRUE;
+								break;
+							}	
+						}
+						// Since we are here, we have non-null parts in this record.
+						// if others have null parts, then Multiple values exist
+						else if ($hasNullParts) {
+							$multipleExist = TRUE;
+							break;
+						}
+						
+						// Initialize our value or make sure that all are null.
+						if ($value === NULL) {
+							// If we have a value, initialize to it
+							$part =& $parts->next();
+							$value =& $part->getValue();
+						}
+						
+						while ($parts->hasNext()) {
+							$part =& $parts->next();
+							if (!$value->isEqualTo($part->getValue())) {
+								$multipleExist = TRUE;
+								break;
+							}
+						}
+					
+						if ($multipleExist)
+							break;
+					}
+					
+					if ($multipleExist)
+							break;
+				}
+				
+				if ($multipleExist) {
+					$property->setStartingDisplayText($multExistString);
+				} else if ($value) {
+					$property->setValue($value->asString());
+				}
+				
+				print "\n\t<tr>";
+				print "\n\t\t<th>";
+				print "\n\t\t\t".$partStruct->getDisplayName();
+		// 		print "\n"._("The Name for this <em>Asset</em>: ");
+				print "\n\t\t</th>";
+				print "\n\t\t<td>";
+				print "\n\t\t\t[[".$partStructId->getIdString()."]]";
+				print "\n\t\t</td>";
+				print "\n\t</tr>";
+			}
+		
+			print "\n</table>";
+		
+			$step->setContent(ob_get_contents());
+			ob_end_clean();
+		}
 	
 		return $wizard;
 	}
