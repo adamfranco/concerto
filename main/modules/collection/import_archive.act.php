@@ -183,8 +183,8 @@ class import_archiveAction extends RepositoryAction {
 			}
 		}
 		else if ($properties['importtype'] == "XML") { 
-			$importer =& XMLImporter::withFile($newName."/metadata.xml", "insert");
-			$importer->decompress($newName);
+			$directory = $importer->decompress($newName);
+			$importer =& XMLImporter::withFile($directory."/metadata.xml", "insert");
 
 			$importer->parseAndImportBelow();
 		}

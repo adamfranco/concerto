@@ -184,19 +184,22 @@ class importAction extends MainWindowAction {
 		if ($properties['file_type'] == "XML") {
 			$importer =& new XMLImporter();
 		if ($properties['is_archived'] == TRUE) {
-				$importer->decompress($newName);
-				$importer =& XMLImporter::withFile($newName."/metadata.xml", 
+				$directory = $importer->decompress($newName);
+				$importer =& XMLImporter::withFile($directory."/metadata.xml", 
 					$properties['import_type']);
+
 			}
 			else
 				$importer =& XMLImporter::withFile($newName,
 					$properties['import_type']);
 					
 			$importer->parseAndImportBelow();
+			
 		}
 		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();
-		return TRUE;
+				
+		return true;
 	}
 		
 	/**
