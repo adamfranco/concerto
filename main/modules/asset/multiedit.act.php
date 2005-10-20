@@ -65,7 +65,36 @@ class multieditAction
 		
 		$assetList = RequestContext::value("assets");
 		
-		$cacheName = 'edit_asset_wizard_'.$assetList;
+		$cacheName = 'edit_asset_wizard_'.preg_replace("/[^a-zA-Z0-9]/", "_", $assetList);
+				
+		// Create the step text
+		ob_start();
+		$style = "
+		<style type='text/css'>			
+			.edit_table td, th {
+				border-top: 1px solid;
+				padding: 5px;
+				padding-bottom: 20px;
+				vertical-align: top;
+				text-align: left;
+			}
+			
+			.edit_table .mod {
+				vertical-align: middle;
+				text-align: center;
+			}
+			
+			.desc {
+				border-top: 0px solid;
+				vertical-align: bottom;
+				text-align: center;
+				padding-bottom: 5px;
+				font-style: italic;
+			}
+		</style>
+		";
+		$outputHandler =& $harmoni->getOutputHandler();
+		$outputHandler->setHead($outputHandler->getHead().$style);
 		
 		$this->runWizard ( $cacheName, $centerPane );
 	}
@@ -135,82 +164,133 @@ class multieditAction
 	 */
 	function &createWizard () {
 		$harmoni =& Harmoni::instance();
+		$multExistString = _("(multiple values exist)");
 	
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withDefaultLayout();		
+		$wizard =& SimpleStepWizard::withDefaultLayout();
 		
-		// :: Asset Properties ::
+	/*********************************************************
+	 * Load the assets
+	 *********************************************************/
+	 	$idManager =& Services::getService("Id");
+	 	$repository =& $this->getRepository();
+	 	
+	 	$assets = array();
+	 	$assetIds = explode(",", RequestContext::value("assets"));
+	 	
+	 	foreach ($assetIds as $idString) {
+	 		$assets[] =& $repository->getAsset($idManager->getId($idString));
+	 	}
+	 	
+		
+	/*********************************************************
+	 *  :: Asset Properties ::
+	 *********************************************************/
 		$step =& $wizard->addStep("assetproperties", new WizardStep());
 		$step->setDisplayName(_("Basic Properties"));
 		
-		// Create the properties.
-		$displayNameProp =& $step->addComponent("display_name", new WTextField());
-// 		$displayNameProp->setValue($asset->getDisplayName());
-		$displayNameProp->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
-		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
-		
-		$property =& $step->addComponent("mod_display_name", new WCheckBox());
+	// Display Name
+		$property =& $step->addComponent("display_name", new WVerifiedChangeInput);
+		$property =& $property->setInputComponent(new WTextField);
+		$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
+		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
+		$property->setSize(50);
 
-		
-		$descriptionProp =& $step->addComponent("description", new WTextArea());
-// 		$descriptionProp->setValue($asset->getDescription());
-		$descriptionProp->setRows(3);
-		$descriptionProp->setColumns(70);
-		
-		$property =& $step->addComponent("mod_description", new WCheckBox());
-		
-		// Create the properties.
-		$property =& $step->addComponent("effective_date", new WTextField());
-// 		$date =& $asset->getEffectiveDate();
-// 		if ($date) {
-// 			$date =& $date->asDate();
-// 			$property->setValue($date->yyyymmddString());
-// 		}
+		$value = $assets[0]->getDisplayName();
+		$multipleExist = FALSE;
+		for ($i = 1; $i < count($assets); $i++) {
+			if ($assets[$i]->getDisplayName() != $value) {
+				$multipleExist = TRUE;
+				break;
+			}
+		}
+		if ($multipleExist) {
+			$property->setStartingDisplayText($multExistString);
+		} else {
+	 		$property->setValue($value);
+	 	}
 
-		$property =& $step->addComponent("mod_effective_date", new WCheckBox());
+	// Description	
+		$property =& $step->addComponent("description", new WVerifiedChangeInput);
+		$property =& $property->setInputComponent(new WTextArea);
+		$property->setRows(3);
+		$property->setColumns(50);
+		
+		$value = $assets[0]->getDescription();
+		$multipleExist = FALSE;
+		for ($i = 1; $i < count($assets); $i++) {
+			if ($assets[$i]->getDescription() != $value) {
+				$multipleExist = TRUE;
+				break;
+			}
+		}
+		if ($multipleExist) {
+			$property->setStartingDisplayText($multExistString);
+		} else {
+	 		$property->setValue($value);
+	 	}
+				
+	// Effective Date
+		$property =& $step->addComponent("effective_date", new WVerifiedChangeInput);
+		$property =& $property->setInputComponent(new WTextField);
 	
-		$property =& $step->addComponent("expiration_date", new WTextField());
-// 		$date =& $asset->getExpirationDate();
-// 		if ($date) {
-// 			$date =& $date->asDate();
-// 			$property->setValue($date->yyyymmddString());
-// 		}
+		$date =& $assets[0]->getEffectiveDate();
+		$multipleExist = FALSE;
+		for ($i = 1; $i < count($assets); $i++) {
+			if (($date && !$value->isEqualTo($assets[$i]->getEffectiveDate()))
+				|| (!$date && $assets[$i]->getEffectiveDate()))
+			{
+				$multipleExist = TRUE;
+				break;
+			}
+		}
+		if ($multipleExist) {
+			$property->setStartingDisplayText($multExistString);
+		} else if ($date) {
+	 		$date =& $date->asDate();
+			$property->setValue($date->yyyymmddString());
+	 	}
+	
+	// Expiration Date
+		$property =& $step->addComponent("expiration_date", new WVerifiedChangeInput);
+		$property =& $property->setInputComponent(new WTextField);
+				
+		$date =& $assets[0]->getExpirationDate();
+		$multipleExist = FALSE;
+		for ($i = 1; $i < count($assets); $i++) {
+			if (($date && !$value->isEqualTo($assets[$i]->getExpirationDate()))
+				|| (!$date && $assets[$i]->getEffectiveDate()))
+			{
+				$multipleExist = TRUE;
+				break;
+			}
+		}
+		if ($multipleExist) {
+			$property->setStartingDisplayText($multExistString);
+		} else if ($date) {
+	 		$date =& $date->asDate();
+			$property->setValue($date->yyyymmddString());
+	 	}
 
-		$property =& $step->addComponent("mod_expiration_date", new WCheckBox());
-		
-		// Create the step text
-		ob_start();
-		$style = "
-		<style type='text/css'>			
-			.edit_table td, th {
-				border-top: 1px solid;
-				padding: 5px;
-				padding-bottom: 20px;
-				vertical-align: top;
-				text-align: left;
-			}
-			.edit_table .mod {
-				vertical-align: middle;
-				text-align: center;
-			}
-		</style>
-		";
-		$outputHandler =& $harmoni->getOutputHandler();
-		$outputHandler->setHead($outputHandler->getHead().$style);
 		
 		print "\n<table class='edit_table' cellspacing='0'>";
+		
+		print "\n\t<tr>";
+		print "\n\t\t<th class='desc'>";
+		print "\n\t\t</th>";
+		print "\n\t\t<th class='desc'>";
+		print "\n\t\t\tNew Value";
+		print "\n\t\t</th>";
+		print "\n\t</tr>";
 		
 		print "\n\t<tr>";
 		print "\n\t\t<th>";
 		print "\n\t\t\t"._("Name");
 // 		print "\n"._("The Name for this <em>Asset</em>: ");
 		print "\n\t\t</th>";
-		print "\n\t\t<td class='mod'>";
-		print "\n\t\t\t[[mod_display_name]]";
-		print "\n\t\t</td>";
 		print "\n\t\t<td>";
 		print "\n\t\t\t[[display_name]]";
-		print "\n\t\t<td>";
+		print "\n\t\t</td>";
 		print "\n\t</tr>";
 		
 		print "\n\t<tr>";
@@ -218,12 +298,9 @@ class multieditAction
 		print "\n\t\t\t"._("Description");
 // 		print "\n"._("The Description for this <em>Asset</em>: ");
 		print "\n\t\t</th>";
-		print "\n\t\t<td class='mod'>";
-		print "\n\t\t\t[[mod_description]]";
-		print "\n\t\t</td>";
 		print "\n\t\t<td>";
 		print "\n\t\t\t[[description]]";
-		print "\n\t\t<td>";
+		print "\n\t\t</td>";
 		print "\n\t</tr>";
 		
 		print "\n\t<tr>";
@@ -231,12 +308,9 @@ class multieditAction
 		print "\n\t\t\t"._("Effective Date");
 // 		print "\n"._("The date that this <em>Asset</em> becomes effective: ");
 		print "\n\t\t</th>";
-		print "\n\t\t<td class='mod'>";
-		print "\n\t\t\t[[mod_effective_date]]";
-		print "\n\t\t</td>";
 		print "\n\t\t<td>";
 		print "\n\t\t\t[[effective_date]]";
-		print "\n\t\t<td>";
+		print "\n\t\t</td>";
 		print "\n\t</tr>";
 		
 		print "\n\t<tr>";
@@ -244,12 +318,9 @@ class multieditAction
 		print "\n\t\t\t"._("Expiration Date");
 // 		print "\n"._("The date that this <em>Asset</em> expires: ");
 		print "\n\t\t</th>";
-		print "\n\t\t<td class='mod'>";
-		print "\n\t\t\t[[mod_expiration_date]]";
-		print "\n\t\t</td>";
 		print "\n\t\t<td>";
 		print "\n\t\t\t[[expiration_date]]";
-		print "\n\t\t<td>";
+		print "\n\t\t</td>";
 		print "\n\t</tr>";
 		
 		print "\n</table>";
@@ -258,7 +329,9 @@ class multieditAction
 		ob_end_clean();
 		
 		
-		// :: Content ::
+	/*********************************************************
+	 *  :: Content ::
+	 *********************************************************/
 		$step =& $wizard->addStep("contentstep", new WizardStep());
 		$step->setDisplayName(_("Content")." ("._("optional").")");
 		
