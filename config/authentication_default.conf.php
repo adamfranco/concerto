@@ -61,7 +61,7 @@
 // 		$ldapConfiguration->addProperty("LDAPHost", $arg1 = "ad.middlebury.edu");
 // 		$ldapConfiguration->addProperty("baseDN", $arg2 = "cn=users,dc=middlebury,dc=edu");
 // 		$ldapConfiguration->addProperty("bindDN", $arg3 = "juser");
-// 		$ldapConfiguration->addProperty("bindDNPassword", $arg4 = "poi987");
+// 		$ldapConfiguration->addProperty("bindDNPassword", $arg4 = "");
 // 		$propertiesFields = array (
 // 			'username' => 'samaccountname',
 // 			'name' =>  'displayname',
