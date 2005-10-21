@@ -77,7 +77,7 @@ class displayAction
 		$harmoni->history->markReturnURL("polyphony/language/change");
 		$languageText = "\n<form action='".$harmoni->request->quickURL("language", "change")."' method='post'>";
 	$harmoni->request->startNamespace("polyphony");
-	$languageText .= "\n\t<div>\n\t<select name='".$harmoni->request->getName("language")."'>";
+	$languageText .= "\n\t<div style='text-align: center'>\n\t<select name='".$harmoni->request->getName("language")."'>";
 	$harmoni->request->endNamespace();
 		$langLoc =& Services::getService('Lang');
 		$currentCode = $langLoc->getLanguage();
@@ -105,7 +105,7 @@ class displayAction
 				$authNManager =& Services::getService("AuthN");
 				$agentManager =& Services::getService("Agent");
 				$authTypes =& $authNManager->getAuthenticationTypes();
-				print "\n<table border='1'>";
+				print "\n<table border='1' align='right'>";
 				print "\n\t<tr><th colspan='3'><center>";
 				print _("Current Authentications: ");
 				print "</center>\n\t</th></tr>";
