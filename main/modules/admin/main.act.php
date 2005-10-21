@@ -96,28 +96,43 @@ class mainAction
 		$actionRows->add($introText, "100%", null, CENTER, CENTER);
 		ob_end_clean();
 		
+		$authZ =& Services::getService("AuthZ");
+		$idManager =& Services::getService("Id");		
+		if ($authZ->isUserAuthorized(
+			$idManager->getId("edu.middlebury.authorization.view"),
+			$idManager->getId("edu.middlebury.authorization.root"))) {
 		
-		
-		$actionRows->add(new Block("<span style='font-size: larger'><b>" . _("Development") . "</b></span>" , 2));
-		
-		ob_start();
-		print "\n<ul>";
-		print "\n\t<li><a href='".$harmoni->request->quickURL("admin","main", array('reset_concerto' => 'TRUE'))."'>";
-		print _("Reset Concerto");
-		print "</a></li>";
-		print "\n\t<li><a href='".$harmoni->request->quickURL("admin", 
-			"import")."'>";
-		print _("Import");
-		print "</a></li>";
-		print "\n\t<li><a href='".$harmoni->request->quickURL("admin", 
-			"export")."'>";
-		print _("Export");
-		print "</a></li>";
-		print "\n</ul>";
-		
-		$introText =& new Block(ob_get_contents(),3);
-		$actionRows->add($introText, "100%", null, CENTER, CENTER);
-		ob_end_clean();
+			$actionRows->add(new Block("<span style='font-size: larger'><b>" .
+				_("Development") . "</b></span>" , 2));
+			
+			ob_start();
+			print "\n<ul>";
+			if ($authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.delete"),
+				$idManager->getId("edu.middlebury.authorization.root"))) {
+				print "\n\t<li><a href='".$harmoni->request->quickURL(
+					"admin","main", array('reset_concerto' => 'TRUE'))."'>";
+				print _("Reset Concerto");
+				print "</a></li>";
+			}
+			if ($authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.add_children"),
+				$idManager->getId("edu.middlebury.authorization.root"))) {
+				print "\n\t<li><a href='".$harmoni->request->quickURL("admin", 
+					"import")."'>";
+				print _("Import");
+				print "</a></li>";
+			}
+			print "\n\t<li><a href='".$harmoni->request->quickURL("admin", 
+				"export")."'>";
+			print _("Export");
+			print "</a></li>";
+			print "\n</ul>";
+			
+			$introText =& new Block(ob_get_contents(),3);
+			$actionRows->add($introText, "100%", null, CENTER, CENTER);
+			ob_end_clean();
+		}
 	}
 }
 

@@ -122,23 +122,44 @@ if (!isset($_SESSION['table_setup_complete'])) {
 			$agentManager =& Services::getService("AgentManager");
 			$idManager =& Services::getService("IdManager");			
 	
-			$groupType =& new Type ("System", "edu.middlebury.harmoni", "SystemGroups", "Groups for administrators and others with special privledges.");
+			$groupType =& new Type ("System", "edu.middlebury.harmoni", "SystemGroups", "Groups for administrators and others with special privileges.");
 			$nullType =& new Type ("System", "edu.middlebury.harmoni", "NULL");
 			$properties =& new HarmoniProperties($nullType);
 			$adminGroup =& $agentManager->createGroup("Administrators", $groupType, "Users that have access to every function in the system.", $properties);
 			$auditorGroup =& $agentManager->createGroup("Auditors", $groupType, "Users that can view all content in the system but not modify it.", $properties);
+			
+			$dwarfGroup =& $agentManager->createGroup("Dwarves", $groupType,
+				"Test users with varying privileges", $properties);
 			
 			// default administrator account
 			$authNMethodManager =& Services::getService("AuthNMethodManager");
 			$dbAuthType =& new Type ("Authentication", "edu.middlebury.harmoni", "Concerto DB");
 			$dbAuthMethod =& $authNMethodManager->getAuthNMethodForType($dbAuthType);
 			// Create the representation
+			
 			$tokensArray = array("username" => "jadministrator",
 							"password" => "password");
-			$adminAuthNTokens =& $dbAuthMethod->createTokens($tokensArray);
+			$arrayOfTokens[] = $tokensArray;
+			$arrayOfTokens[] = array("username" => "sleepy",
+				"password" => "disney");
+			$arrayOfTokens[] = array("username" => "doc",
+				"password" => "disney");
+			$arrayOfTokens[] = array("username" => "bashful",
+				"password" => "disney");
+			$arrayOfTokens[] = array("username" => "dopey",
+				"password" => "disney");
+			$arrayOfTokens[] = array("username" => "sneezy",
+				"password" => "disney");
+			$arrayOfTokens[] = array("username" => "grumpy",
+				"password" => "disney");
+			$arrayOfTokens[] = array("username" => "happy",
+				"password" => "disney");
+			$adminAuthNTokens = array();
+			foreach ($arrayOfTokens as $key => $tokenArray) {
+				$adminAuthNTokens[] =& $dbAuthMethod->createTokens($tokenArray);
 			// Add it to the system
-			$dbAuthMethod->addTokens($adminAuthNTokens);
-			
+				$dbAuthMethod->addTokens($adminAuthNTokens[$key]);
+			}
 			// Create an agent
 			$agentType =& new Type ("System", "edu.middlebury.harmoni", "Default Agents", "Default agents created for install and setup. They should be removed on production systems.");
 			require_once(HARMONI."oki2/shared/NonReferenceProperties.class.php");
@@ -150,13 +171,30 @@ if (!isset($_SESSION['table_setup_complete'])) {
 			$agentProperties->addProperty("status", "Not a real person.");
 			$adminAgent =& $agentManager->createAgent("John Administrator", $agentType, $agentProperties);
 			
+
 			// map the agent to the tokens
 			$agentTokenMappingManager =& Services::getService("AgentTokenMappingManager");
-			$agentTokenMappingManager->createMapping($adminAgent->getId(), $adminAuthNTokens, $dbAuthType);
+			$agentTokenMappingManager->createMapping($adminAgent->getId(), $adminAuthNTokens[0], $dbAuthType);
 			
 			// Add the agent to the Administrators group.
 			$adminGroup->add($adminAgent);
-	
+			// the last 3 steps for the dwarves
+			for ($i = 1; $i <= 7; $i++) {
+				$dwarfProperties =& new NonReferenceProperties($agentType);
+				$dwarfProperties->addProperty("name",
+					$arrayOfTokens[$i]['username']);
+				$dwarfProperties->addProperty("first_name",
+					$arrayOfTokens[$i]['username']);
+				$dwarfProperties->addProperty("email",
+					$arrayOfTokens[$i]['username']."@xxxxxxxxx.edu");
+				$dwarfProperties->addProperty("status",
+					"Not a real Dwarf");
+				$dAgent =& $agentManager->createAgent(
+					$arrayOfTokens[$i]['username'], $agentType, $dwarfProperties);
+				$agentTokenMappingManager->createMapping($dAgent->getId(),
+					$adminAuthNTokens[$i], $dbAuthType);
+				$dwarfGroup->add($dAgent);
+			}
 	
 	/*********************************************************
 	 * Script for setting up the AuthorizationFunctions that Concerto will use
