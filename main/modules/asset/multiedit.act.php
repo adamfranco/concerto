@@ -72,7 +72,7 @@ class multieditAction
 		$style = "
 		<style type='text/css'>			
 			.edit_table td, th {
-				border-top: 1px solid;
+// 				border-top: 1px solid;
 				padding: 5px;
 				padding-bottom: 20px;
 				vertical-align: top;
@@ -97,6 +97,8 @@ class multieditAction
 		$outputHandler->setHead($outputHandler->getHead().$style);
 		
 		$this->runWizard ( $cacheName, $centerPane );
+		
+// 		printpre($_REQUEST);
 	}
 	
 	/**
@@ -111,9 +113,11 @@ class multieditAction
 	 */
 	function saveWizard ( $cacheName ) {
 // 		$asset =& $this->getAsset();
-// 		$wizard =& $this->getWizard($cacheName);
-// 				
-// 		$properties =& $wizard->getAllValues();
+		$wizard =& $this->getWizard($cacheName);
+				
+		$properties =& $wizard->getAllValues();
+		printpre($properties);
+		exit;
 // 			
 // 		// Update the name and description
 // 		$asset->updateDisplayName($properties['namedescstep']['display_name']);
@@ -190,8 +194,8 @@ class multieditAction
 		$step->setDisplayName(_("Basic Properties"));
 		
 	// Display Name
-		$property =& $step->addComponent("display_name", new WVerifiedChangeInput);
-		$property =& $property->setInputComponent(new WTextField);
+		$vProperty =& $step->addComponent("display_name", new WVerifiedChangeInput);
+		$property =& $vProperty->setInputComponent(new WTextField);
 		$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setSize(50);
@@ -208,11 +212,12 @@ class multieditAction
 			$property->setStartingDisplayText($multExistString);
 		} else {
 	 		$property->setValue($value);
+	 		$vProperty->setChecked(true);
 	 	}
 
 	// Description	
-		$property =& $step->addComponent("description", new WVerifiedChangeInput);
-		$property =& $property->setInputComponent(new WTextArea);
+		$vProperty =& $step->addComponent("description", new WVerifiedChangeInput);
+		$property =& $vProperty->setInputComponent(new WTextArea);
 		$property->setRows(3);
 		$property->setColumns(50);
 		
@@ -228,11 +233,12 @@ class multieditAction
 			$property->setStartingDisplayText($multExistString);
 		} else {
 	 		$property->setValue($value);
+	 		$vProperty->setChecked(true);
 	 	}
 				
 	// Effective Date
-		$property =& $step->addComponent("effective_date", new WVerifiedChangeInput);
-		$property =& $property->setInputComponent(new WTextField);
+		$vProperty =& $step->addComponent("effective_date", new WVerifiedChangeInput);
+		$property =& $vProperty->setInputComponent(new WTextField);
 	
 		$date =& $assets[0]->getEffectiveDate();
 		$multipleExist = FALSE;
@@ -249,11 +255,14 @@ class multieditAction
 		} else if ($date) {
 	 		$date =& $date->asDate();
 			$property->setValue($date->yyyymmddString());
+	 		$vProperty->setChecked(true);
+	 	} else {
+	 		$vProperty->setChecked(true);
 	 	}
 	
 	// Expiration Date
-		$property =& $step->addComponent("expiration_date", new WVerifiedChangeInput);
-		$property =& $property->setInputComponent(new WTextField);
+		$vProperty =& $step->addComponent("expiration_date", new WVerifiedChangeInput);
+		$property =& $vProperty->setInputComponent(new WTextField);
 				
 		$date =& $assets[0]->getExpirationDate();
 		$multipleExist = FALSE;
@@ -270,6 +279,9 @@ class multieditAction
 		} else if ($date) {
 	 		$date =& $date->asDate();
 			$property->setValue($date->yyyymmddString());
+			$vProperty->setChecked(true);
+	 	} else {
+	 		$vProperty->setChecked(true);
 	 	}
 
 		
@@ -327,8 +339,8 @@ class multieditAction
 		$step =& $wizard->addStep("contentstep", new WizardStep());
 		$step->setDisplayName(_("Content")." ("._("optional").")");
 		
-		$property =& $step->addComponent("content", new WVerifiedChangeInput);
-		$property =& $property->setInputComponent(new WTextArea);
+		$vProperty =& $step->addComponent("content", new WVerifiedChangeInput);
+		$property =& $vProperty->setInputComponent(new WTextArea);
 		$property->setRows(20);
 		$property->setColumns(70);
 		
@@ -343,6 +355,7 @@ class multieditAction
 		if ($multipleExist) {
 			$property->setStartingDisplayText($multExistString);
 		} else {
+			$vProperty->setChecked(true);
 	 		$property->setValue($content->asString());
 	 	}
 		
@@ -387,68 +400,147 @@ class multieditAction
 				$partStructId =& $partStruct->getId();
 			
 			// PartStructure
-				$property =& $step->addComponent($partStructId->getIdString(),
-					new WVerifiedChangeInput);
-				$property =& $property->setInputComponent(new WTextField);
-// 				$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
-// 				$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
-				$property->setSize(50);
-				
-			// Part Values
-				$value = NULL;
-				$hasNullParts = FALSE;
-				$multipleExist = FALSE;
-				for ($i = 0; $i < count($assets); $i++) {
-					$records =& $assets[$i]->getRecordsByRecordStructure($recStructId);
+				if (!$partStruct->isRepeatable()) {
+					$property =& $step->addComponent(str_replace(".", "_", $partStructId->getIdString()),
+						new WVerifiedChangeInput);
+					$property =& $property->setInputComponent(new WTextField);
+	// 				$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
+	// 				$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
+					$property->setSize(50);
 					
-					while ($records->hasNext()) {
-						$record =& $records->next();
-						$parts =& $record->getPartsByPartStructure($partStructId);
+				// Part Values
+					$value = NULL;
+					$hasNullParts = FALSE;
+					$multipleExist = FALSE;
+					for ($i = 0; $i < count($assets); $i++) {
+						$records =& $assets[$i]->getRecordsByRecordStructure($recStructId);
 						
-						if (!$parts->hasNext()) {
-							$hasNullParts = TRUE;
+						while ($records->hasNext()) {
+							$record =& $records->next();
+							$parts =& $record->getPartsByPartStructure($partStructId);
 							
-							if ($value === NULL)
-								continue;
-							else {
-								$multipleExist = TRUE;
-								break;
-							}	
-						}
-						// Since we are here, we have non-null parts in this record.
-						// if others have null parts, then Multiple values exist
-						else if ($hasNullParts) {
-							$multipleExist = TRUE;
-							break;
-						}
-						
-						// Initialize our value or make sure that all are null.
-						if ($value === NULL) {
-							// If we have a value, initialize to it
-							$part =& $parts->next();
-							$value =& $part->getValue();
-						}
-						
-						while ($parts->hasNext()) {
-							$part =& $parts->next();
-							if (!$value->isEqualTo($part->getValue())) {
+							if (!$parts->hasNext()) {
+								$hasNullParts = TRUE;
+								
+								if ($value === NULL)
+									continue;
+								else {
+									$multipleExist = TRUE;
+									break;
+								}	
+							}
+							// Since we are here, we have non-null parts in this record.
+							// if others have null parts, then Multiple values exist
+							else if ($hasNullParts) {
 								$multipleExist = TRUE;
 								break;
 							}
+							
+							// Initialize our value or make sure that all are null.
+							if ($value === NULL) {
+								// If we have a value, initialize to it
+								$part =& $parts->next();
+								$value =& $part->getValue();
+							}
+							
+							while ($parts->hasNext()) {
+								$part =& $parts->next();
+								if (!$value->isEqualTo($part->getValue())) {
+									$multipleExist = TRUE;
+									break;
+								}
+							}
+						
+							if ($multipleExist)
+								break;
 						}
-					
+						
 						if ($multipleExist)
-							break;
+								break;
 					}
 					
-					if ($multipleExist)
-							break;
+					if ($multipleExist) {
+						$property->setStartingDisplayText($multExistString);
+					} else if ($value) {
+						$property->setChecked(true);
+						$property->setValue($value->asString());
+					} else {
+						$property->setChecked(true);
+					}
 				}
-				
-				if ($multipleExist) {
-					$property->setStartingDisplayText($multExistString);
-				} else if ($value) {
-					$property->setValue($value->asString());
+
+				// If the part is repeatable, then we will build a list of all parts,
+				// keeping track of which ones are had by all, and which ones are had
+				// just by some.
+				else {
+					
+				// Build lists of all values.
+					$values = array();
+					$valueCounts = array();
+					$numRecords = 0;
+					for ($i = 0; $i < count($assets); $i++) {
+						$records =& $assets[$i]->getRecordsByRecordStructure($recStructId);
+						
+						while ($records->hasNext()) {
+							$record =& $records->next();
+							$numRecords++;
+							$parts =& $record->getPartsByPartStructure($partStructId);
+							
+							while ($parts->hasNext()) {
+								$part =& $parts->next();
+								$value =& $part->getValue();
+								
+								$valueKeyIfExists = false;
+								for ($j = 0; $j < count($values); $j++) {
+									if ($value->isEqualTo($values[$j])) {
+										$valueKeyIfExists = $j;
+										break;
+									}
+								}
+								
+								if ($valueKeyIfExists === false)
+									$valueKeyIfExists = count($values);
+								
+								$values[$valueKeyIfExists] =& $value;
+								if (isset($valueCounts[$valueKeyIfExists]))
+									$valueCounts[$valueKeyIfExists]++;
+								else
+									$valueCounts[$valueKeyIfExists] = 1;
+							}
+						}
+					}
+					
+				// Make a component for each of values
+					$repeatableProperty =& $step->addComponent(str_replace(".", "_", $partStructId->getIdString()),
+						new WNewOnlyEditableRepeatableComponentCollection());
+					$repeatableProperty->setStartingNumber(0);
+							
+					$property =& $repeatableProperty->addComponent('partvalue',
+							new WVerifiedChangeInput);
+					
+					$property =& $property->setInputComponent(new WTextField);
+					$property->setSize(50);
+// 					$property->setReadOnly(true);
+					
+					ob_start();
+					print "\n\t\t\t<div>";
+					print "[[partvalue]]";
+					print "\n\t\t\t</div>";
+					$repeatableProperty->setElementLayout(ob_get_contents());
+					ob_end_clean();
+					
+					for ($i = 0; $i < count($values); $i++) {
+						$valueCollection = array();
+						$valueCollection['partvalue'] = array();
+						
+						if ($valueCounts[$i] == $numRecords)
+							$valueCollection['partvalue']['checked'] = TRUE;
+						else 
+							$valueCollection['partvalue']['checked'] = FALSE;
+						
+						$valueCollection['partvalue']['value'] = $values[$i]->asString();
+						$repeatableProperty->addValueCollection($valueCollection);
+					}					
 				}
 				
 				print "\n\t<tr>";
@@ -457,7 +549,7 @@ class multieditAction
 		// 		print "\n"._("The Name for this <em>Asset</em>: ");
 				print "\n\t\t</th>";
 				print "\n\t\t<td>";
-				print "\n\t\t\t[[".$partStructId->getIdString()."]]";
+				print "\n\t\t\t[[".str_replace(".", "_", $partStructId->getIdString())."]]";
 				print "\n\t\t</td>";
 				print "\n\t</tr>";
 			}
