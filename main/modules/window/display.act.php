@@ -105,7 +105,7 @@ class displayAction
 				$authNManager =& Services::getService("AuthN");
 				$agentManager =& Services::getService("Agent");
 				$authTypes =& $authNManager->getAuthenticationTypes();
-				print "\n<table border='1' align='right'>";
+				print "\n<table border='2' align='right'>";
 				print "\n\t<tr><th colspan='3'><center>";
 				print _("Current Authentications: ");
 				print "</center>\n\t</th></tr>";
@@ -114,19 +114,19 @@ class displayAction
 					$authType =& $authTypes->nextType();
 					$typeString = HarmoniType::typeToString($authType);
 					print "\n\t<tr>";
-					print "\n\t\t<td>";
+					print "\n\t\t<td><small>";
 					print "<a href='#' title='$typeString' onclick='alert(\"$typeString\")'>";
 					print $authType->getKeyword();
 					print "</a>";
-					print "\n\t\t</td>";
-					print "\n\t\t<td>";
+					print "\n\t\t</small></td>";
+					print "\n\t\t<td><small>";
 					$userId =& $authNManager->getUserId($authType);
 					$userAgent =& $agentManager->getAgent($userId);
 					print '<a title=\''._("Agent Id").': '.$userId->getIdString().'\' onclick=\'Javascript:alert("'._("Agent Id").':\n\t'.$userId->getIdString().'");\'>';
 					print $userAgent->getDisplayName();
 					print "</a>";
-					print "\n\t\t</td>";
-					print "\n\t\t<td>";
+					print "\n\t\t</small></td>";
+					print "\n\t\t<td><small>";
 					
 					$harmoni->request->startNamespace("polyphony");
 					
@@ -150,7 +150,7 @@ class displayAction
 					}
 					$harmoni->request->endNamespace();
 					
-					print "\n\t\t</td>";
+					print "\n\t\t</small></td>";
 					print "\n\t</tr>";
 				}
 			print "\n</table>";

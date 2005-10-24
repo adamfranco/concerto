@@ -87,10 +87,17 @@ class ConcertoMenuGenerator {
 			}
 		}
 		
+		$mainMenu_item8 =& new MenuItemLink("<span style='font-size: large'>".
+			_("User Tools")."</span>",
+			$harmoni->request->quickURL("user", "main"), 
+			(ereg("^user$", $module))?TRUE:FALSE, 1);
+		$mainMenu->add($mainMenu_item8, "100%", null, LEFT, CENTER);
+		
 		$mainMenu_item7 =& new MenuItemLink("<span style='font-size: large'>"._("Admin Tools")."</span>", 
 			$harmoni->request->quickURL("admin", "main"), 
 			(ereg("^admin$",$module))?TRUE:FALSE, 1);
 		$mainMenu->add($mainMenu_item7, "100%", null, LEFT, CENTER);
+	
 	
 		return $mainMenu;
 	}
