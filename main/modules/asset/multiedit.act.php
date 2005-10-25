@@ -427,15 +427,21 @@ class multieditAction
 			while ($partStructs->hasNext()) {
 				$partStruct =& $partStructs->next();
 				$partStructId =& $partStruct->getId();
+				
+				$partStructType =& $partStruct->getType();
+				// get the datamanager data type
+				$dataType = $partStructType->getKeyword();
+				// get the correct component for this data type
+				$component =& PrimitiveIOManager::createComponent($dataType);
 			
 			// PartStructure
 				if (!$partStruct->isRepeatable()) {
 					$property =& $step->addComponent(str_replace(".", "_", $partStructId->getIdString()),
 						new WVerifiedChangeInput);
-					$property =& $property->setInputComponent(new WTextField);
+					$property =& $property->setInputComponent($component);
 	// 				$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 	// 				$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
-					$property->setSize(50);
+// 					$property->setSize(50);
 					
 				// Part Values
 					$value = NULL;
@@ -492,7 +498,7 @@ class multieditAction
 						$property->setStartingDisplayText($multExistString);
 					} else if ($value) {
 						$property->setChecked(true);
-						$property->setValue($value->asString());
+						$property->setValue($value);
 					} else {
 						$property->setChecked(true);
 					}
@@ -547,8 +553,8 @@ class multieditAction
 					$property =& $repeatableProperty->addComponent('partvalue',
 							new WVerifiedChangeInput);
 					
-					$property =& $property->setInputComponent(new WTextField);
-					$property->setSize(50);
+					$property =& $property->setInputComponent($component);
+// 					$property->setSize(50);
 // 					$property->setReadOnly(true);
 					
 					ob_start();
@@ -567,7 +573,7 @@ class multieditAction
 						else 
 							$valueCollection['partvalue']['checked'] = FALSE;
 						
-						$valueCollection['partvalue']['value'] = $values[$i]->asString();
+						$valueCollection['partvalue']['value'] = $values[$i];
 						$repeatableProperty->addValueCollection($valueCollection);
 					}					
 				}
@@ -723,6 +729,9 @@ class multieditAction
 	{
 		$partStructId = $partStruct->getId();
 		
+		$partStructType =& $partStruct->getType();
+		$valueObjClass =& $partStructureType->getKeyword();
+		
 		if ($partResults['checked'] == '1'
 			&& ($partInitialState['checked'] =='0'
 				|| $partResults['value'] != $partInitialState['value']))
@@ -762,7 +771,7 @@ class multieditAction
 			
 			// Check for existance in the results.
 			// if the value is not in the results, remove the part and continue.
-			if (!$this->inWizArray($partStrVal, 'value', $partResults)) {
+			if (!$this->inWizArray($partVal, 'value', $partResults)) {
 				$record->deletePart($part->getId());
 				$partValsHandled[] = $partStrVal;
 				
@@ -785,10 +794,10 @@ class multieditAction
 		// been handled and need to be, add them.
 		foreach ($partResults as $key => $valueArray) {
 			$checked = ($valueArray['partvalue']['checked'] == '1')?true:false;
-			$valueStr = $valueArray['partvalue']['value'];
+			$valueStr = $valueArray['partvalue']['value']->asString();
 			
 			if ($checked && !in_array($valueStr, $partValsHandled)) {
-				$part =& $record->createPart($partStructId, String::withvalue($valueArray['partvalue']['value']));
+				$part =& $record->createPart($partStructId, $valueArray['partvalue']['value']);
 				
 				$partId =& $part->getId();
 				printpre("\tAdding Part: Id: ".$partId->getIdString()." Value: ".$partStrVal);
@@ -810,11 +819,11 @@ class multieditAction
 	function inWizArray ($val, $key, $parentArray) {
 		foreach ( $parentArray as $i => $componentArray ) {
 			foreach ($componentArray as $j => $subComponentArray) {
-				if ($j == $key && $subComponentArray == $val)
+				if ($j == $key && $val->isEqualTo($subComponentArray))
 					return TRUE;
 				else if (is_array($subComponentArray) 
 					&& isset($subComponentArray[$key])
-					&& $subComponentArray[$key] == $val)
+					&& $val->isEqualTo($subComponentArray[$key]))
 				{
 					return TRUE;
 				}
