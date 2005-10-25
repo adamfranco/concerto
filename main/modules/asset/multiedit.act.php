@@ -126,10 +126,19 @@ class multieditAction
 	 	$assets = array();
 	 	$assetIds = explode(",", RequestContext::value("assets"));
 	 	
+	 	// Records
+		$repository =& $this->getRepository();
+		$repositoryId =& $this->getRepositoryId();
+		
+		// Get the set of RecordStructures so that we can print them in order.
+		$setManager =& Services::getService("Sets");
+		$recStructSet =& $setManager->getPersistentSet($repositoryId);
+	 		 	
 	 	foreach ($assetIds as $idString) {
 			// @todo Check AuthN
 			if (true) {
 				$asset =& $repository->getAsset($idManager->getId($idString));
+				printpre("<hr>".$asset->getDisplayName());
 				
 				// DisplayName
 				if ($results['assetproperties']['display_name']['checked'] == '1'
@@ -169,16 +178,9 @@ class multieditAction
 						$asset->updateContent($newContent);
 				}
 				
-				// Records
-				$repository =& $this->getRepository();
-				$repositoryId =& $this->getRepositoryId();
-				
-				// Get the set of RecordStructures so that we can print them in order.
-				$setManager =& Services::getService("Sets");
-				$recStructSet =& $setManager->getPersistentSet($repositoryId);
-				
 				// First, lets go through the info structures listed in the set and print out
 				// the info records for those structures in order.
+				$recStructSet->reset();
 				while ($recStructSet->hasNext()) {
 					$recStructId =& $recStructSet->next();
 					if ($recStructId->getIdString() == 'FILE')
@@ -657,6 +659,7 @@ class multieditAction
 	 * @since 10/24/05
 	 */
 	function updateAssetRecords (&$results, &$initialState, &$recStructId, &$asset) {
+		printpre("<hr>updateAssetRecords:".$asset->getDisplayName());
 		$records =& $asset->getRecordsByRecordStructure($recStructId);
 		if (!$records->hasNext()) {
 			$record =& $asset->createRecord($recStructId);
