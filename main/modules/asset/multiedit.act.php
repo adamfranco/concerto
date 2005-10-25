@@ -115,24 +115,86 @@ class multieditAction
 // 		$asset =& $this->getAsset();
 		$wizard =& $this->getWizard($cacheName);
 				
-		$properties =& $wizard->getAllValues();
-		printpre($properties);
-		exit;
-// 			
-// 		// Update the name and description
-// 		$asset->updateDisplayName($properties['namedescstep']['display_name']);
-// 		$asset->updateDescription($properties['namedescstep']['description']);
-// 		$content =& Blob::withValue($properties['contentstep']['content']);
-// 		$asset->updateContent($content);
-// 		
-// 		
-// 		// Update the effective/expiration dates
-// 		if ($properties['datestep']['effective_date'])
-// 			$asset->updateEffectiveDate(
-// 				DateAndTime::fromString($properties['datestep']['effective_date']));
-// 		if ($properties['datestep']['expiration_date'])
-// 			$asset->updateExpirationDate(
-// 				DateAndTime::fromString($properties['datestep']['expiration_date']));
+		$results =& $wizard->getAllValues();
+		$initialState =& $wizard->initialState;
+				
+		// Go through all of the assets and update all of the values if they have
+		// changed.
+		$idManager =& Services::getService("Id");
+	 	$repository =& $this->getRepository();
+	 	
+	 	$assets = array();
+	 	$assetIds = explode(",", RequestContext::value("assets"));
+	 	
+	 	foreach ($assetIds as $idString) {
+			// @todo Check AuthN
+			if (true) {
+				$asset =& $repository->getAsset($idManager->getId($idString));
+				
+				// DisplayName
+				if ($results['assetproperties']['display_name']['checked'] == '1'
+					&& $asset->getDisplayName() != $results['assetproperties']['display_name']['value']) 
+				{
+					$asset->updateDisplayName($results['assetproperties']['display_name']['value']);
+				}
+				
+				// Description
+				if ($results['assetproperties']['description']['checked'] == '1'
+					&& $asset->getDescription() != $results['assetproperties']['description']['value']) 
+				{
+					$asset->updateDescription($results['assetproperties']['description']['value']);
+				}
+				
+				// Effective Date
+				if ($results['assetproperties']['effective_date']['checked'] == '1') {
+					$effDate =& $asset->getEffectiveDate();
+					$newEffDate =& DateAndTime::fromString($results['assetproperties']['effective_date']['value']);
+					if (is_object($effDate) && !$effDate->isEqualTo($newEffDate))
+						$asset->updateEffectiveDate($newEffDate);
+				}
+				
+				// Expiration Date
+				if ($results['assetproperties']['expiration_date']['checked'] == '1') {
+					$expDate =& $asset->getEffectiveDate();
+					$newExpDate =& DateAndTime::fromString($results['assetproperties']['expiration_date']['value']);
+					if (is_object($expDate) && !$expDate->isEqualTo($newExpDate))
+						$asset->updateEffectiveDate($newExpDate);
+				}
+				
+				// Content 
+				if ($results['contentstep']['content']['checked'] == '1') {
+					$content =& $asset->getContent();
+					$newContent =& Blob::withValue($results['contentstep']['content']['value']);
+					if (is_object($content) && !$content->isEqualTo($newContent))
+						$asset->updateContent($newContent);
+				}
+				
+				// Records
+				$repository =& $this->getRepository();
+				$repositoryId =& $this->getRepositoryId();
+				
+				// Get the set of RecordStructures so that we can print them in order.
+				$setManager =& Services::getService("Sets");
+				$recStructSet =& $setManager->getPersistentSet($repositoryId);
+				
+				// First, lets go through the info structures listed in the set and print out
+				// the info records for those structures in order.
+				while ($recStructSet->hasNext()) {
+					$recStructId =& $recStructSet->next();
+					if ($recStructId->getIdString() == 'FILE')
+						continue;
+					
+					if ($this->hasChangedParts($results, $initialState, $recStructId)) {
+						$this->updateAssetRecords($results, $initialState, $recStructId, $asset);
+					}
+					
+				}
+			}
+	 	}
+		
+		
+// 		printpre($results);
+// 		exit;
 		
 		return TRUE;
 	}
@@ -333,41 +395,6 @@ class multieditAction
 		ob_end_clean();
 		
 		
-	/*********************************************************
-	 *  :: Content ::
-	 *********************************************************/
-		$step =& $wizard->addStep("contentstep", new WizardStep());
-		$step->setDisplayName(_("Content")." ("._("optional").")");
-		
-		$vProperty =& $step->addComponent("content", new WVerifiedChangeInput);
-		$property =& $vProperty->setInputComponent(new WTextArea);
-		$property->setRows(20);
-		$property->setColumns(70);
-		
-		$content =& $assets[0]->getContent();
-		$multipleExist = FALSE;
-		for ($i = 1; $i < count($assets); $i++) {
-			if ($content->isEqualTo($assets[$i]->getContent())) {
-				$multipleExist = TRUE;
-				break;
-			}
-		}
-		if ($multipleExist) {
-			$property->setStartingDisplayText($multExistString);
-		} else {
-			$vProperty->setChecked(true);
-	 		$property->setValue($content->asString());
-	 	}
-		
-		// Create the step text
-		ob_start();
-		print "\n<h2>"._("Content")."</h2>";
-		print "\n"._("This is an optional place to put content for this <em>Asset</em>. <br />If you would like more structure, you can create new schemas to hold the <em>Asset's</em> data.");
-		print "\n<br />[[content]]";
-		print "\n<div style='width: 400px'> &nbsp; </div>";
-		$step->setContent(ob_get_contents());
-		ob_end_clean();
-		
 		
 	/*********************************************************
 	 *  :: Record Structures ::
@@ -559,7 +586,237 @@ class multieditAction
 			$step->setContent(ob_get_contents());
 			ob_end_clean();
 		}
+		
+	/*********************************************************
+	 *  :: Content ::
+	 *********************************************************/
+		$step =& $wizard->addStep("contentstep", new WizardStep());
+		$step->setDisplayName(_("Content")." ("._("optional").")");
+		
+		$vProperty =& $step->addComponent("content", new WVerifiedChangeInput);
+		$property =& $vProperty->setInputComponent(new WTextArea);
+		$property->setRows(20);
+		$property->setColumns(70);
+		
+		$content =& $assets[0]->getContent();
+		$multipleExist = FALSE;
+		for ($i = 1; $i < count($assets); $i++) {
+			if ($content->isEqualTo($assets[$i]->getContent())) {
+				$multipleExist = TRUE;
+				break;
+			}
+		}
+		if ($multipleExist) {
+			$property->setStartingDisplayText($multExistString);
+		} else {
+			$vProperty->setChecked(true);
+	 		$property->setValue($content->asString());
+	 	}
+		
+		// Create the step text
+		ob_start();
+		print "\n<h2>"._("Content")."</h2>";
+		print "\n"._("This is an optional place to put content for this <em>Asset</em>. <br />If you would like more structure, you can create new schemas to hold the <em>Asset's</em> data.");
+		print "\n<br />[[content]]";
+		print "\n<div style='width: 400px'> &nbsp; </div>";
+		$step->setContent(ob_get_contents());
+		ob_end_clean();
+		
+		$wizard->initialState = $wizard->getAllValues();
 	
 		return $wizard;
+	}
+	
+	/**
+	 * Answer true if some of the parts were changed in this record
+	 * 
+	 * @param array $results, the wizard results
+	 * @param array $initialState, the initial wizard results
+	 * @param object Id $recStructId
+	 * @return boolean
+	 * @access public
+	 * @since 10/24/05
+	 */
+	function hasChangedParts ( &$results, &$initialState, &$recStructId ) {
+		if ($results[$recStructId->getIdString()] != $initialState[$recStructId->getIdString()])
+			return TRUE;
+		
+		return FALSE;
+	}
+	
+	/**
+	 * Update the records for the recStructId for the asset based on the results
+	 * from the wizard.
+	 * 
+	 * @param array $results, the wizard results
+	 * @param array $initialState, the initial wizard results
+	 * @param object Id $recStructId
+	 * @param object Asset $asset
+	 * @return void
+	 * @access public
+	 * @since 10/24/05
+	 */
+	function updateAssetRecords (&$results, &$initialState, &$recStructId, &$asset) {
+		$records =& $asset->getRecordsByRecordStructure($recStructId);
+		if (!$records->hasNext()) {
+			$record =& $asset->createRecord($recStructId);
+			$this->updateRecord($results, $initialState, $record);
+		} else {
+			while ($records->hasNext()) {
+				$this->updateRecord($results, $initialState, $records->next());
+			}
+		}
+	}
+	
+	/**
+	 * Update the given record to reflect the values changed in the wizard
+	 * 
+	 * @param array $results, the wizard results
+	 * @param array $initialState, the initial wizard results
+	 * @param object Record $record
+	 * @return void
+	 * @access public
+	 * @since 10/24/05
+	 */
+	function updateRecord (&$results, &$initialState, &$record) {
+		$recStruct =& $record->getRecordStructure();
+
+		$recStructId =& $recStruct->getId();
+		$recStructIdString = str_replace(".", "_", $recStructId->getIdString());
+		
+		$partStructs =& $recStruct->getPartStructures();
+		while ($partStructs->hasNext()) {
+			$partStruct =& $partStructs->next();
+			
+			$partStructId = $partStruct->getId();
+			$partStructIdString = str_replace(".", "_", $partStructId->getIdString());
+			
+			if ($partStruct->isRepeatable()) {
+				$this->updateRepeatablePart(
+					$results[$recStructIdString][$partStructIdString], 
+					$initialState[$recStructIdString][$partStructIdString], 
+					$partStruct, $record);
+			} else {
+				$this->updateSingleValuedPart(
+					$results[$recStructIdString][$partStructIdString],
+					$initialState[$recStructIdString][$partStructIdString], 
+					$partStruct, $record);
+			}
+		}
+	}
+	
+	/**
+	 * Update the given single valued part to reflect the value changed in the wizard
+	 * 
+	 * @param array $results, the wizard results
+	 * @param array $initialState, the initial wizard results
+	 * @param object Record $record
+	 * @return void
+	 * @access public
+	 * @since 10/24/05
+	 */
+	function updateSingleValuedPart (&$partResults, &$partInitialState, 
+		&$partStruct, &$record) 
+	{
+		$partStructId = $partStruct->getId();
+		
+		if ($partResults['checked'] == '1'
+			&& ($partInitialState['checked'] =='0'
+				|| $partResults['value'] != $partInitialState['value']))
+		{
+			$parts =& $record->getPartsByPartStructure($partStructId);
+			$part =& $parts->next();
+			$part->updateValue(String::withvalue($partResults['value']));
+		}
+	}
+	
+	/**
+	 * Update the given repeatable part to reflect the value changed in the wizard.
+	 *
+	 * For "Value from Wizard" = wizVal and  "value originally in Part" = partVal
+	 *	- If a partVal exists and is equal to a wizVal, leave it alone
+	 *	- If a partVal exists, but is not equal to any wizVals, remove it.
+	 *	- If a wizVal exists, but no partVals equal to it exist, add a new Part
+	 * 
+	 * @param array $results, the wizard results
+	 * @param array $initialState, the initial wizard results
+	 * @param object Record $record
+	 * @return void
+	 * @access public
+	 * @since 10/24/05
+	 */
+	function updateRepeatablePart (&$partResults, &$partInitialState, 
+		&$partStruct, &$record) 
+	{
+		$partStructId = $partStruct->getId();
+		$partValsHandled = array();
+		
+		$parts =& $record->getPartsByPartStructure($partStructId);
+		while ($parts->hasNext()) {
+			$part =& $parts->next();
+			$partVal =& $part->getValue();
+			$partStrVal = $partVal->asString();
+			
+			// Check for existance in the results.
+			// if the value is not in the results, remove the part and continue.
+			if (!$this->inWizArray($partStrVal, 'value', $partResults)) {
+				$record->deletePart($part->getId());
+				$partValsHandled[] = $partStrVal;
+				
+				$partId =& $part->getId();
+				printpre("\tDeleting Part: Id: ".$partId->getIdString()." Value: ".$partStrVal);
+				
+				continue;
+			}
+			
+			// If the value is in the wizard results, do nothing
+			$partValsHandled[] = $partStrVal;
+			
+			$partId =& $part->getId();
+			printpre("\tIgnoring Part: Id: ".$partId->getIdString()." Value: ".$partStrVal);
+			
+			continue;
+		}
+		
+		// Go through all of the Wizard result values. If any of them haven't
+		// been handled and need to be, add them.
+		foreach ($partResults as $key => $valueArray) {
+			$checked = ($valueArray['partvalue']['checked'] == '1')?true:false;
+			$valueStr = $valueArray['partvalue']['value'];
+			
+			if ($checked && !in_array($valueStr, $partValsHandled)) {
+				$part =& $record->createPart($partStructId, String::withvalue($valueArray['partvalue']['value']));
+				
+				$partId =& $part->getId();
+				printpre("\tAdding Part: Id: ".$partId->getIdString()." Value: ".$partStrVal);
+			}
+		}
+	}
+	
+	/**
+	 * Answer true if the wizard results array contains the value for the 
+	 * specified key.
+	 * 
+	 * @param string $val
+	 * @param string $key
+	 * @param array $parentArray
+	 * @return boolean
+	 * @access public
+	 * @since 10/25/05
+	 */
+	function inWizArray ($val, $key, $parentArray) {
+		foreach ( $parentArray as $i => $componentArray ) {
+			foreach ($componentArray as $j => $subComponentArray) {
+				if ($j == $key && $subComponentArray == $val)
+					return TRUE;
+				else if (is_array($subComponentArray) 
+					&& isset($subComponentArray[$key])
+					&& $subComponentArray[$key] == $val)
+				{
+					return TRUE;
+				}
+			}
+		}
+		return FALSE;
 	}
 }
