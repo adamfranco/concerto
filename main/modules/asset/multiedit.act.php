@@ -332,7 +332,7 @@ class multieditAction
 		$multipleExist = FALSE;
 		for ($i = 1; $i < count($assets); $i++) {
 			if (($date && !$value->isEqualTo($assets[$i]->getExpirationDate()))
-				|| (!$date && $assets[$i]->getEffectiveDate()))
+				|| (!$date && $assets[$i]->getExpirationDate()))
 			{
 				$multipleExist = TRUE;
 				break;
