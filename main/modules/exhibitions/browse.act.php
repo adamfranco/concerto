@@ -82,23 +82,23 @@ class browseAction
 		print  "</p>";
 		
 		$authZ =& Services::getService("AuthZ");
+	//===== Create Link =====//
 		if ($authZ->isUserAuthorized(
 			$idManager->getId("edu.middlebury.authorization.add_children"), 
-			$exhibitionRepositoryId)) 
-		{
+			$exhibitionRepositoryId)) {
 			print  "\n<p>";
-			print "\n\t<a href='";
-			print $harmoni->request->quickURL("exhibitions","create_exhibition");
-			print "'>"._("Create a new <em>Exhibition</em>")."</a>";
+			print "\n\t<a href='".$harmoni->request->quickURL(
+				"exhibitions","create_exhibition")."'>".
+				_("Create a new <em>Exhibition</em>")."</a>";
+	//===== Import Link =====//
 			$harmoni->request->startNamespace("import");
 			print  "\t|\t<a href='".
 				$harmoni->request->quickURL("exhibitions", "import_exhibition").
 				"'>".
-				_("Import an <em>Exhibition</em>").
+				_("Import <em>Exhibition(s)</em>").
 				"</a>";
 			$harmoni->request->endNamespace();
 			print  "\n</p>";
-
 		}
 		
 		$introText =& new Block(ob_get_contents(), 3);

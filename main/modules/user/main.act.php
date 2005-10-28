@@ -95,15 +95,13 @@ class mainAction
 				
 			if ($authNManager->isUserAuthenticated($authType)) {
 				$url = $harmoni->request->quickURL(
-					"auth",
-					"logout_type",
+					"auth", "logout_type",
 					array("type"=>urlencode($typeString))
 				);
 				print "<a href='".$url."'>Log Out</a>";
 			} else {
 				$url = $harmoni->request->quickURL(
-					"auth",
-					"login_type",
+					"auth", "login_type",
 					array("type"=>urlencode($typeString))
 				);
 				print "<a href='".$url."'>Log In</a>";

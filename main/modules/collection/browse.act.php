@@ -199,7 +199,7 @@ class browseAction
 			$this->printSelectOption("num_per_page", $defaultNumPerPage, $i);
 		print "\n\t</select>";
 		
-		print "\n\t\t"._("Columns").": ";
+		print "\n\t\t<br/>"._("Columns").": ";
 		
 		if (isset($_SESSION["assetColumns"]))
 			$defaultCols = $_SESSION["assetColumns"];

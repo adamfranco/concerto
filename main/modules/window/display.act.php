@@ -130,7 +130,7 @@ class displayAction
 				"logout")."'>"._("Log Out")."</a></small></div>";
 		} else {
 			// set bookmarks for success and failure
-			$harmoni->history->markReturnURL("polyphony/login");
+			$harmoni->history->markReturnURL("polyphony/display_login");
 			$harmoni->history->markReturnURL("polyphony/login_fail",
 				$harmoni->request->quickURL("user", "main"));
 
