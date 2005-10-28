@@ -183,12 +183,10 @@ class editAction
 	 */
 	function updateAssetContent ( &$results, &$asset ) {
 		// Content 
-		if ($results['checked'] == '1') {
-			$content =& $asset->getContent();
-			$newContent =& Blob::withValue($results['value']);
-			if (is_object($content) && !$content->isEqualTo($newContent))
-				$asset->updateContent($newContent);
-		}
+		$content =& $asset->getContent();
+		$newContent =& Blob::withValue($results);
+		if (is_object($content) && !$content->isEqualTo($newContent))
+			$asset->updateContent($newContent);
 	}
 	
 	/**
@@ -287,8 +285,6 @@ class editAction
 				
 		$property =& $repeatableProperty->addComponent('partvalue',
 				$this->getComponentForPartStruct($partStruct));
-// 		$property->setSize(50);
-// 		$property->setReadOnly(true);
 		
 		ob_start();
 		print "\n\t\t\t<div>";
@@ -353,6 +349,125 @@ class editAction
 		} else {
 			$part =& $parts->next();
 			return $part->getValue();
+		}
+	}
+	
+	/**
+	 * Update the records for the recStructId for the asset based on the results
+	 * from the wizard.
+	 * 
+	 * @param array $results, the wizard results
+	 * @param array $initialState, the initial wizard results
+	 * @param object Id $recStructId
+	 * @param object Asset $asset
+	 * @return void
+	 * @access public
+	 * @since 10/24/05
+	 */
+	function updateAssetRecords (&$results, &$initialState, &$recStructId, &$asset) {
+		printpre("<hr>updateAssetRecords:".$asset->getDisplayName());
+		
+		$recStructIdString = str_replace(".", "_", $recStructId->getIdString());
+		$idManager =& Services::getService("Id");
+		
+		foreach (array_keys($results[$recStructIdString]['records']) as $i) {
+			$recordResults =& $results[$recStructIdString]['records'][$i];
+			if ($recordResults['record_id']) {
+				$record =& $asset->getRecord($idManager->getId($recordResults['record_id']));
+			} else {
+				$record =& $asset->createRecord($recStructId);
+			}
+			
+			$this->updateRecord($recordResults, 
+				$initialState[$recStructIdString]['records'][$i], $record);
+		}
+	}
+	
+	/**
+	 * Update the given single valued part to reflect the value changed in the wizard
+	 * 
+	 * @param array $results, the wizard results
+	 * @param array $initialState, the initial wizard results
+	 * @param object Record $record
+	 * @return void
+	 * @access public
+	 * @since 10/24/05
+	 */
+	function updateSingleValuedPart (&$partResults, &$partInitialState, 
+		&$partStruct, &$record) 
+	{
+		$partStructId = $partStruct->getId();
+		
+		$partStructType =& $partStruct->getType();
+		$valueObjClass =& $partStructureType->getKeyword();
+		
+		if ($partResults['partvalue'] != $partInitialState['partvalue'])
+		{
+			$parts =& $record->getPartsByPartStructure($partStructId);
+			$part =& $parts->next();
+			$part->updateValue(String::withvalue($partResults['partvalue']));
+		}
+	}
+	
+	/**
+	 * Update the given repeatable part to reflect the value changed in the wizard.
+	 *
+	 * For "Value from Wizard" = wizVal and  "value originally in Part" = partVal
+	 *	- If a partVal exists and is equal to a wizVal, leave it alone
+	 *	- If a partVal exists, but is not equal to any wizVals, remove it.
+	 *	- If a wizVal exists, but no partVals equal to it exist, add a new Part
+	 * 
+	 * @param array $results, the wizard results
+	 * @param array $initialState, the initial wizard results
+	 * @param object Record $record
+	 * @return void
+	 * @access public
+	 * @since 10/24/05
+	 */
+	function updateRepeatablePart (&$partResults, &$partInitialState, 
+		&$partStruct, &$record) 
+	{
+		$partStructId = $partStruct->getId();
+		$partValsHandled = array();
+		
+		$parts =& $record->getPartsByPartStructure($partStructId);
+		while ($parts->hasNext()) {
+			$part =& $parts->next();
+			$partVal =& $part->getValue();
+			$partStrVal = $partVal->asString();
+			
+			// Check for existance in the results.
+			// if the value is not in the results, remove the part and continue.
+			if (!$this->inWizArray($partVal, 'partvalue', $partResults)) {
+				$record->deletePart($part->getId());
+				$partValsHandled[] = $partStrVal;
+				
+				$partId =& $part->getId();
+				printpre("\tDeleting Part: Id: ".$partId->getIdString()." Value: ".$partStrVal);
+				
+				continue;
+			}
+			
+			// If the value is in the wizard results, do nothing
+			$partValsHandled[] = $partStrVal;
+			
+			$partId =& $part->getId();
+			printpre("\tIgnoring Part: Id: ".$partId->getIdString()." Value: ".$partStrVal);
+			
+			continue;
+		}
+		
+		// Go through all of the Wizard result values. If any of them haven't
+		// been handled and need to be, add them.
+		foreach ($partResults as $key => $valueArray) {
+			$valueStr = $valueArray['partvalue']->asString();
+			
+			if (!in_array($valueStr, $partValsHandled)) {
+				$part =& $record->createPart($partStructId, $valueArray['partvalue']);
+				
+				$partId =& $part->getId();
+				printpre("\tAdding Part: Id: ".$partId->getIdString()." Value: ".$valueStr);
+			}
 		}
 	}
 }

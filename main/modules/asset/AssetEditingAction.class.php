@@ -437,13 +437,18 @@ class AssetEditingAction
 	 */
 	function updateAssetRecords (&$results, &$initialState, &$recStructId, &$asset) {
 		printpre("<hr>updateAssetRecords:".$asset->getDisplayName());
+		
+		$recStructIdString = str_replace(".", "_", $recStructId->getIdString());
+		
 		$records =& $asset->getRecordsByRecordStructure($recStructId);
 		if (!$records->hasNext()) {
 			$record =& $asset->createRecord($recStructId);
-			$this->updateRecord($results, $initialState, $record);
+			$this->updateRecord($results[$recStructIdString], 
+				$initialState[$recStructIdString], $record);
 		} else {
 			while ($records->hasNext()) {
-				$this->updateRecord($results, $initialState, $records->next());
+				$this->updateRecord($results[$recStructIdString], 
+				$initialState[$recStructIdString], $records->next());
 			}
 		}
 	}
@@ -460,9 +465,6 @@ class AssetEditingAction
 	 */
 	function updateRecord (&$results, &$initialState, &$record) {
 		$recStruct =& $record->getRecordStructure();
-
-		$recStructId =& $recStruct->getId();
-		$recStructIdString = str_replace(".", "_", $recStructId->getIdString());
 		
 		$partStructs =& $recStruct->getPartStructures();
 		while ($partStructs->hasNext()) {
@@ -473,13 +475,13 @@ class AssetEditingAction
 			
 			if ($partStruct->isRepeatable()) {
 				$this->updateRepeatablePart(
-					$results[$recStructIdString][$partStructIdString], 
-					$initialState[$recStructIdString][$partStructIdString], 
+					$results[$partStructIdString], 
+					$initialState[$partStructIdString], 
 					$partStruct, $record);
 			} else {
 				$this->updateSingleValuedPart(
-					$results[$recStructIdString][$partStructIdString],
-					$initialState[$recStructIdString][$partStructIdString], 
+					$results[$partStructIdString],
+					$initialState[$partStructIdString], 
 					$partStruct, $record);
 			}
 		}
