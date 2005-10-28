@@ -90,7 +90,11 @@ class CollectionsPrinter {
 			
 			
 /******************* FOR EXPORTING ALL THE COLLECTIONS??? ****************/	
-		if (/*admin*/FALSE) {
+		$authZ =& Services::getService("AuthZ");
+		$idManager =& Services::getService("Id");
+		if ($authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.add_children"),
+				$idManager->getId("edu.middlebury.authorization.root"))) {
 			$harmoni->request->startNamespace('export');
 			if ($actionString != "collections.export") {
 				$links[] = "<a href='".$harmoni->request->quickURL(

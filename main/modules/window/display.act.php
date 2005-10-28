@@ -120,19 +120,20 @@ class displayAction
 			}
 		}
 		if ($users != '') {
-			print "\n<div style='text-align: right'><small>".
-				_("Users: ").$users."\t".
-				"<a href='".$harmoni->request->quickURL("auth", "logout")."'>".
-				_("Log Out")."</a></small></div>";
+			print "\n<div style='text-align: right'><small>";
+			if (count(explode("+", $users)) == 1)
+				print _("User: ").$users."\t";
+			else 
+				print _("Users: ").$users."\t";
+			
+			print "<a href='".$harmoni->request->quickURL("auth",
+				"logout")."'>"._("Log Out")."</a></small></div>";
 		} else {
 			// set bookmarks for success and failure
 			$harmoni->history->markReturnURL("polyphony/login");
 			$harmoni->history->markReturnURL("polyphony/login_fail",
 				$harmoni->request->quickURL("user", "main"));
 
-			$allType = new Type("Authentication", "edu.middlebury.harmoni", 
-				"All");
-			$allTypeString = HarmoniType::typeToString($allType);
 			$harmoni->request->startNamespace("harmoni-authentication");
 			$usernameField = $harmoni->request->getName("username");
 			$passwordField = $harmoni->request->getName("password");
