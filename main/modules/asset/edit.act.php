@@ -87,25 +87,27 @@ class editAction
 		$property =& $step->addComponent("display_name", new WTextField);
 		$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
-		$property->setSize(50);
+		$property->setSize(40);
 
 		$property->setValue($this->_assets[0]->getDisplayName());
 		
 	// Description	
 		$property =& $step->addComponent("description", new WTextArea);
 		$property->setRows(3);
-		$property->setColumns(50);
+		$property->setColumns(40);
 		
 		$property->setValue($this->_assets[0]->getDescription());
 				
 	// Effective Date
 		$property =& $step->addComponent("effective_date", new WTextField);
+		$property->setSize(40);
 		$date =& $this->_assets[0]->getEffectiveDate();
 		if (is_object($date))
 			$property->setValue($date->yyyymmddString());
 	
 	// Expiration Date
 		$property =& $step->addComponent("expiration_date", new WTextField);
+		$property->setSize(40);
 		$date =& $this->_assets[0]->getExpirationDate();
 		if (is_object($date))
 			$property->setValue($date->yyyymmddString());

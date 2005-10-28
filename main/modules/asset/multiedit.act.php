@@ -89,7 +89,7 @@ class multieditAction
 		$property =& $vProperty->setInputComponent(new WTextField);
 		$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
-		$property->setSize(50);
+		$property->setSize(40);
 
 		$value = $this->_assets[0]->getDisplayName();
 		$multipleExist = FALSE;
@@ -110,7 +110,7 @@ class multieditAction
 		$vProperty =& $step->addComponent("description", new WVerifiedChangeInput);
 		$property =& $vProperty->setInputComponent(new WTextArea);
 		$property->setRows(3);
-		$property->setColumns(50);
+		$property->setColumns(40);
 		
 		$value = $this->_assets[0]->getDescription();
 		$multipleExist = FALSE;
@@ -130,6 +130,7 @@ class multieditAction
 	// Effective Date
 		$vProperty =& $step->addComponent("effective_date", new WVerifiedChangeInput);
 		$property =& $vProperty->setInputComponent(new WTextField);
+		$property->setSize(40);
 	
 		$date =& $this->_assets[0]->getEffectiveDate();
 		$multipleExist = FALSE;
@@ -154,6 +155,7 @@ class multieditAction
 	// Expiration Date
 		$vProperty =& $step->addComponent("expiration_date", new WVerifiedChangeInput);
 		$property =& $vProperty->setInputComponent(new WTextField);
+		$property->setSize(40);
 				
 		$date =& $this->_assets[0]->getExpirationDate();
 		$multipleExist = FALSE;
@@ -341,10 +343,6 @@ class multieditAction
 // 		$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 // 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		
-		$hasMethods =& HasMethodsValidatorRule::getRule("setSize");
-		if ($hasMethods->check($property))
-			$property->setSize(40);
-		
 		return $property;
 	}
 	
@@ -369,10 +367,6 @@ class multieditAction
 		
 		$property =& $property->setInputComponent(
 			$this->getComponentForPartStruct($partStruct));
-
-		$hasMethods =& HasMethodsValidatorRule::getRule("setSize");
-		if ($hasMethods->check($property))
-			$property->setSize(40);
 		
 		ob_start();
 		print "\n\t\t\t<div>";

@@ -397,7 +397,13 @@ class AssetEditingAction
 		$dataType = $partStructType->getKeyword();
 		
 		// get the correct component for this data type
-		return  PrimitiveIOManager::createComponent($dataType);
+		$component =& PrimitiveIOManager::createComponent($dataType);
+
+		$hasMethods =& HasMethodsValidatorRule::getRule("setSize");
+		if ($hasMethods->check($component))
+			$component->setSize(40);
+		
+		return $component;
 	}
 	
 	/**
