@@ -39,7 +39,12 @@ class importAction extends MainWindowAction {
 	 * @since 6/08/05
 	 */
 	function isAuthorizedToExecute () {
-		return TRUE;
+		$authZ =& Services::getService("AuthZ");
+		$idManager =& Services::getService("Id");
+
+		return $authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.add_children"),
+				$idManager->getId("edu.middlebury.authorization.root"));
 	}
 
 	/**

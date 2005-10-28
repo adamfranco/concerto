@@ -35,7 +35,13 @@ class change_passwordAction
 	 * @since 4/26/05
 	 */
 	function isAuthorizedToExecute () {
-		return TRUE;
+		$authN =& Services::getService("AuthN");
+		return $authN->isUserAuthenticated(new Type ("Authentication", 
+			"edu.middlebury.harmoni", "Concerto DB"));
+	}
+	
+	function getUnauthorizedMessage() {
+		return _("You must be currently Authenticated under ConcertoDB");
 	}
 	
 	/**
@@ -78,6 +84,7 @@ class change_passwordAction
 	 * @since 10/24/05
 	 */
 	function &createWizard() {
+		$harmoni =& Harmoni::Instance();
 		$wizard =& SimpleWizard::withText(
 			"\n<h2>"._("Old Password")."</h2>".
 			"\n<br \>[[old_password]]".
@@ -93,13 +100,16 @@ class change_passwordAction
 			"<td align='right' width='50%'>\n".
 			"[[_save]]".
 			"</td></tr></table>");
+		$error = $harmoni->request->get("error");
+		if (!is_null($error))
+			print $error;
 			
-		$pass1 =& $wizard->addComponent("old_password", new WPasswordField());
-		$pass2 =& $wizard->addComponent("new_password", new WPasswordField());
-		$pass3 =& $wizard->addComponent("n_p_again", new WPasswordField());
+		$pass =& $wizard->addComponent("old_password", new WPasswordField());
+		$pass =& $wizard->addComponent("new_password", new WPasswordField());
+		$pass =& $wizard->addComponent("n_p_again", new WPasswordField());
 		
 		$save =& $wizard->addComponent("_save", 
-			WSaveButton::withLabel("Change Password"));
+			WSaveButton::withLabel("Click to Change Password!!"));
 		$cancel =& $wizard->addComponent("_cancel", new WCancelButton());
 
 		return $wizard;
@@ -127,7 +137,7 @@ class change_passwordAction
 			"Concerto DB");		
 		$id =& $authN->getUserId($dbAuthType);
 		$it =& $tokenM->getMappingsForAgentId($id);
-		
+
 		while ($it->hasNext()) {
 			$mapping =& $it->next();
 			
@@ -136,7 +146,8 @@ class change_passwordAction
 		}
 		if (isset($tokens)) {
 			$uname = $tokens->getUsername();
-			if ($properties['new_password'] == $properties['n_p_again']) {
+			if (($properties['new_password'] != '') && 
+				($properties['new_password'] == $properties['n_p_again'])) {
 				$authNMethodManager =&
 					Services::getService("AuthNMethodManager");
 				$dbAuthMethod =&
@@ -145,7 +156,7 @@ class change_passwordAction
 				$t_array = array("username" => $uname, 
 					"password" => $properties['new_password']);
 				$authNTokens =& $dbAuthMethod->createTokens($t_array);
-				// Add it to the system
+				// Add it to the system and login with new password
 				if ($dbAuthMethod->supportsTokenUpdates()) {
 					$dbAuthMethod->updateTokens($tokens, $authNTokens);
 					$harmoni->request->startNamespace("harmoni-authentication");
@@ -156,10 +167,14 @@ class change_passwordAction
 					$authN->authenticateUser($dbAuthType);
 					return TRUE;
 				}
-			}		
-		 } else {
-		 	print "Sorry, something didn't work, please try again";
-			return FALSE;
+				
+			} else 
+				$error = "Invalid new password, try again<br />\n";
+		 } 
+		 if (isset($error)) {	
+		 	$this->closeWizard($cacheName);
+		 	RequestContext::locationHeader($harmoni->request->quickURL("user",
+		 		"change_password", array("error" => $error)));
 		}
 	}
 	
@@ -175,6 +190,5 @@ class change_passwordAction
 		
 		return $harmoni->request->quickURL("user", "main");
 	}
-
 }
 ?>

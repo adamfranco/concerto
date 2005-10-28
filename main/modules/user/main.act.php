@@ -9,6 +9,8 @@
  */ 
 
 require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
+require_once(HARMONI."GUIManager/Container.class.php");
+require_once(HARMONI."GUIManager/Layouts/YLayout.class.php");
 
 /**
  * 
@@ -58,6 +60,66 @@ class mainAction
 
 		$actionRows->add(new Block("<span style='font-size: larger'><b>".
 			_("Authentication")."</b></span>" , 3));
+		
+		// Current AuthN Table
+		ob_start();
+		$authNManager =& Services::getService("AuthN");
+		$agentManager =& Services::getService("Agent");
+		$authTypes =& $authNManager->getAuthenticationTypes();
+		print "\n<table border='2' align='left'>";
+		print "\n\t<tr><th colspan='3'><center>";
+		print _("Current Authentications: ");
+		print "</center>\n\t</th></tr>";
+		
+		while($authTypes->hasNextType()) {
+			$authType =& $authTypes->nextType();
+			$typeString = HarmoniType::typeToString($authType);
+			print "\n\t<tr>";
+			print "\n\t\t<td><small>";
+			print "<a href='#' title='$typeString' onclick='alert(\"$typeString\")'>";
+			print $authType->getKeyword();
+			print "</a>";
+			print "\n\t\t</small></td>";
+			print "\n\t\t<td><small>";
+			$userId =& $authNManager->getUserId($authType);
+			$userAgent =& $agentManager->getAgent($userId);
+			print '<a title=\''._("Agent Id").': '.$userId->getIdString().'\' onclick=\'Javascript:alert("'._("Agent Id").':\n\t'.$userId->getIdString().'");\'>';
+			print $userAgent->getDisplayName();
+			print "</a>";
+			print "\n\t\t</small></td>";
+			print "\n\t\t<td><small>";
+			
+			$harmoni->request->startNamespace("polyphony");
+			// set where we are before login 
+			$harmoni->history->markReturnURL("polyphony/login");
+				
+			if ($authNManager->isUserAuthenticated($authType)) {
+				$url = $harmoni->request->quickURL(
+					"auth",
+					"logout_type",
+					array("type"=>urlencode($typeString))
+				);
+				print "<a href='".$url."'>Log Out</a>";
+			} else {
+				$url = $harmoni->request->quickURL(
+					"auth",
+					"login_type",
+					array("type"=>urlencode($typeString))
+				);
+				print "<a href='".$url."'>Log In</a>";
+			}
+			$harmoni->request->endNamespace();
+			
+			print "\n\t\t</small></td>";
+			print "\n\t</tr>";
+		}
+		print "\n</table>";
+
+		$statusBar =& new Block(ob_get_contents(),3);
+		$actionRows->add($statusBar,null,null,RIGHT,TOP);
+		ob_end_clean();
+
+
 		
 		ob_start();
 		print "\n<ul>".

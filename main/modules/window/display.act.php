@@ -71,8 +71,6 @@ class displayAction
 							style='border: 0px;' alt='"._("Concerto Logo'"). "/> </a>",2);
 		$headRow->add($logo, null, null, LEFT, TOP);
 		
-		
-		
 		// Language Bar
 		$harmoni->history->markReturnURL("polyphony/language/change");
 		$languageText = "\n<form action='".$harmoni->request->quickURL("language", "change")."' method='post'>";
@@ -95,69 +93,69 @@ class displayAction
 		$languageBar =& new Block($languageText,2);
 		$headRow->add($languageBar, null, null, LEFT,TOP);
 		
+		// Pretty Login Box
+		$loginRow =& new Container($yLayout, OTHER, 1);
+		$headRow->add($loginRow, null, null, RIGHT, TOP);
 		
-		$statusRow = new Container($yLayout, OTHER, 1);
-		$headRow->add($statusRow,null,null,RIGHT,TOP);
-		
-		
-		// Status Bar
-				ob_start();
-				$authNManager =& Services::getService("AuthN");
-				$agentManager =& Services::getService("Agent");
-				$authTypes =& $authNManager->getAuthenticationTypes();
-				print "\n<table border='2' align='right'>";
-				print "\n\t<tr><th colspan='3'><center>";
-				print _("Current Authentications: ");
-				print "</center>\n\t</th></tr>";
-				
-				while($authTypes->hasNextType()) {
-					$authType =& $authTypes->nextType();
-					$typeString = HarmoniType::typeToString($authType);
-					print "\n\t<tr>";
-					print "\n\t\t<td><small>";
-					print "<a href='#' title='$typeString' onclick='alert(\"$typeString\")'>";
-					print $authType->getKeyword();
-					print "</a>";
-					print "\n\t\t</small></td>";
-					print "\n\t\t<td><small>";
-					$userId =& $authNManager->getUserId($authType);
-					$userAgent =& $agentManager->getAgent($userId);
-					print '<a title=\''._("Agent Id").': '.$userId->getIdString().'\' onclick=\'Javascript:alert("'._("Agent Id").':\n\t'.$userId->getIdString().'");\'>';
-					print $userAgent->getDisplayName();
-					print "</a>";
-					print "\n\t\t</small></td>";
-					print "\n\t\t<td><small>";
-					
-					$harmoni->request->startNamespace("polyphony");
-					
-					if ($this->requestedModule() != 'auth')
-						$harmoni->history->markReturnURL("polyphony/login");
-						
-					if ($authNManager->isUserAuthenticated($authType)) {
-						$url = $harmoni->request->quickURL(
-							"auth",
-							"logout_type",
-							array("type"=>urlencode($typeString))
-						);
-						print "<a href='".$url."'>Log Out</a>";
-					} else {
-						$url = $harmoni->request->quickURL(
-							"auth",
-							"login_type",
-							array("type"=>urlencode($typeString))
-						);
-						print "<a href='".$url."'>Log In</a>";
-					}
-					$harmoni->request->endNamespace();
-					
-					print "\n\t\t</small></td>";
-					print "\n\t</tr>";
+		ob_start();
+		$authN =& Services::getService("AuthN");
+		$agentM =& Services::getService("Agent");
+		$authTypes =& $authN->getAuthenticationTypes();
+		$users = '';
+		while ($authTypes->hasNext()) {
+			$authType =& $authTypes->next();
+			$id =& $authN->getUserId($authType);
+			if ("edu.middlebury.agents.anonymous" != $id->getIdString()) {
+				$agent =& $agentM->getAgent($id);
+				foreach (explode("+", $users) as $user) {
+					if ($agent->getDisplayName() == $user)
+						$exists = true;
 				}
-			print "\n</table>";
+				if (!$exists) {
+					if ($users == '')
+						$users .= $agent->getDisplayName();
+					else
+						$users .= " + ".$agent->getDisplayName();
+				}
+			}
+		}
+		if ($users != '') {
+			print "\n<div style='text-align: right'><small>".
+				_("Users: ").$users."\t".
+				"<a href='".$harmoni->request->quickURL("auth", "logout")."'>".
+				_("Log Out")."</a></small></div>";
+		} else {
+			// set bookmarks for success and failure
+			$harmoni->history->markReturnURL("polyphony/login");
+			$harmoni->history->markReturnURL("polyphony/login_fail",
+				$harmoni->request->quickURL("user", "main"));
+
+			$allType = new Type("Authentication", "edu.middlebury.harmoni", 
+				"All");
+			$allTypeString = HarmoniType::typeToString($allType);
+			$harmoni->request->startNamespace("harmoni-authentication");
+			$usernameField = $harmoni->request->getName("username");
+			$passwordField = $harmoni->request->getName("password");
+			$harmoni->request->endNamespace();
+			$harmoni->request->startNamespace("polyphony");
+			print  "\n<div style='text-align: right'>".
+				"\n<form action='".
+				$harmoni->request->quickURL("auth", "login").
+				"' align='right' method='post'><small>".
+				"\n\t"._("Username:")." <input type='text' size='8' 
+					name='$usernameField'/>".
+				"\n\t"._("Password:")." <input type='password' size ='8' 
+					name='$passwordField'/>".
+				"\n\t <input type='submit' value='Log In' />".
+				"\n</small></form></div>\n";
+			$harmoni->request->endNamespace();
+		}		
 		
-		$statusBar =& new Block(ob_get_contents(),2);
-		$statusRow->add($statusBar,null,null,RIGHT,TOP);
+
+		$loginForm =& new Block(ob_get_contents(), 2);
+		$loginRow->add($loginForm, null, null, RIGHT, TOP);
 		ob_end_clean();
+		
 		//Add the headerRow to the mainScreen
 		$mainScreen->add($headRow, "100%", null, LEFT, TOP);
 		
