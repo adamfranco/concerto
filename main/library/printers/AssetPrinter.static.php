@@ -225,8 +225,12 @@ class AssetPrinter {
 		$idManager =& Services::getService("Id");
 		
 		$checkboxName = RequestContext::name("asset");
-		$editURL = str_replace("&amp;", "&", 
+		
+		$editMultiURL = str_replace("&amp;", "&", 
 			$harmoni->request->quickURL("asset", "multiedit"));
+		$editSingleURL = str_replace("&amp;", "&", 
+			$harmoni->request->quickURL("asset", "edit"));
+		
 		$pleaseSelectString = _("Please select some Assets.");
 		print<<<END
 
@@ -249,21 +253,25 @@ class AssetPrinter {
 	}
 	
 	function editCheckedAssets() {
-		var editURL = '$editURL';
+		var editMultiURL = '$editMultiURL';
+		var editSingleURL = '$editSingleURL';
+		var assetList = '&assets=';
 		var assetElements = document.getElementsByName('$checkboxName');
 		var numChecked = 0;
-		editURL += '&assets='
+		
 		for (var i = 0; i < assetElements.length; i++) {
 			if (!assetElements[i].disabled && assetElements[i].checked == true) {
 				if (numChecked > 0)
-					editURL += ',';
-				editURL += assetElements[i].value;
+					assetList += ',';
+				assetList += assetElements[i].value;
 				numChecked++;
 			}
 		}
 		
-		if (numChecked > 0)
-			window.location = editURL;
+		if (numChecked > 1)
+			window.location = editMultiURL + assetList;
+		else if (numChecked == 1)
+			window.location = editSingleURL + assetList;
 		else
 			alert('$pleaseSelectString');
 	}
