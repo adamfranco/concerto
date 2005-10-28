@@ -102,7 +102,7 @@ the entity.</td>
 				<type>
 					<domain>Repository</domain>
 					<authority>edu.middlebury.concerto</authority>
-					<keyword>string</keyword>
+					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
 			<partstructure xml:id="dc-subject" isRepeatable="TRUE">
@@ -125,7 +125,7 @@ formal classification scheme.</td>
 				<type>
 					<domain>Repository</domain>
 					<authority>edu.middlebury.concerto</authority>
-					<keyword>string</keyword>
+					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
 			<partstructure xml:id="dc-description" isRepeatable="TRUE">
@@ -169,7 +169,7 @@ the entity.</td>
 				<type>
 					<domain>Repository</domain>
 					<authority>edu.middlebury.concerto</authority>
-					<keyword>string</keyword>
+					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
 			<partstructure xml:id="dc-contributor" isRepeatable="TRUE">
@@ -191,7 +191,7 @@ indicate the entity.</td>
 				<type>
 					<domain>Repository</domain>
 					<authority>edu.middlebury.concerto</authority>
-					<keyword>string</keyword>
+					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
 			<partstructure xml:id="dc-date" isRepeatable="TRUE">
@@ -236,7 +236,7 @@ Type Vocabulary [<a href="#dct1">DCT1</a>]). To describe the physical or digital
 				<type>
 					<domain>Repository</domain>
 					<authority>edu.middlebury.concerto</authority>
-					<keyword>string</keyword>
+					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
 			<partstructure xml:id="dc-format" isRepeatable="TRUE">
@@ -261,7 +261,7 @@ Internet Media Types [<a href="#mime">MIME</a>] defining computer media formats)
 				<type>
 					<domain>Repository</domain>
 					<authority>edu.middlebury.concerto</authority>
-					<keyword>string</keyword>
+					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
 			<partstructure xml:id="dc-identifier" isRepeatable="TRUE">
@@ -309,7 +309,7 @@ formal identification system.</td>
 				<type>
 					<domain>Repository</domain>
 					<authority>edu.middlebury.concerto</authority>
-					<keyword>string</keyword>
+					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
 			<partstructure xml:id="dc-language" isRepeatable="TRUE">
@@ -332,7 +332,7 @@ Akkadian", and "en-GB" for English used in the United Kingdom.</td>
 				<type>
 					<domain>Repository</domain>
 					<authority>edu.middlebury.concerto</authority>
-					<keyword>string</keyword>
+					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
 			<partstructure xml:id="dc-relation" isRepeatable="TRUE">
