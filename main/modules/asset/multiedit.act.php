@@ -340,7 +340,10 @@ class multieditAction
 			$this->getComponentForPartStruct($partStruct));
 // 		$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 // 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
-// 		$property->setSize(50);
+		
+		$hasMethods =& HasMethodsValidatorRule::getRule("setSize");
+		if ($hasMethods->check($property))
+			$property->setSize(40);
 		
 		return $property;
 	}
@@ -366,8 +369,10 @@ class multieditAction
 		
 		$property =& $property->setInputComponent(
 			$this->getComponentForPartStruct($partStruct));
-// 		$property->setSize(50);
-// 		$property->setReadOnly(true);
+
+		$hasMethods =& HasMethodsValidatorRule::getRule("setSize");
+		if ($hasMethods->check($property))
+			$property->setSize(40);
 		
 		ob_start();
 		print "\n\t\t\t<div>";
