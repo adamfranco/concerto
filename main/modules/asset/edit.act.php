@@ -234,20 +234,15 @@ class editAction
 		print "\n[[file_upload]]";
 		
 		
-		$component =& $repeatableComponent->addComponent("file_name", new WTextField());
-		
-		$component =& $repeatableComponent->addComponent("use_custom_filename", new WCheckBox());
-		$component->setValue(false);
-		
+		$vComponent =& $repeatableComponent->addComponent("file_name", new WVerifiedChangeInput());
+		$component =& $vComponent->setInputComponent(new WTextField);
 		
 		$component =& $repeatableComponent->addComponent("file_size", new WTextField());
 		$component->setReadOnly(TRUE);
 		
 		
-		$component =& $repeatableComponent->addComponent("mime_type", new WTextField());
-		
-		$component =& $repeatableComponent->addComponent("use_custom_type", new WCheckBox());
-		$component->setValue(false);
+		$vComponent =& $repeatableComponent->addComponent("mime_type", new WVerifiedChangeInput());
+		$component =& $vComponent->setInputComponent(new WTextField);
 		
 		
 		// Dimensions 
@@ -257,49 +252,36 @@ class editAction
 		$dimensionComponent->setErrorRule(new WECOptionalRegex("^([0-9]+px)?$"));
 		$dimensionComponent->setErrorText(_("Must be a positive integer followed by 'px'."));
 		$dimensionComponent->setOnChange("validateWizard(this.form);");
-
-		$component =& $repeatableComponent->addComponent("height", $dimensionComponent->shallowCopy());
 		
-
-		$component =& $repeatableComponent->addComponent("use_custom_height", new WCheckBox());
-		$component->setValue(false);
+		$vComponent =& $repeatableComponent->addComponent("height", new WVerifiedChangeInput());
+		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
-		$component =& $repeatableComponent->addComponent("width", $dimensionComponent->shallowCopy());
-		
-		
-		$component =& $repeatableComponent->addComponent("use_custom_width", new WCheckBox());
-		$component->setValue(false);
+		$vComponent =& $repeatableComponent->addComponent("width", new WVerifiedChangeInput());
+		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
 		
 		// Thumnail Upload
 		$component =& $repeatableComponent->addComponent("thumbnail_upload", new WFileUploadField());
 		
-		
-		$component =& $repeatableComponent->addComponent("thumbnail_mime_type", new WTextField());
-		
-		$component =& $repeatableComponent->addComponent("use_custom_thumbnail_type", new WCheckBox());
-		$component->setValue(false);
-		
+		$vComponent =& $repeatableComponent->addComponent("thumbnail_mime_type", new WVerifiedChangeInput());
+		$component =& $vComponent->setInputComponent(new WTextField);
 		
 		// Thumbnail dimensions
-		$component =& $repeatableComponent->addComponent("thumbnail_height", $dimensionComponent->shallowCopy());
-		$component =& $repeatableComponent->addComponent("use_custom_thumbnail_height", new WCheckBox());
-		$component->setValue(false);
+		$vComponent =& $repeatableComponent->addComponent("thumbnail_height", new WVerifiedChangeInput());
+		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
-		$component =& $repeatableComponent->addComponent("thumbnail_width", $dimensionComponent->shallowCopy());
-		$component =& $repeatableComponent->addComponent("use_custom_thumbnail_width", new WCheckBox());
-		$component->setValue(false);
+		$vComponent =& $repeatableComponent->addComponent("thumbnail_width", new WVerifiedChangeInput());
+		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
-		print "\n<p>"._("Change properties of the uploaded file to custom values:");
+		print "\n<p>";
+		print _("By default, the values below will be automatically populated from your uploaded file.");
+		print " "._("If needed, change properties of this file record to custom values: ");
 		
 		print "\n<table border='1'>";
 		
 		print "\n<tr>";
 		print "\n\t<th>";
 		print "\n\t\t"._("Property")."";
-		print "\n\t</th>";
-		print "\n\t<th>";
-		print "\n\t\t"._("Use Custom Value")."";
 		print "\n\t</th>";
 		print "\n\t<th>";
 		print "\n\t\t"._("Custom Value")."";
@@ -310,9 +292,6 @@ class editAction
 		print "\n\t<td>";
 		print "\n\t\t"._("File Name")."";
 		print "\n\t</td>";
-		print "\n\t<td align='center'>";
-		print "\n\t\t[[use_custom_filename]]";
-		print "\n\t</td>";
 		print "\n\t<td>";
 		print "\n\t\t[[file_name]]";
 		print "\n\t</td>";
@@ -321,9 +300,6 @@ class editAction
 		print "\n<tr>";
 		print "\n\t<td>";
 		print "\n\t\t"._("File Size")."";
-		print "\n\t</td>";
-		print "\n\t<td align='center'>";
-// 		print "\n\t\t[[size_from_file]]";
 		print "\n\t</td>";
 		print "\n\t<td>";
 		print "\n\t\t[[file_size]]";
@@ -335,9 +311,6 @@ class editAction
 		print "\n\t<td>";
 		print "\n\t\t"._("Mime Type")."";
 		print "\n\t</td>";
-		print "\n\t<td align='center'>";
-		print "\n\t\t[[use_custom_type]]";
-		print "\n\t</td>";
 		print "\n\t<td>";
 		print "\n\t\t[[mime_type]]";
 		print "\n\t</td>";
@@ -346,9 +319,6 @@ class editAction
 		print "\n<tr>";
 		print "\n\t<td>";
 		print "\n\t\t"._("Width")."";
-		print "\n\t</td>";
-		print "\n\t<td align='center'>";
-		print "\n\t\t[[use_custom_width]]";
 		print "\n\t</td>";
 		print "\n\t<td>";
 		print "\n\t\t[[width]]";
@@ -359,9 +329,6 @@ class editAction
 		print "\n\t<td>";
 		print "\n\t\t"._("Height")."";
 		print "\n\t</td>";
-		print "\n\t<td align='center'>";
-		print "\n\t\t[[use_custom_height]]";
-		print "\n\t</td>";
 		print "\n\t<td>";
 		print "\n\t\t[[height]]";
 		print "\n\t</td>";
@@ -370,9 +337,6 @@ class editAction
 		print "\n<tr>";
 		print "\n\t<td>";
 		print "\n\t\t"._("Thumbnail")."";
-		print "\n\t</td>";
-		print "\n\t<td align='center'>";
-		print "\n\t\t &nbsp; ";
 		print "\n\t</td>";
 		print "\n\t<td>";
 		print "\n[[thumbnail_upload]]";
@@ -383,9 +347,6 @@ class editAction
 		print "\n\t<td>";
 		print "\n\t\t"._("Thumbnail Mime Type")."";
 		print "\n\t</td>";
-		print "\n\t<td align='center'>";
-		print "\n\t\t[[use_custom_thumbnail_type]]";
-		print "\n\t</td>";
 		print "\n\t<td>";
 		print "\n\t\t[[thumbnail_mime_type]]";
 		print "\n\t</td>";
@@ -395,9 +356,6 @@ class editAction
 		print "\n\t<td>";
 		print "\n\t\t"._("Thumbnail Width")."";
 		print "\n\t</td>";
-		print "\n\t<td align='center'>";
-		print "\n\t\t[[use_custom_thumbnail_width]]";
-		print "\n\t</td>";
 		print "\n\t<td>";
 		print "\n\t\t[[thumbnail_width]]";
 		print "\n\t</td>";
@@ -406,9 +364,6 @@ class editAction
 		print "\n<tr>";
 		print "\n\t<td>";
 		print "\n\t\t"._("Thumbnail Height")."";
-		print "\n\t</td>";
-		print "\n\t<td align='center'>";
-		print "\n\t\t[[use_custom_thumbnail_height]]";
 		print "\n\t</td>";
 		print "\n\t<td>";
 		print "\n\t\t[[thumbnail_height]]";
@@ -441,6 +396,10 @@ class editAction
 			$recordId =& $record->getId();
 			$collection['record_id'] = $recordId->getIdString();
 			
+			$collection['file_upload'] = array(
+					"starting_name" => $parts['FILE_NAME']->getValue(),
+					"starting_size" => $parts['FILE_SIZE']->getValue());
+			
 			$collection['file_name'] = $parts['FILE_NAME']->getValue();
 	
 			$size =& ByteSize::withValue($parts['FILE_SIZE']->getValue());
@@ -453,6 +412,10 @@ class editAction
 				$collection['height'] = $dim[1].'px';
 			if ($dim[0])
 				$collection['width'] = $dim[0].'px';
+			
+			$collection['thumbnail_upload'] = array(
+					"starting_name" => "thumb.jpg",
+					"starting_size" => strlen($parts['THUMBNAIL_DATA']->getValue()));
 	
 			$collection['thumbnail_mime_type'] = $parts['THUMBNAIL_MIME_TYPE']->getValue();
 	
@@ -585,18 +548,18 @@ class editAction
 		}
 		
 		// if the "use custom" box was checked store the name.
-		if ($results['use_custom_filename']) {
-			$parts['FILE_NAME']->updateValue($results['file_name']);
+		if ($results['file_name']['checked'] == '1') {
+			$parts['FILE_NAME']->updateValue($results['file_name']['value']);
 		}
 		
 		// if the "use custom" box was checked store the mime type.
-		if ($results['use_custom_type']) {
-			$parts['MIME_TYPE']->updateValue($results['mime_type']);
+		if ($results['mime_type']['checked'] == '1') {
+			$parts['MIME_TYPE']->updateValue($results['mime_type']['value']);
 		}
 		
 		// if the "use custom" box was checked store the height.
-		if ($results['use_custom_height']
-			&& ereg("^([0-9]+)px$", $results['height'], $matches)) 
+		if ($results['height']['checked'] == '1'
+			&& ereg("^([0-9]+)px$", $results['height']['value'], $matches)) 
 		{
 			$dimArray = $parts['DIMENSIONS']->getValue();
 			$dimArray[1] = $matches[1];
@@ -606,8 +569,8 @@ class editAction
 		unset($dimArray, $matches);
 		
 		// if the "use custom" box was checked store the width.
-		if ($results['use_custom_width']
-			&& ereg("^([0-9]+)px$", $results['width'], $matches)) 
+		if ($results['width']['checked'] == '1'
+			&& ereg("^([0-9]+)px$", $results['width']['value'], $matches)) 
 		{
 			$dimArray = $parts['DIMENSIONS']->getValue();
 			$dimArray[0] = $matches[1];
@@ -617,8 +580,8 @@ class editAction
 		unset($dimArray, $matches);
 		
 		// if the "use custom" box was checked store the height.
-		if ($results['use_custom_thumbnail_height']
-			&& ereg("^([0-9]+)px$", $results['thumbnail_height'], $matches)) 
+		if ($results['thumbnail_height']['checked'] == '1'
+			&& ereg("^([0-9]+)px$", $results['thumbnail_height']['value'], $matches)) 
 		{
 			$dimArray = $parts['THUMBNAIL_DIMENSIONS']->getValue();
 			$dimArray[1] = $matches[1];
@@ -628,8 +591,8 @@ class editAction
 		unset($dimArray, $matches);
 		
 		// if the "use custom" box was checked store the width.
-		if ($results['use_custom_thumbnail_width']
-			&& ereg("^([0-9]+)px$", $results['thumbnail_width'], $matches)) 
+		if ($results['thumbnail_width']['checked'] == '1'
+			&& ereg("^([0-9]+)px$", $results['thumbnail_width']['value'], $matches)) 
 		{
 			$dimArray = $parts['THUMBNAIL_DIMENSIONS']->getValue();
 			$dimArray[0] = $matches[1];
