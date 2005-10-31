@@ -49,12 +49,11 @@ class editAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-// 		$authZ =& Services::getService("AuthZ");
-// 		$idManager =& Services::getService("Id");
-// 		return $authZ->isUserAuthorized(
-// 					$idManager->getId("edu.middlebury.authorization.modify"), 
-// 					$this->getAssetId());
-		return true;
+		$authZ =& Services::getService("AuthZ");
+		$idManager =& Services::getService("Id");
+		return $authZ->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.modify"), 
+					$this->_assets[0]->getId());
 	}
 	
 	/**
@@ -65,7 +64,7 @@ class editAction
 	 * @since 4/26/05
 	 */
 	function getUnauthorizedMessage () {
-		return _("You are not authorized to edit this <em>Asset</em>.");
+		return _("You are not authorized to modify this <em>Asset</em>.");
 	}
 	
 	/**

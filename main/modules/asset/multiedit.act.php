@@ -50,11 +50,16 @@ class multieditAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-// 		$authZ =& Services::getService("AuthZ");
-// 		$idManager =& Services::getService("Id");
-// 		return $authZ->isUserAuthorized(
-// 					$idManager->getId("edu.middlebury.authorization.modify"), 
-// 					$this->getAssetId());
+		$authZ =& Services::getService("AuthZ");
+		$idManager =& Services::getService("Id");
+		foreach( array_keys($this->_assets) as $key) {
+			if (!$authZ->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.modify"), 
+					$this->_assets[$key]->getId()))
+			{
+				return false;
+			}
+		}
 		return true;
 	}
 	
@@ -66,7 +71,7 @@ class multieditAction
 	 * @since 4/26/05
 	 */
 	function getUnauthorizedMessage () {
-		return _("You are not authorized to edit this <em>Asset</em>.");
+		return _("You are not authorized to modify one or more of these <em>Assets</em>.");
 	}
 	
 		/**
