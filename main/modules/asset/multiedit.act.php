@@ -135,7 +135,7 @@ class multieditAction
 		$date =& $this->_assets[0]->getEffectiveDate();
 		$multipleExist = FALSE;
 		for ($i = 1; $i < count($this->_assets); $i++) {
-			if (($date && !$value->isEqualTo($this->_assets[$i]->getEffectiveDate()))
+			if (($date && !$date->isEqualTo($this->_assets[$i]->getEffectiveDate()))
 				|| (!$date && $this->_assets[$i]->getEffectiveDate()))
 			{
 				$multipleExist = TRUE;
@@ -160,7 +160,7 @@ class multieditAction
 		$date =& $this->_assets[0]->getExpirationDate();
 		$multipleExist = FALSE;
 		for ($i = 1; $i < count($this->_assets); $i++) {
-			if (($date && !$value->isEqualTo($this->_assets[$i]->getExpirationDate()))
+			if (($date && !$date->isEqualTo($this->_assets[$i]->getExpirationDate()))
 				|| (!$date && $this->_assets[$i]->getExpirationDate()))
 			{
 				$multipleExist = TRUE;
