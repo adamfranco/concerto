@@ -121,6 +121,7 @@ class AssetEditingAction
 				
 				$this->updateAssetProperties($results['assetproperties'], $asset);
 				$this->updateAssetContent($results['contentstep']['content'], $asset);
+				$this->updateFileRecords($results['filestep']['files'], $initialState, $asset);
 				
 				// First, lets go through the info structures listed in the set and print out
 				// the info records for those structures in order.
@@ -184,6 +185,12 @@ class AssetEditingAction
 	 * :: Asset Properties ::
 	 *********************************************************/
 		$wizard->addStep("assetproperties", $this->getAssetPropertiesStep());
+	
+	/*********************************************************
+	 * :: File Records ::
+	 *********************************************************/
+	 	if ($fileRecordStep =& $this->getFileRecordsStep())
+			$wizard->addStep("filestep", $fileRecordStep);
 		
 	/*********************************************************
 	 *  :: Record Structures ::
@@ -358,6 +365,31 @@ class AssetEditingAction
 	
 		$parentComponent->setContent(ob_get_contents());
 		ob_end_clean();
+	}
+	
+	/**
+	 * Answer a step for all of the the files of the asset
+	 * 
+	 * @return object WizardStep
+	 * @access public
+	 * @since 10/31/05
+	 */
+	function &getFileRecordsStep () {
+		$false = false;
+		return $false;
+	}
+	
+	/**
+	 * Update the file records of the asset based on the values from the wizard
+	 * 
+	 * @param array $results
+	 * @param object Asset $asset
+	 * @return void
+	 * @access public
+	 * @since 10/26/05
+	 */
+	function updateFileRecords ( &$results, &$asset ) {
+		
 	}
 	
 	/**
