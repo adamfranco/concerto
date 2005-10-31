@@ -131,11 +131,11 @@ class AssetPrinter {
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.modify"),
 				$assetId)) {
-			if ($actionString != "asset.editview") {
+			if ($actionString != "asset.edit") {
 				$links[] = "<a href='".$harmoni->request->quickURL(
-					"asset", "editview", 
+					"asset", "edit", 
 					array("collection_id" => $repositoryId->getIdString(), 
-					"asset_id" => $assetId->getIdString()))."'>";
+					"assets" => $assetId->getIdString()))."'>";
 				$links[count($links) - 1] .= _("Edit")."</a>";
 			} else
 				$links[] = _("edit");
