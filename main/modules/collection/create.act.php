@@ -116,17 +116,17 @@ class createAction
 		$stepTwo->setDisplayName(_("Type"));
 		// Create the properties.
 		$property =& $stepTwo->addComponent("type_domain", new WTextField());
-		$property->setStartingDisplayText(_("Collections"));
+		$property->setValue(_("Collections"));
 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setErrorText(_("A value for this field is required."));
 		
 		$property =& $stepTwo->addComponent("type_authority", new WTextField());
-		$property->setStartingDisplayText(_("Concerto"));
+		$property->setValue(_("Concerto"));
 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setErrorText(_("A value for this field is required."));
 		
 		$property =& $stepTwo->addComponent("type_keyword", new WTextField());
-		$property->setStartingDisplayText(_("Generic Collection"));
+		$property->setValue(_("Generic Collection"));
 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setErrorText(_("A value for this field is required."));
 		
@@ -224,6 +224,6 @@ class createAction
 						"collection_id" => $this->repositoryId->getIdString(), 
 						"wizardSkipToStep" => "schema"));
 		else
-			return $harmoni->request->quickURL("collections", "main");
+			return $harmoni->request->quickURL("collections", "browse");
 	}
 }

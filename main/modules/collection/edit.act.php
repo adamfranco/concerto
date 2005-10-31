@@ -160,10 +160,16 @@ class editAction
 			$numRecordStructures++;
 		}
 		
+		$idManager =& Services::getService("Id");
+		$assetContentStructureId =& $idManager->getId("edu.middlebury.harmoni.repository.asset_content");
 		$recordStructures =& $repository->getRecordStructures();
 		while ($recordStructures->hasNext()) {
 			$recordStructure =& $recordStructures->next();
 			$recordStructureId =& $recordStructure->getId();
+			
+			// Don't list the asset Content structure.
+			if ($recordStructureId->isEqual($assetContentStructureId))
+				continue;
 			
 			// Create the properties.
 			// 'in set' property
