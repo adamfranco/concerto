@@ -254,7 +254,7 @@ class editAction
 		$dimensionComponent =& new WTextField();
 		$dimensionComponent->setSize(8);
 		$dimensionComponent->setStyle("text-align: right");
-		$dimensionComponent->setErrorRule(new WECRegex("^([0-9]+px)?$"));
+		$dimensionComponent->setErrorRule(new WECOptionalRegex("^([0-9]+px)?$"));
 		$dimensionComponent->setErrorText(_("Must be a positive integer followed by 'px'."));
 		$dimensionComponent->setOnChange("validateWizard(this.form);");
 
