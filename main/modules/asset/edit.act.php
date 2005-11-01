@@ -446,18 +446,32 @@ class editAction
 		
 		$idManager =& Services::getService("Id");
 		$recStructId =& $idManager->getId("FILE");
+		$exisistingRecords = array();
 		
 		foreach (array_keys($results) as $i) {
 			$recordResults =& $results[$i];
 			
 			if ($recordResults['record_id']) {
-				$record =& $asset->getRecord($idManager->getId($recordResults['record_id']));
+				$recordId =& $idManager->getId($recordResults['record_id']);
+				$record =& $asset->getRecord($recordId);
 			} else {
 				$record =& $asset->createRecord($recStructId);
+				$recordId =& $record->getId();
 			}
+			
+			$exisistingRecords[] =& $recordId->getIdString();
 			
 			$this->updateFileRecord($recordResults, 
 				$initialState[$i], $record);
+		}
+		
+		// Delete any records that were removed.
+		$records =& $asset->getRecordsByRecordStructure($recStructId);
+		while ($records->hasNext()) {
+			$record =& $records->next();
+			$recordId =& $record->getId();
+			if (!in_array($recordId->getIdString(), $exisistingRecords))
+				$asset->deleteRecord($recordId);
 		}
 	}
 	
@@ -782,17 +796,31 @@ class editAction
 		
 		$recStructIdString = str_replace(".", "_", $recStructId->getIdString());
 		$idManager =& Services::getService("Id");
+		$exisistingRecords = array();
 		
 		foreach (array_keys($results[$recStructIdString]['records']) as $i) {
 			$recordResults =& $results[$recStructIdString]['records'][$i];
 			if ($recordResults['record_id']) {
-				$record =& $asset->getRecord($idManager->getId($recordResults['record_id']));
+				$recordId =& $idManager->getId($recordResults['record_id']);
+				$record =& $asset->getRecord($recordId);
 			} else {
 				$record =& $asset->createRecord($recStructId);
+				$recordId =& $record->getId();
 			}
+			
+			$exisistingRecords[] =& $recordId->getIdString();
 			
 			$this->updateRecord($recordResults, 
 				$initialState[$recStructIdString]['records'][$i], $record);
+		}
+		
+		// Delete any records that were removed.
+		$records =& $asset->getRecordsByRecordStructure($recStructId);
+		while ($records->hasNext()) {
+			$record =& $records->next();
+			$recordId =& $record->getId();
+			if (!in_array($recordId->getIdString(), $exisistingRecords))
+				$asset->deleteRecord($recordId);
 		}
 	}
 	
