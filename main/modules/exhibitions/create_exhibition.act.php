@@ -201,13 +201,7 @@ class create_exhibitionAction
 	 */
 	function getReturnUrl () {
 		$harmoni =& Harmoni::instance();
-// 		$repositoryId =& $this->getRepositoryId();
-// 		if ($this->_assetId) 
-// 			return $harmoni->request->quickURL("asset", "editview", array(
-// 				"collection_id" => $repositoryId->getIdString(),
-// 				"asset_id" => $this->_assetId->getIdString()));
-// 		else
-			return $harmoni->request->quickURL("exhibitions", "browse");
+		return $harmoni->request->quickURL("exhibitions", "browse");
 	}
 }
 

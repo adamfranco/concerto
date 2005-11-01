@@ -363,9 +363,9 @@ class addAction
 		$harmoni =& Harmoni::instance();
 		$repositoryId =& $this->getRepositoryId();
 		if ($this->_assetId) 
-			return $harmoni->request->quickURL("asset", "editview", array(
+			return $harmoni->request->quickURL("asset", "edit", array(
 				"collection_id" => $repositoryId->getIdString(),
-				"asset_id" => $this->_assetId->getIdString()));
+				"assets" => $this->_assetId->getIdString()));
 		else
 			return $harmoni->request->quickURL("collection", "browse", array(
 				"collection_id" => $repositoryId->getIdString()));
