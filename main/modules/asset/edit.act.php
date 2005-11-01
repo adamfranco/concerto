@@ -220,19 +220,7 @@ class editAction
 		
 		$component =& $repeatableComponent->addComponent("record_id", new WHiddenField());
 		
-		$component =& $repeatableComponent->addComponent("file_upload", new WFileUploadField());
-		
-		print "\n<em>"._("Upload a new file or change file properties.")."</em>\n<hr />";
-// 		print "\n<br /><strong>";
-// 		if ($parts['FILE_NAME']->getValue()) {
-// 			print _("New file (optional)");
-// 		} else {
-// 			print _("File");
-// 		}
-// 		print ":</strong>";
-		
-		print "\n[[file_upload]]";
-		
+		$component =& $repeatableComponent->addComponent("file_upload", new WFileUploadField());		
 		
 		$vComponent =& $repeatableComponent->addComponent("file_name", new WVerifiedChangeInput());
 		$component =& $vComponent->setInputComponent(new WTextField);
@@ -273,9 +261,12 @@ class editAction
 		$vComponent =& $repeatableComponent->addComponent("thumbnail_width", new WVerifiedChangeInput());
 		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
+		print "\n<p>"._("Upload a new file and/or change the properties below.")."</p>";
+		print "\n[[file_upload]]";
+		
 		print "\n<p>";
 		print _("By default, the values below will be automatically populated from your uploaded file.");
-		print " "._("If needed, change properties of this file record to custom values: ");
+		print " "._("If needed, change the properties below to custom values: ");
 		
 		print "\n<table border='1'>";
 		
