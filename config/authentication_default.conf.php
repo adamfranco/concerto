@@ -16,10 +16,11 @@
 // :: Start the AuthenticationManager OSID Impl.
 	$configuration =& new ConfigurationProperties;
 	$tokenCollectors = array(
-//		serialize(new Type ("Authentication", "edu.middlebury.harmoni", "Concerto DB")) 
-//			=> new BasicFormNamePassTokenCollector,
+	$tokenCollectors = array(
 		serialize(new Type ("Authentication", "edu.middlebury.harmoni", "Concerto DB")) 
 			=> new FormActionNamePassTokenCollector($harmoni->request->quickURL("auth","username_password_form")),
+// 		serialize(new Type ("Authentication", "edu.middlebury.harmoni", "Middlebury LDAP")) 
+// 			=> new FormActionNamePassTokenCollector($harmoni->request->quickURL("auth","username_password_form")),
 	);
 	$configuration->addProperty('token_collectors', $tokenCollectors);
 	Services::startManagerAsService("AuthenticationManager", $context, $configuration);
@@ -77,7 +78,8 @@
 // 			'cn',
 // 		);
 // 		$ldapConfiguration->addProperty('login_fields', $loginFields);
-// 		
+// 		$ldapConfiguration->addProperty("display_name_property", $arg6 = "name");
+// 
 // 		$ldapAuthNMethod =& new LDAPAuthNMethod;
 // 		$ldapAuthNMethod->assignConfiguration($ldapConfiguration);
 // 		unset($arg0, $arg1, $arg2, $arg3, $arg4, $propertiesFields, $loginFields, $ldapConfiguration);
