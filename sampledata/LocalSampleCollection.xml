@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE import PUBLIC "- //Middlebury College//XML-Import//EN" "http://harmoni.sourceforge.net/dtds/harmoni/1.0/XMLImport.dtd">
+<import type="update">
+	<repository>
+		<name>Sample Media Collection</name>
+		<description><![CDATA[This collection contains a number of media licensed under the Creative Commons <em>Attribution-NonCommercial-ShareAlike 2.5</em> license. The majority of these are photos by Adam Franco. The audio is by Cargo Cult, while the video was produced by Adam Franco using Cargo Cult in the sound tracks.]]></description>
+		<type>
+			<domain>User Repositories</domain>
+			<authority>edu.middlebury.concerto</authority>
+			<keyword>Multimedia</keyword>
+			<description>User-created repository for storing multimedia.</description>
+		</type>
+		<recordstructure xml:id="dc">
+			<name>Dublin Core</name>
+			<description><![CDATA[
+<h1>Dublin Core Metadata Element Set, Version 1.1: Reference Description</h1>
+<table class="docinfo" cellspacing="0">
+<tbody><tr>
+<th>Date Issued:</th>
+<td>2004-12-20</td></tr>
+<tr>
+<th>Identifier:</th>
+<td><a href="/documents/2004/12/20/dces/">http://dublincore.org/documents/2004/12/20/dces/</a></td></tr>
+<tr>
+<th>Supersedes:</th>
+
+<td><a href="/documents/2003/06/02/dces/">http://dublincore.org/documents/2003/06/02/dces/</a></td></tr>
+<tr>
+<th>Latest version:</th>
+<td><a href="/documents/dces/">http://dublincore.org/documents/dces/</a></td></tr>
+<tr>
+<th>Translations:</th>
+<td><a href="/resources/translations/#dces1-1">http://dublincore.org/resources/translations/</a></td></tr>
+<tr>
+<th>Status of document:</th>
+<td>This is a DCMI <a href="/documents/#recommendations">Recommendation</a>.</td></tr>
+
+<tr>
+<th>Description of document:</th>
+<td>This document is the reference description, version 1.1 of the Dublin Core Metadata Element Set.</td></tr>
+<tr>
+<th>Recent changes:</th>
+<td>Updated references to [ISO3166] and [MIME]
+</td></tr></tbody></table>
+<a name="introduction" id="introduction"></a> 
+<h2>Introduction</h2>
+<p>The Dublin Core metadata element set is a standard for cross-domain
+information resource description. Here an information resource is
+defined to be "anything that has identity". This is the definition used
+in Internet RFC 2396, "Uniform Resource Identifiers (URI): Generic
+Syntax", by Tim Berners-Lee et al. There are no fundamental
+restrictions to the types of resources to which Dublin Core metadata
+can be assigned.</p>
+<p>Three formally endorsed versions exist of the Dublin Core Metadata Element Set, version 1.1:</p>
+
+<ul>
+<li>ISO Standard 15836-2003 (February 2003): <a href="http://www.niso.org/international/SC4/n515.pdf">http://www.niso.org/international/SC4/n515.pdf</a></li>
+<li>NISO Standard Z39.85-2001 (September 2001): <a href="http://www.niso.org/standards/resources/Z39-85.pdf">http://www.niso.org/standards/resources/Z39-85.pdf</a></li>
+<li>CEN Workshop Agreement CWA 13874 (March 2000, no longer available)</li></ul>
+<p>The current document has been brought into line with the ISO and
+NISO standards. The more comprehensive document "DCMI Metadata Terms" (<a href="/documents/dcmi-terms/">http://dublincore.org/documents/dcmi-terms/</a>) includes the latest and authoritative term declarations for the Dublin Core Metadata Element Set, Version 1.1.</p>
+<p>For an overview and links to full specifications of all metadata
+terms maintained by the Dublin Core Metadata Initiative please see:: <a href="http://dublincore.org/usage/documents/overview/">http://dublincore.org/usage/documents/overview/</a>.</p>
+			]]></description>
+			<format>text/plain</format>
+			<partstructure xml:id="dc-title" isRepeatable="TRUE">
+				<name>Title</name>
+				<description><![CDATA[
+<table><tr>
+<th valign='top'>Label:</td>
+<td valign='top'>Title</td></tr>
+<tr>
+<th valign='top'>Definition:</td>
+<td valign='top'>A name given to the resource.</td></tr>
+<tr>
+<th valign='top'>Comment:</td>
+<td valign='top'>Typically, Title will be a name by which the resource is formally known.</td>
+</tr></table>
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="dc-creator" isRepeatable="TRUE">
+				<name>Creator</name>
+				<description><![CDATA[
+<table><tr>
+<th valign='top'>Label:</td>
+<td valign='top'>Creator</td></tr>
+<tr>
+<th valign='top'>Definition:</td>
+<td valign='top'>An entity primarily responsible for making the content of the resource.</td></tr>
+<tr>
+<th valign='top'>Comment:</td>
+<td valign='top'>Examples of Creator include a person, an organization, or a
+service. Typically, the name of a Creator should be used to indicate
+the entity.</td>
+</tr></table>
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>shortstring</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="dc-subject" isRepeatable="TRUE">
+				<name>Subject</name>
+				<description><![CDATA[
+<table><tr>
+<th valign='top'>Label:</td>
+<td valign='top'>Subject and Keywords</td></tr>
+<tr>
+<th valign='top'>Definition:</td>
+<td valign='top'>A topic of the content of the resource.</td></tr>
+<tr>
+<th valign='top'>Comment:</td>
+<td valign='top'>Typically, Subject will be expressed as keywords, key phrases or
+classification codes that describe a topic of the resource. Recommended
+best practice is to select a value from a controlled vocabulary or
+formal classification scheme.</td>
+</tr></table>
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>shortstring</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="dc-description" isRepeatable="TRUE">
+				<name>Description</name>
+				<description><![CDATA[
+<table><tr>
+<th valign='top'>Label:</td>
+<td valign='top'>Description</td></tr>
+<tr>
+<th valign='top'>Definition:</td>
+<td valign='top'>An account of the content of the resource.</td></tr>
+<tr>
+<th valign='top'>Comment:</td>
+<td valign='top'>Examples of Description include, but is not limited to: an
+abstract, table of contents, reference to a graphical representation of
+content or a free-text account of the content.</td>
+</tr></table>
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="dc-publisher" isRepeatable="TRUE">
+				<name>Publisher</name>
+				<description><![CDATA[
+<table><tr>
+<th valign='top'>Label:</td>
+<td valign='top'>Publisher</td></tr>
+<tr>
+<th valign='top'>Definition:</td>
+<td valign='top'>An entity responsible for making the resource available</td></tr>
+<tr>
+<th valign='top'>Comment:</td>
+<td valign='top'>Examples of Publisher include a person, an organization, or a
+service. Typically, the name of a Publisher should be used to indicate
+the entity.</td>
+</tr></table>
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>shortstring</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="dc-contributor" isRepeatable="TRUE">
+				<name>Contributor</name>
+				<description><![CDATA[
+<table><tr>
+<th valign='top'>Label:</td>
+<td valign='top'>Contributor</td></tr>
+<tr>
+<th valign='top'>Definition:</td>
+<td valign='top'>An entity responsible for making contributions to the content of the resource.</td></tr>
+<tr>
+<th valign='top'>Comment:</td>
+<td valign='top'>Examples of Contributor include a person, an organization, or a
+service. Typically, the name of a Contributor should be used to
+indicate the entity.</td>
+</tr></table>
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>shortstring</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="dc-date" isRepeatable="TRUE">
+				<name>Date</name>
+				<description><![CDATA[
+<table><tr>
+<th valign='top'>Label:</td>
+<td valign='top'>Date</td></tr>
+<tr>
+<th valign='top'>Definition:</td>
+<td valign='top'>A date of an event in the lifecycle of the resource.</td></tr>
+<tr>
+<th valign='top'>Comment:</td>
+<td valign='top'>Typically, Date will be associated with the creation or
+availability of the resource. Recommended best practice for encoding
+the date value is defined in a profile of ISO 8601 [<a href="#w3cdtf">W3CDTF</a>] and includes (among others) dates of the form YYYY-MM-DD.</td>
+</tr></table>
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>datetime</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="dc-type" isRepeatable="TRUE">
+				<name>Type</name>
+				<description><![CDATA[
+<table><tr>
+<th valign='top'>Label:</td>
+<td valign='top'>Resource Type</td></tr>
+<tr>
+<th valign='top'>Definition:</td>
+<td valign='top'>The nature or genre of the content of the resource.</td></tr>
+<tr>
+<th valign='top'>Comment:</td>
+<td valign='top'>Type includes terms describing general categories, functions,
+genres, or aggregation levels for content. Recommended best practice is
+to select a value from a controlled vocabulary (for example, the DCMI
+Type Vocabulary [<a href="#dct1">DCT1</a>]). To describe the physical or digital manifestation of the resource, use the FORMAT element.</td>
+</tr></table>
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>shortstring</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="dc-format" isRepeatable="TRUE">
+				<name>Format</name>
+				<description><![CDATA[
+<table><tr>
+<th valign='top'>Label:</td>
+<td valign='top'>Format</td></tr>
+<tr>
+<th valign='top'>Definition:</td>
+<td valign='top'>The physical or digital manifestation of the resource.</td></tr>
+<tr>
+<th valign='top'>Comment:</td>
+<td valign='top'>Typically, Format may include the media-type or dimensions of the
+resource. Format may be used to identify the software, hardware, or
+other equipment needed to display or operate the resource. Examples of
+dimensions include size and duration. Recommended best practice is to
+select a value from a controlled vocabulary (for example, the list of
+Internet Media Types [<a href="#mime">MIME</a>] defining computer media formats).</td>
+</tr></table>
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>shortstring</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="dc-identifier" isRepeatable="TRUE">
+				<name>Identifier</name>
+				<description><![CDATA[
+<table><tr>
+<th valign='top'>Label:</td>
+<td valign='top'>Resource Identifier</td></tr>
+<tr>
+<th valign='top'>Definition:</td>
+<td valign='top'>An unambiguous reference to the resource within a given context.</td></tr>
+<tr>
+<th valign='top'>Comment:</td>
+<td valign='top'>Recommended best practice is to identify the resource by means of a
+string or number conforming to a formal identification system. Formal
+identification systems include but are not limited to the Uniform
+Resource Identifier (URI) (including the Uniform Resource Locator
+(URL)), the Digital Object Identifier (DOI) and the International
+Standard Book Number (ISBN).</td>
+</tr></table>
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="dc-source" isRepeatable="TRUE">
+				<name>Source</name>
+				<description><![CDATA[
+<table><tr>
+<th valign='top'>Label:</td>
+<td valign='top'>Source</td></tr>
+<tr>
+<th valign='top'>Definition:</td>
+<td valign='top'>A Reference to a resource from which the present resource is derived.</td></tr>
+<tr>
+<th valign='top'>Comment:</td>
+<td valign='top'>The present resource may be derived from the Source resource in
+whole or in part. Recommended best practice is to identify the
+referenced resource by means of a string or number conforming to a
+formal identification system.</td>
+</tr></table>
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>shortstring</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="dc-language" isRepeatable="TRUE">
+				<name>Language</name>
+				<description><![CDATA[
+<table><tr>
+<th valign='top'>Label:</td>
+<td valign='top'>Language</td></tr>
+<tr>
+<th valign='top'>Definition:</td>
+<td valign='top'>A language of the intellectual content of the resource.</td></tr>
+<tr>
+<th valign='top'>Comment:</td>
+<td valign='top'>Recommended best practice is to use RFC 3066 [<a href="#rfc3066">RFC3066</a>] which, in conjunction with ISO639 [<a href="#iso639">ISO639</a>]),
+defines two- and three-letter primary language tags with optional
+subtags. Examples include "en" or "eng" for English, "akk" for
+Akkadian", and "en-GB" for English used in the United Kingdom.</td>
+</tr></table>
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>shortstring</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="dc-relation" isRepeatable="TRUE">
+				<name>Relation</name>
+				<description><![CDATA[
+<table><tr>
+</tr>
+<tr>
+<th valign='top'>Label:</td>
+<td valign='top'>Relation</td></tr>
+<tr>
+<th valign='top'>Definition:</td>
+<td valign='top'>A reference to a related resource.</td></tr>
+<tr>
+<th valign='top'>Comment:</td>
+<td valign='top'>Recommended best practice is to identify the referenced resource by
+means of a string or number conforming to a formal identification
+system.</td>
+</tr></table>
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="dc-coverage" isRepeatable="TRUE">
+				<name>Coverage</name>
+				<description><![CDATA[
+<table><tr>
+<th valign='top'>Label:</td>
+<td valign='top'>Coverage</td></tr>
+<tr>
+<th valign='top'>Definition:</td>
+<td valign='top'>The extent or scope of the content of the resource.</td></tr>
+<tr>
+<th valign='top'>Comment:</td>
+<td valign='top'>Typically, Coverage will include spatial location (a place name or
+geographic coordinates), temporal period (a period label, date, or date
+range) or jurisdiction (such as a named administrative entity).
+Recommended best practice is to select a value from a controlled
+vocabulary (for example, the Thesaurus of Geographic Names [TGN]) and
+to use, where appropriate, named places or time periods in preference
+to numeric identifiers such as sets of coordinates or date ranges.</td>
+</tr></table>
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="dc-rights" isRepeatable="TRUE">
+				<name>Rights</name>
+				<description><![CDATA[
+<table><tr>
+<th valign='top'>Label:</td>
+<td valign='top'>Rights Management</td></tr>
+<tr>
+<th valign='top'>Definition:</td>
+<td valign='top'>Information about rights held in and over the resource.</td></tr>
+<tr>
+<th valign='top'>Comment:</td>
+<td valign='top'>Typically, Rights will contain a rights management statement for
+the resource, or reference a service providing such information. Rights
+information often encompasses Intellectual Property Rights (IPR),
+Copyright, and various Property Rights. If the Rights element is
+absent, no assumptions may be made about any rights held in or over the
+resource.</td>
+</tr></table>
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+		</recordstructure>
+		<asset>
+			<name>Trillium</name>
+			<description>Large-flowered Trillium (Trillium Grandiflorum). Trilliums along the trail at Snake Mountain.</description>
+			<type>
+				<domain>Asset Types</domain>
+				<authority>edu.middlebury.concerto</authority>
+				<keyword>XML Imported Asset</keyword>
+			</type>
+			<record xml:id="dc">
+				<part xml:id="dc-title">Trillium</part>
+				<part xml:id="dc-creator">Adam Franco</part>
+				<part xml:id="dc-subject">flowers</part>
+				<part xml:id="dc-subject">Trillium</part>
+				<part xml:id="dc-subject">Large-flowered Trillium</part>
+				<part xml:id="dc-subject">Trillium Grandiflorum</part>
+				<part xml:id="dc-subject">Snake Mountain</part>
+				<part xml:id="dc-description">Large-flowered Trillium (Trillium Grandiflorum). Trilliums along the trail at Snake Mountain.</part>
+				<part xml:id="dc-publisher">Adam Franco</part>
+				<part xml:id="dc-date">2005-05-21</part>
+				<part xml:id="dc-type">Image</part>
+				<part xml:id="dc-type">StillImage</part>
+				<part xml:id="dc-format">image/jpeg</part>
+				<part xml:id="dc-identifier"></part>
+				<part xml:id="dc-source">http://www.adamfranco.com</part>
+				<part xml:id="dc-language">en</part>
+				<part xml:id="dc-relation"></part>
+				<part xml:id="dc-coverage">Addison, Vermont, USA</part>
+				<part xml:id="dc-coverage">lat: 44.0542978547762 lon: -73.2792679832254</part>
+				<part xml:id="dc-coverage">UTM 18 637833E 4879343N</part>
+				<part xml:id="dc-rights"><![CDATA[
+Copyright &copy; 2005 Adam Franco
+<br/>Available under the following Creative Commons license: <a href='http://creativecommons.org/licenses/by-nc-sa/2.5/'>Attribution-NonCommercial-ShareAlike 2.5</a>
+<br/>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/"><img alt="Creative Commons License" src="http://creativecommons.org/images/public/somerights20.png" border="0"/></a>
+
+
+
+
+				]]></part>
+			</record>
+			<filerecord>
+				<filepathpart>http://slug.middlebury.edu/~afranco/samplemedia/IMG_4147_small.jpg</filepathpart>
+			</filerecord>
+		</asset>
+		<asset>
+			<name>Urn &amp; Railing</name>
+			<description>Balcony at the Empress Zoe Hotel.</description>
+			<type>
+				<domain>Asset Types</domain>
+				<authority>edu.middlebury.concerto</authority>
+				<keyword>XML Imported Asset</keyword>
+			</type>
+			<record xml:id="dc">
+				<part xml:id="dc-title">Urn &amp; Railing</part>
+				<part xml:id="dc-creator">Adam Franco</part>
+				<part xml:id="dc-subject">urn</part>
+				<part xml:id="dc-subject">wall</part>
+				<part xml:id="dc-subject">still-life</part>
+				<part xml:id="dc-description">Balcony at the Empress Zoe Hotel.</part>
+				<part xml:id="dc-publisher">Adam Franco</part>
+				<part xml:id="dc-date">2005-06-14</part>
+				<part xml:id="dc-type">Image</part>
+				<part xml:id="dc-type">StillImage</part>
+				<part xml:id="dc-format">image/jpeg</part>
+				<part xml:id="dc-identifier"></part>
+				<part xml:id="dc-source">http://www.adamfranco.com</part>
+				<part xml:id="dc-language">en</part>
+				<part xml:id="dc-relation"></part>
+				<part xml:id="dc-coverage">Sultan Ahmed, Istanbul, Turkey</part>
+				<part xml:id="dc-coverage">lat: 41.005682 lon: 28.981376</part>
+				<part xml:id="dc-rights"><![CDATA[
+Copyright &copy; 2005 Adam Franco
+<br/>Available under the following Creative Commons license: <a href='http://creativecommons.org/licenses/by-nc-sa/2.5/'>Attribution-NonCommercial-ShareAlike 2.5</a>
+<br/>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/"><img alt="Creative Commons License" src="http://creativecommons.org/images/public/somerights20.png" border="0"/></a>
+
+
+
+
+				]]></part>
+			</record>
+			<filerecord>
+				<filepathpart>http://slug.middlebury.edu/~afranco/samplemedia/IMG_4866_small.jpg</filepathpart>
+			</filerecord>
+		</asset>
+		<asset>
+			<name>Mushrooms on Moss</name>
+			<description>Mushrooms growing out of the moss on the side of a tree, about one mile south of the Lincoln-Warren road on the Long Trail.</description>
+			<type>
+				<domain>Asset Types</domain>
+				<authority>edu.middlebury.concerto</authority>
+				<keyword>XML Imported Asset</keyword>
+			</type>
+			<record xml:id="dc">
+				<part xml:id="dc-title">Mushrooms on Moss</part>
+				<part xml:id="dc-creator">Adam Franco</part>
+				<part xml:id="dc-subject">mushrooms</part>
+				<part xml:id="dc-subject">fungus</part>
+				<part xml:id="dc-subject">moss</part>
+				<part xml:id="dc-description">Mushrooms growing out of the moss on the side of a tree, about one mile south of the Lincoln-Warren road on the Long Trail.</part>
+				<part xml:id="dc-publisher">Adam Franco</part>
+				<part xml:id="dc-date">2005-09-17</part>
+				<part xml:id="dc-type">Image</part>
+				<part xml:id="dc-type">StillImage</part>
+				<part xml:id="dc-format">image/jpeg</part>
+				<part xml:id="dc-identifier"></part>
+				<part xml:id="dc-source">http://www.adamfranco.com</part>
+				<part xml:id="dc-language">en</part>
+				<part xml:id="dc-relation"></part>
+				<part xml:id="dc-coverage">Lincoln, Vermont, USA</part>
+				<part xml:id="dc-coverage">lat: 44.089681 lon: -72.928276</part>
+				<part xml:id="dc-rights"><![CDATA[
+Copyright &copy; 2005 Adam Franco
+<br/>Available under the following Creative Commons license: <a href='http://creativecommons.org/licenses/by-nc-sa/2.5/'>Attribution-NonCommercial-ShareAlike 2.5</a>
+<br/>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/"><img alt="Creative Commons License" src="http://creativecommons.org/images/public/somerights20.png" border="0"/></a>
+
+
+
+
+				]]></part>
+			</record>
+			<filerecord>
+				<filepathpart>http://slug.middlebury.edu/~afranco/samplemedia/IMG_9033_small.jpg</filepathpart>
+			</filerecord>
+		</asset>
+		<asset>
+			<name>Mosque of Sultan Ahmed (Blue Mosque)</name>
+			<description>Exterior and interior viewes of the Blue Mosque.</description>
+			<type>
+				<domain>Asset Types</domain>
+				<authority>edu.middlebury.concerto</authority>
+				<keyword>XML Imported Asset</keyword>
+			</type>
+			<record xml:id="dc">
+				<part xml:id="dc-title">Mosque of Sultan Ahmed (Blue Mosque)</part>
+				<part xml:id="dc-creator">Adam Franco</part>
+				<part xml:id="dc-subject">mosque</part>
+				<part xml:id="dc-subject">architecture</part>
+				<part xml:id="dc-subject">domes</part>
+				<part xml:id="dc-subject">vaulted</part>
+				<part xml:id="dc-subject">minerets</part>
+				<part xml:id="dc-subject">tiles</part>
+				<part xml:id="dc-description">Exterior and interior viewes of the Blue Mosque.</part>
+				<part xml:id="dc-publisher">Adam Franco</part>
+				<part xml:id="dc-date">2005-06-14</part>
+				<part xml:id="dc-type">Image</part>
+				<part xml:id="dc-type">StillImage</part>
+				<part xml:id="dc-format">image/jpeg</part>
+				<part xml:id="dc-identifier"></part>
+				<part xml:id="dc-source">http://www.adamfranco.com</part>
+				<part xml:id="dc-language">en</part>
+				<part xml:id="dc-relation"></part>
+				<part xml:id="dc-coverage">Sultan Ahmed, Istanbul, Turkey</part>
+				<part xml:id="dc-coverage">lat: 41.006265 lon: 28.977942</part>
+				<part xml:id="dc-rights"><![CDATA[
+Copyright &copy; 2005 Adam Franco
+<br/>Available under the following Creative Commons license: <a href='http://creativecommons.org/licenses/by-nc-sa/2.5/'>Attribution-NonCommercial-ShareAlike 2.5</a>
+<br/>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/"><img alt="Creative Commons License" src="http://creativecommons.org/images/public/somerights20.png" border="0"/></a>
+
+
+
+
+				]]></part>
+			</record>
+			<filerecord>
+				<filepathpart>http://slug.middlebury.edu/~afranco/samplemedia/IMG_4837_small.jpg</filepathpart>
+			</filerecord>
+			<filerecord>
+				<filepathpart>http://slug.middlebury.edu/~afranco/samplemedia/IMG_4767_small.jpg</filepathpart>
+			</filerecord>
+			<filerecord>
+				<filepathpart>http://slug.middlebury.edu/~afranco/samplemedia/IMG_4762_small.jpg</filepathpart>
+			</filerecord>
+			<filerecord>
+				<filepathpart>http://slug.middlebury.edu/~afranco/samplemedia/IMG_4735_small.jpg</filepathpart>
+			</filerecord>
+			<filerecord>
+				<filepathpart>http://slug.middlebury.edu/~afranco/samplemedia/IMG_4734_small.jpg</filepathpart>
+			</filerecord>
+		</asset>
+		<asset>
+			<name>Cargo Cult - Alchemy</name>
+			<description>Audio track, 'Alchemy', off of Cargo Cult's album by the same name.</description>
+			<type>
+				<domain>Asset Types</domain>
+				<authority>edu.middlebury.concerto</authority>
+				<keyword>XML Imported Asset</keyword>
+			</type>
+			<record xml:id="dc">
+				<part xml:id="dc-title">Alchemy</part>
+				<part xml:id="dc-creator">Cargo Cult</part>
+				<part xml:id="dc-creator">Allan Vilhan</part>
+				<part xml:id="dc-subject">electronic music</part>
+				<part xml:id="dc-description">Audio track, 'Alchemy', off of Cargo Cult's album by the same name.</part>
+				<part xml:id="dc-publisher">Magnatune.com</part>
+				<part xml:id="dc-date">2003-05-16</part>
+				<part xml:id="dc-type">Sound</part>
+				<part xml:id="dc-format">audio/mpeg</part>
+				<part xml:id="dc-identifier"></part>
+				<part xml:id="dc-source">Alchemy</part>
+				<part xml:id="dc-source">http://magnatune.com/artists/albums/cargo-alchemy/</part>
+				<part xml:id="dc-language"></part>
+				<part xml:id="dc-relation">Single track on Album</part>
+				<part xml:id="dc-coverage"></part>
+				<part xml:id="dc-rights"><![CDATA[
+Copyright &copy; 2003 Allan Vilhan
+<br/>Available under the following Creative Commons license: <a href='http://creativecommons.org/licenses/by-nc-sa/2.5/'>Attribution-NonCommercial-ShareAlike 2.5</a>
+<br/>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/"><img alt="Creative Commons License" src="http://creativecommons.org/images/public/somerights20.png" border="0"/></a>
+
+
+				]]></part>
+			</record>
+			<filerecord>
+				<filepathpart>http://slug.middlebury.edu/~afranco/samplemedia/Cargo%20Cult%20-%20Alchemy.mp3</filepathpart>
+			</filerecord>
+		</asset>
+		<asset>
+			<name>Water-Sports</name>
+			<description>Photos and video of water-sports.</description>
+			<type>
+				<domain>Asset Types</domain>
+				<authority>edu.middlebury.concerto</authority>
+				<keyword>collection</keyword>
+			</type>
+			<asset>
+				<name>Wakeboarding</name>
+				<description>Josh spinning through the air on a wakeboard.</description>
+				<type>
+					<domain>Asset Types</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>XML Imported Asset</keyword>
+				</type>
+				<record xml:id="dc">
+					<part xml:id="dc-title">Wakeboarding</part>
+					<part xml:id="dc-creator">Adam Franco</part>
+					<part xml:id="dc-subject">waterskiing</part>
+					<part xml:id="dc-subject">wakeboarding</part>
+					<part xml:id="dc-subject">lake</part>
+					<part xml:id="dc-description">Josh spinning through the air on a wakeboard.</part>
+					<part xml:id="dc-publisher">Adam Franco</part>
+					<part xml:id="dc-date">2005-08-27</part>
+					<part xml:id="dc-type">Image</part>
+					<part xml:id="dc-type">StillImage</part>
+					<part xml:id="dc-format">image/jpeg</part>
+					<part xml:id="dc-identifier"></part>
+					<part xml:id="dc-source">http://www.adamfranco.com</part>
+					<part xml:id="dc-language">en</part>
+					<part xml:id="dc-relation"></part>
+					<part xml:id="dc-coverage">Island Pond, Vermont, USA</part>
+					<part xml:id="dc-coverage">lat: 44.811192 lon: -71.875734</part>
+					<part xml:id="dc-rights"><![CDATA[
+Copyright &copy; 2005 Adam Franco
+<br/>Available under the following Creative Commons license: <a href='http://creativecommons.org/licenses/by-nc-sa/2.5/'>Attribution-NonCommercial-ShareAlike 2.5</a>
+<br/>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/"><img alt="Creative Commons License" src="http://creativecommons.org/images/public/somerights20.png" border="0"/></a>
+	
+					]]></part>
+				</record>
+				<filerecord>
+					<filepathpart>http://slug.middlebury.edu/~afranco/samplemedia/IMG_8653_small.jpg</filepathpart>
+				</filerecord>
+			</asset>
+			<asset>
+				<name>MooseFest 2002 (Clip)</name>
+				<description>A short clip from Adam Franco's video of kayaking on the Moose River during the Moose River Festival, 2002.</description>
+				<type>
+					<domain>Asset Types</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>XML Imported Asset</keyword>
+				</type>
+				<record xml:id="dc">
+					<part xml:id="dc-title">MooseFest 2002 (Clip)</part>
+					<part xml:id="dc-creator">Adam Franco</part>
+					<part xml:id="dc-contributor">Cargo Cult</part>
+					<part xml:id="dc-subject">kayaking</part>
+					<part xml:id="dc-subject">whitewater</part>
+					<part xml:id="dc-subject">waterfall</part>
+					<part xml:id="dc-subject">Moose River</part>
+					<part xml:id="dc-description">A short clip from Adam Franco's video of kayaking on the Moose River during the Moose River Festival, 2002.</part>
+					<part xml:id="dc-publisher">Adam Franco</part>
+					<part xml:id="dc-publisher">http://www.adamfranco.com</part>
+					<part xml:id="dc-date">2002-10-31</part>
+					<part xml:id="dc-type">MovingImage</part>
+					<part xml:id="dc-format">video/quicktime</part>
+					<part xml:id="dc-format">video/x-msvideo</part>
+					<part xml:id="dc-identifier"></part>
+					<part xml:id="dc-source">MooseFest 2002</part>
+					<part xml:id="dc-language">en</part>
+					<part xml:id="dc-relation">16-second clip from movie intro.</part>
+					<part xml:id="dc-coverage">Fowlersville Falls</part>
+					<part xml:id="dc-coverage">Moose River</part>
+					<part xml:id="dc-coverage">Old Forge, New York, USA</part>
+					<part xml:id="dc-rights"><![CDATA[
+Copyright &copy; 2002 Adam Franco
+<br/>Available under the following Creative Commons license: <a href='http://creativecommons.org/licenses/by-nc-sa/2.5/'>Attribution-NonCommercial-ShareAlike 2.5</a>
+<br/>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/"><img alt="Creative Commons License" src="http://creativecommons.org/images/public/somerights20.png" border="0"/></a>
+
+
+					]]></part>
+				</record>
+				<filerecord>
+					<filedimensionspart>
+						<width>90px</width>
+						<height>60px</height>
+						<filetype>video/quicktime</filetype>
+					</filedimensionspart>
+					<filepathpart>http://slug.middlebury.edu/~afranco/samplemedia/MooseFest2002clip_small.mov</filepathpart>
+				</filerecord>
+			</asset>
+		</asset>
+	</repository>
+</import>
