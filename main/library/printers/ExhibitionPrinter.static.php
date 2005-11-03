@@ -111,25 +111,18 @@ class ExhibitionPrinter {
 				.$harmoni->request->quickURL("exhibitions", "add_slideshow",
 				array("exhibition_id" => $assetId->getIdString())).
 				"'>"._("Add a <em>Slideshow</em>")."</a>";
-	//===== Import Slideshow Link =====//
-			$harmoni->request->startNamespace("import_slideshow");
-			$links[] = "<a href='".$harmoni->request->quickURL(
-				"exhibitions", "import_slideshow",
-				array("exhibition_id" => $assetId->getIdString())).
-				"'>"._("Import <em>Slideshow(s)</em>")."</a>";
-			$harmoni->request->endNamespace();
 		}
-	//===== Export Link =====//
-		if ($authZ->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.view"),
-				$asset->getId())) {
-			$harmoni->request->startNamespace('export_exhibition');
-			$links[] = "<a href='".$harmoni->request->quickURL(
-				"exhibitions", "export_exhibition",
-				array("exhibition_id" => $assetId->getIdString()))."'>";
-			$links[count($links) - 1] .= _("Export")."</a>";
-			$harmoni->request->endNamespace();
-		}
+// ===== Export Link =====//
+// 		if ($authZ->isUserAuthorized(
+// 				$idManager->getId("edu.middlebury.authorization.view"),
+// 				$asset->getId())) {
+// 			$harmoni->request->startNamespace('export_exhibition');
+// 			$links[] = "<a href='".$harmoni->request->quickURL(
+// 				"exhibitions", "export_exhibition",
+// 				array("exhibition_id" => $assetId->getIdString()))."'>";
+// 			$links[count($links) - 1] .= _("Export")."</a>";
+// 			$harmoni->request->endNamespace();
+// 		}
 
 		print  implode("\n\t | ", $links);
 	}

@@ -87,23 +87,23 @@ class importAction extends MainWindowAction {
 	function &createWizard () {
 		//$repository =& $this->getRepository();
 		$wizard =& SimpleWizard::withText(
-			"\n<h3>"._("File type")."</h3>".
-			"\n"._("The type of file to be imported: ").
-			"\n<br />[[file_type]]".
-			"\n<br />\n<br />"._("Is this file an archive?").
-			"\n<br />[[is_archived]]".
-			"\n<h3>"._("Import type")."</h3>".
-			"\n"._("The type of import to execute: ").
-			"\n<br />[[import_type]]".
-			"\n<h3>"._("File")."</h3>".
-			"\n"._("The file to be imported: ").
-			"\n<br />[[filename]]".
-			"<table width='100%' border='0' style='margin-top:20px' >\n" .
+			"<table border='0' style='margin-top:20px' >\n" .
+			"\n<tr><td><h3>"._("File type:")."</h3></td></tr>".
+			"\n<tr><td>"._("The type of file to be imported: ")."</td>".
+			"\n<td>[[file_type]]</td></tr>".
+			"\n<tr><td>"._("Is this file an archive? ")."</td>".
+			"\n<td>[[is_archived]]</td></tr>".
+			"\n<tr><td><h3>"._("Import type:")."</h3></td></tr>".
+			"\n<tr><td>"._("The type of import to execute: ")."</td>".
+			"\n<td>[[import_type]]</td></tr>".
+			"\n<tr><td><h3>"._("File:")."</h3></td></tr>".
+			"\n<tr><td>"._("The file to be imported: ")."</td>".
+			"\n<td>[[filename]]</td>".
 			"<tr>\n" .
-			"<td align='left' width='50%'>\n" .
+			"<td align='left'>\n" .
 			"[[_cancel]]".
 			"</td>\n" .
-			"<td align='right' width='50%'>\n" .
+			"<td align='right'>\n" .
 			"[[_save]]".
 			"</td></tr></table>");
 		
@@ -118,7 +118,7 @@ class importAction extends MainWindowAction {
 //		$select->setValue("Tab-Delimited");
 		
 		$archive =& $wizard->addComponent("is_archived", 
-			WCheckBox::withLabel("isArchived?"));
+			WCheckBox::withLabel("is Archived"));
 		
 		$type =& $wizard->addComponent("import_type", new WSelectList());
 		$type->addOption("update", "update");
@@ -184,27 +184,41 @@ class importAction extends MainWindowAction {
 		}	
 		$newName = $this->moveArchive($path, $filename);
 		
-		
+		$array = array("FILE", "FILE_DATA", "FILE_NAME", "MIME_TYPE",
+		"THUMBNAIL_DATA", "THUMBNAIL_MIME_TYPE", "FILE_SIZE", "DIMENSIONS",
+		"THUMBNAIL_DIMENSIONS", 	
+		"edu.middlebury.harmoni.repository.asset_content", 
+		"edu.middlebury.harmoni.repository.asset_content.Content",
+		"edu.middlebury.concerto.exhibition_repository");
+
 		
 		if ($properties['file_type'] == "XML") {
-			$importer =& new XMLImporter();
+			$importer =& new XMLImporter($array);
 		if ($properties['is_archived'] == TRUE) {
 				$directory = $importer->decompress($newName);
-				$importer =& XMLImporter::withFile($directory."/metadata.xml", 
+				$importer =& XMLImporter::withFile($array, 
+					$directory."/metadata.xml", 
 					$properties['import_type']);
-
 			}
 			else
-				$importer =& XMLImporter::withFile($newName,
+				$importer =& XMLImporter::withFile($array, $newName,
 					$properties['import_type']);
 					
 			$importer->parseAndImportBelow();
 			
 		}
+
+		if ($importer->hasErrors()) {
+			$importer->printErrorMessages();
+	
+			$centerPane->add(new Block(ob_get_contents(), 1));
+			ob_end_clean();
+			return FALSE;
+		}
 		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();
-				
-		return true;
+		
+		return TRUE;
 	}
 		
 	/**

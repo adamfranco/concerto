@@ -1,7 +1,7 @@
 <?php
 /**
  * @since 9/14/05
- * @package concerto.admin
+ * @package concerto.exhibhitions
  * 
  * @copyright Copyright &copy; 2005, Middlebury College
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
@@ -16,7 +16,7 @@ require_once(POLYPHONY."/main/library/Importer/XMLImporters/XMLRepositoryImporte
  * imports data into concerto (of many types)
  * 
  * @since 9/14/05
- * @package concerto.admin
+ * @package concerto.exhibitions
  * 
  * @copyright Copyright &copy; 2005, Middlebury College
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)

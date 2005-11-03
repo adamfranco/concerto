@@ -1,7 +1,7 @@
 <?php
 /**
  * @since 9/14/05
- * @package concerto.admin
+ * @package concerto.collection
  * 
  * @copyright Copyright &copy; 2005, Middlebury College
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
@@ -13,10 +13,10 @@ require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php
 require_once(POLYPHONY."/main/library/Importer/XMLImporters/XMLRepositoryImporter.class.php");
 
 /**
- * imports data into concerto (of many types)
+ * Imports assets into a collection in concerto
  * 
  * @since 9/14/05
- * @package concerto.admin
+ * @package concerto.collection
  * 
  * @copyright Copyright &copy; 2005, Middlebury College
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
@@ -210,9 +210,10 @@ class importAction extends MainWindowAction {
 			return FALSE;
 		}	
 		$newName = $this->moveArchive($path, $filename);
-		
+		$array = array();
 		if ($properties['file_type'] == "XML") 
 			$importer =& XMLRepositoryImporter::withObject(
+				$array,
 				$repositoryManager->getRepository(
 				$idManager->getId(
 				$harmoni->request->get('collection_id'))),
@@ -220,9 +221,16 @@ class importAction extends MainWindowAction {
 				$properties['import_type']);
 
 		$importer->parseAndImportBelow();
+		if ($importer->hasErrors()) {
+			$importer->printErrorMessages();
 	
+			$centerPane->add(new Block(ob_get_contents(), 1));
+			ob_end_clean();
+			return FALSE;
+		}
 		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();
+		
 		return TRUE;
 	}
 		

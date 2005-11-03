@@ -110,35 +110,7 @@ class SlideShowPrinter {
 				$links[] = _("delete");
 			}
 		}
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $asset->getId())) {
-		
-			$harmoni->request->startNamespace('import_slides');
-			if ($actionString != "exhibitions.import_slides") {
-				$links[] = "<a href='".$harmoni->request->quickURL(
-					"exhibitions", "import_slides", array("slideshow_id"
-					=> $assetId->getIdString()))."'>";
-				$links[count($links) - 1] .= _("import slides")."</a>";
-			} else {
-				$links[] = _("import slides");
-			}
-			$harmoni->request->endNamespace();
-		
-// 			$harmoni->request->startNamespace('export_slideshow');
-// 			if ($actionString != "exhibitions.export_slideshow") {
-// 				$links[] = "<a href='".$harmoni->request->quickURL(
-// 					"exhibitions", "export_slideshow",
-// 					array("slideshow_id" => $assetId->getIdString()))."'>";
-// 				$links[count($links) - 1] .= _("export")."</a>";
-// 			} else {
-// 				$links[] = _("export");
-// 			}
-// 			$harmoni->request->endNamespace();
-		}
 		print  implode("\n\t | ", $links);
 	}
-	
-	
-	
 }
-
 ?>

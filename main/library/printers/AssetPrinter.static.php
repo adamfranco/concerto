@@ -101,13 +101,17 @@ class AssetPrinter {
 			} else
 				$links[] = _("details");
 		//===== Export Link =====//
-			$harmoni->request->startNamespace('export');
-			$links[] = "<a href='".$harmoni->request->quickURL(
-				"asset", "export",
-				array("collection_id" => $repositoryId->getIdString(),
-				"asset_id" => $assetId->getIdString()))."'>";
-			$links[count($links) - 1] .= _("Export")."</a>";
-			$harmoni->request->endNamespace();
+			if (ereg("^asset\..*$", $actionString) && 
+					$harmoni->request->get("asset_id") == 
+					$assetId->getIdString()) {
+				$harmoni->request->startNamespace('export');
+				$links[] = "<a href='".$harmoni->request->quickURL(
+					"asset", "export",
+					array("collection_id" => $repositoryId->getIdString(),
+					"asset_id" => $assetId->getIdString()))."'>";
+				$links[count($links) - 1] .= _("Export")."</a>";
+				$harmoni->request->endNamespace();
+			}
 		}
 	//===== Browse Link =====//
 		if ($authZ->isUserAuthorized(

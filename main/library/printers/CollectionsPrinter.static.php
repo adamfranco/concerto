@@ -84,19 +84,6 @@ class CollectionsPrinter {
 				_("Import <em>Collection(s)</em>").
 				"</a>";
 		}
-	//===== Export All Collections Link =====//
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
-		if ($authZ->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.view"),
-				$idManager->getId("edu.middlebury.concerto.collections_root"))) {
-			$harmoni->request->startNamespace('export');
-			$links[] = "<a href='".$harmoni->request->quickURL(
-				"collections", "export")."'>";
-			$links[count($links) - 1] .= 
-				_("Export all <em>Collections</em>")."</a>";
-			$harmoni->request->endNamespace();
-		}		
 		print  implode("\n\t | ", $links);
 	}
 }

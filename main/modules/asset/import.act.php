@@ -1,7 +1,7 @@
 <?php
 /**
  * @since 9/14/05
- * @package concerto.admin
+ * @package concerto.asset
  * 
  * @copyright Copyright &copy; 2005, Middlebury College
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
@@ -14,10 +14,10 @@ require_once(POLYPHONY."/main/library/Importer/XMLImporters/XMLAssetImporter.cla
 require_once(POLYPHONY."/main/library/Importer/XMLImporters/XMLRepositoryImporter.class.php");
 
 /**
- * imports data into concerto (of many types)
+ * imports underneath an asset (child assets)
  * 
  * @since 9/14/05
- * @package concerto.admin
+ * @package concerto.asset
  * 
  * @copyright Copyright &copy; 2005, Middlebury College
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
