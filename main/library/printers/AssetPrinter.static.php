@@ -101,18 +101,18 @@ class AssetPrinter {
 			} else
 				$links[] = _("details");
 		//===== Export Link =====//
-			if (ereg("^asset\..*$", $actionString) && 
-					$harmoni->request->get("asset_id") == 
-					$assetId->getIdString()) {
-				$harmoni->request->startNamespace('export');
-				$links[] = "<a href='".$harmoni->request->quickURL(
-					"asset", "export",
-					array("collection_id" => $repositoryId->getIdString(),
-					"asset_id" => $assetId->getIdString()))."'>";
-				$links[count($links) - 1] .= _("Export")."</a>";
-				$harmoni->request->endNamespace();
-			}
-		}
+// 			if (ereg("^asset\..*$", $actionString) && 
+// 					$harmoni->request->get("asset_id") == 
+// 					$assetId->getIdString()) {
+// 				$harmoni->request->startNamespace('export');
+// 				$links[] = "<a href='".$harmoni->request->quickURL(
+// 					"asset", "export",
+// 					array("collection_id" => $repositoryId->getIdString(),
+// 					"asset_id" => $assetId->getIdString()))."'>";
+// 				$links[count($links) - 1] .= _("Export")."</a>";
+// 				$harmoni->request->endNamespace();
+// 			}
+ 		}
 	//===== Browse Link =====//
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.access"),
@@ -181,13 +181,13 @@ class AssetPrinter {
 				$links[count($links) - 1] .= _("Add Child <em>Asset</em>").
 					"</a>";
 	//===== Import Link =====//
-				$harmoni->request->startNamespace("import");
-				$links[] = "<a href='".$harmoni->request->quickURL(
-					"asset", "import",
-					array("collection_id" => $repositoryId->getIdString(), 
-					"asset_id" => $assetId->getIdString()))."'>".
-					_("Import Child <em>Asset(s)</em>")."</a>";
-				$harmoni->request->endNamespace();
+// 				$harmoni->request->startNamespace("import");
+// 				$links[] = "<a href='".$harmoni->request->quickURL(
+// 					"asset", "import",
+// 					array("collection_id" => $repositoryId->getIdString(), 
+// 					"asset_id" => $assetId->getIdString()))."'>".
+// 					_("Import Child <em>Asset(s)</em>")."</a>";
+// 				$harmoni->request->endNamespace();
 			}
 		}
 	//===== Basket Link =====//

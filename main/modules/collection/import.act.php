@@ -115,38 +115,39 @@ class importAction extends MainWindowAction {
 	 */
 	
 	function &createWizard () {
-		//$repository =& $this->getRepository();
 		$wizard =& SimpleWizard::withText(
-			"\n<h3>"._("File type")."</h3>".
-			"\n"._("The type of file to be imported: ").
-			"\n<br />[[file_type]]".
-			"\n<h3>"._("Import type").
-			"\n"._("The type of import to execute: ").
-			"\n<br />[[import_type]]".
-			"\n<h3>"._("File")."</h3>".
-			"\n"._("The file to be imported: ").
-			"\n<br />[[filename]]".
-			"<table width='100%' border='0' style='margin-top:20px' >\n" .
+			"<table border='0' style='margin-top:20px' >\n" .
+			"\n<tr><td><h3>"._("File type:")."</h3></td></tr>".
+			"\n<tr><td>"._("The type of file to be imported: ")."</td>".
+			"\n<td>[[file_type]]</td></tr>".
+			"\n<tr><td>"._("Is this file an archive? ")."</td>".
+			"\n<td>[[is_archived]] (Tab-Delimited and Exif must be Archived)</td></tr>".
+			"\n<tr><td><h3>"._("Import type:")."</h3></td></tr>".
+			"\n<tr><td>"._("The type of import to execute: ")."</td>".
+			"\n<td>[[import_type]]</td></tr>".
+			"\n<tr><td><h3>"._("File:")."</h3></td></tr>".
+			"\n<tr><td>"._("The file to be imported: ")."</td>".
+			"\n<td>[[filename]]</td>".
 			"<tr>\n" .
-			"<td align='left' width='50%'>\n" .
+			"<td align='left'>\n" .
 			"[[_cancel]]".
 			"</td>\n" .
-			"<td align='right' width='50%'>\n" .
+			"<td align='right'>\n" .
 			"[[_save]]".
 			"</td></tr></table>");
-		
-		// :: Name and Description ::
-		//$step =& $wizard->addStep("fileupload", new WizardStep());
-		//$step->setDisplayName(_("Archive Type and File Upload"));
-		
+				
 		$select =& $wizard->addComponent("file_type", new WSelectList());
-//		$select->addOption("Tab-Delimited", "Tab-Delimited");
 		$select->addOption("XML", "XML");
-//		$select->addOption("Exif", "Exif");
-//		$select->setValue("Tab-Delimited");
-		
+		$select->addOption("Tab-Delimited", "Tab-Delimited");
+		$select->addOption("Exif", "Exif");
+		$select->setValue("XML");
+
+		$archive =& $wizard->addComponent("is_archived", 
+			WCheckBox::withLabel("is Archived"));
+
 		$type =& $wizard->addComponent("import_type", new WSelectList());
-		$type->addOption("update", "update");
+//		$type->addOption("update", "update");  
+// need exceptions for nodes not existing
 		$type->addOption("insert", "insert");
 		//$type->addOption("replace", "replace");
 		
@@ -208,26 +209,58 @@ class importAction extends MainWindowAction {
 			$centerPane->add(new Block(ob_get_contents(), 1));
 			ob_end_clean();
 			return FALSE;
-		}	
+		}
 		$newName = $this->moveArchive($path, $filename);
-		$array = array();
-		if ($properties['file_type'] == "XML") 
-			$importer =& XMLRepositoryImporter::withObject(
-				$array,
-				$repositoryManager->getRepository(
-				$idManager->getId(
-				$harmoni->request->get('collection_id'))),
-				$newName,
-				$properties['import_type']);
+//===== THIS ARRAY DEFINES THINGS THAT SHOULD NOT BE IMPORTED =====// 
+		$array = array("FILE", "FILE_DATA", "FILE_NAME", "MIME_TYPE",
+		"THUMBNAIL_DATA", "THUMBNAIL_MIME_TYPE", "FILE_SIZE", "DIMENSIONS",
+		"THUMBNAIL_DIMENSIONS", 	
+		"edu.middlebury.harmoni.repository.asset_content", 
+		"edu.middlebury.harmoni.repository.asset_content.Content");
+		
+//===== Exif and Tab-Delim Importers are special =====//
+		if ($properties['importtype'] == "Tab-Delimited") 
+			$importer =& new TabRepositoryImporter($newName, $dr->getId(), false);
+		else if ($properties['importtype'] == "Exif") 
+			$importer =& new ExifRepositoryImporter($newName, $dr->getId(), false);
+		if (isset($importer))
+			$importer->import();						
+//===== Done with special "RepositoryImporters" =====//
 
-		$importer->parseAndImportBelow();
+		if ($properties['file_type'] == "XML") {
+			if ($properties['is_archived'] == TRUE) {
+				//	define an empty importer for decompression
+				$importer =& new XMLImporter($array);
+				$directory = $importer->decompress($newName);
+				unset($importer);
+				$dir = opendir($directory);
+				while ($file = readdir($dir)) // each folder is a collection
+					if (is_dir($directory."/".$file) && $file != "." && $file != "..")
+						$importer =& XMLRepositoryImporter::withObject(
+							$array,
+							$repositoryManager->getRepository(
+							$idManager->getId(
+							$harmoni->request->get('collection_id'))),
+							$directory."/".$file."/metadata.xml", 
+							$properties['import_type']);
+				closedir($dir);
+			}
+			else // not compressed, only one xml file
+				$importer =& XMLRepositoryImporter::withObject($array,
+					$repositoryManager->getRepository($idManager->getId(
+					$harmoni->request->get('collection_id'))), $newName,
+					$properties['import_type']);
+			$importer->parseAndImportBelow();
+		}		
 		if ($importer->hasErrors()) {
+		// something happened so tell the end user
 			$importer->printErrorMessages();
 	
 			$centerPane->add(new Block(ob_get_contents(), 1));
 			ob_end_clean();
 			return FALSE;
 		}
+		// clean and clear
 		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();
 		

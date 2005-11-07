@@ -153,7 +153,8 @@ class importAction extends MainWindowAction {
 //		$select->setValue("Tab-Delimited");
 		
 		$type =& $wizard->addComponent("import_type", new WSelectList());
-		$type->addOption("update", "update");
+//		$type->addOption("update", "update");  
+// need exceptions for nodes not existing
 		$type->addOption("insert", "insert");
 		//$type->addOption("replace", "replace");
 		

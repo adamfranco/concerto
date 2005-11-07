@@ -89,7 +89,6 @@ class importAction extends MainWindowAction {
 	 */
 	
 	function &createWizard () {
-		//$repository =& $this->getRepository();
 		$wizard =& SimpleWizard::withText(
 			"<table border='0' style='margin-top:20px' >\n" .
 			"\n<tr><td><h3>"._("File type:")."</h3></td></tr>".
@@ -110,11 +109,7 @@ class importAction extends MainWindowAction {
 			"<td align='right'>\n" .
 			"[[_save]]".
 			"</td></tr></table>");
-		
-		// :: Name and Description ::
-		//$step =& $wizard->addStep("fileupload", new WizardStep());
-		//$step->setDisplayName(_("Archive Type and File Upload"));
-		
+				
 		$select =& $wizard->addComponent("file_type", new WSelectList());
 //		$select->addOption("Tab-Delimited", "Tab-Delimited");
 		$select->addOption("XML", "XML");
@@ -125,7 +120,8 @@ class importAction extends MainWindowAction {
 			WCheckBox::withLabel("is Archived"));
 
 		$type =& $wizard->addComponent("import_type", new WSelectList());
-		$type->addOption("update", "update");
+//		$type->addOption("update", "update");  
+// need exceptions for nodes not existing
 		$type->addOption("insert", "insert");
 		//$type->addOption("replace", "replace");
 		
@@ -189,7 +185,7 @@ class importAction extends MainWindowAction {
 			return FALSE;
 		}	
 		$newName = $this->moveArchive($path, $filename);
-		
+//===== THIS ARRAY DEFINES THINGS THAT SHOULD NOT BE IMPORTED =====// 
 		$array = array("FILE", "FILE_DATA", "FILE_NAME", "MIME_TYPE",
 		"THUMBNAIL_DATA", "THUMBNAIL_MIME_TYPE", "FILE_SIZE", "DIMENSIONS",
 		"THUMBNAIL_DIMENSIONS", 	
@@ -197,12 +193,13 @@ class importAction extends MainWindowAction {
 		"edu.middlebury.harmoni.repository.asset_content.Content");
 		
 		if ($properties['file_type'] == "XML") {
-			$importer =& new XMLImporter($array);
+		//	define an empty importer for decompression
 			if ($properties['is_archived'] == TRUE) {
+				$importer =& new XMLImporter($array);
 				$directory = $importer->decompress($newName);
 				unset($importer);
 				$dir = opendir($directory);
-				while ($file = readdir($dir))
+				while ($file = readdir($dir)) // each folder is a collection
 					if (is_dir($directory."/".$file) && $file != "." && $file != "..")
 						$importer =& XMLRepositoryImporter::withFile(
 							$array,
@@ -210,18 +207,20 @@ class importAction extends MainWindowAction {
 							$properties['import_type']);
 				closedir($dir);
 			}
-			else
+			else // not compressed, only one xml file
 				$importer =& XMLRepositoryImporter::withFile($array, $newName,
 					$properties['import_type']);
 			$importer->parseAndImport();
 		}
 		if ($importer->hasErrors()) {
+		// something happened so tell the end user
 			$importer->printErrorMessages();
 	
 			$centerPane->add(new Block(ob_get_contents(), 1));
 			ob_end_clean();
 			return FALSE;
 		}
+		// clean and clear
 		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();
 		
