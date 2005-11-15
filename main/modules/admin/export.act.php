@@ -159,13 +159,17 @@ class exportAction
 
 		$file = $exporter->exportAll();
 
+		shell_exec('cd '.str_replace(":", "\:", $file).";".
+		'tar -czf /tmp/'.$properties['filepath'].$properties['compression'].
+		" *");
+
 		header("Content-type: application/x-gzip");
 		header('Content-Disposition: attachment; filename="'.
 			$properties['filepath'].$properties['compression'].'"');
 
-		print file_get_contents($file);
+		print file_get_contents(
+			"/tmp/".$properties['filepath'].$properties['compression']);
 		exit();
-// 		header("Content-type: text/html");
 
 
 		return TRUE;

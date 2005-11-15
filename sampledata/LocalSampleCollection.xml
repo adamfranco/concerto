@@ -10,7 +10,7 @@
 			<keyword>Multimedia</keyword>
 			<description>User-created repository for storing multimedia.</description>
 		</type>
-		<recordstructure xml:id="dc">
+		<recordstructure xml:id="dc" isGlobal="TRUE">
 			<name>Dublin Core</name>
 			<description><![CDATA[
 <h1>Dublin Core Metadata Element Set, Version 1.1: Reference Description</h1>
