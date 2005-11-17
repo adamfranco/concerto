@@ -199,6 +199,13 @@ if (!isset($_SESSION['table_setup_complete'])) {
 	/*********************************************************
 	 * Script for setting up the AuthorizationFunctions that Concerto will use
 	 *********************************************************/
+	 
+			 if (file_exists(MYDIR.'/config/authorization.conf.php'))
+				require_once (MYDIR.'/config/authorization.conf.php');
+			else
+				require_once (MYDIR.'/config/authorization_default.conf.php');
+				
+				
 			$authZManager =& Services::getService("AuthorizationManager");
 			$idManager =& Services::getService("IdManager");
 			$qualifierHierarchyId =& $authorizationHierarchyId; // Id from above
