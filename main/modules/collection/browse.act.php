@@ -10,6 +10,7 @@
 
 require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/TextAlignSP.class.php");
+require_once(HARMONI."GUIManager/StyleProperties/MinHeightSP.class.php");
 
 /**
  * 
@@ -307,7 +308,7 @@ class browseAction
 function printAssetShort(& $asset, &$harmoni, $num) {
 	$container =& new Container(new YLayout, BLOCK, 4);
 	$fillContainerSC =& new StyleCollection("*.fillcontainer", "fillcontainer", "Fill Container", "Elements with this style will fill their container.");
-	$fillContainerSC->addSP(new HeightSP("85%"));
+	$fillContainerSC->addSP(new MinHeightSP("88%"));
 	$container->addStyle($fillContainerSC);
 	
 	$centered =& new StyleCollection("*.centered", "centered", "Centered", "Centered Text");

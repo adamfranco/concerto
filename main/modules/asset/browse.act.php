@@ -9,6 +9,7 @@
  */ 
 
 require_once(MYDIR."/main/library/abstractActions/AssetAction.class.php");
+require_once(HARMONI."GUIManager/StyleProperties/MinHeightSP.class.php");
 
 /**
  * 
@@ -235,7 +236,7 @@ class browseAction
 function printAssetShort(& $asset, &$harmoni, $num) {
 	$container =& new Container(new YLayout, BLOCK, 4);
 	$fillContainerSC =& new StyleCollection("*.fillcontainer", "fillcontainer", "Fill Container", "Elements with this style will fill their container.");
-	$fillContainerSC->addSP(new HeightSP("85%"));
+	$fillContainerSC->addSP(new MinHeightSP("88%"));
 // 	$fillContainerSC->addSP(new WidthSP("100%"));
 // 	$fillContainerSC->addSP(new BorderSP("3px", "solid", "#F00"));
 	$container->addStyle($fillContainerSC);
@@ -254,7 +255,7 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 	ob_end_clean();
 	$container->add($component, "100%", null, LEFT, TOP);
 	
-	$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($assetId);
+	$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($asset);
 	if ($thumbnailURL !== FALSE) {
 		ob_start();
 		print "\n\t<a href='";
