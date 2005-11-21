@@ -34,6 +34,7 @@ class browseAction
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
 		$authZ =& Services::getService("AuthZ");
+
 		$idManager =& Services::getService("Id");
 		return $authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.access"), 
@@ -307,8 +308,6 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 	$container =& new Container(new YLayout, BLOCK, 4);
 	$fillContainerSC =& new StyleCollection("*.fillcontainer", "fillcontainer", "Fill Container", "Elements with this style will fill their container.");
 	$fillContainerSC->addSP(new HeightSP("85%"));
-// 	$fillContainerSC->addSP(new WidthSP("100%"));
-// 	$fillContainerSC->addSP(new BorderSP("3px", "solid", "#F00"));
 	$container->addStyle($fillContainerSC);
 	
 	$centered =& new StyleCollection("*.centered", "centered", "Centered", "Centered Text");
@@ -325,7 +324,7 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 	ob_end_clean();
 	$container->add($component, "100%", null, LEFT, TOP);
 	
-	$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($assetId);
+	$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($asset);
 	if ($thumbnailURL !== FALSE) {
 		ob_start();
 		print "\n\t<a href='";
