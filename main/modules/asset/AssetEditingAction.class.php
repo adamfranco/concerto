@@ -238,7 +238,6 @@ class AssetEditingAction
 		$style = "
 		<style type='text/css'>			
 			.edit_table td, th {
-// 				border-top: 1px solid;
 				padding: 5px;
 				padding-bottom: 20px;
 				vertical-align: top;
