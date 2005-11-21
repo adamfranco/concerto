@@ -229,6 +229,46 @@ class browseAction
 		}
 		print ">".$value."</option>";
 	}
+	
+	/**
+	 * Trim the passed text to a shorter length.
+	 *
+	 * Originally posted to php.net forums 
+	 * by webmaster at joshstmarie dot com (55-Sep-2005 05:58).
+	 * Modified by Adam Franco (afranco at middlebury dot edu).
+	 * 
+	 * @param string $text
+	 * @param integer $maxLength
+	 * @return string
+	 * @access public
+	 * @since 11/21/05
+	 */
+	function trim ($string, $word_count) {
+		$string = strip_tags($string);
+		
+		$trimmed = "";
+		$string = preg_replace("/\040+/"," ", trim($string));
+		$stringc = explode(" ",$string);
+		echo sizeof($stringc);
+		if($word_count >= sizeof($stringc))
+		{
+			// nothing to do, our string is smaller than the limit.
+			return $string;
+		}
+		elseif($word_count < sizeof($stringc))
+		{
+			// trim the string to the word count
+			for($i=0;$i<$word_count;$i++)
+			{
+				$trimmed .= $stringc[$i]." ";
+			}
+			
+			if(substr($trimmed, strlen(trim($trimmed))-1, 1) == '.')
+				return trim($trimmed).'..';
+			else
+				return trim($trimmed).'...';
+		}
+	}
 }
 
 
@@ -248,7 +288,7 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 	$assetId =& $asset->getId();
 	print "\n\t<strong>".htmlentities($asset->getDisplayName())."</strong>";
 	print "\n\t<br/>"._("ID#").": ".$assetId->getIdString();
-	print  "\n\t<br /><em>".htmlentities($asset->getDescription())."</em>";	
+	print  "\n\t<br /><em>".nl2br(browseAction::trim(htmlentities($asset->getDescription()), 25))."</em>";	
 	print  "\n\t<br />";
 	
 	$component =& new Block(ob_get_contents(), 2);
