@@ -13,13 +13,13 @@
  * @version $Id$
  */
 
-require_once(HARMONI."/GUIManager/Themes/SimpleTheme.class.php");
+require_once(HARMONI."/GUIManager/Themes/SimpleLinesTheme.class.php");
  
 // :: GUIManager setup ::
 	$configuration =& new ConfigurationProperties;
 	$configuration->addProperty('database_index', $dbID);
 	$configuration->addProperty('database_name', $dbName);
-	$configuration->addProperty('default_theme', new SimpleTheme);
+	$configuration->addProperty('default_theme', new SimpleLinesTheme);
 	$configuration->addProperty('character_set', $arg0 = 'utf-8');
 	$configuration->addProperty('document_type', $arg1 = 'text/html');
 	$configuration->addProperty('document_type_definition', $arg2 = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">');
