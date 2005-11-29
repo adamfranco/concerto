@@ -56,7 +56,7 @@ class mainAction
 		$actionRows =& $this->getActionRows();
 		$harmoni =& Harmoni::instance();
 		
-		$actionRows->add(new Block("<span style='font-size: larger'><b>" . _("Agents &amp; Groups") . "</b></span>" , 3));
+		$actionRows->add(new Heading(_("Agents &amp; Groups"), 2));
 		
 		ob_start();
 		print "\n<ul>";
@@ -74,13 +74,13 @@ class mainAction
 		print "</a></li>";
 		print "\n</ul>";
 		
-		$introText =& new Block(ob_get_contents(),3);
+		$introText =& new Block(ob_get_contents(),2);
 		$actionRows->add($introText, "100%", null, CENTER, CENTER);
 		ob_end_clean();
 		
 		
 		
-		$actionRows->add(new Block("<span style='font-size: larger'><b>" . _("Authorizations") . "</b></span>" , 2));
+		$actionRows->add(new Heading(_("Authorizations"), 2));
 		
 		ob_start();
 		print "\n<ul>";
@@ -92,7 +92,7 @@ class mainAction
 		print "</a></li>";
 		print "\n</ul>";
 		
-		$introText =& new Block(ob_get_contents(),3);
+		$introText =& new Block(ob_get_contents(),2);
 		$actionRows->add($introText, "100%", null, CENTER, CENTER);
 		ob_end_clean();
 		
@@ -102,8 +102,7 @@ class mainAction
 			$idManager->getId("edu.middlebury.authorization.view"),
 			$idManager->getId("edu.middlebury.authorization.root"))) {
 		
-			$actionRows->add(new Block("<span style='font-size: larger'><b>" .
-				_("Development") . "</b></span>" , 2));
+			$actionRows->add(new Heading(_("Development"), 2));
 			
 			ob_start();
 			print "\n<ul>";
@@ -129,7 +128,7 @@ class mainAction
 			print "</a></li>";
 			print "\n</ul>";
 			
-			$introText =& new Block(ob_get_contents(),3);
+			$introText =& new Block(ob_get_contents(), 2);
 			$actionRows->add($introText, "100%", null, CENTER, CENTER);
 			ob_end_clean();
 		}

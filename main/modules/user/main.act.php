@@ -58,8 +58,7 @@ class mainAction
 		$actionRows =& $this->getActionRows();
 		$harmoni =& Harmoni::instance();
 
-		$actionRows->add(new Block("<span style='font-size: larger'><b>".
-			_("Authentication")."</b></span>" , 3));
+		$actionRows->add(new Heading(_("Authentication"), 2));
 		
 		// Current AuthN Table
 		ob_start();
@@ -113,7 +112,7 @@ class mainAction
 		}
 		print "\n</table>";
 
-		$statusBar =& new Block(ob_get_contents(),3);
+		$statusBar =& new Block(ob_get_contents(),2);
 		$actionRows->add($statusBar,null,null,RIGHT,TOP);
 		ob_end_clean();
 
@@ -126,7 +125,7 @@ class mainAction
 			_("Change ConcertoDB Password").
 			"</li>";
 			
-		$introText =& new Block(ob_get_contents(),3);
+		$introText =& new Block(ob_get_contents(),2);
 		$actionRows->add($introText, "100%", null, CENTER, CENTER);
 		ob_end_clean();
 		// end of authN links
