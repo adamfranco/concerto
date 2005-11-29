@@ -72,11 +72,11 @@ class SimpleTheme extends Theme {
 		
 		// =====================================================================
 		// Block 2 style
-		$block2 =& new CornersStyleCollection("*.block2", "block2", "Block 2", "A 2nd level block.");
-		$block2->setBorderUrl("TopLeft", MYPATH."/themes/SimpleTheme/images/block2_TL.gif");
-		$block2->setBorderUrl("TopRight", MYPATH."/themes/SimpleTheme/images/block2_TR.gif");
-		$block2->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleTheme/images/block2_BL.gif");
-		$block2->setBorderUrl("BottomRight", MYPATH."/themes/SimpleTheme/images/block2_BR.gif");
+		$block2 =& new CornersStyleCollection("*.block2", "block2", "Block 2", "A 2nd level block. Used for standard content");
+		$block2->setBorderUrl("TopLeft", MYPATH."/themes/SimpleTheme/images/corner_TL.gif");
+		$block2->setBorderUrl("TopRight", MYPATH."/themes/SimpleTheme/images/corner_TR.gif");
+		$block2->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleTheme/images/corner_BL.gif");
+		$block2->setBorderUrl("BottomRight", MYPATH."/themes/SimpleTheme/images/corner_BR.gif");
 		
 		
 		$block2->addSP(new BackgroundColorSP("#ccc"));
@@ -90,15 +90,15 @@ class SimpleTheme extends Theme {
 	
 		// =====================================================================
 		// Block 3 style
-		$block3 =& new CornersStyleCollection("*.block3", "block3", "Block 3", "A 3rd level block.");
-		$block3->setBorderUrl("TopLeft", MYPATH."/themes/SimpleTheme/images/block3_TL.gif");
-		$block3->setBorderUrl("TopRight", MYPATH."/themes/SimpleTheme/images/block3_TR.gif");
-		$block3->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleTheme/images/block3_BL.gif");
-		$block3->setBorderUrl("BottomRight", MYPATH."/themes/SimpleTheme/images/block3_BR.gif");
+		$block3 =& new CornersStyleCollection("*.block3", "block3", "Block 3", "A 3rd level block. Used for emphasized content such as Wizards.");
+		$block3->setBorderUrl("TopLeft", MYPATH."/themes/SimpleTheme/images/corner_TL.gif");
+		$block3->setBorderUrl("TopRight", MYPATH."/themes/SimpleTheme/images/corner_TR.gif");
+		$block3->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleTheme/images/corner_BL.gif");
+		$block3->setBorderUrl("BottomRight", MYPATH."/themes/SimpleTheme/images/corner_BR.gif");
 		
 		
-		$block3->addSP(new BackgroundColorSP("#FD9453"));
-		$block3->addSP(new ColorSP("#FFF"));
+		$block3->addSP(new BackgroundColorSP("#AAA9A9"));
+		$block3->addSP(new ColorSP("#000"));
 // 		$block3->addSP(new BorderSP("1px", "solid", "#000"));
 		$block3->addSP(new PaddingSP("10px"));
 		$block3->addSP(new MarginSP("1px"));
@@ -106,27 +106,31 @@ class SimpleTheme extends Theme {
 		$this->addStyleForComponentType($block3, BLOCK, 3);
 		
 		
-// 		
-// 		// =====================================================================
-// 		// Block 4 style
-// 		$block4 =& new StyleCollection("*.block4", "block4", "Block 4", "A 4th level block.");
-// 		$block4->addSP(new BackgroundColorSP("#D4D4D4"));
-// 		$block4->addSP(new ColorSP("#000"));
-// 		$block4->addSP(new BorderTopSP("1px", "solid", "#000"));
-// 		$block4->addSP(new BorderRightSP("1px", "solid", "#000"));
-// 		$block4->addSP(new BorderBottomSP("1px", "solid", "#000"));
-// 		$block4->addSP(new BorderLeftSP("1px", "solid", "#000"));
-// 		$block4->addSP(new PaddingSP("10px"));
-// 		$block4->addSP(new MarginSP("10px"));
-// 		$this->addStyleForComponentType($block4, BLOCK, 4);
+		
+		// =====================================================================
+		// Block 4 style
+		$block4 =& new CornersStyleCollection("*.block4", "block4", "Block 4", "A 4th level block. Used for alerts and highlit dialog boxes.");
+		$block4->setBorderUrl("TopLeft", MYPATH."/themes/SimpleTheme/images/corner_TL.gif");
+		$block4->setBorderUrl("TopRight", MYPATH."/themes/SimpleTheme/images/corner_TR.gif");
+		$block4->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleTheme/images/corner_BL.gif");
+		$block4->setBorderUrl("BottomRight", MYPATH."/themes/SimpleTheme/images/corner_BR.gif");
+		
+		
+		$block4->addSP(new BackgroundColorSP("#FD9453"));
+		$block4->addSP(new ColorSP("#FFF"));
+// 		$block4->addSP(new BorderSP("1px", "solid", "#000"));
+		$block4->addSP(new PaddingSP("10px"));
+		$block4->addSP(new MarginSP("1px"));
+		$block4->addSP(new TextAlignSP("justify"));
+		$this->addStyleForComponentType($block4, BLOCK, 4);
 		
 		// =====================================================================
 		// Heading 1 style
 		$heading1 =& new CornersStyleCollection("*.heading1", "heading1", "Heading 1", "A 1st level heading.");
-		$heading1->setBorderUrl("TopLeft", MYPATH."/themes/SimpleTheme/images/heading1_TL.gif");
-		$heading1->setBorderUrl("TopRight", MYPATH."/themes/SimpleTheme/images/heading1_TR.gif");
-		$heading1->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleTheme/images/heading1_BL.gif");
-		$heading1->setBorderUrl("BottomRight", MYPATH."/themes/SimpleTheme/images/heading1_BR.gif");
+		$heading1->setBorderUrl("TopLeft", MYPATH."/themes/SimpleTheme/images/corner_TL.gif");
+		$heading1->setBorderUrl("TopRight", MYPATH."/themes/SimpleTheme/images/corner_TR.gif");
+		$heading1->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleTheme/images/corner_BL.gif");
+		$heading1->setBorderUrl("BottomRight", MYPATH."/themes/SimpleTheme/images/corner_BR.gif");
 		
 		
 		$heading1->addSP(new BackgroundColorSP("#666666"));
@@ -143,10 +147,10 @@ class SimpleTheme extends Theme {
 		// =====================================================================
 		// Heading 2 style
 		$heading2 =& new CornersStyleCollection("*.heading2", "heading2", "Heading 2", "A 2nd level heading.");
-		$heading2->setBorderUrl("TopLeft", MYPATH."/themes/SimpleTheme/images/heading2_TL.gif");
-		$heading2->setBorderUrl("TopRight", MYPATH."/themes/SimpleTheme/images/heading2_TR.gif");
-		$heading2->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleTheme/images/heading2_BL.gif");
-		$heading2->setBorderUrl("BottomRight", MYPATH."/themes/SimpleTheme/images/heading2_BR.gif");
+		$heading2->setBorderUrl("TopLeft", MYPATH."/themes/SimpleTheme/images/corner_TL.gif");
+		$heading2->setBorderUrl("TopRight", MYPATH."/themes/SimpleTheme/images/corner_TR.gif");
+		$heading2->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleTheme/images/corner_BL.gif");
+		$heading2->setBorderUrl("BottomRight", MYPATH."/themes/SimpleTheme/images/corner_BR.gif");
 		
 		
 		$heading2->addSP(new BackgroundColorSP("#AAA9A9"));
@@ -169,10 +173,10 @@ class SimpleTheme extends Theme {
 		// =====================================================================
 		// Menu 1 style
 		$menu1 =& new CornersStyleCollection("*.menu1", "menu1", "Menu 1", "A 1st level menu.");
-		$menu1->setBorderUrl("TopLeft", MYPATH."/themes/SimpleTheme/images/menu1_TL.gif");
-		$menu1->setBorderUrl("TopRight", MYPATH."/themes/SimpleTheme/images/menu1_TR.gif");
-		$menu1->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleTheme/images/menu1_BL.gif");
-		$menu1->setBorderUrl("BottomRight", MYPATH."/themes/SimpleTheme/images/menu1_BR.gif");
+		$menu1->setBorderUrl("TopLeft", MYPATH."/themes/SimpleTheme/images/corner_TL.gif");
+		$menu1->setBorderUrl("TopRight", MYPATH."/themes/SimpleTheme/images/corner_TR.gif");
+		$menu1->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleTheme/images/corner_BL.gif");
+		$menu1->setBorderUrl("BottomRight", MYPATH."/themes/SimpleTheme/images/corner_BR.gif");
 		
 		$menu1->addSP(new BackgroundColorSP("#FD9453"));
 		$menu1->addSP(new ColorSP("#FFF"));
