@@ -67,7 +67,7 @@ class namebrowseAction
 		print _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
 		print "</p>";
 		
-		$actionRows->add(new Block(ob_get_contents(), 3), "100%", null, CENTER, CENTER);
+		$actionRows->add(new Block(ob_get_contents(), STANDARD_BLOCK), "100%", null, CENTER, CENTER);
 		ob_end_clean();
 		
 		
@@ -114,8 +114,8 @@ function printRepositoryShort(& $repository, & $harmoni) {
 	
 	RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
 	$xLayout =& new XLayout();
-	$layout =& new Container($xLayout, BLOCK, 4);
-	$layout2 =& new Block(ob_get_contents(), 2);
+	$layout =& new Container($xLayout, BLANK, 1);
+	$layout2 =& new Block(ob_get_contents(), EMPHASIZED_BLOCK);
 	$layout->add($layout2, null, null, CENTER, CENTER);
 	ob_end_clean();
 	return $layout;

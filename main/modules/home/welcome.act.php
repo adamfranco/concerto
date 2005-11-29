@@ -64,7 +64,7 @@ class welcomeAction
 		print "</p>";
 		
 		$actionRows->add(
-			new Block(ob_get_contents(),3), 
+			new Block(ob_get_contents(), STANDARD_BLOCK), 
 			"100%", 
 			null, 
 			CENTER, 
