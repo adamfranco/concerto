@@ -53,9 +53,11 @@ class SimpleTheme extends Theme {
 		$body->addSP(new MarginSP("1px"));
 		$this->addGlobalStyle($body);
 
-// 		$links =& new StyleCollection("a", null, "Link Style", "Style settings affecting the look and feel of links.");
-// 		$links->addSP(new TextDecorationSP("underline"));
-// 		$this->addGlobalStyle($links);
+		$links =& new StyleCollection("a", null, "Link Style", "Style settings affecting the look and feel of links.");
+		$links->addSP(new TextDecorationSP("underline"));
+		$links->addSP(new ColorSP("#FFF"));
+		$links->addSP(new FontWeightSP("bold"));
+		$this->addGlobalStyle($links);
 // 
 // 		$links_hover =& new StyleCollection("a:hover", null, "Link Hover Style", "Style settings affecting the look and feel of hover links.");
 // 		$links_hover->addSP(new TextDecorationSP("underline"));
@@ -86,6 +88,9 @@ class SimpleTheme extends Theme {
 		$block2->addSP(new TextAlignSP("justify"));
 		$this->addStyleForComponentType($block2, BLOCK, 2);
 
+		$links =& new StyleCollection("*.block2 a", "block2", "Block 2 Links", "Properties of links");
+		$links->addSP(new ColorSP("#000"));
+		$this->addStyleForComponentType($links, BLOCK, 2);
 	
 		// =====================================================================
 		// Block 3 style
@@ -123,6 +128,8 @@ class SimpleTheme extends Theme {
 		$block4->addSP(new TextAlignSP("justify"));
 		$this->addStyleForComponentType($block4, BLOCK, 4);
 		
+		
+		
 		// =====================================================================
 		// Heading 1 style
 		$heading1 =& new CornersStyleCollection("*.heading1", "heading1", "Heading 1", "A 1st level heading.");
@@ -136,12 +143,11 @@ class SimpleTheme extends Theme {
 // 		$heading1->addSP(new BorderSP("1px", "solid", "#000"));
 		$heading1->addSP(new PaddingSP("10px"));
 		$heading1->addSP(new MarginSP("1px"));
-		$heading1->addSP(new TextAlignSP("justify"));
-		$this->addStyleForComponentType($heading1, HEADING, 1);
-		
+		$heading1->addSP(new TextAlignSP("justify"));		
 		$heading1->addSP(new ColorSP("#fff"));
-		$heading1->addSP(new FontSizeSP("200%"));
+		$heading1->addSP(new FontSizeSP("175%"));
 		$this->addStyleForComponentType($heading1, HEADING, 1);
+
 		
 		// =====================================================================
 		// Heading 2 style
@@ -181,6 +187,7 @@ class SimpleTheme extends Theme {
 // 		$header1->addSP(new FontSizeSP("200%"));
 		$this->addStyleForComponentType($header1, HEADER, 1);
 
+
 		// =====================================================================
 		// Footer 1 style
 		$footer1 =& new CornersStyleCollection("*.footer1", "footer1", "Footer 1", "A 1st level footer.");
@@ -196,8 +203,9 @@ class SimpleTheme extends Theme {
 		$footer1->addSP(new TextAlignSP("right"));
 		
 		$footer1->addSP(new ColorSP("#fff"));
-// 		$footer1->addSP(new FontSizeSP("200%"));
+		$footer1->addSP(new FontSizeSP("75%"));
 		$this->addStyleForComponentType($footer1, FOOTER, 1);
+
 		
 		// =====================================================================
 		// Menu 1 style

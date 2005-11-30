@@ -49,7 +49,7 @@ class ConcertoMenuGenerator {
 		$mainMenu_item2 =& new MenuItemLink(
 			"<span style='font-size: large'>"._("Collections")."</span>", 
 			$harmoni->request->quickURL("collections", "namebrowse"), 
-			($module == "collections" && $action == "main")?TRUE:FALSE,1);
+			($module == "collections")?TRUE:FALSE,1);
 		$mainMenu->add($mainMenu_item2, "100%", null, LEFT, CENTER);
 		
 		// Collection browse links.
