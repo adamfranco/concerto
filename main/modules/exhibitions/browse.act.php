@@ -101,7 +101,7 @@ class browseAction
 			print  "\n</p>";
 		}
 		
-		$introText =& new Block(ob_get_contents(), 3);
+		$introText =& new Block(ob_get_contents(), STANDARD_BLOCK);
 		ob_end_clean();
 		$actionRows->add($introText, "100%", null, CENTER, CENTER);
 		
@@ -148,11 +148,7 @@ function printAssetShort(&$asset, &$harmoni) {
 		print "\n\t</a>";
 	}
 	
-	$xLayout =& new XLayout();
-	$layout =& new Container($xLayout, BLOCK, 4);
-	$layout2 =& new Block(ob_get_contents(), 3);
-	$layout->add($layout2, null, null, CENTER, CENTER);
-	//$layout->addComponent(new Content(ob_get_contents()));
+	$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
 	ob_end_clean();
 	return $layout;
 }

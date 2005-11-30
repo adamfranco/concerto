@@ -224,6 +224,6 @@ class createAction
 						"collection_id" => $this->repositoryId->getIdString(), 
 						"wizardSkipToStep" => "schema"));
 		else
-			return $harmoni->request->quickURL("collections", "browse");
+			return $harmoni->request->quickURL("collections", "namebrowse");
 	}
 }

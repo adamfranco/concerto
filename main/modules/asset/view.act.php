@@ -79,7 +79,7 @@ class viewAction
 		// function links
 		ob_start();
 		AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
-		$layout =& new Block(ob_get_contents(), 3);
+		$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
 		ob_end_clean();
 		$actionRows->add($layout, "100%", null, LEFT, CENTER);
 		
@@ -106,7 +106,7 @@ class viewAction
 				print  "\n\t<br /><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->asString()."</em>";
 			}
 		
-			$layout =& new Block(ob_get_contents(), 3);
+			$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
 			ob_end_clean();
 			$contentCols->add($layout, "100%", null, LEFT, CENTER);
 		
@@ -136,7 +136,7 @@ class viewAction
 			}	
 		}
 		
-		$layout =& new Block(ob_get_contents(), 3);
+		$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
 		ob_end_clean();
 		$actionRows->add($layout, "100%", null, LEFT, CENTER);
 		
@@ -152,7 +152,7 @@ class viewAction
 		if ($string = $content->asString()) {
 			ob_start();
 			print ($string);
-			$layout =& new Block(ob_get_contents(), 4);
+			$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
 			ob_end_clean();
 			$actionRows->add($layout, "100%", null, LEFT, CENTER);
 		}

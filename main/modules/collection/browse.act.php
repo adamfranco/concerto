@@ -97,12 +97,12 @@ class browseAction
 		ob_start();
 		print _("Collection").": ";
 		RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
-		$layout =& new Block(ob_get_contents(), 3);
+		$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
 		ob_end_clean();
 		$actionRows->add($layout, "100%", null, CENTER, CENTER);
 		
 		
-		$searchBar =& new Container(new XLayout(), BLOCK, 2);
+		$searchBar =& new Container(new XLayout(), BLOCK, STANDARD_BLOCK);
 		$actionRows->add($searchBar, "100%", null, CENTER, CENTER);
 		
 		
@@ -176,7 +176,7 @@ class browseAction
 			print "/>"._("Search")."\n<br/>";
 		}		
 		
-		$searchForm =& new Block(ob_get_contents(), 3);
+		$searchForm =& new UnstyledBlock(ob_get_contents());
 		ob_end_clean();
 		$searchBar->add($searchForm, "70%", null, LEFT, TOP);
 		
@@ -215,7 +215,7 @@ class browseAction
 		print "\n\t</select>";
 		print "</div>";
 		
-		$searchForm =& new Block(ob_get_contents(), 3);
+		$searchForm =& new UnstyledBlock(ob_get_contents());
 		ob_end_clean();
 		$searchBar->add($searchForm, "30%", null, RIGHT, TOP);
 		
@@ -346,7 +346,7 @@ class browseAction
 
 // Callback function for printing Assets
 function printAssetShort(& $asset, &$harmoni, $num) {
-	$container =& new Container(new YLayout, BLOCK, 4);
+	$container =& new Container(new YLayout, BLOCK, EMPHASIZED_BLOCK);
 	$fillContainerSC =& new StyleCollection("*.fillcontainer", "fillcontainer", "Fill Container", "Elements with this style will fill their container.");
 	$fillContainerSC->addSP(new MinHeightSP("88%"));
 	$container->addStyle($fillContainerSC);
@@ -358,10 +358,10 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 	$assetId =& $asset->getId();
 	print "\n\t<strong>".htmlentities($asset->getDisplayName())."</strong>";
 	print "\n\t<br/>"._("ID#").": ".$assetId->getIdString();
-	print  "\n\t<br /><em>".nl2br(browseAction::trim(htmlentities($asset->getDescription()), 25))."</em>";	
+	print  "\n\t<br /><span style='font-size: smaller;'>".nl2br(browseAction::trim(htmlentities($asset->getDescription()), 25))."</span>";	
 	print  "\n\t<br />";
 	
-	$component =& new Block(ob_get_contents(), 2);
+	$component =& new UnstyledBlock(ob_get_contents());
 	ob_end_clean();
 	$container->add($component, "100%", null, LEFT, TOP);
 	
@@ -373,7 +373,7 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 		print "'>";
 		print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' />";
 		print "\n\t</a>";
-		$component =& new Block(ob_get_contents(), 2);
+		$component =& new UnstyledBlock(ob_get_contents());
 		$component->addStyle($centered);
 		ob_end_clean();
 		$container->add($component, "100%", null, CENTER, CENTER);
@@ -395,7 +395,7 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 	
 	AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num);
 	
-	$component =& new Block(ob_get_contents(), 2);
+	$component =& new UnstyledBlock(ob_get_contents());
 	$component->addStyle($centered);
 	ob_end_clean();
 	$container->add($component, "100%", null, CENTER, BOTTOM);
