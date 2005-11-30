@@ -109,7 +109,7 @@ function printRepositoryShort(& $repository, & $harmoni) {
 	$repositoryId =& $repository->getId();
 	print  "\n\t<strong>".$repository->getDisplayName()."</strong> - "._("ID#").": ".
 			$repositoryId->getIdString();
-	print  "\n\t<br /><em>".$repository->getDescription()."</em>";	
+	print  "\n\t<br /><span style='font-size: smaller'>".$repository->getDescription()."</span>";	
 	print  "\n\t<br />";
 	
 	RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);

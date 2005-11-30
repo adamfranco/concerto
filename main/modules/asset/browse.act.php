@@ -288,7 +288,7 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 	$assetId =& $asset->getId();
 	print "\n\t<strong>".htmlentities($asset->getDisplayName())."</strong>";
 	print "\n\t<br/>"._("ID#").": ".$assetId->getIdString();
-	print  "\n\t<br /><em>".nl2br(browseAction::trim(htmlentities($asset->getDescription()), 25))."</em>";	
+	print  "\n\t<br /><span style='font-size: smaller'>".nl2br(browseAction::trim(htmlentities($asset->getDescription()), 25))."</span>";	
 	print  "\n\t<br />";
 	
 	$component =& new UnstyledBlock(ob_get_contents());
