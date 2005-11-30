@@ -43,7 +43,7 @@ class displayAction
 		 * @version $Id$
 		 */
 		 
-		require_once(HARMONI."GUIManager/Components/Block.class.php");
+		require_once(HARMONI."GUIManager/Components/Header.class.php");
 		require_once(HARMONI."GUIManager/Components/Menu.class.php");
 		require_once(HARMONI."GUIManager/Components/MenuItemHeading.class.php");
 		require_once(HARMONI."GUIManager/Components/MenuItemLink.class.php");
@@ -64,11 +64,11 @@ class displayAction
 		
 	// :: Top Row ::
 		// The top row for the logo and status bar.
-		$headRow =& new Container($xLayout, OTHER, 1);
+		$headRow =& new Container($xLayout, HEADER, 1);
 		
 		// The logo
-		$logo =& new Block("\n<a href='".MYPATH."/'> <img src='".MYPATH."/main/modules/window/logo.gif' 
-							style='border: 0px;' alt='"._("Concerto Logo'"). "/> </a>",2);
+		$logo =& new Component("\n<a href='".MYPATH."/'> <img src='".MYPATH."/main/modules/window/logo.gif' 
+							style='border: 0px;' alt='"._("Concerto Logo'"). "/> </a>", BLANK, 1);
 		$headRow->add($logo, null, null, LEFT, TOP);
 		
 		// Language Bar
@@ -90,7 +90,7 @@ class displayAction
 		$languageText .= "\n\t<input type='submit' />";
 		$languageText .= "\n\t</div>\n</form>";
 		
-		$languageBar =& new Block($languageText,2);
+		$languageBar =& new Component($languageText, BLANK, 1);
 		$headRow->add($languageBar, null, null, LEFT,TOP);
 		
 		// Pretty Login Box
@@ -153,7 +153,7 @@ class displayAction
 		}		
 		
 
-		$loginForm =& new Block(ob_get_contents(), 2);
+		$loginForm =& new Component(ob_get_contents(), BLANK, 2);
 		$loginRow->add($loginForm, null, null, RIGHT, TOP);
 		ob_end_clean();
 		
@@ -189,14 +189,12 @@ class displayAction
 			$rightColumn->add(AssetPrinter::getMultiEditOptionsBlock(), "100%", null, LEFT, TOP);
 		
 	// :: Footer ::
-		$footerRow =& new Container($yLayout, OTHER, 1);
 		$footerText = "Concerto v.0.1 &copy;2004 Middlebury College: <a href=''>";
 		$footerText .= _("credits");
 		$footerText .= "</a>";
-		$footer =& new Block($footerText,2);
-		$footerRow->add($footer,null,null,RIGHT,BOTTOM);
+		$footer =& new Footer($footerText, 1);
 		
-		$mainScreen->add($footerRow, "100%", null, RIGHT, BOTTOM);
+		$mainScreen->add($footer, "100%", null, RIGHT, BOTTOM);
 
 		return $mainScreen;
 	}	

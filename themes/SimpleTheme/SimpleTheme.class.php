@@ -50,7 +50,7 @@ class SimpleTheme extends Theme {
 		$body->addSP(new ColorSP("#000"));
 		//$body->addSP(new FontFamilySP("Verdana"));
 		$body->addSP(new PaddingSP("0px"));
-		$body->addSP(new MarginSP("0px"));
+		$body->addSP(new MarginSP("1px"));
 		$this->addGlobalStyle($body);
 
 // 		$links =& new StyleCollection("a", null, "Link Style", "Style settings affecting the look and feel of links.");
@@ -65,9 +65,8 @@ class SimpleTheme extends Theme {
 		// Block 1 style
 		$block1 =& new StyleCollection("*.block1", "block1", "Block 1", "The main block where normally all of the page content goes in.");
 // 		$block1->addSP(new BackgroundColorSP("#DDD"));
-		$block1->addSP(new PaddingSP("10px"));
-		$block1->addSP(new MarginSP("10px"));
-		$block1->addSP(new MarginSP("10px"));
+// 		$block1->addSP(new PaddingSP("10px"));
+// 		$block1->addSP(new MarginSP("10px"));
 		$this->addStyleForComponentType($block1, BLOCK, 1);
 		
 		// =====================================================================
@@ -161,14 +160,44 @@ class SimpleTheme extends Theme {
 		$heading2->addSP(new ColorSP("#fff"));
 		$heading2->addSP(new FontSizeSP("125%"));
 		$this->addStyleForComponentType($heading2, HEADING, 2);
-// 
-// 		// =====================================================================
-// 		// Footer 1 style
-// 		$footer1 =& new StyleCollection("*.footer1", "footer1", "Footer 1", "A 1st level footer.");
-// 		$footer1->addSP(new ColorSP("#959595"));
-// 		$footer1->addSP(new MarginSP("10px"));
-// 		$footer1->addSP(new FontSizeSP("125%"));
-// 		$this->addStyleForComponentType($footer1, FOOTER, 1);
+
+
+		// =====================================================================
+		// Header 1 style
+		$header1 =& new CornersStyleCollection("*.header1", "header1", "Header 1", "A 1st level header.");
+		$header1->setBorderUrl("TopLeft", MYPATH."/themes/SimpleTheme/images/corner_TL.gif");
+		$header1->setBorderUrl("TopRight", MYPATH."/themes/SimpleTheme/images/corner_TR.gif");
+		$header1->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleTheme/images/corner_BL.gif");
+		$header1->setBorderUrl("BottomRight", MYPATH."/themes/SimpleTheme/images/corner_BR.gif");
+		
+		
+		$header1->addSP(new BackgroundColorSP("#666666"));
+// 		$header1->addSP(new BorderSP("1px", "solid", "#000"));
+		$header1->addSP(new PaddingSP("10px"));
+		$header1->addSP(new MarginSP("1px"));
+		$header1->addSP(new TextAlignSP("justify"));
+		
+		$header1->addSP(new ColorSP("#fff"));
+// 		$header1->addSP(new FontSizeSP("200%"));
+		$this->addStyleForComponentType($header1, HEADER, 1);
+
+		// =====================================================================
+		// Footer 1 style
+		$footer1 =& new CornersStyleCollection("*.footer1", "footer1", "Footer 1", "A 1st level footer.");
+		$footer1->setBorderUrl("TopLeft", MYPATH."/themes/SimpleTheme/images/corner_TL.gif");
+		$footer1->setBorderUrl("TopRight", MYPATH."/themes/SimpleTheme/images/corner_TR.gif");
+		$footer1->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleTheme/images/corner_BL.gif");
+		$footer1->setBorderUrl("BottomRight", MYPATH."/themes/SimpleTheme/images/corner_BR.gif");
+		
+		$footer1->addSP(new BackgroundColorSP("#666666"));
+// 		$footer1->addSP(new BorderSP("1px", "solid", "#000"));
+		$footer1->addSP(new PaddingSP("10px"));
+		$footer1->addSP(new MarginSP("1px"));
+		$footer1->addSP(new TextAlignSP("right"));
+		
+		$footer1->addSP(new ColorSP("#fff"));
+// 		$footer1->addSP(new FontSizeSP("200%"));
+		$this->addStyleForComponentType($footer1, FOOTER, 1);
 		
 		// =====================================================================
 		// Menu 1 style
