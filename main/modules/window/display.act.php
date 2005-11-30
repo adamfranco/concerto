@@ -67,7 +67,7 @@ class displayAction
 		$headRow =& new Container($xLayout, HEADER, 1);
 		
 		// The logo
-		$logo =& new Component("\n<a href='".MYPATH."/'> <img src='".MYPATH."/main/modules/window/logo.gif' 
+		$logo =& new Component("\n<a href='".MYPATH."/'> <img src='".LOGO_URL."' 
 							style='border: 0px;' alt='"._("Concerto Logo'"). "/> </a>", BLANK, 1);
 		$headRow->add($logo, null, null, LEFT, TOP);
 		

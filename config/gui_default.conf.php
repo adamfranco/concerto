@@ -17,6 +17,8 @@ require_once(dirname(__FILE__)."/../themes/SimpleTheme/SimpleTheme.class.php");
 
 
 // :: GUIManager setup ::
+	define("LOGO_URL", MYPATH."/themes/SimpleTheme/images/logo.gif");
+	
 	$configuration =& new ConfigurationProperties;
 	$configuration->addProperty('database_index', $dbID);
 	$configuration->addProperty('database_name', $dbName);
