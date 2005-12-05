@@ -219,9 +219,9 @@ class importAction extends MainWindowAction {
 		"edu.middlebury.harmoni.repository.asset_content.Content");
 		
 //===== Exif and Tab-Delim Importers are special =====//
-		if ($properties['importtype'] == "Tab-Delimited") 
+		if ($properties['file_type'] == "Tab-Delimited") 
 			$importer =& new TabRepositoryImporter($newName, $dr->getId(), false);
-		else if ($properties['importtype'] == "Exif") 
+		else if ($properties['file_type'] == "Exif") 
 			$importer =& new ExifRepositoryImporter($newName, $dr->getId(), false);
 		if (isset($importer))
 			$importer->import();						

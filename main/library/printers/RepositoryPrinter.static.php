@@ -95,6 +95,29 @@ class RepositoryPrinter {
 			$links[] = "<a href='".$url->write()."'>";
 			$links[count($links) - 1] .= _("Edit")."</a>";
 		}
+		if ($authZ->iSUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.delete"),
+				$repositoryId))
+		{
+			$harmoni->history->markReturnURL("rep-delete");
+			ob_start();
+			print "<a href='Javascript:deleteRepository(\"".
+				$repositoryId->getIdString()."\", \"".
+				$harmoni->request->quickURL("collection", "delete",
+				array("collection_id" => $repositoryId->getIdString())).
+				"\");'>";
+			print _("Delete")."</a>";
+			$links[] = ob_get_contents();
+			ob_end_clean();
+			
+			print "\n<script type='text/javascript'>\n//<![CDATA[";
+			print "\n	function deleteRepository(repositoryId, url) {";
+			print "\n		if (confirm(\""._("Are you sure you want to delete this Collection?")."\")) {";
+			print "\n			window.location = url;";
+			print "\n		}";
+			print "\n	}";
+			print "\n//]]>\n</script>\n";
+		}
 	 //===== Add Link =====//
 	 	if ($authZ->isUserAuthorized(
 	 			$idManager->getId("edu.middlebury.authorization.add_children"), 
