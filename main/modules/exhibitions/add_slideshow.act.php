@@ -306,13 +306,13 @@ class add_slideshowAction
 										"slide", 
 										"Slides are components of Slide-Shows that contain captions and may reference media Assets.");
 			$slideRecordStructId =& $idManager->getId(
-				"edu.middlebury.concerto.slide_record_structure");
+				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure");
 			$targetIdPartStructId =& $idManager->getId(
-				"edu.middlebury.concerto.slide_record_structure.target_id");
+				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id");
 			$textPositionPartStructId =& $idManager->getId(
-				"edu.middlebury.concerto.slide_record_structure.text_position");
+				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position");
 			$displayMetadataPartStructId =& $idManager->getId(
-				"edu.middlebury.concerto.slide_record_structure.display_metadata");
+				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata");
 				
 			$setManager =& Services::getService("Sets");
 			$slideOrder =& $setManager->getPersistentSet($slideshowAssetId);

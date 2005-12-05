@@ -243,11 +243,11 @@ class modify_slideshowAction
 		
 		// Add the current assets to the list.
 		$textPositionId =& $idManager->getId(
-			"edu.middlebury.concerto.slide_record_structure.text_position");
+			"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position");
 		$showMetadataId =& $idManager->getId(
-			"edu.middlebury.concerto.slide_record_structure.display_metadata");
+			"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata");
 		$targetId =& $idManager->getId(
-			"edu.middlebury.concerto.slide_record_structure.target_id");
+			"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id");
 		
 		$slideIterator =& $slideshowAsset->getAssets();
 		$slideOrder =& $setManager->getPersistentSet($slideshowAsset->getId());
@@ -259,7 +259,7 @@ class modify_slideshowAction
 			$slideId =& $slideAsset->getId();
 /*
 			// DEBUG
-			$records =& $slideAsset->getRecordsByRecordStructure($idManager->getId("edu.middlebury.concerto.slide_record_structure"));
+			$records =& $slideAsset->getRecordsByRecordStructure($idManager->getId("Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure"));
 			$myCrapRecord =& $records->next();
 			require_once(POLYPHONY."/main/library/DataManagerGUI/SimpleRecordPrinter.class.php");
 			SimpleRecordPrinter::printRecord($myCrapRecord->_record);
@@ -384,13 +384,13 @@ class modify_slideshowAction
 				"slide", 
 				"Slides are components of Slide-Shows that contain captions and may reference media Assets.");
 			$slideRecordStructId =& $idManager->getId(
-				"edu.middlebury.concerto.slide_record_structure");
+				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure");
 			$targetIdPartStructId =& $idManager->getId(
-				"edu.middlebury.concerto.slide_record_structure.target_id");
+				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id");
 			$textPositionPartStructId =& $idManager->getId(
-				"edu.middlebury.concerto.slide_record_structure.text_position");
+				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position");
 			$displayMetadataPartStructId =& $idManager->getId(
-				"edu.middlebury.concerto.slide_record_structure.display_metadata");
+				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata");
 
 				
 			$setManager =& Services::getService("Sets");
@@ -410,7 +410,54 @@ class modify_slideshowAction
 			foreach ($properties['slidestep']['slides'] as $slideProperties) {
 				print get_class($slideProperties['slideId']).":";
 
-				if (in_array($slideProperties['slideId']->getIdString(), $existingSlides)) {
+				if (!isset($slideProperties['slideId'])) {
+					// ---- Clean the inputs ----
+					if (isset($slideProperties['title']))
+						$title = $slideProperties['title'];
+					else
+						$title = '';
+						
+					if (isset($slideProperties['caption']))
+						$caption = $slideProperties['caption'];
+					else
+						$caption = '';
+					
+					if (isset($slideProperties['text_position']))
+						$textPosition = String::withValue(
+							$slideProperties['text_position']);
+					else
+						$textPosition = String::withValue('');
+					
+					if (isset($slideProperties['show_target_metadata']))
+						$displayMetadata = Boolean::withValue(
+							$slideProperties['show_target_metadata']);
+					else
+						$displayMetadata = Boolean::false();
+					
+					if (isset($slideProperties['_assetId']))
+						$targetId = String::withValue(
+							$slideProperties['_assetId']->getIdString());
+					else
+						$targetId = String::withValue('');	
+					
+					// ---- Create the asset ----
+					$slideAsset =& $repository->createAsset(
+											$title, 
+											$caption, 
+											$slideAssetType);
+					$slideAssetId =& $slideAsset->getId();
+					$slideshowAsset->addAsset($slideAssetId);
+					$pSlideOrder->addItem($slideAssetId);
+					
+					// ---- Set the additional info ----
+					$slideRecord =& $slideAsset->createRecord($slideRecordStructId);
+					$slideRecord->createPart($textPositionPartStructId,
+						$textPosition);
+					$slideRecord->createPart($displayMetadataPartStructId,
+						$displayMetadata);
+					$slideRecord->createPart($targetIdPartStructId, $targetId);
+				} 
+				else if (in_array($slideProperties['slideId']->getIdString(), $existingSlides)) {
 					$slideAsset =& $repository->getAsset(
 						$slideProperties['slideId']);
 					$slideAsset->updateDisplayName($slideProperties['title']);
@@ -437,55 +484,6 @@ class modify_slideshowAction
 					$records =& $slideAsset->getRecordsByRecordStructure(
 						$slideRecordStructId);
 					$slideRecord =& $records->next();
-				}
-				else if (!isset($slideProperties['slideId'])) {
-					// ---- Clean the inputs ----
-					if (isset($slideProperties['title']))
-						$title = $slideProperties['title'];
-					else
-						$title = '';
-						
-					if (isset($slideProperties['caption']))
-						$caption = $slideProperties['caption'];
-					else
-						$caption = '';
-					
-					if (isset($slideProperties['text_position']))
-						$textPosition = String::withValue(
-							$slideProperties['text_position']);
-					else
-						$textPosition = String::withValue('');
-					
-					if (isset($slideProperties['show_target_metadata']))
-						$displayMetadata = Boolean::withValue(
-							$slideProperties['show_target_metadata']);
-					else
-						$displayMetadata = Boolean::false();
-					
-					if (isset($slideProperties['_assetId']))
-						$targetId = String::withValue(
-							$slideProperties['_assetId']);
-					else
-						$targetId = String::withValue('');	
-					
-					// ---- Create the asset ----
-					$slideAsset =& $repository->createAsset(
-											$title, 
-											$caption, 
-											$slideAssetType);
-					$slideAssetId =& $slideAsset->getId();
-					$slideshowAsset->addAsset($slideAssetId);
-					$slideOrder->addItem($slideAssetId);
-					
-					// ---- Set the additional info ----
-					$slideRecord =& $slideAsset->createRecord($slideRecordStructId);
-					$slideRecord->createPart($textPositionPartStructId,
-						$textPosition);
-					$slideRecord->createPart($displayMetadataPartStructId,
-						$displayMetadata);
-					$slideRecord->createPart($targetIdPartStructId, $targetId);
-					
-					$pSlideOrder->addItem($slideAsset);
 				}
 			}
 			// ==== Remove slide assets no longer in slideshow ----

@@ -93,7 +93,7 @@ class browse_exhibitionAction
 		// function links
 		ob_start();
 		ExhibitionPrinter::printFunctionLinks($asset);
-		$layout =& new Block(ob_get_contents(), 3);
+		$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
 		ob_end_clean();
 		$actionRows->add($layout, null, null, CENTER, CENTER);
 		
@@ -101,7 +101,7 @@ class browse_exhibitionAction
 		/*********************************************************
 		 * Description
 		 *********************************************************/
-		 $actionRows->add(new Block("<em>".$asset->getDescription()."</em>", 3), "100%", null, LEFT, CENTER);
+		 $actionRows->add(new Block("<em>".$asset->getDescription()."</em>", STANDARD_BLOCK), "100%", null, LEFT, CENTER);
 		
 		//***********************************
 		// Get the assets to display
@@ -120,7 +120,7 @@ class browse_exhibitionAction
 		print  _("Some <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
 		print  "</p>";
 		
-		$actionRows->add(new Block(ob_get_contents(), 3), "100%", null, LEFT, CENTER);
+		$actionRows->add(new Block(ob_get_contents(), STANDARD_BLOCK), "100%", null, LEFT, CENTER);
 		ob_end_clean();
 	}
 }
@@ -132,12 +132,12 @@ function printAssetShort(& $asset, &$harmoni) {
 	$assetId =& $asset->getId();
 	print  "\n\t<strong>".$asset->getDisplayName()."</strong> - "._("ID#").": ".
 			$assetId->getIdString();
-	print  "\n\t<br /><em>".$asset->getDescription()."</em>";	
+	print  "\n\t<br /><span style='font-size: smaller;'>".$asset->getDescription()."</span>";	
 	print  "\n\t<br />";
 	
 	SlideShowPrinter::printFunctionLinks($asset);
 	
-	$layout =& new Block(ob_get_contents(), 4);
+	$layout =& new Block(ob_get_contents(), EMPHASIZED_BLOCK);
 	ob_end_clean();
 	return $layout;
 }

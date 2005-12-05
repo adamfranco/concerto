@@ -133,7 +133,7 @@ function printAssetShort(&$asset, &$harmoni) {
 	
 	$assetId =& $asset->getId();
 	print  "\n\t<strong>".$asset->getDisplayName()."</strong>";
-	print  "\n\t<br /><em>".$asset->getDescription()."</em>";	
+	print  "\n\t<br /><span style='font-size: smaller;'>".$asset->getDescription()."</span>";	
 	print  "\n\t<br />";
 	
 	ExhibitionPrinter::printFunctionLinks($asset);

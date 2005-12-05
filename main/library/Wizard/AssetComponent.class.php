@@ -35,6 +35,7 @@ class AssetComponent
 	 * @return void
 	 */
 	function setValue ( &$id ) {
+		ArgumentValidator::validate($id, ExtendsValidatorRule::getRule("Id"), true);
 		$this->_id = $id;
 	}
 	

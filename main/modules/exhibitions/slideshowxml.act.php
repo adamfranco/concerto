@@ -138,24 +138,24 @@ END;
 		
 		// Get our record and its data
 		$slideRecords =& $slideAsset->getRecordsByRecordStructure(
-			$idManager->getId("edu.middlebury.concerto.slide_record_structure"));
+			$idManager->getId("Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure"));
 		
 		if ($slideRecords->hasNext()) {
 			$slideRecord =& $slideRecords->next();
 			
 			// Text-Position
 			$textPosition =& $this->getFirstPartValueFromRecord(
-				"edu.middlebury.concerto.slide_record_structure.text_position",
+				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position",
 				$slideRecord);
 			
 			// Display Metadata
 			$displayMetadata =& $this->getFirstPartValueFromRecord(
-				"edu.middlebury.concerto.slide_record_structure.display_metadata",
+				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata",
 				$slideRecord);
 			
 			// Media
 			$mediaIdStringObj =& $this->getFirstPartValueFromRecord(
-				"edu.middlebury.concerto.slide_record_structure.target_id",
+				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id",
 				$slideRecord);
 			if (strlen($mediaIdStringObj->asString()))
 				$mediaId =& $idManager->getId($mediaIdStringObj->asString());
@@ -174,7 +174,7 @@ END;
 		// Caption
 		print "\t\t<caption><![CDATA[";
 		print $slideAsset->getDescription();
-		if ($displayMetadata->isTrue()
+		if (isset($displayMetadata) && $displayMetadata->isTrue()
 			&& isset($mediaId)
 			&& $authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.view"),
