@@ -168,12 +168,12 @@ class exportexhibmdbAction
 		fwrite($this->_xmlFile, "\t<repository 
 			id=\"edu.middlebury.concerto.exhibition_repository\">\n");
 // recordstructure
-		fwrite($this->_xmlFile, "\t\t<recordstructure id=\"edu.middlebury.concerto.slide_record_structure\" xml:id=\"slidestructure\">\n".
-			"\t\t\t<partstructure id=\"edu.middlebury.concerto.slide_record_structure.target_id\" xml:id=\"target id\" isMandatory=\"FALSE\" isRepeatable=\"FALSE\" isPopulated=\"FALSE\">
+		fwrite($this->_xmlFile, "\t\t<recordstructure id=\"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure\" xml:id=\"slidestructure\">\n".
+			"\t\t\t<partstructure id=\"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id\" xml:id=\"target id\" isMandatory=\"FALSE\" isRepeatable=\"FALSE\" isPopulated=\"FALSE\">
 			</partstructure>\n".
-			"\t\t\t<partstructure id=\"edu.middlebury.concerto.slide_record_structure.text_position\" xml:id=\"text position\" isMandatory=\"FALSE\" isRepeatable=\"FALSE\" isPopulated=\"FALSE\">
+			"\t\t\t<partstructure id=\"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position\" xml:id=\"text position\" isMandatory=\"FALSE\" isRepeatable=\"FALSE\" isPopulated=\"FALSE\">
 			</partstructure>\n".
-			"\t\t\t<partstructure id=\"edu.middlebury.concerto.slide_record_structure.display_metadata\" xml:id=\"display metadata\" isMandatory=\"FALSE\" isRepeatable=\"FALSE\" isPopulated=\"FALSE\">
+			"\t\t\t<partstructure id=\"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata\" xml:id=\"display metadata\" isMandatory=\"FALSE\" isRepeatable=\"FALSE\" isPopulated=\"FALSE\">
 			</partstructure>\n".
 		"\t\t</recordstructure>\n");
 // recordstructure
