@@ -112,6 +112,7 @@ END;
 			else
 				$unorderedSlides[] =& $slideAsset;
 		}
+		ksort($orderedSlides);
 		$slides =& array_merge($orderedSlides, $unorderedSlides);
 		unset($orderedSlides, $unorderedSlides);
 		

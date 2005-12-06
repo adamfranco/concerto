@@ -299,6 +299,7 @@ class modify_slideshowAction
 				$orderlessSlides[] = $collection;
 		}
 		// add them in order
+		ksort($orderedSlides);
 		foreach ($orderedSlides as $slide)
 			$multField->addValueCollection($slide);
 			
@@ -408,7 +409,7 @@ class modify_slideshowAction
 			$pSlideOrder->removeAllItems();
 
 			foreach ($properties['slidestep']['slides'] as $slideProperties) {
-				print get_class($slideProperties['slideId']).":";
+// 				print get_class($slideProperties['slideId']).": ".$slideProperties['title'];
 
 				if (!isset($slideProperties['slideId'])) {
 					// ---- Clean the inputs ----
@@ -447,6 +448,8 @@ class modify_slideshowAction
 											$slideAssetType);
 					$slideAssetId =& $slideAsset->getId();
 					$slideshowAsset->addAsset($slideAssetId);
+					
+					// Add it to the order field
 					$pSlideOrder->addItem($slideAssetId);
 					
 					// ---- Set the additional info ----
@@ -494,6 +497,7 @@ class modify_slideshowAction
 					$repository->deleteAsset($old);
 				}
 			}
+			
 			return TRUE;
 		} 
 		// If we don't have authorization to add to the picked parent, send us back to
