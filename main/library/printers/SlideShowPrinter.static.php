@@ -92,7 +92,7 @@ class SlideShowPrinter {
 			if ($actionString != "exhibitions.delete") {
 				$harmoni->history->markReturnURL("concerto/exhibitions/delete-return");
 				ob_start();
-				print "<a href='Javascript:deleteSlideShow(\"".$assetId->getIdString()."\", \"".$harmoni->request->quickURL("exhibitions", "delete", array("exhibition_id" => $assetId->getIdString()))."\");'";
+				print "<a href='Javascript:deleteSlideShow(\"".$assetId->getIdString()."\", \"".$harmoni->request->quickURL("exhibitions", "delete_slideshow", array("exhibition_id" => RequestContext::value('exhibition_id'), "slideshow_id" => $assetId->getIdString()))."\");'";
 				print ">";
 				print _("delete")."</a>";
 				
