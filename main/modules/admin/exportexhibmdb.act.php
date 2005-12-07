@@ -1,7 +1,7 @@
 <?php
 
 require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
-require_once(POLYPHONY."/main/library/Importer/XMLImporter.class.php");
+require_once(POLYPHONY."/main/library/Importer/XMLImporters/XMLImporter.class.php");
 
 
 //apd_set_pprof_trace(); 
@@ -47,7 +47,7 @@ class exportexhibmdbAction
 		$dbHandler->connect($mdbIndex);
 
 		$n_C_Index = $dbHandler->addDatabase(
-			new MySQLDatabase("localhost", "niraj_concerto", "test", "test"));
+			new MySQLDatabase("localhost", "mdb_concerto", "test", "test"));
 		$dbHandler->connect($n_C_Index);
 		
 		$exhibitionsQuery =& new SelectQuery;
@@ -99,23 +99,40 @@ class exportexhibmdbAction
 					if ($slideResult->getNumberOfRows() == 1) {
 						$slide =& $slideResult->getCurrentRow();
 					
-						$idQuery =& new SelectQuery;
-						$idQuery->addTable("temp_id_matrix");
-						$idQuery->addColumn("media_id");
-						$idQuery->addColumn("asset_id");
-						$idQuery->addWhere("media_id = ".$slide['media_id']);
-						
-						$idResult =& $dbHandler->query($idQuery, $n_C_Index);
-						if ($idResult->getNumberOfRows() == 1) {
-							$idRow =& $idResult->getCurrentRow();
-							$this->addSlide($slide, $idRow['asset_id']);
-						}
-						else {
+						$mediaQuery =& new SelectQuery;
+						$mediaQuery->addTable("media");
+						$mediaQuery->addColumn("id");
+						$mediaQuery->addColumn("fname");
+						$mediaQuery->addWhere("id = ".$slide['media_id']);
+						$mediaResult =& $dbHandler->query($mediaQuery, 
+							$mdbIndex);
+						if ($mediaResult->getNumberOfRows() == 1) {
+							$media =& $mediaResult->getCurrentRow();
+							
+							$idQuery =& new SelectQuery;
+							$idQuery->addTable("dr_file");
+							$idQuery->addTable("dr_asset_record", "INNER_JOIN",
+								"dr_file.id = dr_asset_record.FK_record");
+							$idQuery->addColumn("dr_asset_record.FK_asset",
+								"asset_id");
+							$idQuery->addColumn("dr_file.filename");
+							$idQuery->addWhere("dr_file.filename = ".
+								rawurlencode($media['fname']));
+							
+							$idResult =& $dbHandler->query($idQuery, 
+								$n_C_Index);
+							if ($idResult->getNumberOfRows() == 1) {
+								$idRow =& $idResult->getCurrentRow();
+								$this->addSlide($slide, $idRow['asset_id']);
+							}
+							$idResult->free();
+							unset($idQuery);
+						} else {
 							$empty = "";
 							$this->addSlide($slide, $empty);		
 						}
-						$idResult->free();
-						unset($idQuery);
+						$mediaResult->free();
+						unset($mediaQuery);
 					}
 //					else
 //						print "Bad presmedia: ".$presmediaId."<br />";
@@ -164,7 +181,7 @@ class exportexhibmdbAction
 			"/home/cshubert/public_html/importer/importtest/metadata.xml",
 			"wt");
 		fwrite($this->_xmlFile, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-		fwrite($this->_xmlFile, "<import type=\"insert\">\n");
+		fwrite($this->_xmlFile, "<import>\n");
 		fwrite($this->_xmlFile, "\t<repository 
 			id=\"edu.middlebury.concerto.exhibition_repository\">\n");
 // recordstructure
