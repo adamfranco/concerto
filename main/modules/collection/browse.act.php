@@ -321,7 +321,7 @@ class browseAction
 		$trimmed = "";
 		$string = preg_replace("/\040+/"," ", trim($string));
 		$stringc = explode(" ",$string);
-		echo sizeof($stringc);
+
 		if($word_count >= sizeof($stringc))
 		{
 			// nothing to do, our string is smaller than the limit.
