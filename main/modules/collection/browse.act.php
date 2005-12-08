@@ -154,10 +154,6 @@ class browseAction
 			print "/>"._("Search").": ";
 			print "\n\t<select name='".RequestContext::name("searchtype")."'";
 			print " onchange='this.form.submit();'>";
-				print "\n\t\t<option value=''";
-				if (!RequestContext::value("searchtype"))
-					print " selected='selected'";
-				print ">All Types</option>";
 				$types =& $repository->getSearchTypes();
 				while ($types->hasNext()) {
 					$type =& $types->next();
