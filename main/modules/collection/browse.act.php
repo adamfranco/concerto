@@ -209,6 +209,12 @@ class browseAction
 		for ($i = 1; $i < 20; $i++)
 			$this->printSelectOption("columns", $defaultCols, $i);
 		print "\n\t</select>";
+		
+		print "\n\t<select name='".RequestContext::name("order")."'";
+		print " onchange='this.form.submit();'>";
+		$this->printSelectOption("order", 'DisplayName', 'DisplayName', _('DisplayName'));
+		$this->printSelectOption("order", 'DisplayName', 'Id', _('Id'));
+		print "\n\t</select>";
 		print "</div>";
 		
 		$searchForm =& new UnstyledBlock(ob_get_contents());
@@ -218,6 +224,12 @@ class browseAction
 		//***********************************
 		// Get the assets to display
 		//***********************************
+		$searchProperties =& new HarmoniProperties(
+					Type::stringToType("repository::harmoni::order"));
+		if (!($order = RequestContext::value("order")))
+			$order = 'DisplayName';
+		$searchProperties->addProperty("order", $order);
+					
 		switch (RequestContext::value("limit_by")) {
 			case 'type':
 				if (RequestContext::value("type")) {
@@ -230,17 +242,21 @@ class browseAction
 					&& RequestContext::value("searchstring")) 
 				{
 					$searchString = RequestContext::value("searchstring");
+					
 					$assets =& $repository->getAssetsBySearch(
 						$searchString,
 						Type::stringToType(RequestContext::value("searchtype")),
-						$searchProperties = NULL);
+						$searchProperties);
 					break;
 				}
 			
 			default:
 				if ($hasRootSearch) {
 					$criteria = NULL;
-					$assets =& $repository->getAssetsBySearch($criteria, $rootSearchType, $searchProperties = NULL);
+					$assets =& $repository->getAssetsBySearch(
+						$criteria, 
+						$rootSearchType, 
+						$searchProperties);
 				} 
 				// Otherwise, just get all the assets
 				else {
@@ -283,11 +299,12 @@ class browseAction
 	 * @param string $fieldname
 	 * @param string $default
 	 * @param string $value
+	 * @param optional string $label
 	 * @return void
 	 * @access public
 	 * @since 10/18/05
 	 */
-	function printSelectOption ( $fieldname, $default, $value ) {
+	function printSelectOption ( $fieldname, $default, $value, $label = null ) {
 		print "\n\t\t<option value='".$value."'";
 		if (RequestContext::value($fieldname) == $value
 			|| (!RequestContext::value($fieldname)
@@ -295,7 +312,7 @@ class browseAction
 		{
 			print " selected='selected'";
 		}
-		print ">".$value."</option>";
+		print ">".(($label)?$label:$value)."</option>";
 	}
 	
 	/**
