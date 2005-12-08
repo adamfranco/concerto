@@ -179,7 +179,7 @@ END;
 		
 		// Title
 		print "\t\t<title><![CDATA[";
-		print htmlentities($asset->getDisplayName(), ENT_COMPAT, 'UTF-8');
+		print htmlspecialchars($asset->getDisplayName(), ENT_COMPAT, 'UTF-8');
 		print "]]></title>\n";
 		
 		// Caption

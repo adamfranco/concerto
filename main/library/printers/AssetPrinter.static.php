@@ -85,7 +85,7 @@ class AssetPrinter {
 						RequestContext::name("searchtype") => RequestContext::value("searchtype"),
 						RequestContext::name("searchstring") => RequestContext::value("searchstring"))));
 			print '&amp;start='.$xmlStart.'", ';
-			print '"'.htmlentities($asset->getDisplayName()).'", ';
+			print '"'.htmlspecialchars($asset->getDisplayName()).'", ';
 			print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
 			print ")'>";
 			print _("View")."</a>";			

@@ -169,7 +169,7 @@ END;
 		
 		// Title
 		print "\t\t<title><![CDATA[";
-		print htmlentities($slideAsset->getDisplayName(), ENT_COMPAT, 'UTF-8');
+		print htmlspecialchars($slideAsset->getDisplayName(), ENT_COMPAT, 'UTF-8');
 		print "]]></title>\n";
 		
 		// Caption
