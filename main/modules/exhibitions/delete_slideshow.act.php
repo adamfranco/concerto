@@ -41,6 +41,17 @@ class delete_slideshowAction
 	}
 	
 	/**
+	 * Return the "unauthorized" string to pring
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function getUnauthorizedMessage () {
+		return _("You are not authorized to delete this <em>Slideshow</em> or its <em>Slides</em>.");
+	}
+
+	/**
 	 * Return the heading text for this action, or an empty string.
 	 * 
 	 * @return string
@@ -74,23 +85,11 @@ class delete_slideshowAction
 		$repository =& $repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
-		$asset =& $repository->getAsset(
+		$repository->deleteAsset(
 				$idManager->getId(RequestContext::value('slideshow_id')));
 
-		$success = $this->recursiveDeleteAsset($asset);
-		
-		if ($success) {
-			RequestContext::locationHeader(
-				$harmoni->request->quickURL("exhibitions", "browse_exhibition",
-					array("exhibition_id" => RequestContext::value('exhibition_id'))));
-		} else {
-			ob_start();
-			print  "<p>";
-			print  _("An error occured while trying to delete this slideshow.");
-			print  "</p>";
-			
-			$actionRows->add(new Block(ob_get_contents(), 2), "100%", null, LEFT, CENTER);
-			ob_end_clean();
-		}
+		RequestContext::locationHeader($harmoni->request->quickURL(
+			"exhibitions", "browse_exhibition",
+			array("exhibition_id" => RequestContext::value('exhibition_id'))));
 	}
 }

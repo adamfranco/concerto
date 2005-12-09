@@ -86,61 +86,11 @@ class deleteAction
 		$repository =& $repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
-		$asset =& $repository->getAsset(
-				$idManager->getId(RequestContext::value('exhibition_id')));
-
-		$success = $this->recursiveDeleteAsset($asset);
-		
-		if ($success) {
-			RequestContext::locationHeader(
-				$harmoni->request->quickURL("exhibitions", "browse"));
-		} else {
-			ob_start();
-			print  "<p>";
-			print  _("An error occured while trying to delete this exhibition.");
-			print  "</p>";
-			
-			$actionRows->add(new Block(ob_get_contents(), 2), "100%", null, LEFT, CENTER);
-			ob_end_clean();
-		}
-	}
 	
-	/**
-	 * Recursively delete an Asset
-	 * 
-	 * @param object Asset $asset	The Asset to delete.
-	 * @return boolean
-	 * @access public
-	 * @since 8/4/05
-	 */
-	function recursiveDeleteAsset (&$asset) {
-		$children =& $asset->getAssets();
-		
-		while ($children->hasNext()) {
-			$child =& $children->next();
-			print "Deleting Child: "; printpre($child->getId());
-			$this->recursiveDeleteAsset($child);
-		}
-		
-		// Make sure that this asset now has no children.
-		// if it does not have children delete it.
-		// Check that the user can delete this asset
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
-
-		$children =& $asset->getAssets();
-		if (!$children->hasNext()
-			&& $authZ->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.delete"), 
-					$asset->getId()))
-		{
-			print "Deleting Asset: "; printpre($asset->getId());
-			
-			$repository =& $asset->getRepository();
-			$repository->deleteAsset($asset->getId());
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+		$repository->deleteAsset(
+				$idManager->getId(RequestContext::value('exhibition_id')));
+	
+		RequestContext::locationHeader(
+			$harmoni->request->quickURL("exhibitions", "browse"));
 	}
 }

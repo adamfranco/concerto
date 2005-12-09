@@ -7,26 +7,89 @@
  *
  * @version $Id$
  */
+require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
+/**
+ * 
+ * 
+ * @package concerto.modules.asset
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
+ * @version $Id$
+ */
 
 
-// Get the Repository
-$repositoryManager =& Services::getService("Repository");
-$idManager =& Services::getService("Id");
-$assetId =& $idManager->getId($harmoni->request->get('asset_id'));
-$asset =& $repositoryManager->getAsset($assetId);
-$repository =& $asset->getRepository();
-$repositoryId =& $repository->getId();
+class deleteAction
+	extends MainWindowAction
+{
 
-// Check that the user can delete this asset
-$authZ =& Services::getService("AuthZ");
-$idManager =& Services::getService("Id");
-if (!$authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.delete"), $assetId)) {
-	// Get the Layout compontents. See core/modules/moduleStructure.txt
-	// for more info. 
-	return new Block(_("You are not authorized to delete this <em>Asset</em> here."), 2);
+	/**
+	 * Check Authorizations
+	 * 
+	 * @return boolean
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function isAuthorizedToExecute () {
+		// Check that the user can delete this exhibition
+		$authZ =& Services::getService("AuthZ");
+		$idManager =& Services::getService("Id");
+		return $authZ->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.delete"), 
+					$idManager->getId(RequestContext::value('asset_id')));
+	}
+	
+	/**
+	 * Return the "unauthorized" string to pring
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function getUnauthorizedMessage () {
+		return _("You are not authorized to delete this <em>Asset</em> or its <em>Assets</em>.");
+	}
+
+	/**
+	 * Return the heading text for this action, or an empty string.
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function getHeadingText () {
+		$idManager =& Services::getService("Id");
+		$repositoryManager =& Services::getService("Repository");
+		$repository =& $repositoryManager->getRepository(
+				$idManager->getId(
+					RequestContext::value('collection_id')));
+		$asset =& $repository->getAsset(
+				$idManager->getId(RequestContext::value('asset_id')));
+		return _("Delete Asset")." <em>".$asset->getDisplayName()."</em> ";
+	}
+	
+	/**
+	 * Build the content for this action
+	 * 
+	 * @return void
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function buildContent () {
+		$actionRows =& $this->getActionRows();
+		$harmoni =& Harmoni::instance();
+		
+		$idManager =& Services::getService("Id");
+		$repositoryManager =& Services::getService("Repository");
+		$repository =& $repositoryManager->getRepository(
+				$idManager->getId(
+					RequestContext::value('collection_id')));
+		$repository->deleteAsset(
+				$idManager->getId(RequestContext::value('asset_id')));
+
+		RequestContext::locationHeader($harmoni->request->quickURL(
+			"collection", "browse",
+			array("collection_id" => RequestContext::value('collection_id'))));
+	}
 }
-
-// Delete the asset
-$repository->deleteAsset($assetId);
-
-$harmoni->history->goBack("concerto/asset/delete-return");

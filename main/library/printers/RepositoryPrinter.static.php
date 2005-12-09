@@ -95,11 +95,11 @@ class RepositoryPrinter {
 			$links[] = "<a href='".$url->write()."'>";
 			$links[count($links) - 1] .= _("Edit")."</a>";
 		}
+	//===== Delete Link =====//
 		if ($authZ->iSUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.delete"),
 				$repositoryId))
 		{
-			$harmoni->history->markReturnURL("rep-delete");
 			ob_start();
 			print "<a href='Javascript:deleteRepository(\"".
 				$repositoryId->getIdString()."\", \"".

@@ -13,7 +13,7 @@ require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php
 require_once(POLYPHONY."/main/library/Exporter/XMLExporter.class.php");
 
 /**
- * This is the export action for a concerto
+ * This is the export action for concerto
  * 
  * @since 9/27/05
  * @package concerto.admin
@@ -50,7 +50,7 @@ class exportAction
 	 * @since 9/27/05
 	 */
 	function getUnauthorizedMessage () {
-		return _("You are not authorized to export this <em>Concerto</em>.");
+		return _("You are not authorized to export this instance of <em>Concerto</em>.");
 	}
 	
 	/**
@@ -74,7 +74,15 @@ class exportAction
 	function buildContent () {
 		$centerPane =& $this->getActionRows();
 
-		$cacheName = 'export_concerto_wizard_';
+		$authN =& Services::getService("AuthN");
+		$authTypes =& $authN->getAuthenticationTypes();
+		$uniqueString = "";
+		while($authTypes->hasNextType()) {
+			$authType =& $authTypes->nextType();
+			$uniqueString .= "_".$authN->getUserId($authType);
+		}
+		
+		$cacheName = 'export_concerto_wizard'.$uniqueString;
 		
 		$this->runWizard ( $cacheName, $centerPane );
 	}
@@ -93,7 +101,7 @@ class exportAction
 		$repositoryManager =& Services::getService("Repository");
 		
 		
-		// Instantiate the wizard, then add our steps.
+		// Instantiate the wizard
 		$wizard =& SimpleWizard::withText(
 			"\n<h3>"._("Click <em>Export</em> to Export Concerto")."</h3>".
 			"\n<br/>"._("The current content of concerto will be exported and presented as an archive for download.  Once the archive is downloaded click <em>Cancel</em> to go back.").
@@ -114,8 +122,6 @@ class exportAction
 		
 		// Create the properties.
 		$fileNameProp =& $wizard->addComponent("filepath", new WTextField());
-//		$fileNameProp->setErrorText("<nobr>"._("The archive name must not have an extension")."</nobr>");
-// 		$fileNameProp->setErrorRule(new WECRegex("\."));
 
 // 		$datefield =& $wizard->addComponent("effective_date", new WTextField());
 // 		$date =& DateAndTime::Now();
@@ -154,23 +160,23 @@ class exportAction
 		$wizard =& $this->getWizard($cacheName);
 				
 		$properties =& $wizard->getAllValues();
-		
+		// instantiate new exporter
 		$exporter =& XMLExporter::withCompression($properties['compression']);
-
+		// export all of concerto to this location
 		$file = $exporter->exportAll();
-
+		// down and dirty compression
 		shell_exec('cd '.str_replace(":", "\:", $file).";".
 		'tar -czf /tmp/'.$properties['filepath'].$properties['compression'].
 		" *");
-
+		// give out the archive for download
 		header("Content-type: application/x-gzip");
 		header('Content-Disposition: attachment; filename="'.
 			$properties['filepath'].$properties['compression'].'"');
-
 		print file_get_contents(
 			"/tmp/".$properties['filepath'].$properties['compression']);
 		exit();
 
+		// never ever even think about returning true :)
 
 		return TRUE;
 	}
