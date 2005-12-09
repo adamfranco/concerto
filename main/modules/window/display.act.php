@@ -189,10 +189,17 @@ class displayAction
 			$rightColumn->add(AssetPrinter::getMultiEditOptionsBlock(), "100%", null, LEFT, TOP);
 		
 	// :: Footer ::
+		$footer =& new Container (new XLayout, FOOTER, 1);
+		
+		$helpText = "<a target='_blank' href='";
+		$helpText .= $harmoni->request->quickURL("help", "browse");
+		$helpText .= "'>"._("Help")."</a>";
+		$footer->add(new UnstyledBlock($helpText), "50%", null, LEFT, BOTTOM);
+		
 		$footerText = "Concerto v.0.1 &copy;2004 Middlebury College: <a href=''>";
 		$footerText .= _("credits");
 		$footerText .= "</a>";
-		$footer =& new Footer($footerText, 1);
+		$footer->add(new UnstyledBlock($footerText), "50%", null, RIGHT, BOTTOM);
 		
 		$mainScreen->add($footer, "100%", null, RIGHT, BOTTOM);
 

@@ -30,6 +30,7 @@
 	$postProcessIgnoreList = array(
 									"language.*",
 									"repository.*",
+									"help.*",
 									
 									// and our special no-theme action
 									"example.no_theme"

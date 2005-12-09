@@ -14,6 +14,7 @@ require_once(HARMONI."GUIManager/StyleProperties/BorderRightSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/BorderBottomSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/BorderLeftSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/MarginSP.class.php");
+require_once(HARMONI."GUIManager/StyleProperties/MarginLeftSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/PaddingSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/FontSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/FontFamilySP.class.php");
@@ -239,6 +240,7 @@ class SimpleTheme extends Theme {
 		$menuLink1_unselected->addSP(new BackgroundColorSP("#FD9453"));
 		$menuLink1_unselected->addSP(new ColorSP("#FFF"));
 		$menuLink1_unselected->addSP(new PaddingSP("5px"));
+		$menuLink1_unselected->addSP(new FontSizeSP("larger"));
 		$this->addStyleForComponentType($menuLink1_unselected, MENU_ITEM_LINK_UNSELECTED, 1);
 		
 		$menuLink1_hover =& new StyleCollection("*.menuLink1_hover a:hover", "menuLink1_hover", "Menu Link 1 Hover", "A 1st level menu link hover behavior.");
@@ -252,7 +254,32 @@ class SimpleTheme extends Theme {
 		$menuLink1_selected->addSP(new BackgroundColorSP("#C77441"));
 		$menuLink1_selected->addSP(new ColorSP("#FFF"));
 		$menuLink1_selected->addSP(new PaddingSP("5px"));
+		$menuLink1_selected->addSP(new FontSizeSP("larger"));
 		$this->addStyleForComponentType($menuLink1_selected, MENU_ITEM_LINK_SELECTED, 1);
+		
+		// =====================================================================
+		// Menu Unselected Link 2 style
+		$menuLink1_unselected =& new StyleCollection("*.menuLink2_unselected a", "menuLink2_unselected", "Unselected Menu Link ", "A 2nd level unselected menu link.");
+		$menuLink1_unselected->addSP(new DisplaySP("block"));
+		$menuLink1_unselected->addSP(new BackgroundColorSP("#FD9453"));
+		$menuLink1_unselected->addSP(new ColorSP("#FFF"));
+		$menuLink1_unselected->addSP(new PaddingSP("5px"));
+		$menuLink1_unselected->addSP(new MarginLeftSP("10px"));
+		$this->addStyleForComponentType($menuLink1_unselected, MENU_ITEM_LINK_UNSELECTED, 2);
+		
+		$menuLink1_hover =& new StyleCollection("*.menuLink2_hover a:hover", "menuLink2_hover", "Menu Link 2 Hover", "A 2nd level menu link hover behavior.");
+		$menuLink1_hover->addSP(new BackgroundColorSP("#C77441"));
+		$this->addStyleForComponentType($menuLink1_hover, MENU_ITEM_LINK_UNSELECTED, 2);
+		
+		// =====================================================================
+		// Menu Selected Link 2 style
+		$menuLink1_selected =& new StyleCollection("*.menuLink2_selected a", "menuLink2_selected", "Selected Menu Link 2", "A 2nd level selected menu link.");
+		$menuLink1_selected->addSP(new DisplaySP("block"));
+		$menuLink1_selected->addSP(new BackgroundColorSP("#C77441"));
+		$menuLink1_selected->addSP(new ColorSP("#FFF"));
+		$menuLink1_selected->addSP(new PaddingSP("5px"));
+		$menuLink1_selected->addSP(new MarginLeftSP("10px"));
+		$this->addStyleForComponentType($menuLink1_selected, MENU_ITEM_LINK_SELECTED, 2);
 	}
 
 
