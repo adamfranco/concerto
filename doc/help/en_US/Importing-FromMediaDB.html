@@ -1,0 +1,31 @@
+<html>
+	<head>
+		<title>Importing - From MediaDB</title>
+	</head>
+	<body>
+		<h1>Export Import Sequence of Actions:</h1>
+
+		<h2>Export:</h2>
+		<p>Upon a successful export the export action will return an archive containing the appropriate file substructure for the importer.  There will be only a single file labeled "metadata.xml" and any associated data files per directory.</p>
+		<p>This archive will be of the proper form for the importer to handle in the appropriate location.</p>
+
+		<h2>Import:</h2>
+		<p>The Importer generally accepts single xml files, or archives of xml files and data files.  If the data for the assets are available remotely then the archive itself need only be xml files with the appropriate addresses for the remote files.  It is also possible to import sets of assets with tab-delimited metadata or images containing EXIF metadata.</p>
+
+		<h1>Example: MEDIADB -&gt; CONCERTO 2</h1>
+
+		<p>The ADMIN action "expmdb" in concerto2 will read the mediadb information directly from the mediadb database (specified in the action), except the file data.  The action itself needs the appropriate web location for the mediadb instance in order to properly write the xml files that will point to the remote file locations.</p>
+		<p>The xml files in their appropriate structure will be stored in "/tmp/mdbExport".  This directory should be moved to a permanent location.</p>
+		<p>From here there are a couple of options, depending on how capable the importer is it may be able to import the entire mediadb instance (using the ADMIN import action) if you tar the whole directory from inside the directory. </p>
+	
+		<p style='border: 1px dotted; margin: 20px; padding: 5px;'>tar -czf mdb.tar.gz *</p>
+	
+		<p>It is also entirely possible that this will not work due to memory limitations.  In which case a solution is to import each of the metadata.xml files individually as collections (using the COLLECTIONS import action).</p>
+		<p>In this case it is entirely unnecessary to tar the files because the xml file is using remote file locations and there is only one file for the importer to look at, namely the "metadata.xml" file for the collection.</p>
+		<p>The importing process has been found to be not entirely programmatic, but with minimal intervention the data transfer can be completed quickly:</p>
+		<p>It has been found that single assets may block an entire import from continuing for reasons yet to be determined, but without the snippet of xml that defines the corrupt asset the import will run smoothly.</p>
+		<p>There is also the possibility that a single collection itself will consume all the available memory, in which case the xml file can be manually broken up into smaller chunks, and all secondary chunks of xml can be imported (using the COLLECTION import action).  For this you will need the xml description of the repository and the recordstructure, as well as the assets for importing into the repository.</p>
+		
+		<p>I don't really know what else to say.</p>
+	</body>
+</html>
