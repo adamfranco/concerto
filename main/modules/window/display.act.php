@@ -192,7 +192,7 @@ class displayAction
 		$footer =& new Container (new XLayout, FOOTER, 1);
 		
 		$helpText = "<a target='_blank' href='";
-		$helpText .= $harmoni->request->quickURL("help", "browse");
+		$helpText .= $harmoni->request->quickURL("help", "browse_help");
 		$helpText .= "'>"._("Help")."</a>";
 		$footer->add(new UnstyledBlock($helpText), "50%", null, LEFT, BOTTOM);
 		
