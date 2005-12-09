@@ -10,6 +10,29 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
+	<version number="0.3.0" date="The Nebulous Future">
+		<new author='adam'>
+			New theme.
+		</new>
+		<new author='adam'>
+			Reworked browsing to be more usable.
+		</new>
+		<new author='adam'>
+			Implemented asset searching.
+		</new>
+		<new author='adam'>
+			Lots of little improvements.
+		</new>
+		<new author='adam'>
+			Implemented Asset editing in a single wizard.
+		</new>
+		<new author='adam'>
+			Multi-Asset editing.
+		</new>
+		<change author='adam'>
+			Lots of speed optimizations.
+		</change>
+	</version>
 	<version number="0.2.0" date="2005-10-12">
 		<new author='adam'>
 			Lots of other changes that make this now a workable system.
