@@ -10,40 +10,12 @@
 			<keyword>Multimedia</keyword>
 			<description>User-created repository for storing multimedia.</description>
 		</type>
-		<recordstructure xml:id="dc" isGlobal="TRUE">
+				<recordstructure xml:id="dc" isGlobal="TRUE">
 			<name>Dublin Core</name>
 			<description><![CDATA[
-<h1>Dublin Core Metadata Element Set, Version 1.1: Reference Description</h1>
-<table class="docinfo" cellspacing="0">
-<tbody><tr>
-<th>Date Issued:</th>
-<td>2004-12-20</td></tr>
-<tr>
-<th>Identifier:</th>
-<td><a href="/documents/2004/12/20/dces/">http://dublincore.org/documents/2004/12/20/dces/</a></td></tr>
-<tr>
-<th>Supersedes:</th>
-
-<td><a href="/documents/2003/06/02/dces/">http://dublincore.org/documents/2003/06/02/dces/</a></td></tr>
-<tr>
-<th>Latest version:</th>
-<td><a href="/documents/dces/">http://dublincore.org/documents/dces/</a></td></tr>
-<tr>
-<th>Translations:</th>
-<td><a href="/resources/translations/#dces1-1">http://dublincore.org/resources/translations/</a></td></tr>
-<tr>
-<th>Status of document:</th>
-<td>This is a DCMI <a href="/documents/#recommendations">Recommendation</a>.</td></tr>
-
-<tr>
-<th>Description of document:</th>
-<td>This document is the reference description, version 1.1 of the Dublin Core Metadata Element Set.</td></tr>
-<tr>
-<th>Recent changes:</th>
-<td>Updated references to [ISO3166] and [MIME]
-</td></tr></tbody></table>
+<h2>Dublin Core Metadata Element Set, Version 1.1: Reference Description</h2>
 <a name="introduction" id="introduction"></a> 
-<h2>Introduction</h2>
+<h3>Introduction</h3>
 <p>The Dublin Core metadata element set is a standard for cross-domain
 information resource description. Here an information resource is
 defined to be "anything that has identity". This is the definition used
@@ -58,9 +30,38 @@ can be assigned.</p>
 <li>NISO Standard Z39.85-2001 (September 2001): <a href="http://www.niso.org/standards/resources/Z39-85.pdf">http://www.niso.org/standards/resources/Z39-85.pdf</a></li>
 <li>CEN Workshop Agreement CWA 13874 (March 2000, no longer available)</li></ul>
 <p>The current document has been brought into line with the ISO and
-NISO standards. The more comprehensive document "DCMI Metadata Terms" (<a href="/documents/dcmi-terms/">http://dublincore.org/documents/dcmi-terms/</a>) includes the latest and authoritative term declarations for the Dublin Core Metadata Element Set, Version 1.1.</p>
+NISO standards. The more comprehensive document "DCMI Metadata Terms" (<a href="http://dublincore.org/documents/dcmi-terms/">http://dublincore.org/documents/dcmi-terms/</a>) includes the latest and authoritative term declarations for the Dublin Core Metadata Element Set, Version 1.1.</p>
 <p>For an overview and links to full specifications of all metadata
 terms maintained by the Dublin Core Metadata Initiative please see:: <a href="http://dublincore.org/usage/documents/overview/">http://dublincore.org/usage/documents/overview/</a>.</p>
+
+<table class="docinfo" cellspacing="0">
+<tbody><tr>
+<th>Date Issued:</th>
+<td>2004-12-20</td></tr>
+<tr>
+<th>Identifier:</th>
+<td><a href="http://dublincore.org/documents/2004/12/20/dces/">http://dublincore.org/documents/2004/12/20/dces/</a></td></tr>
+<tr>
+<th>Supersedes:</th>
+
+<td><a href="http://dublincore.org/documents/2003/06/02/dces/">http://dublincore.org/documents/2003/06/02/dces/</a></td></tr>
+<tr>
+<th>Latest version:</th>
+<td><a href="http://dublincore.org/documents/dces/">http://dublincore.org/documents/dces/</a></td></tr>
+<tr>
+<th>Translations:</th>
+<td><a href="http://dublincore.org/resources/translations/#dces1-1">http://dublincore.org/resources/translations/</a></td></tr>
+<tr>
+<th>Status of document:</th>
+<td>This is a DCMI <a href="http://dublincore.org/documents/#recommendations">Recommendation</a>.</td></tr>
+
+<tr>
+<th>Description of document:</th>
+<td>This document is the reference description, version 1.1 of the Dublin Core Metadata Element Set.</td></tr>
+<tr>
+<th>Recent changes:</th>
+<td>Updated references to [ISO3166] and [MIME]
+</td></tr></tbody></table>
 			]]></description>
 			<format>text/plain</format>
 			<partstructure xml:id="dc-title" isRepeatable="TRUE">
@@ -414,7 +415,20 @@ resource.</td>
 		<recordstructure xml:id="vra_core" isGlobal="TRUE">
 			<name>VRA Core</name>
 			<description><![CDATA[
-<p><b>INTRODUCTION</b><br/>
+<div align="left">
+  <table border="0" width="100%">
+    <tbody><tr> 
+      <td><a href="http://www.vraweb.org/index.html"><img src="http://www.vraweb.org/images3/logosmall.gif" border="0" height="93" width="91"></a></td>
+      <td><a name="top"></a><h2>VRA Core Categories, Version 3.0</h2>
+        <br><b>a project of the</b>
+        <br><a href="http://www.vraweb.org/datastandard2.html"><b>Visual 
+        Resources Association Data Standards Committee</b></a> </td>
+    </tr>
+  </tbody></table>
+</div>
+<p><b><i>This document last modified on 2/20/2002 </i></b></p>
+
+<p><i><b>INTRODUCTION</b></i>
 The <i>VRA Core Categories, Version 3.0</i> consist of a single element set that can be applied as many times as necessary to create records to describe<i> works </i>of visual culture as well as the <i>images </i>that document them. The Data Standards Committee followed the "1:1 principle," developed by the Dublin Core community, i.e., only one object or resource may be described within a single metadata set.&nbsp; How the element sets are linked to form a single record is a local database implementation issue.&nbsp; The order of the categories in the <i>VRA Core 3.0</i> is arbitrary, and local implementations are encouraged to determine their own field sequence that will appropriately describe their data.</p>
 
 <p>The <i>VRA Core 3.0</i> is intended as a point of departure—not a completed application.&nbsp; The elements that comprise the <i>Core</i> are designed to facilitate the sharing of information among visual resources collections about <i>works </i>and <i>images.</i>&nbsp; These elements may not be sufficient to fully describe a local collection and additional fields can be added for that purpose.&nbsp; We also recommend the use of qualifiers with certain elements in the <i>VRA Core 3.0 </i>so that the data values contained in the element may be more precisely identified&nbsp;&nbsp; For instance, a "Notes" qualifier to clarify the data may be an appropriate addition to many of the current elements. Furthermore, every element may be repeated as many times as necessary within a given set to describe the <i>work</i>or<i> image</i>.</p>
