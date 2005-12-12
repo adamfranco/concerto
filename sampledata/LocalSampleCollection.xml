@@ -411,6 +411,369 @@ resource.</td>
 				</type>
 			</partstructure>
 		</recordstructure>
+		<recordstructure xml:id="vra_core" isGlobal="TRUE">
+			<name>VRA Core</name>
+			<description><![CDATA[
+<p><b>INTRODUCTION</b><br/>
+The <i>VRA Core Categories, Version 3.0</i> consist of a single element set that can be applied as many times as necessary to create records to describe<i> works </i>of visual culture as well as the <i>images </i>that document them. The Data Standards Committee followed the "1:1 principle," developed by the Dublin Core community, i.e., only one object or resource may be described within a single metadata set.&nbsp; How the element sets are linked to form a single record is a local database implementation issue.&nbsp; The order of the categories in the <i>VRA Core 3.0</i> is arbitrary, and local implementations are encouraged to determine their own field sequence that will appropriately describe their data.</p>
+
+<p>The <i>VRA Core 3.0</i> is intended as a point of departure—not a completed application.&nbsp; The elements that comprise the <i>Core</i> are designed to facilitate the sharing of information among visual resources collections about <i>works </i>and <i>images.</i>&nbsp; These elements may not be sufficient to fully describe a local collection and additional fields can be added for that purpose.&nbsp; We also recommend the use of qualifiers with certain elements in the <i>VRA Core 3.0 </i>so that the data values contained in the element may be more precisely identified&nbsp;&nbsp; For instance, a "Notes" qualifier to clarify the data may be an appropriate addition to many of the current elements. Furthermore, every element may be repeated as many times as necessary within a given set to describe the <i>work</i>or<i> image</i>.</p>
+
+<p><b>How does <i>VRA Core 3.0 </i>relate to <i>VRA Core 2.0</i>?</b><br/> The <i>VRA Core 3.0</i> conflates the Work (W) and the Visual Document (V) element sets from <i>VRA Core 2.0</i> into a single universally applicable element set.&nbsp; <i>Core 3.0</i> retains the same order of elements, and where possible, the same category titles and definitions that were used in <i>Core 2.0</i>.&nbsp; Users of the <i>Core 3.0 </i>will wish to rearrange these elements in their local applications into sequences which reflect their needs.</p>
+
+<p>Because <i>work </i>and <i>image</i> records use the same element set, a new element—Record Type—was added.&nbsp; This element defines the type of resource that is being described.&nbsp; While the Core elements pertain to only two types of records - the work and the image, it is understood that other types of records such as authority records may be included in a database structure. Like <i>VRA Core 2.0 </i>, <i>VRA Core 3.0 </i> refrains from recommending any type of data structure.  Instead, it is hoped that the core elements will help to determine the types of data recorded in a visual resources database and that the concepts can be used to map between databases. However, two elements in <i>VRA Core 3.0 </i>- Record Type and Relation - describe or point to the record itself. A consideration of the record and its relationship to other records requires the acknowledgement of data structure particularly evident in the Relation element.
+
+<p><i>VRA Core 3.0 </i>also includes a new "Rights" element as well as new category qualifiers.</p></p>
+
+<p><b>What is a <i>Work</i>?</b><br/>
+In the context of the <i>VRA Core 3.0</i>, a <i>work</i> is a physical entity that exists, has existed at some time in the past, or that could exist in the future.&nbsp; It might be an artistic creation such as a painting or a sculpture; it might be a performance, composition, or literary work; it might be a building or other construction in the built environment; or it might be an object of material culture. <i>Works</i> may be single items, or they may consist of many parts.</p>
+
+<p><b>What is an <i>Image</i>?</b><br/>
+An <i>image</i> is a visual representation of a <i>work</i>.&nbsp; It can exist in photomechanical, photographic and digital formats.&nbsp; In a typical visual resources collection, an <i>image</i> is a reproduction of the <i>work</i> that is owned by the cataloging institution and is typically a slide, photograph, or digital file.&nbsp; A visual resources collection may own several <i>images</i> of a given <i>work</i>.</p>
+
+<p>
+The term "visual document", which was used in the <i>VRA Core 2.0, </i>has been eliminated because a visual document could be defined not only as an <i>image</i> but as a type of <i>work,</i> such as a preparatory sketch or an architectural plan for a building.</p>
+
+<p>
+<b>How do <i>Work</i> records and <i>Image r</i>ecords link to each other?</b><br/>
+How the <i>VRA Core 3.0</i> element sets are linked to form a single record is a local database implementation issue; however, it is assumed that <i>work</i> records will be linked to the relevant <i>image</i> records.&nbsp; For many collections, the creation of two linked element sets to describe a <i>work</i> (e.g., a painting) and an <i>image</i> (e.g., a slide of that painting) will be sufficient. In other cases a <i>work</i> (e.g., a building) might be linked to multiple <i>images</i> (e.g., digital images showing different aspects of the building). However, it will become increasingly common to associate two or more <i>image</i> records with a given <i>work</i> record to document the existence of different formats—slides, digital files, photographs, etc.&nbsp; Naturally most people will not want to create more levels than necessary in order to describe the sequence from <i>work</i> to <i>image</i>.&nbsp; Often only two element sets will be necessary; however, sometimes intermediate sets will be unavoidable.</p>
+
+<p>
+It is possible to repeat and link together the<i> VRA Core 3.0</i> element set in order to more fully describe a <i>work</i> for which a "visual document" (i.e., another <i>work</i>) exists.&nbsp; For instance, one might use an element set to describe a building's structure and another linked element set to describe the" visual document" (e.g., site plan).&nbsp; The <i>image r</i>ecord(s) will then be linked to the appropriate <i>work </i>record.&nbsp; This will allow views of the building to be associated with the primary <i>work</i> (the building) and images of the plan with the record for the "visual document."</p>
+
+<p><b>How does one <i>Work</i> record relate to another <i>Work</i> record?</b><br/>
+</p>
+
+<p>Relationships between two works may be either <i>essential</i> or <i>informative</i>. An <i>essential</i> relationship existswhere the described work includes the referenced work, either physically orlogically within a larger to smaller context. With works that have an essentialrelationship, it is recommended that the <b>Title.Larger Entity</b> qualifieralways accompany the title for the part.</p>
+
+<p> An informative relationship between two works exists when the described andreferenced works could stand independently and the relationship is informativebut not essential either physically or logically in identifying either of theworks. The link between the works should be reciprocal and the data values shouldinclude the identity of the related work and a description of the type of relationship.Core 3 Relationship types are consistent with the for the DC Relation element..<a href="http://dublincore.org/documents/dcmes-qualifiers/"> Dublin Core Qualifiers(Element Refinements)</a>for the DC Relation element.. A detailed list of typesand examples will be included in the <a href="http://php.indiana.edu/%7Efryp/goodpractice.html"><u>Guide to Good Practice: Cataloguing Standards For Describing Cultural Objectsand Images (expected publication, early 2003)</u></a>.</p>
+
+<p><b>Am I required to use everycategory?</b><br/>Only those elements which are relevant for a specificrecord should contain data.&nbsp; There is no need to place any data value,including "n/a" or "unknown" into these elements to indicate that they are blank.There is no requirement to include a minimum number of elements in order tocreate a valid record.</p>
+
+<p><b>May I repeat categories?</b><br/>All categories and qualifiers are repeatable.&nbsp;Moreover, identical data values may be used in more than one category. For Example,works with no title may require a description based upon values that definethe object type, materials, original location, owenership, etc. Values usedin the title may be repeated in other categories used to describe the work.</p>
+
+<p><b>How do I control the data valuesfor each element?</b><br/>The Data Standards Committee recommends the useof controlled vocabularies, particularly the Getty vocabularies and other standardauthorities for use with many of the categories. No single authority will sufficefor the entire set of the VRA Core Categories, Version 3.0 or even in many casesfor a single element in the set.&nbsp; We suggest that collections compile alist of data content vocabularies and authorities which are appropriate foruse for each field in their local applications.&nbsp; We also suggest that eachcollection limit the number of authorities or vocabularies used in<br/>each field, and, if possible, to indicate whichauthority has been used.&nbsp; We recommend that collections develop uniformways of entering data into the fields of their local applications.&nbsp; Someof these issues will be addressed and resolved by the Committee when it compilesfurther guidance and recommendations for the use of controlled vocabularies.</p>
+
+<p><b>The <i>VRA Core 3.0</i> isa work in progress</b><br/>Although the basic categories are set as prescribedin this document, the Data Standards Committee will continue to develop the<i>VRA Core 3.0</i> in the following areas:<br/>-- mapping to CDWA, MARC and other metadata standards.<br/>-- further guidance on recommendations for theuse of controlled vocabularies.<br/>-- additions to the Compendium of Examples.<br/>We welcome your comments and suggestions. Please contact Elisa Lanzi (elanzi@smith.edu)or Ann Whiteside (abw6n@virginia.edu) </p>
+
+<p><b>Category attributes</b><br/>In this document, each category is displayed withthe following attributes:<br/>Qualifiers = indicates existence of qualifiersand label<br/>Definition =&nbsp; a narrative statement that definesthe concept of the category.<br/>Data Values = recommendations for use of controlledvocabularies or standardized lists.<br/>VRA Core 2.0 = mapping to <i>VRA Core Categories2.0</i><br/>CDWA = mapping to the <a href="http://www.getty.edu/gri/standard/cdwa/"><i>Categoriesfor the Description of Works of Art</i></a><br/>Dublin Core = mapping to <a href="http://purl.oclc.org/dc/documents/rec-dces-19990702.htm"><i>DublinCore Metadata Element Set, Version 1.1</i></a><br/>Comment = questions and comments for discussion</p>
+
+<p><b>Standards Recommended</b><br/><a href="http://www.library.cornell.edu/tsmanual/CIRM/AACR2.html">AACR</a><br/><a href="http://shiva.pub.getty.edu/aat_browser/">AAT</a><br/><a href="http://www.getty.edu/gri/standard/cdwa/">CDWA</a><br/><a href="http://catalog.loc.gov">LCSH</a><br/><a href="http://lcweb.loc.gov/rr/print/tgm1">LCTGM</a><br/><a href="http://shiva.pub.getty.edu/tgn_browser/">TGN</a><br/><a href="http://shiva.pub.getty.edu/ulan_browser/">ULAN</p>
+			]]></description>
+			<format>text/plain</format>
+			<partstructure xml:id="vra_core-title" isRepeatable="TRUE">
+				<name>Title</name>
+				<description><![CDATA[
+<b>Qualifiers:</b>
+<br/>&nbsp;&nbsp;&nbsp; Title.Variant
+<br/>&nbsp;&nbsp;&nbsp; Title.Translation
+<br/>&nbsp;&nbsp;&nbsp; Title.Series
+<br/>&nbsp;&nbsp;&nbsp; Title.Larger Entity
+<br/><b>Definition: </b>Thetitle or identifying phrase given to a Work or an Image. For complex works orseries the title may refer to a discrete unit within the larger entity (a printfrom a series, a panel from a fresco cycle, a building within a temple complex)or may identify only the larger entity itself. A record for a part of a largerunit should include both the title for the part and the title for the larger entity.For an Image record this category describes the specific view of the depictedWork.
+<br/><b>Data Values: </b>formulated according to datacontent rules for titles of works of art
+<br/><b>VRA Core 2.0:&nbsp;</b> W2 Title; V7 Visual DocumentView Description
+<br/><b>CDWA: </b>Titles or Names-Text; Related VisualDocumentation-View; Related Visual Documentation-View- Indexing Terms
+<br/><b>Dublin Core:&nbsp; </b>TITLE
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="vra_core-creator" isRepeatable="TRUE">
+				<name>Creator</name>
+				<description><![CDATA[
+<b>Qualifiers</b>
+<br/>&nbsp;&nbsp;&nbsp; Creator.Role
+<br/>&nbsp;&nbsp;&nbsp; Creator.Attribution
+<br/>&nbsp;&nbsp;&nbsp; Creator.Personal name
+<br/>&nbsp;&nbsp;&nbsp; Creator.Corporate name
+<br/><b>Description: </b>The names, appellations, or other identifiers assigned to an individual, group, corporate body, or other entity that has contributed to the design, creation, production, manufacture, or alteration of the work or image.
+<br/><b>Data Values (controlled): </b>recommend ULAN and AAAF (LC authority files).
+<br/><b>Comment:</b> Controlled list for role (e.g., artist, engraver, architect, etc.) and attribution (e.g., school of, workshop of, circle of, style of, follower of, attributed to, etc.) in development.
+<br/><b>VRA Core 2.0:</b> W6 Creator; W7 Role
+<br/><b>CDWA: </b>Creation-Creator-Identity-Names, Creation-Creator-Identity-Qualifier, Creation-Creator-Identity-Roles
+<br/><b>Dublin Core: </b>CREATOR, CONTRIBUTOR
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="vra_core-description" isRepeatable="TRUE">
+				<name>Description</name>
+				<description><![CDATA[
+<b>Qualifiers: </b>None
+<br/><b>Description:</b> A free-text note about the Work or Image, including comments, description, or interpretation, that gives additional information not recorded in other categories.
+<br/><b>Data Values:</b>
+<br/><b>VRA Core 2.0:</b>&nbsp; W19 Notes
+<br/><b>CDWA: </b>the "Remarks" section for various categories;&nbsp; Physical Description
+<br/><b>Dublin Core:</b> DESCRIPTION
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="vra_core-subject" isRepeatable="TRUE">
+				<name>Subject</name>
+				<description><![CDATA[
+<b>Qualifiers: </b>None
+<br/><b>Description: </b>Terms or phrases that describe, identify, or interpret the Work or Image and what it depicts or expresses.&nbsp; These may include proper names (e.g., people or events), geographic designations (places), generic terms describing the material world, or topics (e.g., iconography, concepts, themes, or issues).
+<br/><b>Data Values: </b>recommend AAT, TGM, ICONCLASS, Sears Subject Headings
+<br/><b>VRA Core 2.0 </b>W16 Subject; V8 Visual Document Subject
+<br/><b>CDWA: </b>Subject Matter-Description-Indexing Terms; Subject Matter-Identification-Indexing Terms; Subject Matter-Interpretation-Indexing Terms, Related Visual Documentation-View-Indexing Terms
+<br/><b>Dublin Core:</b> SUBJECT
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="vra_core-record_type" isRepeatable="TRUE">
+				<name>Record Type</name>
+				<description><![CDATA[
+<b>Qualifiers</b>: None
+<br/><b>Definition:</b> Identifies the record as being either a WORK record, for the physical or created object, or an IMAGE record, for the visual surrogates of such objects.
+<br/><b>Data Values (controlled)</b>:&nbsp; work, image
+<br/><b>VRA Core 2.0:</b> None
+<br/><b>CDWA: </b>None
+<br/><b>Dublin Core:&nbsp;</b> TYPE
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="vra_core-type" isRepeatable="TRUE">
+				<name>Type</name>
+				<description><![CDATA[
+<b>Qualifiers: </b>None
+<br/><b>Definition: </b>Identifies the specific type of Work or Image being described in the record.
+<br/><b>Data Values (controlled): </b>recommend AAT
+<br/><b>VRA Core 2.0:&nbsp;</b> W1 Work Type; V1 Visual Document Type
+<br/><b>CDWA: </b>Object/Work - Type; Related Visual Documentation-Image Type
+<br/>
+<b>Dublin Core:&nbsp; </b>TYPE
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="vra_core-measurements" isRepeatable="TRUE">
+				<name>Measurements</name>
+				<description><![CDATA[
+<b>Qualifiers:</b>
+<br/>&nbsp;&nbsp;&nbsp; Measurements.Dimensions
+<br/>&nbsp;&nbsp;&nbsp; Measurements.Format
+<br/>&nbsp;&nbsp;&nbsp; Measurements.Resolution
+<br/><b>Description:</b>&nbsp; The size, shape, scale, dimensions, format, or storage configuration of the Work or Image. Dimensions may include such measurements as volume, weight, area or running time. The unit used in the measurement must be specified.
+<br/><b>Data Values: </b>formulated according to standards for data content (e.g., AACR, etc.)
+<br/><b>VRA Core 2.0:&nbsp;</b> W3 Measurements; V2 Visual Document Format; V3 Visual Document Measurements
+<br/><b>CDWA: </b>Measurements-Dimensions; Measurements-Shape; Measurements-Format; Related Visual Documentation-Image Measurements
+<br/><b>Dublin Core:&nbsp;</b> FORMAT
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="vra_core-material" isRepeatable="TRUE">
+				<name>Material</name>
+				<description><![CDATA[
+<b>Qualifiers:</b>
+<br/><b>&nbsp; </b>Material.Medium
+<br/>&nbsp; Material.Support
+<br/><b>Description: </b>.The substance of which a work or an image is composed.
+<br/><b>Data Values (controlled): </b>AAT
+<br/><b>VRA Core 2.0: </b>W4 Material
+<br/><b>CDWA: </b>Materials and Techniques-Materials-Name,Materials and Techniques-Materials-Role
+<br/><b>Dublin Core:&nbsp; </b>FORMAT
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="vra_core-technique" isRepeatable="TRUE">
+				<name>Technique</name>
+				<description><![CDATA[
+<b>Qualifiers: </b>None
+<br/><b>Description</b>: The production or manufacturing processes, techniques, and methods incorporated in the fabrication or alteration of the work or image.
+<br/><b>Data Values (controlled)</b>: AAT
+<br/><b>VRA Core 2.0:</b> W5 Technique
+<br/><b>CDWA: </b>Materials and Techniques-Processes or Techniques- Name
+<br/><b>Dublin Core:&nbsp; </b>FORMAT
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="vra_core-date" isRepeatable="TRUE">
+				<name>Date</name>
+				<description><![CDATA[
+<b>Qualifiers:</b>
+<br/>&nbsp;&nbsp;&nbsp; Date.Creation
+<br/>&nbsp;&nbsp;&nbsp; Date.Design
+<br/>&nbsp;&nbsp;&nbsp; Date.Beginning
+<br/>&nbsp;&nbsp;&nbsp; Date.Completion
+<br/>&nbsp;&nbsp;&nbsp; Date.Alteration
+<br/>&nbsp;&nbsp;&nbsp; Date.Restoration
+<br/><b>Description:&nbsp; </b>Date or range of dates associated with the creation, design, production, presentation, performance, construction, or alteration, etc. of the work or image.&nbsp; Dates may be expressed as free text or numerical.
+<br/><b>Data Values:&nbsp; </b>formulated according to standards for data content (e.g., AACR, DC dates, etc.)
+<br/><b>VRA Core 2.0&nbsp;</b> W8 Date; V4 Visual Document Date
+<br/><b>CDWA: </b>Creation-Date
+<br/><b>Dublin Core:&nbsp; </b>DATE, COVERAGE
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>date</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="vra_core-location" isRepeatable="TRUE">
+				<name>Location</name>
+				<description><![CDATA[
+<b>Qualifiers:</b>
+<br/>&nbsp;&nbsp;&nbsp; Location.Current Site
+<br/>&nbsp;&nbsp;&nbsp; Location.Former Site
+<br/>&nbsp;&nbsp;&nbsp; Location.Creation Site
+<br/>&nbsp;&nbsp;&nbsp; Location.Discovery Site
+<br/>&nbsp;&nbsp;&nbsp; Location.Current Repository
+<br/>&nbsp;&nbsp;&nbsp; Location.Former Repository
+<br/><b>Description: </b>The geographic location and/or name of the repository, building, or site-specific work or other entity whose boundaries include the Work or Image.
+<br/><b>Data Values (controlled): </b>BHA index, AAAF (LC), <i>Grove's Dictionary of Art </i>Location Appendix
+<br/><b>VRA Core 2.0</b> W9 Repository Name; W10 Repository Place;&nbsp; V5 Visual Document Owner
+<br/><b>CDWA: </b>Current Location-Repository Name, Current Location-Geographic Location, Context-Architectural-Building/Site, Context-Architectural-Building/Site-Place, Context-Archaeological-Excavation Place; Related Visual Documentation-Image Ownership-Owner's Name
+<br/><b>Dublin Core:&nbsp; </b>CONTRIBUTOR, COVERAGE
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="vra_core-id_number" isRepeatable="TRUE">
+				<name>ID Number</name>
+				<description><![CDATA[
+<b>Qualifiers</b>:
+<br/>&nbsp;&nbsp;&nbsp; ID Number.Current Repository
+<br/>&nbsp;&nbsp;&nbsp; ID Number.Former Repository
+<br/>&nbsp;&nbsp;&nbsp; ID Number.Current Accession
+<br/>&nbsp;&nbsp;&nbsp; ID Number.Former Accession
+<br/><b>Description:&nbsp; </b>The unique identifiers assigned to a Work or an Image.
+<br/><b>Data Values:</b>
+<br/><b>VRA Core 2.0</b> W11 Repository Number; V6 Visual Document Owner Number
+<br/><b>CDWA: </b>Current Location-Repository Numbers; Related Visual Documentation-Image Ownership-Owner's Number
+<br/><b>Dublin Core:&nbsp; </b>IDENTIFIER
+<br/><hr>
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="vra_core-style_period" isRepeatable="TRUE">
+				<name>Style/Period</name>
+				<description><![CDATA[
+<b>Qualifiers:</b>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Style/Period.Style
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Style/Period.Period
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Style/Period.Group
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Style/Period.School
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Style/Period.Dynasty
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Style/Period.Movement
+<br/><b>Description:&nbsp;</b> A defined style, historical period, group, school, dynasty, movement, etc. whose characteristics are represented in the Work or Image.
+<br/><b>Data Values (controlled):&nbsp;</b> recommend AAT
+<br/><b>VRA Core 2.0:&nbsp;</b> W14 Style/Period/Group/Movement
+<br/><b>CDWA: </b>Styles/Periods/Groups/Movements-Indexing Terms
+<br/><b>Dublin Core:&nbsp; </b>COVERAGE, SUBJECT
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="vra_core-culture" isRepeatable="TRUE">
+				<name>Culture</name>
+				<description><![CDATA[
+<b>Qualifiers: </b>None
+<br/><b>Description: </b>The name of the culture, people (ethnonym), or adjectival form of a country name from which a Work or Image originates or with which the Work or Image has been associated.
+<br/><b>Data Values</b>:&nbsp; recommend AAT, LCSH
+<br/><b>VRA Core 2.0:&nbsp;</b> W15 Nationality/Culture
+<br/><b>CDWA: </b>Creation-Creator-Identity-Nationality/Culture/Race-Citizenship; Creation-Creator-Identity-Nationality/Culture/Race-Culture
+<br/><b>Dublin Core:&nbsp; </b>COVERAGE
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="vra_core-relation" isRepeatable="TRUE">
+				<name>Relation</name>
+				<description><![CDATA[
+<b>Qualifiers:</b>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Relation.Identity
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Relation.Type
+<br/><b>Description:</b>&nbsp; Terms or phrases describing the identity of the related work and the relationship between the Work being cataloged and the related work. Note: If the relationship is <i>essential</i> (i.e. when the described work includes the referenced works, either physically or logically within a larger or smaller context), use the <b>Title.Larger Entity</b> element.
+<br/><b>Data Values:</b>
+<br/><b>VRA Core 2.0: </b>W17 Related Work; W18 Relationship Type
+<br/><b>CDWA: </b>Related Works-Relationship Type; Related Works-Identification
+<br/><b>Dublin Core: </b>RELATION
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="vra_core-source" isRepeatable="TRUE">
+				<name>Source</name>
+				<description><![CDATA[
+<b>Qualifiers: </b>None
+<br/><b>Description:</b> A reference to the source of the information recorded about the work or the image.&nbsp; For a work record, this may be a citation to the authority for the information provided. For an image, it can be used to provide information about the supplying Agency, Vendor or Individual; or,in the case of copy photography, a bibliographic citation or other description of the image source. In both cases, names, locations, and source identification numbers can be included.
+<br/><b>Data Values:</b>
+<br/><b>VRA Core 2.0:&nbsp;</b> V9 Source
+<br/><b>CDWA: </b>Related Visual Documentation-Image-Source-Name; Related Visual Documentation-Image-Source
+<br/><b>Dublin Core:&nbsp; </b>SOURCE
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+			<partstructure xml:id="vra_core-rights" isRepeatable="TRUE">
+				<name>Rights</name>
+				<description><![CDATA[
+<b>Qualifiers: </b>None
+<br/><b>Description: </b>Information about rights management; may include copyright and other intellectual property statements required for use.
+<br/><b>Data Values:</b>
+<br/><b>VRA Core 2.0:</b>&nbsp; None
+<br/><b>CDWA: </b>Related Visual Documentation-Copyright Restrictions
+<br/><b>Dublin Core:</b> RIGHTS
+				]]></description>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.concerto</authority>
+					<keyword>string</keyword>
+				</type>
+			</partstructure>
+		</recordstructure>
 		<asset>
 			<name>Trillium</name>
 			<description>Large-flowered Trillium (Trillium Grandiflorum). Trilliums along the trail at Snake Mountain.</description>
