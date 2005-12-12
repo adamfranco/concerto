@@ -72,9 +72,17 @@ class importAction extends MainWindowAction {
 
 	function buildContent () {
 		$harmoni =& Harmoni::instance();
-		
 		$centerPane =& $this->getActionRows();
-		$cacheName = 'import_collection_wizard_';//need unique identifier
+
+		$authN =& Services::getService("AuthN");
+		$authTypes =& $authN->getAuthenticationTypes();
+		$uniqueString = "";
+		while($authTypes->hasNextType()) {
+			$authType =& $authTypes->nextType();
+			$uniqueString .= "_".$authN->getUserId($authType);
+		}
+
+		$cacheName = 'import_collection_wizard_'.$uniqueString;
 		
 		$this->runWizard($cacheName, $centerPane);
 		
@@ -164,8 +172,6 @@ class importAction extends MainWindowAction {
 	 * @access public
 	 * @since 7/27/05
 	 */
-	
-	
 	function saveWizard($cacheName) {
 		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");

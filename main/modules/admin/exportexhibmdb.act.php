@@ -111,13 +111,13 @@ class exportexhibmdbAction
 							
 							$idQuery =& new SelectQuery;
 							$idQuery->addTable("dr_file");
-							$idQuery->addTable("dr_asset_record", "INNER_JOIN",
+							$idQuery->addTable("dr_asset_record", INNER_JOIN,
 								"dr_file.id = dr_asset_record.FK_record");
 							$idQuery->addColumn("dr_asset_record.FK_asset",
 								"asset_id");
 							$idQuery->addColumn("dr_file.filename");
-							$idQuery->addWhere("dr_file.filename = ".
-								rawurlencode($media['fname']));
+							$idQuery->addWhere("dr_file.filename = '".
+								rawurlencode($media['fname'])."'");
 							
 							$idResult =& $dbHandler->query($idQuery, 
 								$n_C_Index);
@@ -186,11 +186,30 @@ class exportexhibmdbAction
 			id=\"edu.middlebury.concerto.exhibition_repository\">\n");
 // recordstructure
 		fwrite($this->_xmlFile, "\t\t<recordstructure id=\"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure\" xml:id=\"slidestructure\">\n".
+			"\t\t\t<name>Slide Schema</name>\n".
 			"\t\t\t<partstructure id=\"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id\" xml:id=\"target id\" isMandatory=\"FALSE\" isRepeatable=\"FALSE\" isPopulated=\"FALSE\">
-			</partstructure>\n".
+				<name>target id</name>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.harmoni</authority>
+					<keyword>string</keyword>
+				</type>
+</partstructure>\n".
 			"\t\t\t<partstructure id=\"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position\" xml:id=\"text position\" isMandatory=\"FALSE\" isRepeatable=\"FALSE\" isPopulated=\"FALSE\">
+				<name>text position</name>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.harmoni</authority>
+					<keyword>string</keyword>
+				</type>
 			</partstructure>\n".
 			"\t\t\t<partstructure id=\"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata\" xml:id=\"display metadata\" isMandatory=\"FALSE\" isRepeatable=\"FALSE\" isPopulated=\"FALSE\">
+				<name>display metadata</name>
+				<type>
+					<domain>Repository</domain>
+					<authority>edu.middlebury.harmoni</authority>
+					<keyword>boolean</keyword>
+				</type>
 			</partstructure>\n".
 		"\t\t</recordstructure>\n");
 // recordstructure
@@ -266,12 +285,21 @@ class exportexhibmdbAction
 			"\t</repository>\n".
 			"</import>");
 		fclose($this->_xmlFile);
+	
+		$array = array("edu.middlebury.concerto.exhibition_repository",
+"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure",
+"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id",
+"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position",
+"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata");
 
 		if (isset($this->_importer))
 			unset($this->_importer);
-		$this->_importer =& new XMLImporter("/home/cshubert/public_html/importer/importtest/metadata.xml");
+		
+		$this->_importer =& XMLImporter::withFile($array, 
+			"/home/cshubert/public_html/importer/importtest/metadata.xml",
+			"insert");
 
-		$this->_importer->parse();
+		$this->_importer->parseAndImportBelow();
 	}
 }
 ?>

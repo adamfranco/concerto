@@ -46,7 +46,6 @@ class exportAction
 
 		$harmoni->request->endNamespace();
 		
-		// Check that the user can create an asset here.
 		return $return;
 	}
 	

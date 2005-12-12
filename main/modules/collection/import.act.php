@@ -100,7 +100,8 @@ class importAction extends MainWindowAction {
 		$harmoni->request->passthrough("collection_id");
 		
 		$centerPane =& $this->getActionRows();
-		$cacheName = 'import_concerto_data_wizard';
+		$cacheName = 'import_concerto_data_wizard_'.
+			$harmoni->request->get('collection_id');
 		
 		$this->runWizard($cacheName, $centerPane);
 		
@@ -113,7 +114,6 @@ class importAction extends MainWindowAction {
  	 * @access public
  	 * @since 7/18/05
 	 */
-	
 	function &createWizard () {
 		$wizard =& SimpleWizard::withText(
 			"<table border='0' style='margin-top:20px' >\n" .
@@ -171,7 +171,6 @@ class importAction extends MainWindowAction {
 	 * @access public
 	 * @since 7/27/05
 	 */
-	
 	function moveArchive($tmpPath, $filename) {
 		$newPath = $tmpPath."0";
 		mkdir($newPath);
@@ -190,8 +189,6 @@ class importAction extends MainWindowAction {
 	 * @access public
 	 * @since 7/27/05
 	 */
-	
-	
 	function saveWizard($cacheName) {
 		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");

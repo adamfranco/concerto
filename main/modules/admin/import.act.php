@@ -9,13 +9,6 @@
  * @version $Id$
  */ 
 
-//require_once(MYDIR."/domit/xml_domit_include.php");
-//require_once(POLYPHONY."/main/library/RepositoryImporter/XMLRepositoryImporter.class.php");
-//require_once(POLYPHONY."/main/library/RepositoryImporter/TabRepositoryImporter.class.php");
-//require_once(POLYPHONY."/main/library/RepositoryImporter/ExifRepositoryImporter.class.php");
-//require_once(HARMONI."utilities/MIMETypes.class.php");
-//require_once(HARMONI."utilities/Dearchiver.class.php");
-
 require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
 require_once(POLYPHONY."/main/library/Importer/XMLImporters/XMLImporter.class.php");
 
@@ -73,7 +66,16 @@ class importAction extends MainWindowAction {
 		$harmoni =& Harmoni::instance();
 		$centerPane =& $this->getActionRows();
 		
-		$cacheName = 'import_concerto_data_wizard';
+		$authN =& Services::getService("AuthN");
+		$authTypes =& $authN->getAuthenticationTypes();
+		$uniqueString = "";
+		while($authTypes->hasNextType()) {
+			$authType =& $authTypes->nextType();
+			$uniqueString .= "_".$authN->getUserId($authType);
+		}
+
+		
+		$cacheName = 'import_concerto_data_wizard'.$uniqueString;
 		$this->runWizard($cacheName, $centerPane);
 	}
 	
@@ -85,7 +87,6 @@ class importAction extends MainWindowAction {
 	 */
 	
 	function &createWizard () {
-		//$repository =& $this->getRepository();
 		$wizard =& SimpleWizard::withText(
 			"<table border='0' style='margin-top:20px' >\n" .
 			"\n<tr><td><h3>"._("File type:")."</h3></td></tr>".
@@ -206,7 +207,6 @@ class importAction extends MainWindowAction {
 					$properties['import_type']);
 					
 			$importer->parseAndImportBelow();
-			
 		}
 
 		if ($importer->hasErrors()) {
@@ -230,7 +230,6 @@ class importAction extends MainWindowAction {
 	 * @since 6/08/05
 	 */
 	function getReturnUrl () {
-
 		$harmoni =& Harmoni::instance();
 		return $harmoni->request->quickURL("admin", "main");
 	}
