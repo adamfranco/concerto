@@ -19,7 +19,13 @@ $loadTimer->start();
  *********************************************************/
 
 define("MYDIR",dirname(__FILE__));
-define("MYPATH", "http://".$_SERVER['HTTP_HOST'].str_replace(
+
+if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
+	$protocol = 'https';
+else
+	$protocol = 'http';
+
+define("MYPATH", $protocol."://".$_SERVER['HTTP_HOST'].str_replace(
 												"\\", "/", 
 												dirname($_SERVER['PHP_SELF'])));
 define("MYURL", MYPATH."/index.php");
