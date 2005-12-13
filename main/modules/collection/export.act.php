@@ -190,7 +190,6 @@ class exportAction
 		shell_exec('cd '.str_replace(":", "\:", $file).";".
 		'tar -czf /tmp/'.$properties['filepath'].$properties['compression'].
 		" *");
-		
 
 		header("Content-type: application/x-gzip");
 		header('Content-Disposition: attachment; filename="'.

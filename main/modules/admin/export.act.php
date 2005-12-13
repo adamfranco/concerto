@@ -95,12 +95,7 @@ class exportAction
 	 * @access public
 	 * @since 9/28/05
 	 */
-	function &createWizard () {
-		$harmoni =& Harmoni::instance();
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		
-		
+	function &createWizard () {		
 		// Instantiate the wizard
 		$wizard =& SimpleWizard::withText(
 			"\n<h3>"._("Click <em>Export</em> to Export Concerto")."</h3>".
@@ -128,7 +123,6 @@ class exportAction
 // 		$datefield->setValue($date->asString());		
 // 
 // 		$date2field =& $wizard->addComponent("expiration_date", new WTextField());
-// 		$date2 =& $repository->getExpirationDate();
 // 		
 // 		if (is_object($date2))
 // 			$date2field->setValue($date->asString());

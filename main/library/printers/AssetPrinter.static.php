@@ -233,6 +233,11 @@ class AssetPrinter {
 		$editSingleURL = str_replace("&amp;", "&", 
 			$harmoni->request->quickURL("asset", "edit"));
 		
+		$harmoni->request->startNamespace("basket");
+		$addBasketURL = str_replace("&amp;", "&", 
+			$harmoni->request->quickURL("basket", "add", array("assets" => "xxxxx")));
+		$harmoni->request->endNamespace();
+		
 		$pleaseSelectString = _("Please select some Assets.");
 		print<<<END
 
@@ -278,6 +283,33 @@ class AssetPrinter {
 			alert('$pleaseSelectString');
 	}
 	
+	function addCheckedAssetsToBasket() {
+		var addBasketURL = new String('$addBasketURL');
+		var assetList = '';
+		var assetElements = document.getElementsByName('$checkboxName');
+		var numChecked = 0;
+		
+		for (var i = 0; i < assetElements.length; i++) {
+			if (!assetElements[i].disabled && assetElements[i].checked == true) {
+				if (numChecked > 0)
+					assetList += ',';
+				assetList += assetElements[i].value;
+				numChecked++;
+			}
+		}
+		
+		var regex = new RegExp("xxxxx");
+		addBasketURL = addBasketURL.replace(regex, assetList);
+		
+		
+		if (numChecked >= 1)
+			window.location = addBasketURL;
+		else
+			alert('$pleaseSelectString');
+	}
+		
+		
+	
 // ]]>
 </script>
 END;
@@ -290,6 +322,9 @@ END;
 		
 		print "\n<br/><input type='button' onclick='editCheckedAssets();'";
 		print "value='"._("Edit Checked")."'/>";
+		
+		print "\n<br/><input type='button' onclick='addCheckedAssetsToBasket();'";
+		print "value='"._("Add Checked To Basket")."'/>";
 		
 		$block = new Block(ob_get_contents(), 4);
 		ob_end_clean();

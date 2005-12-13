@@ -1,7 +1,7 @@
 <?php
 /**
  * @since 9/27/05
- * @package concerto.asset
+ * @package polyphony.basket
  * 
  * @copyright Copyright &copy; 2005, Middlebury College
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
@@ -15,7 +15,7 @@ require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php
  * This is the export action for an asset
  * 
  * @since 9/27/05
- * @package concerto.asset
+ * @package polyphony.basket
  * 
  * @copyright Copyright &copy; 2005, Middlebury College
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
@@ -37,16 +37,21 @@ class exportAction
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
 
-		$harmoni->request->startNamespace('export');
-
-		$return = $authZ->isUserAuthorized(
-			$idManager->getId("edu.middlebury.authorization.access"),
-			$idManager->getId(RequestContext::value('asset_id')));
-
-		$harmoni->request->endNamespace();
+		$basket =& BasketManager::getBasket();
+		$view =& $idManager->getId("edu.middlebury.authorization.view");
+		$this->_exportList = array();
 		
-		// Check that the user can create an asset here.
-		return $return;
+		while ($bakset->hasNext()) {
+			$id =& $basket->next();
+			
+			if ($authZ->isUserAuthorized($view, $id))
+				$this->_exportList[] =& $id;
+		}
+		
+		if (count($this->_exportList) > 0)
+			return true;
+		else
+			return false;
 	}
 	
 	/**
@@ -57,7 +62,7 @@ class exportAction
 	 * @since 9/27/05
 	 */
 	function getUnauthorizedMessage () {
-		return _("You are not authorized to export this <em>Asset</em>.");
+		return _("You are not authorized to export ANY of these <em>Assets</em>.");
 	}
 	
 	/**
@@ -70,19 +75,8 @@ class exportAction
 	function getHeadingText () {
 		$harmoni =& Harmoni::Instance();
 		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
 
-		$harmoni->request->startNamespace('export');
-		
-		$repository =& $repositoryManager->getRepository($idManager->getId(
-			RequestContext::value('collection_id')));
-
-		$asset =& $repository->getAsset(
-			$idManager->getId(RequestContext::value('asset_id')));
-		
-		$harmoni->request->endNamespace();
-
-		return _("Export the <em>".$asset->getDisplayName()."</em> Asset out of <em>Concerto</em>");
+		return _("Export the <em>Assets</em> in the Basket");
 	}
 
 	/**
@@ -94,17 +88,20 @@ class exportAction
 	 */
 	function buildContent () {
 		$harmoni =& Harmoni::Instance();
-		$harmoni->request->startNamespace('export');
-		$harmoni->request->passthrough('asset_id');
-		$harmoni->request->passthrough('collection_id');
 
 		$centerPane =& $this->getActionRows();
 
-		$cacheName = 'export_asset_wizard_'.
-			RequestContext::value('asset_id');
+		$authN =& Services::getService("AuthN");
+		$authTypes =& $authN->getAuthenticationTypes();
+		$uniqueString = "";
+		while($authTypes->hasNextType()) {
+			$authType =& $authTypes->nextType();
+			$uniqueString .= "_".$authN->getUserId($authType);
+		}
+
+		$cacheName = 'export_asset_wizard'.$uniqueString;
 		
 		$this->runWizard ( $cacheName, $centerPane );
-		$harmoni->request->endNamespace();
 	}
 		
 	/**
@@ -116,60 +113,41 @@ class exportAction
 	 * @since 9/28/05
 	 */
 	function &createWizard () {
-		$harmoni =& Harmoni::instance();
-		
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		
-		$repositoryId =& 
-			$idManager->getId(RequestContext::value('collection_id'));
-		
-		$repository =& $repositoryManager->getRepository($repositoryId);
-		$asset =& $repository->getAsset(
-			$idManager->getId(RequestContext::value('asset_id')));
-
-		
 		// Instantiate the wizard, then add our steps.
 		$wizard =& SimpleWizard::withText(
-			"\n<h2>"._("Export Type")."</h2>".
-			"\n"._("The depth of the export of this <em>Asset</em>:").
-			"\n<br />[[export_type]]".
-			"\n<h2>"._("Effective Date")."</h2>".
-			"\n"._("The date that this exported <em>Asset</em> becomes effective: ").
-			"\n<br />[[effective_date]]".
-			"\n<h2>"._("Expiration Date")."</h2>".
-			"\n"._("The date that this exported <em>Asset</em> expires: ").
-			"\n<br />[[expiration_date]]".
-			"<table width='100%' border='0' style='margin-top:20px' >\n" .
+			"\n<h3>"._("Click <em>Export</em> to Export the Basket")."</h3>".
+			"\n<br/>"._("The current content of the Basket will be exported and presented as an archive for download.  Once the archive is downloaded click <em>Cancel</em> to go back.").
+			"\n<br/><h3>"._("Archive:")."</h3>".
+			"<table border='0' style='margin-top:20px' >\n" .
+			"\n<tr><td>"._("Archive Name: ")."</td>".
+			"<td>[[filepath]]</td></tr>".
+			"\n<tr><td>"._("Compression: ")."</td>".
+			"<td>[[compression]]</td></tr>".
 			"<tr>\n" .
-			"<td align='left' width='50%'>\n" .
+			"<td align='left'>\n" .
 			"[[_cancel]]".
 			"</td>\n" .
-			"<td align='right' width='50%'>\n" .
+			"<td align='right'>\n" .
 			"[[_save]]".
 			"</td></tr></table>");
-
 		
 		// Create the properties.
-// 		$fileNameProp =& $wizard->addComponent("filepath", new WTextField());
-// 		$fileNameProp->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
-// 		$fileNameProp->setErrorRule(new WECRegex("[\\w]+"));
-// 		$fileNameProp->setValue("/");
+		$fileNameProp =& $wizard->addComponent("filepath", new WTextField());
 
-		$datefield =& $wizard->addComponent("effective_date", new WTextField());
-		$date =& DateAndTime::Now();
-		$datefield->setValue($date->asString());		
-
-		$date2field =& $wizard->addComponent("expiration_date", new WTextField());
-		$date2 =& $asset->getExpirationDate();
+// 		$datefield =& $wizard->addComponent("effective_date", new WTextField());
+// 		$date =& DateAndTime::Now();
+// 		$datefield->setValue($date->asString());		
+// 
+// 		$date2field =& $wizard->addComponent("expiration_date", new WTextField());
+// 		
+// 		if (is_object($date2))
+// 			$date2field->setValue($date->asString());
 		
-		if (is_object($date2))
-			$date2field->setValue($date->asString());
-		
-		$type =& $wizard->addComponent("export_type", new WSelectList());
-		$type->setValue("down");
-		$type->addOption("this", _("only this node"));
-		$type->addOption("down", _("this node and all children"));
+ 		$type =& $wizard->addComponent("compression", new WSelectList());
+ 		$type->setValue(".tar.gz");
+ 		$type->addOption(".tar.gz", _("gzip"));
+//  		$type->addOption(".zip", _("zip"));
+//  		$type->addOption(".bz2", _("bz2"));
 
 		$save =& $wizard->addComponent("_save", 
 			WSaveButton::withLabel("Export"));
@@ -189,20 +167,27 @@ class exportAction
 	 * @since 4/28/05
 	 */
 	function saveWizard ( $cacheName ) {
-		
 		$wizard =& $this->getWizard($cacheName);
-		
-		// Make sure we have a valid Repository
-		$idManager =& Services::getService("Id");
-		
+				
 		$properties =& $wizard->getAllValues();
-		
-		$assetId =& RequestContext::value('asset_id');
-		
-		$exporter =& new XMLAssetExporter($assetId, $properties['export_type'],
-			$properties['effective_date'], $properties['expiration_date']);
+		// instantiate new exporter
+		$exporter =& XMLAssetExporter::withCompression(
+			$properties['compression']);
+		// export all of concerto to this location
+		$file = $exporter->exportList($this->_exportList);
+		// down and dirty compression
+		shell_exec('cd '.str_replace(":", "\:", $file).";".
+		'tar -czf /tmp/'.$properties['filepath'].$properties['compression'].
+		" *");
+		// give out the archive for download
+		header("Content-type: application/x-gzip");
+		header('Content-Disposition: attachment; filename="'.
+			$properties['filepath'].$properties['compression'].'"');
+		print file_get_contents(
+			"/tmp/".$properties['filepath'].$properties['compression']);
+		exit();
 
-		$exporter->export();
+		// never ever even think about returning true :)
 
 		return TRUE;
 	}
@@ -216,10 +201,7 @@ class exportAction
 	 */
 	function getReturnUrl () {
 		$harmoni =& Harmoni::instance();
-		
-		$harmoni->request->forget('asset_id');
-		$harmoni->request->forget('collection_id');
-		return $harmoni->request->quickURL("collections", "namebrowse");
+		return $harmoni->request->quickURL("basket", "view");
 	}
 }
 
