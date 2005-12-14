@@ -9,6 +9,7 @@
  */ 
 
 require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
+require_once(HARMONI."/Primitives/Collections-Text/HtmlString.class.php");
 
 /**
  * 
@@ -194,7 +195,11 @@ class editAction
 			print "\n<tr><td valign='top'>";
 			print "\n\t[[$fieldname]]";
 //			print "\n\t<strong>".a."</strong>";
-			print "\n</td><td valign='top'>\n\t<em>".$recordStructure->getDescription()."</em>";
+			$description =& HtmlString::withValue($recordStructure->getDescription());
+			$description->trim(100);	// trim to 100 words
+			print "\n</td><td valign='top'>\n\t<div style='font-style: italics'>".$description->asString()."</div>";
+			$harmoni->history->markReturnURL(
+				"concerto/collection/edit/".$repositoryId->getIdString());
 			print " <a href='";
 			print $harmoni->request->quickURL("schema", "view", array(
 						"collection_id" => $repositoryId->getIdString(),
@@ -208,7 +213,6 @@ class editAction
 //				print "\n\t\t<option value='$i' [['$orderFieldname' == '$i'|selected='selected'|]]>".(($i)?$i:"")."</option>";
 				$property->addOption($i, $i?$i:"");
 			}
-			print "\n\t</select>";
 			
 			print "\n</td></tr>";
 		}
