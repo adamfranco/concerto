@@ -9,6 +9,7 @@
  */ 
 
 require_once(MYDIR."/main/library/abstractActions/AssetAction.class.php");
+require_once(HARMONI."/Primitives/Collections-Text/HtmlString.class.php");
 
 /**
  * 
@@ -91,7 +92,10 @@ class viewAction
 			// Description and dates
 			ob_start();
 			$assetId =& $asset->getId();
-			print  "\n\t<strong>"._("Description").":</strong> \n<em>".$asset->getDescription()."</em>";
+			print  "\n\t<strong>"._("Description").":</strong>";
+			$description =& HtmlString::withValue($asset->getDescription());
+			$description->clean();
+			print  "\n\t<div>".$description->asString()."</div>";
 			print  "\n\t<br /><strong>"._("ID#").":</strong> ".$assetId->getIdString();
 		
 			$effectDate =& $asset->getEffectiveDate();

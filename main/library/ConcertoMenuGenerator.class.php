@@ -78,11 +78,11 @@ class ConcertoMenuGenerator {
 			if (ereg("^add_slideshow_wizard_(.+)", $key, $matches)) {
 				$exhibitionAssetId = $matches[1];
 	
-				$item =& new MenuItemLink("<span style='font-size: medium'> - ".
+				$item =& new MenuItemLink(
 						_("SlideShow"),
 						$harmoni->request->quickURL("exhibitions", "add_slideshow", 
 							array("exhibition_id" => $exhibitionAssetId)), 
-						($module == "exhibitions" && $action == "add_slideshow" && RequestContext::value("exhibition_id") == $exhibitionAssetId)?TRUE:FALSE,1
+						($module == "exhibitions" && $action == "add_slideshow" && RequestContext::value("exhibition_id") == $exhibitionAssetId)?TRUE:FALSE, 2
 				);
 				$mainMenu->add($item, "100%", null, LEFT, CENTER);
 			}

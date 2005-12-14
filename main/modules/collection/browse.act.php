@@ -11,6 +11,7 @@
 require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/TextAlignSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/MinHeightSP.class.php");
+require_once(HARMONI."/Primitives/Collections-Text/HtmlString.class.php");
 
 /**
  * 
@@ -314,46 +315,6 @@ class browseAction
 		}
 		print ">".(($label)?$label:$value)."</option>";
 	}
-	
-	/**
-	 * Trim the passed text to a shorter length.
-	 *
-	 * Originally posted to php.net forums 
-	 * by webmaster at joshstmarie dot com (55-Sep-2005 05:58).
-	 * Modified by Adam Franco (afranco at middlebury dot edu).
-	 * 
-	 * @param string $text
-	 * @param integer $maxLength
-	 * @return string
-	 * @access public
-	 * @since 11/21/05
-	 */
-	function trim ($string, $word_count) {
-		$string = strip_tags($string);
-		
-		$trimmed = "";
-		$string = preg_replace("/\040+/"," ", trim($string));
-		$stringc = explode(" ",$string);
-
-		if($word_count >= sizeof($stringc))
-		{
-			// nothing to do, our string is smaller than the limit.
-			return $string;
-		}
-		elseif($word_count < sizeof($stringc))
-		{
-			// trim the string to the word count
-			for($i=0;$i<$word_count;$i++)
-			{
-				$trimmed .= $stringc[$i]." ";
-			}
-			
-			if(substr($trimmed, strlen(trim($trimmed))-1, 1) == '.')
-				return trim($trimmed).'..';
-			else
-				return trim($trimmed).'...';
-		}
-	}
 }
 
 
@@ -371,8 +332,9 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 	$assetId =& $asset->getId();
 	print "\n\t<strong>".htmlspecialchars($asset->getDisplayName())."</strong>";
 	print "\n\t<br/>"._("ID#").": ".$assetId->getIdString();
-	print  "\n\t<br /><span style='font-size: smaller;'>".nl2br(browseAction::trim(htmlspecialchars($asset->getDescription()), 25))."</span>";	
-	print  "\n\t<br />";
+	$description =& HtmlString::withValue($asset->getDescription());
+	$description->trim(25);
+	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	
 	
 	$component =& new UnstyledBlock(ob_get_contents());
 	ob_end_clean();

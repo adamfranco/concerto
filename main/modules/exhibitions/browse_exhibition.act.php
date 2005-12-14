@@ -11,6 +11,7 @@
 require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
 require_once(MYDIR."/main/library/printers/ExhibitionPrinter.static.php");
 require_once(MYDIR."/main/library/printers/SlideShowPrinter.static.php");
+require_once(HARMONI."/Primitives/Collections-Text/HtmlString.class.php");
 
 /**
  * 
@@ -101,7 +102,9 @@ class browse_exhibitionAction
 		/*********************************************************
 		 * Description
 		 *********************************************************/
-		 $actionRows->add(new Block("<em>".$asset->getDescription()."</em>", STANDARD_BLOCK), "100%", null, LEFT, CENTER);
+		$description =& HtmlString::withValue($asset->getDescription());
+		$description->clean();
+		$actionRows->add(new Block($description->asString(), STANDARD_BLOCK), "100%", null, LEFT, CENTER);
 		
 		//***********************************
 		// Get the assets to display
@@ -132,8 +135,9 @@ function printAssetShort(& $asset, &$harmoni) {
 	$assetId =& $asset->getId();
 	print  "\n\t<strong>".$asset->getDisplayName()."</strong> - "._("ID#").": ".
 			$assetId->getIdString();
-	print  "\n\t<br /><span style='font-size: smaller;'>".$asset->getDescription()."</span>";	
-	print  "\n\t<br />";
+	$description =& HtmlString::withValue($asset->getDescription());
+	$description->clean();
+	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	
 	
 	SlideShowPrinter::printFunctionLinks($asset);
 	

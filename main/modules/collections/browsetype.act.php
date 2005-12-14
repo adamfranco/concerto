@@ -10,6 +10,7 @@
 
 require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
 require_once(MYDIR."/main/library/printers/CollectionsPrinter.static.php");
+require_once(HARMONI."/Primitives/Collections-Text/HtmlString.class.php");
 
 /**
  * 
@@ -97,8 +98,9 @@ function printrepositoryShort(& $repository, $harmoni) {
 	$repositoryId =& $repository->getId();
 	print  "\n\t<strong>".$repository->getDisplayName()."</strong> - "._("ID#").": ".
 			$repositoryId->getIdString();
-	print  "\n\t<br /><em>".$repository->getDescription()."</em>";	
-	print  "\n\t<br />";
+	$description =& HtmlString::withValue($repository->getDescription());
+	$description->trim(100);
+	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	
 	
 	RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
 	

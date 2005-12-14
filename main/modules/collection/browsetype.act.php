@@ -9,6 +9,7 @@
  */ 
 
 require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
+require_once(HARMONI."/Primitives/Collections-Text/HtmlString.class.php");
 
 /**
  * 
@@ -103,8 +104,9 @@ function printAssetShort(& $asset, & $harmoni) {
 	$assetId =& $asset->getId();
 	print  "\n\t<strong>".$asset->getDisplayName()."</strong> - "._("ID#").": ".
 			$assetId->getIdString();
-	print  "\n\t<br /><em>".$asset->getDescription()."</em>";	
-	print  "\n\t<br />";
+	$description =& HtmlString::withValue($asset->getDescription());
+	$description->trim(25);
+	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	
 	
 	AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
 	

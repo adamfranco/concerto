@@ -653,7 +653,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 				<type>
 					<domain>Repository</domain>
 					<authority>edu.middlebury.concerto</authority>
-					<keyword>date</keyword>
+					<keyword>datetime</keyword>
 				</type>
 			</partstructure>
 			<partstructure xml:id="vra_core-location" isRepeatable="TRUE">

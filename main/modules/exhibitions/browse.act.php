@@ -10,6 +10,7 @@
 
 require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
 require_once(MYDIR."/main/library/printers/ExhibitionPrinter.static.php");
+require_once(HARMONI."/Primitives/Collections-Text/HtmlString.class.php");
 
 /**
  * 
@@ -133,8 +134,9 @@ function printAssetShort(&$asset, &$harmoni) {
 	
 	$assetId =& $asset->getId();
 	print  "\n\t<strong>".$asset->getDisplayName()."</strong>";
-	print  "\n\t<br /><span style='font-size: smaller;'>".$asset->getDescription()."</span>";	
-	print  "\n\t<br />";
+	$description =& HtmlString::withValue($asset->getDescription());
+	$description->trim(100);
+	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	
 	
 	ExhibitionPrinter::printFunctionLinks($asset);
 	
