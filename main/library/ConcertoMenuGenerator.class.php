@@ -89,7 +89,7 @@ class ConcertoMenuGenerator {
 		}
 		
 		$mainMenu_item8 =& new MenuItemLink(
-			_("User Tools")."</span>",
+			_("User Tools"),
 			$harmoni->request->quickURL("user", "main"), 
 			(ereg("^user$", $module))?TRUE:FALSE, 1);
 		$mainMenu->add($mainMenu_item8, "100%", null, LEFT, CENTER);
