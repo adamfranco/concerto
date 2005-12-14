@@ -115,11 +115,16 @@ class importAction extends MainWindowAction {
  	 * @since 7/18/05
 	 */
 	function &createWizard () {
+		$harmoni =& Harmoni::Instance();
 		$wizard =& SimpleWizard::withText(
 			"<table border='0' style='margin-top:20px' >\n" .
 			"\n<tr><td><h3>"._("File type:")."</h3></td></tr>".
 			"\n<tr><td>"._("The type of file to be imported: ")."</td>".
 			"\n<td>[[file_type]]</td></tr>".
+// 			"\n<tr><td colspan='2'>"._("If Exif click ")."<a href=\"".
+// 			$harmoni->request->quickURL("collection", "exifschema").
+// 			"\">"._("here")."</a>".
+// 			_(" to customize your schema (Suggested)")."</td></tr>".
 			"\n<tr><td>"._("Is this file an archive? ")."</td>".
 			"\n<td>[[is_archived]] (Tab-Delimited and Exif must be Archived)</td></tr>".
 			"\n<tr><td><h3>"._("Import type:")."</h3></td></tr>".
@@ -230,17 +235,12 @@ class importAction extends MainWindowAction {
 				$importer =& new XMLImporter($array);
 				$directory = $importer->decompress($newName);
 				unset($importer);
-				$dir = opendir($directory);
-				while ($file = readdir($dir)) // each folder is a collection
-					if (is_dir($directory."/".$file) && $file != "." && $file != "..")
-						$importer =& XMLRepositoryImporter::withObject(
-							$array,
-							$repositoryManager->getRepository(
-							$idManager->getId(
-							$harmoni->request->get('collection_id'))),
-							$directory."/".$file."/metadata.xml", 
-							$properties['import_type']);
-				closedir($dir);
+				$importer =& XMLRepositoryImporter::withObject(
+					$array,
+					$repositoryManager->getRepository(
+					$idManager->getId($harmoni->request->get('collection_id'))),
+					$directory."/metadata.xml",
+					$properties['import_type']);
 			}
 			else // not compressed, only one xml file
 				$importer =& XMLRepositoryImporter::withObject($array,
