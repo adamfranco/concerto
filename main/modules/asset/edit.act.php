@@ -209,7 +209,10 @@ class editAction
 		$step =& new WizardStep();
 		$step->setDisplayName($recStruct->getDisplayName());
 		
-		$step->setContent("[[files]]");
+		ob_start();
+		print "\n<h2>"._("File")."</h2>";
+		print "\n[[files]]";
+		$step->setContent(ob_get_clean());
 		
 		$repeatableComponent =& $step->addComponent("files", 
 			new WRepeatableComponentCollection);
@@ -630,7 +633,10 @@ class editAction
 			$allRecordsComponent->addValueCollection($values[$i]);
 		}
 				
-		$step->setContent("[[records]]");
+		ob_start();
+		print "\n<h2>".$recStruct->getDisplayName()."</h2>";
+		print "\n[[records]]";
+		$step->setContent(ob_get_clean());
 		
 		return $step;
 	}
@@ -901,5 +907,78 @@ class editAction
 				printpre("\tAdding Part: Id: ".$partId->getIdString()." Value: ".$valueStr);
 			}
 		}
+	}
+	
+	/**
+	 * Answer the step for setting the parent of the asset
+	 * 
+	 * @return object WizardStep
+	 * @access public
+	 * @since 12/15/05
+	 */
+	function &getParentStep () {
+		// :: Parent ::
+		$step =& new WizardStep();
+		$step->setDisplayName(_("Parent")." ("._("optional").")");
+		
+		// Create the properties.
+		$property =& $step->addComponent("parent", new WSelectList());
+		
+		// Create the step text
+		ob_start();
+		print "\n<h2>"._("Parent <em>Asset</em>")."</h2>";
+		print "\n"._("Optionally select one of the <em>Assets</em> below if you wish to make this asset a child of another asset: ");
+		print "\n<br />[[parent]]";
+		
+		$step->setContent(ob_get_clean());
+		
+		
+		$harmoni =& Harmoni::instance();
+		$authZManager =& Services::getService("AuthZ");
+		$idManager =& Services::getService("Id");
+		
+		// Check for authorization to remove the existing parent.
+		$parents =& $this->_assets[0]->getParents();
+		if ($parents->hasNext()) {
+			$parent =& $parents->next();
+			$parentId =& $parent->getId();
+			
+			// If we aren't authorized to change the parent, just use it as the only option.
+			if ($authZManager->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.remove_children"),
+				$parentId))
+			{
+				$property->addOption("NONE", _("None"));
+				$property->addOption($parentId->getIdString(), $parentId->getIdString()." - ".$parent->getDisplayName());
+				$property->setValue($parentId->getIdString());
+			} else {
+				$property->addOption($parentId->getIdString(), $parentId->getIdString()." - ".$parent->getDisplayName());
+				$property->setValue($parentId->getIdString());
+
+				return $step;
+			}
+		} else {
+			$property->addOption("NONE", _("None"));
+			$property->setValue("NONE");
+		}
+	
+		
+		// print options for the rest of the assets
+		$repository =& $this->_assets[0]->getRepository();
+		$assets =& $repository->getAssets();
+		while ($assets->hasNext()) {
+			$asset =& $assets->next();
+			$assetId =& $asset->getId();
+			if ($authZManager->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.add_children"),
+				$assetId)
+				&& (!isset($parentId) || !$assetId->isEqual($parentId))
+				&& !$assetId->isEqual($this->_assets[0]->getId()))
+			{
+				$property->addOption($assetId->getIdString(), $assetId->getIdString()." - ".$asset->getDisplayName());
+			}
+		}
+		
+		return $step;
 	}
 }

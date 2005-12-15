@@ -139,16 +139,16 @@ class addAction
 		$property->setValue("NONE");
 		
 		$property =& $step->addComponent("type_domain", new WTextField());
-		$property->setStartingDisplayText(_("Asset Types"));
+		$property->setStartingDisplayText(_("e.g. Asset Types"));
 		
 		$property =& $step->addComponent("type_authority", new WTextField());
-		$property->setStartingDisplayText(_("Concerto"));
+		$property->setStartingDisplayText(_("e.g. Concerto"));
 		
 		$property =& $step->addComponent("type_keyword", new WTextField());
-		$property->setStartingDisplayText(_("Generic Asset"));
+		$property->setStartingDisplayText(_("e.g. Generic Asset"));
 		
 		$property =& $step->addComponent("type_description", WTextArea::withRowsAndColumns(5,30));
-		$property->setValue(_("This is an <em>Asset</em> of unspecified type."));
+		$property->setStartingDisplayText(_("e.g. This is an <em>Asset</em> of unspecified type."));
 		
 		// create the text
 		ob_start();
@@ -187,21 +187,21 @@ class addAction
 		$step->setContent(ob_get_contents());
 		ob_end_clean();
 		
-		
-		// :: Content ::
-		$step =& $wizard->addStep("contentstep", new WizardStep());
-		$step->setDisplayName(_("Content")." ("._("optional").")");
-		
-		$property =& $step->addComponent("content", WTextArea::withRowsAndColumns(20,50));
-		
-		// Create the step text
-		ob_start();
-		print "\n<h2>"._("Content")."</h2>";
-		print "\n"._("This is an optional place to put content for this <em>Asset</em>. <br />If you would like more structure, you can create new schemas to hold the <em>Asset's</em> data.");
-		print "\n<br />[[content]]";
-		print "\n<div style='width: 400px'> &nbsp; </div>";
-		$step->setContent(ob_get_contents());
-		ob_end_clean();
+// 		
+// 		// :: Content ::
+// 		$step =& $wizard->addStep("contentstep", new WizardStep());
+// 		$step->setDisplayName(_("Content")." ("._("optional").")");
+// 		
+// 		$property =& $step->addComponent("content", WTextArea::withRowsAndColumns(20,50));
+// 		
+// 		// Create the step text
+// 		ob_start();
+// 		print "\n<h2>"._("Content")."</h2>";
+// 		print "\n"._("This is an optional place to put content for this <em>Asset</em>. <br />If you would like more structure, you can create new schemas to hold the <em>Asset's</em> data.");
+// 		print "\n<br />[[content]]";
+// 		print "\n<div style='width: 400px'> &nbsp; </div>";
+// 		$step->setContent(ob_get_contents());
+// 		ob_end_clean();
 		
 		// :: Effective/Expiration Dates ::
 		$step =& $wizard->addStep("datestep", new WizardStep());
@@ -241,10 +241,17 @@ class addAction
 		$property->addOption("NONE", _("None"));
 		
 		$assets =& $repository->getAssets();
+		$authZManager =& Services::getService("AuthZ");
+		$idManager =& Services::getService("Id");
 		while ($assets->hasNext()) {
 			$asset =& $assets->next();
 			$assetId =& $asset->getId();
-			$property->addOption($assetId->getIdString(), $assetId->getIdString()." - ".$asset->getDisplayName());
+			if ($authZManager->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.add_children"),
+				$assetId))
+			{
+				$property->addOption($assetId->getIdString(), $assetId->getIdString()." - ".$asset->getDisplayName());
+			}
 		}
 		
 		if (RequestContext::value('parent'))

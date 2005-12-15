@@ -507,4 +507,139 @@ class multieditAction
 		$results['value'] =& $value;
 		return $results;
 	}
+	
+	/**
+	 * Answer the step for setting the parent of the asset
+	 * 
+	 * @return object WizardStep
+	 * @access public
+	 * @since 12/15/05
+	 */
+	function &getParentStep () {
+		// :: Parent ::
+		$step =& new WizardStep();
+		$step->setDisplayName(_("Parent")." ("._("optional").")");
+		
+		// Create the properties.
+		$vProperty =& $step->addComponent("parent", new WVerifiedChangeInput);
+		$property =& $vProperty->setInputComponent(new WSelectList);
+		
+		// Create the step text
+		ob_start();
+		print "\n<h2>"._("Parent <em>Asset</em>")."</h2>";
+		print "\n"._("Optionally select one of the <em>Assets</em> below if you wish to make these assets the children of another asset: ");
+		print "\n<br />[[parent]]";
+		
+		$step->setContent(ob_get_clean());
+				
+		
+		$harmoni =& Harmoni::instance();
+		$authZManager =& Services::getService("AuthZ");
+		$idManager =& Services::getService("Id");
+		
+		$multipleValuesExist = false;
+		$commonParentId = null;
+		$commonParent = null;
+		$excluded = array();
+		for ($i = 0; $i < count($this->_assets); $i++) {
+			$assetId = $this->_assets[$i]->getId();
+			$excluded[] = $assetId->getIdString();
+			
+			$parents =& $this->_assets[$i]->getParents();
+			if ($parents->hasNext()) {
+				$parent =& $parents->next();
+				$parentId =& $parent->getId();
+				
+				// If we are at the first asset and there is a parent, use it and continue
+				if ($i == 0) {
+					$commonParentId =& $parentId;
+					$commonParent =& $parent;
+					continue;
+				}
+				
+				// if we are just now hitting an id after passing assets
+				// without parents, then multiple values exist
+				if ($i > 0 && $commonParentId == null) {
+					$multipleValuesExist = true;
+					continue;
+				}
+				
+				// If we have different parent Ids...
+				if (!$parentId->isEqual($commonParentId)) {
+					$multipleValuesExist = true;
+					
+					unset($commonParentId);
+					$commonParentId = null;
+					unset($commonParent);
+					$commonParent = null;
+					
+					continue;
+				}
+			}
+			
+			$descendentInfo =& $this->_assets[$i]->getDescendentInfo();
+			while ($descendentInfo->hasNext()) {
+				$info =& $descendentInfo->next();
+				$childId =& $info->getNodeId();
+				if (!in_array($childId->getIdString(), $excluded))
+					$excluded[] = $childId->getIdString();
+			}
+		}
+		
+		
+		
+		// Check for authorization to remove the existing parent.
+		if (!$multipleValuesExist && is_object($commonParentId)) {
+			// If we aren't authorized to change the parent, just use it as the only option.
+			if ($authZManager->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.remove_children"),
+				$commonParentId))
+			{
+				$property->addOption("NONE", _("None"));
+				$property->addOption(
+					$commonParentId->getIdString(), 
+					$commonParentId->getIdString()." - ".$commonParent->getDisplayName());
+				$property->setValue($commonParentId->getIdString());
+				$vProperty->setChecked(true);
+			} else {
+				$property->addOption(
+					$commonParentId->getIdString(), 
+					$commonParentId->getIdString()." - ".$commonParent->getDisplayName());
+				$property->setValue($commonParentId->getIdString());
+				$vProperty->setChecked(true);
+
+				return $step;
+			}
+		} else if (!$multipleValuesExist) {
+			$vProperty->setChecked(true);
+			$property->addOption("NONE", _("None"));
+			$property->setValue("NONE");
+		} 
+		// Multiple values exist
+		else {
+			$property->addOption("", _("(multiple values exist)"));
+			$property->setValue("");
+		}
+		
+		$property->_startingDisplay = "";
+	
+		
+		// print options for the rest of the assets
+		$repository =& $this->_assets[0]->getRepository();
+		$assets =& $repository->getAssets();
+		while ($assets->hasNext()) {
+			$asset =& $assets->next();
+			$assetId =& $asset->getId();
+			if ($authZManager->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.add_children"),
+				$assetId)
+				&& (!is_object($commonParentId) || !$assetId->isEqual($commonParentId))
+				&& !in_array($assetId->getIdString(), $excluded))
+			{
+				$property->addOption($assetId->getIdString(), $assetId->getIdString()." - ".$asset->getDisplayName());
+			}
+		}
+		
+		return $step;
+	}
 }

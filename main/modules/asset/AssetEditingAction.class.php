@@ -137,8 +137,17 @@ class AssetEditingAction
 					
 				}
 			}
+			
+			if ($results['parentstep'] != $initialState['parentstep']) {
+				if (is_array($results['parentstep']['parent']))	{
+					if ($results['parentstep']['parent']['checked'])
+						$this->updateAssetParent(
+							$results['parentstep']['parent']['value'], 
+							$asset);
+				} else
+					$this->updateAssetParent($results['parentstep']['parent'], $asset);
+			}
 	 	}
-		
 		
 // 		printpre($results);
 // 		exit;
@@ -219,6 +228,11 @@ class AssetEditingAction
 	 *  :: Content ::
 	 *********************************************************/
 		$wizard->addStep("contentstep", $this->getAssetContentStep());
+		
+	/*********************************************************
+	 *  :: Content ::
+	 *********************************************************/
+		$wizard->addStep("parentstep", $this->getParentStep());
 		
 		
 		$wizard->initialState = $wizard->getAllValues();
@@ -428,7 +442,6 @@ class AssetEditingAction
 		$dataType = $partStructType->getKeyword();
 		
 		// get the correct component for this data type
-		printpre($dataType);
 		$component =& PrimitiveIOManager::createComponent($dataType);
 
 		$hasMethods =& HasMethodsValidatorRule::getRule("setSize");
@@ -635,6 +648,86 @@ class AssetEditingAction
 			}
 		}
 		return FALSE;
+	}
+	
+	/**
+	 * Update the asset parent based on values from the wizard.
+	 * 
+	 * @param array $results
+	 * @param object Asset $asset
+	 * @return void
+	 * @access public
+	 * @since 10/26/05
+	 */
+	function updateAssetParent ( &$results, &$asset ) {
+		$idManager =& Services::getService("Id");
+		$authZManager =& Services::getService("AuthZ");
+		
+		// remove the parents if requested.
+		$parents =& $asset->getParents();
+		if ($parents->hasNext() && $results == 'NONE') {
+			printpre("<hr/>Removing Parents:");
+			while ($parents->hasNext()) {
+				$parent =& $parents->next();
+				
+				if ($authZManager->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.remove_children"),
+					$parent->getId()))
+				{
+					printpre("Removing from: "); 
+					printpre($parent->getId());
+					
+					$parent->removeAsset($asset->getId());
+				} else {
+					printpre("No Authorization to remove from: "); 
+					printpre($parent->getId());
+				}
+			}
+			return;
+		}
+		
+		// Change parents if needed
+		if ($results && $results != 'NONE') {			
+			$newParentId =& $idManager->getId($results);
+			
+			printpre("<hr/>Trying to change or add Parents:");
+			
+			//verify the current parent and change parents if needed.
+			if ($parents->hasNext()) {
+				$parent =& $parents->next();
+				
+				if (!$newParentId->isEqual($parent->getId())
+					&& $authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.remove_children"),
+						$parent->getId())
+					&& $authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.add_children"),
+						$newParentId))
+				{
+					printpre("Changing parents from: ");
+					printpre($parent->getId());
+					printpre("To: ");
+					printpre($newParentId);
+					$parent->removeAsset($asset->getId());
+					
+					$repository =& $asset->getRepository();
+					$newParent =& $repository->getAsset($newParentId);
+					$newParent->addAsset($asset->getId());
+				}
+			}
+			// If there isn't a previous parent, then just add a parent
+			else if ($authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.add_children"),
+						$newParentId))
+			{
+				printpre("Changing parents from NONE to: ");
+				printpre($newParentId);
+				
+				$repository =& $asset->getRepository();
+				$newParent =& $repository->getAsset($newParentId);
+				$newParent->addAsset($asset->getId());
+			}
+		}
 	}
 }
 
