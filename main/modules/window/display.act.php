@@ -179,7 +179,7 @@ class displayAction
 		}
 		
 		// use the result from previous actions
-		$contentDestination->add($harmoni->result, null, null, TOP, CENTER); 
+		$contentDestination->add($harmoni->result, null, null, CENTER, TOP); 
 		
 		// Right Column
 		$rightColumn =& $centerPane->add(new Container($yLayout, OTHER, 1), "140px", null, LEFT, TOP);
