@@ -21,7 +21,7 @@ require_once(MYDIR."/main/modules/exhibitions/slideshowxml.act.php");
  *
  * @version $Id$
  */
-class browsexmlAction 
+class browse_outline_xmlAction 
 	extends RepositoryAction
 {
 	/**
@@ -100,11 +100,16 @@ class browsexmlAction
 		
 		print<<<END
 <?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE slideshow PUBLIC "- //Middlebury College//Slide-Show//EN" "http://concerto.sourceforge.net/dtds/viewer/2.0/slideshow.dtd">
+<!DOCTYPE slideshow PUBLIC "- //Middlebury College//Slide-Show Outline//EN" "http://concerto.sourceforge.net/dtds/viewer/2.0/slideshow_outline.dtd">
 <slideshow>
 
 END;
 		print "\t<title>".$repository->getDisplayName()."</title>\n";
+		
+		print "\t<media-sizes>\n";
+		print "\t\t\t\t<size>original</size>\n";
+// 		print "\t\t\t\t<size>thumbnail</size>\n";
+		print "\t</media-sizes>\n";
 	
 		
 		//***********************************
@@ -182,80 +187,86 @@ END;
 		$repository =& $asset->getRepository();
 		$repositoryId =& $repository->getId();
 		$idManager =& Services::getService("Id");
+		$harmoni =& Harmoni::instance();
 		
 		
 		// ------------------------------------------
-		print "\t<slide>\n";
+		
+		print "\t<slide ";
+		print "source='";
+		print $harmoni->request->quickURL('collection', 'browse_slide_xml', 
+			array('asset_id' => $assetId->getIdString()));
+		print "'>\n";
 		
 		// Title
-		print "\t\t<title><![CDATA[";
-		print htmlspecialchars($asset->getDisplayName(), ENT_COMPAT, 'UTF-8');
-		print "]]></title>\n";
+// 		print "\t\t<title><![CDATA[";
+// 		print htmlspecialchars($asset->getDisplayName(), ENT_COMPAT, 'UTF-8');
+// 		print "]]></title>\n";
 		
 		// Caption
-		print "\t\t<caption><![CDATA[";
-		slideshowxmlAction::printAsset($asset);
-		print"]]></caption>\n";
+// 		print "\t\t<caption><![CDATA[";
+// 		slideshowxmlAction::printAsset($asset);
+// 		print"]]></caption>\n";
 		
 		// Text-Position
 		print "\t\t<text-position>";
 			print "right";
 		print "</text-position>\n";
 		
-		$fileRecords =& $asset->getRecordsByRecordStructure(
-			$idManager->getId("FILE"));
-		
-		/*********************************************************
-		 * Files
-		 *********************************************************/
-		while ($fileRecords->hasNext()) {
-			$fileRecord =& $fileRecords->next();
-			$fileRecordId =& $fileRecord->getId();
-			print "\t\t<media>\n";
-			print "\t\t\t<version>\n";
-			
-			print "\t\t\t\t<type>";
-			print slideshowxmlAction::getFirstPartValueFromRecord("MIME_TYPE", $fileRecord);
-			print "</type>\n";
-			
-			print "\t\t\t\t<size>original</size>\n";
-			
-			$dimensions = slideshowxmlAction::getFirstPartValueFromRecord("DIMENSIONS", 
-				$fileRecord);
-								
-			if (isset($dimensions[1]) && $dimensions[1] > 0) {
-				print "\t\t\t\t<height>";
-				print $dimensions[1]."px";
-				print "</height>\n";
-			}
-			
-			if (isset($dimensions[0]) && $dimensions[0] > 0) {
-				print "\t\t\t\t<width>";
-				print $dimensions[0]."px";
-				print "</width>\n";	
-			}
-			
-			print "\t\t\t\t<url><![CDATA[";
-			$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
-				$fileRecord);
-			
-			$harmoni =& Harmoni::instance();
-			$harmoni->request->startNamespace("polyphony-repository");
-			
-			print $harmoni->request->quickURL("repository", "viewfile", 
-					array(
-						"repository_id" => $repositoryId->getIdString(),
-						"asset_id" => $assetId->getIdString(),
-						"record_id" => $fileRecordId->getIdString(),
-						"file_name" => $filename));
-			
-			
-			$harmoni->request->endNamespace();
-			print "]]></url>\n";
-			
-			print "\t\t\t</version>\n";
-			print "\t\t</media>\n";
-		}
+// 		$fileRecords =& $asset->getRecordsByRecordStructure(
+// 			$idManager->getId("FILE"));
+// 		
+// 		/*********************************************************
+// 		 * Files
+// 		 *********************************************************/
+// 		while ($fileRecords->hasNext()) {
+// 			$fileRecord =& $fileRecords->next();
+// 			$fileRecordId =& $fileRecord->getId();
+// 			print "\t\t<media>\n";
+// 			print "\t\t\t<version>\n";
+// 			
+// 			print "\t\t\t\t<type>";
+// 			print slideshowxmlAction::getFirstPartValueFromRecord("MIME_TYPE", $fileRecord);
+// 			print "</type>\n";
+// 			
+// 			print "\t\t\t\t<size>original</size>\n";
+// 			
+// 			$dimensions = slideshowxmlAction::getFirstPartValueFromRecord("DIMENSIONS", 
+// 				$fileRecord);
+// 								
+// 			if (isset($dimensions[1]) && $dimensions[1] > 0) {
+// 				print "\t\t\t\t<height>";
+// 				print $dimensions[1]."px";
+// 				print "</height>\n";
+// 			}
+// 			
+// 			if (isset($dimensions[0]) && $dimensions[0] > 0) {
+// 				print "\t\t\t\t<width>";
+// 				print $dimensions[0]."px";
+// 				print "</width>\n";	
+// 			}
+// 			
+// 			print "\t\t\t\t<url><![CDATA[";
+// 			$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
+// 				$fileRecord);
+// 			
+// 			$harmoni =& Harmoni::instance();
+// 			$harmoni->request->startNamespace("polyphony-repository");
+// 			
+// 			print $harmoni->request->quickURL("repository", "viewfile", 
+// 					array(
+// 						"repository_id" => $repositoryId->getIdString(),
+// 						"asset_id" => $assetId->getIdString(),
+// 						"record_id" => $fileRecordId->getIdString(),
+// 						"file_name" => $filename));
+// 			
+// 			
+// 			$harmoni->request->endNamespace();
+// 			print "]]></url>\n";
+// 			
+// 			print "\t\t\t</version>\n";
+// 			print "\t\t</media>\n";
+// 		}
 		
 		
 		print "\t</slide>\n";

@@ -96,7 +96,7 @@ class namebrowseAction
 		array_multisort($repositoryTitles, SORT_ASC, SORT_STRING, $repositoryArray);
 		
 		// print the Results
-		$resultPrinter =& new ArrayResultPrinter($repositoryArray, 2, 20, "printRepositoryShort", $harmoni);
+		$resultPrinter =& new ArrayResultPrinter($repositoryArray, 1, 20, "printRepositoryShort", $harmoni);
 		$resultLayout =& $resultPrinter->getLayout($harmoni);
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 	}

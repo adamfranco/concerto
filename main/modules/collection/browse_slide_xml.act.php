@@ -21,7 +21,7 @@ require_once(MYDIR."/main/modules/exhibitions/slideshowxml.act.php");
  *
  * @version $Id$
  */
-class browsexmlAction 
+class browse_slide_xmlAction 
 	extends RepositoryAction
 {
 	/**
@@ -76,21 +76,13 @@ class browsexmlAction
 		$actionRows =& $this->getActionRows();
 		$harmoni =& Harmoni::instance();
 		
-		$repository =& $this->getRepository();
-				
+		$authZ =& Services::getService("AuthZ");
+		$idManager =& Services::getService("Id");
+		
 		$harmoni->request->passthrough("collection_id");
-		
-		// If the Repository supports searching of root assets, just get those
-		$hasRootSearch = FALSE;
-		$rootSearchType =& new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", "");
-		$searchTypes =& $repository->getSearchTypes();
-		while ($searchTypes->hasNext()) {
-			if ($rootSearchType->isEqual( $searchTypes->next() )) {
-				$hasRootSearch = TRUE;
-				break;
-			}
-		}		
-		
+		$repository =& $this->getRepository();
+		$assetId =& $idManager->getId(RequestContext::value("asset_id"));
+		$asset =& $repository->getAsset($assetId);
 		
 		/*********************************************************
 		 * First print the header, then the xml content, then exit before
@@ -100,69 +92,15 @@ class browsexmlAction
 		
 		print<<<END
 <?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE slideshow PUBLIC "- //Middlebury College//Slide-Show//EN" "http://concerto.sourceforge.net/dtds/viewer/2.0/slideshow.dtd">
-<slideshow>
+<!DOCTYPE slide PUBLIC "- //Middlebury College//Slide//EN" "http://concerto.sourceforge.net/dtds/viewer/2.0/slide.dtd">
 
 END;
-		print "\t<title>".$repository->getDisplayName()."</title>\n";
-	
 		
-		//***********************************
-		// Get the assets to display
-		//***********************************
-		$searchProperties =& new HarmoniProperties(
-					Type::stringToType("repository::harmoni::order"));
-		if (!($order = RequestContext::value("order")))
-			$order = 'DisplayName';
-		$searchProperties->addProperty("order", $order);
-					
-		switch (RequestContext::value("limit_by")) {
-			case 'type':
-				if (RequestContext::value("type")) {
-					$assets =& $repository->getAssetsByType(Type::stringToType(RequestContext::value("type")));
-					break;
-				}
-				
-			case 'search':
-				if (RequestContext::value("searchtype") 
-					&& RequestContext::value("searchstring")) 
-				{
-					$searchString = RequestContext::value("searchstring");
-					
-					$assets =& $repository->getAssetsBySearch(
-						$searchString,
-						Type::stringToType(RequestContext::value("searchtype")),
-						$searchProperties);
-					break;
-				}
-			
-			default:
-				if ($hasRootSearch) {
-					$criteria = NULL;
-					$assets =& $repository->getAssetsBySearch(
-						$criteria, 
-						$rootSearchType, 
-						$searchProperties);
-				} 
-				// Otherwise, just get all the assets
-				else {
-					$assets =& $repository->getAssets();
-				}
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
+		{
+			$this->printAssetXML($asset);
 		}
 		
-		
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
-		
-		while ($assets->hasNext()) {
-			$asset =& $assets->next();
-			if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
-			{
-				$this->printAssetXML($asset);
-			}
-		}
-		
-		print "</slideshow>\n";		
 		exit;
 	}
 	
