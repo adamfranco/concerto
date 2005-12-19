@@ -161,7 +161,10 @@ END;
 			print "\t\t\t<version>\n";
 			
 			print "\t\t\t\t<type>";
-			print $imgProcessor->getWebsafeFormat($mimeType);
+			if ($imgProcessor->isFormatSupported($mimeType))
+				print $imgProcessor->getWebsafeFormat($mimeType);
+			else
+				print $mimeType;
 			print "</type>\n";
 			
 			print "\t\t\t\t<size>medium</size>\n";
@@ -202,7 +205,10 @@ END;
 			print "\t\t\t<version>\n";
 			
 			print "\t\t\t\t<type>";
-			print $imgProcessor->getWebsafeFormat($mimeType);
+			if ($imgProcessor->isFormatSupported($mimeType))
+				print $imgProcessor->getWebsafeFormat($mimeType);
+			else
+				print $mimeType;
 			print "</type>\n";
 			
 			print "\t\t\t\t<size>large</size>\n";
