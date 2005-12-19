@@ -202,63 +202,116 @@ END;
 			print "right";
 		print "</text-position>\n";
 		
+		
 		$fileRecords =& $asset->getRecordsByRecordStructure(
 			$idManager->getId("FILE"));
 		
 		/*********************************************************
 		 * Files
 		 *********************************************************/
+		$harmoni =& Harmoni::instance();
+		$harmoni->request->startNamespace("polyphony-repository");
+		$imgProcessor =& Services::getService("ImageProcessor");
+
 		while ($fileRecords->hasNext()) {
 			$fileRecord =& $fileRecords->next();
 			$fileRecordId =& $fileRecord->getId();
+			$mimeType = slideshowxmlAction::getFirstPartValueFromRecord("MIME_TYPE", $fileRecord);
+			
 			print "\t\t<media>\n";
+			
+			/*********************************************************
+			 * Medium Version
+			 *********************************************************/
 			print "\t\t\t<version>\n";
 			
 			print "\t\t\t\t<type>";
-			print slideshowxmlAction::getFirstPartValueFromRecord("MIME_TYPE", $fileRecord);
+			print $imgProcessor->getWebsafeFormat($mimeType);
 			print "</type>\n";
 			
-			print "\t\t\t\t<size>original</size>\n";
+			print "\t\t\t\t<size>medium</size>\n";
 			
-			$dimensions = slideshowxmlAction::getFirstPartValueFromRecord("DIMENSIONS", 
-				$fileRecord);
-								
-			if (isset($dimensions[1]) && $dimensions[1] > 0) {
-				print "\t\t\t\t<height>";
-				print $dimensions[1]."px";
-				print "</height>\n";
-			}
-			
-			if (isset($dimensions[0]) && $dimensions[0] > 0) {
-				print "\t\t\t\t<width>";
-				print $dimensions[0]."px";
-				print "</width>\n";	
-			}
+// 			$dimensions = slideshowxmlAction::getFirstPartValueFromRecord("DIMENSIONS", 
+// 				$fileRecord);
+// 								
+// 			if (isset($dimensions[1]) && $dimensions[1] > 0) {
+// 				print "\t\t\t\t<height>";
+// 				print $dimensions[1]."px";
+// 				print "</height>\n";
+// 			}
+// 			
+// 			if (isset($dimensions[0]) && $dimensions[0] > 0) {
+// 				print "\t\t\t\t<width>";
+// 				print $dimensions[0]."px";
+// 				print "</width>\n";	
+// 			}
 			
 			print "\t\t\t\t<url><![CDATA[";
 			$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
 				$fileRecord);
-			
-			$harmoni =& Harmoni::instance();
-			$harmoni->request->startNamespace("polyphony-repository");
 			
 			print $harmoni->request->quickURL("repository", "viewfile", 
 					array(
 						"repository_id" => $repositoryId->getIdString(),
 						"asset_id" => $assetId->getIdString(),
 						"record_id" => $fileRecordId->getIdString(),
-						"file_name" => $filename));
+						"file_name" => $filename,
+						"websafe" => "true",
+						"size" => 800));
 			
-			
-			$harmoni->request->endNamespace();
 			print "]]></url>\n";
 			
 			print "\t\t\t</version>\n";
+			
+			/*********************************************************
+			 * Large Version
+			 *********************************************************/
+			print "\t\t\t<version>\n";
+			
+			print "\t\t\t\t<type>";
+			print $imgProcessor->getWebsafeFormat($mimeType);
+			print "</type>\n";
+			
+			print "\t\t\t\t<size>large</size>\n";
+			
+// 			$dimensions = slideshowxmlAction::getFirstPartValueFromRecord("DIMENSIONS", 
+// 				$fileRecord);
+// 								
+// 			if (isset($dimensions[1]) && $dimensions[1] > 0) {
+// 				print "\t\t\t\t<height>";
+// 				print $dimensions[1]."px";
+// 				print "</height>\n";
+// 			}
+// 			
+// 			if (isset($dimensions[0]) && $dimensions[0] > 0) {
+// 				print "\t\t\t\t<width>";
+// 				print $dimensions[0]."px";
+// 				print "</width>\n";	
+// 			}
+			
+			print "\t\t\t\t<url><![CDATA[";
+			$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
+				$fileRecord);
+				
+			print $harmoni->request->quickURL("repository", "viewfile", 
+					array(
+						"repository_id" => $repositoryId->getIdString(),
+						"asset_id" => $assetId->getIdString(),
+						"record_id" => $fileRecordId->getIdString(),
+						"file_name" => $filename,
+						"websafe" => "true"));
+			print "]]></url>\n";
+			
+			print "\t\t\t</version>\n";
+			
+			
 			print "\t\t</media>\n";
 		}
 		
 		
 		print "\t</slide>\n";
 	}
+	
+	$harmoni->request->endNamespace();
 
 }

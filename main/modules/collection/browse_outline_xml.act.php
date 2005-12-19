@@ -107,8 +107,8 @@ END;
 		print "\t<title>".$repository->getDisplayName()."</title>\n";
 		
 		print "\t<media-sizes>\n";
-		print "\t\t\t\t<size>original</size>\n";
-// 		print "\t\t\t\t<size>thumbnail</size>\n";
+		print "\t\t\t\t<size>medium</size>\n";
+		print "\t\t\t\t<size>large</size>\n";
 		print "\t</media-sizes>\n";
 	
 		

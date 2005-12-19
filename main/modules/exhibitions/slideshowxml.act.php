@@ -226,56 +226,107 @@ END;
 			
 			$fileRecords =& $mediaAsset->getRecordsByRecordStructure(
 				$idManager->getId("FILE"));
+				
+			$harmoni =& Harmoni::instance();
+			$harmoni->request->startNamespace("polyphony-repository");
+			$imgProcessor =& Services::getService("ImageProcessor");
 			
 			while ($fileRecords->hasNext()) {
 				$fileRecord =& $fileRecords->next();
 				$fileRecordId =& $fileRecord->getId();
+				
+				$mimeType = $this->getFirstPartValueFromRecord("MIME_TYPE", $fileRecord);
+				
 				print "\t\t<media>\n";
+				
+				/*********************************************************
+				 * Medium Version
+				 *********************************************************/
 				print "\t\t\t<version>\n";
 				
 				print "\t\t\t\t<type>";
-				print $this->getFirstPartValueFromRecord("MIME_TYPE", $fileRecord);
+				print $imgProcessor->getWebsafeFormat($mimeType);
 				print "</type>\n";
 				
-				print "\t\t\t\t<size>original</size>\n";
+				print "\t\t\t\t<size>medium</size>\n";
 				
-				$dimensions = $this->getFirstPartValueFromRecord("DIMENSIONS", 
-					$fileRecord);
-									
-				if (isset($dimensions[1]) && $dimensions[1] > 0) {
-					print "\t\t\t\t<height>";
-					print $dimensions[1]."px";
-					print "</height>\n";
-				}
-				
-				if (isset($dimensions[0]) && $dimensions[0] > 0) {
-					print "\t\t\t\t<width>";
-					print $dimensions[0]."px";
-					print "</width>\n";	
-				}
+// 				$dimensions = $this->getFirstPartValueFromRecord("DIMENSIONS", 
+// 					$fileRecord);
+// 									
+// 				if (isset($dimensions[1]) && $dimensions[1] > 0) {
+// 					print "\t\t\t\t<height>";
+// 					print $dimensions[1]."px";
+// 					print "</height>\n";
+// 				}
+// 				
+// 				if (isset($dimensions[0]) && $dimensions[0] > 0) {
+// 					print "\t\t\t\t<width>";
+// 					print $dimensions[0]."px";
+// 					print "</width>\n";	
+// 				}
 				
 				print "\t\t\t\t<url><![CDATA[";
 				$filename = $this->getFirstPartValueFromRecord("FILE_NAME", 
 					$fileRecord);
-				
-				$harmoni =& Harmoni::instance();
-				$harmoni->request->startNamespace("polyphony-repository");
 				
 				print $harmoni->request->quickURL("repository", "viewfile", 
 						array(
 							"repository_id" => $mediaAssetRepositoryId->getIdString(),
 							"asset_id" => $mediaId->getIdString(),
 							"record_id" => $fileRecordId->getIdString(),
-							"file_name" => $filename));
+							"file_name" => $filename,
+							"websafe" => "true",
+							"size" => 800));
 				
+				print "]]></url>\n";
 				
-				$harmoni->request->endNamespace();
+				print "\t\t\t</version>\n";
+				
+				/*********************************************************
+				 * Large Version
+				 *********************************************************/
+				print "\t\t\t<version>\n";
+				
+				print "\t\t\t\t<type>";
+				print $imgProcessor->getWebsafeFormat($mimeType);
+				print "</type>\n";
+				
+				print "\t\t\t\t<size>large</size>\n";
+				
+// 				$dimensions = $this->getFirstPartValueFromRecord("DIMENSIONS", 
+// 					$fileRecord);
+// 									
+// 				if (isset($dimensions[1]) && $dimensions[1] > 0) {
+// 					print "\t\t\t\t<height>";
+// 					print $dimensions[1]."px";
+// 					print "</height>\n";
+// 				}
+// 				
+// 				if (isset($dimensions[0]) && $dimensions[0] > 0) {
+// 					print "\t\t\t\t<width>";
+// 					print $dimensions[0]."px";
+// 					print "</width>\n";	
+// 				}
+				
+				print "\t\t\t\t<url><![CDATA[";
+				$filename = $this->getFirstPartValueFromRecord("FILE_NAME", 
+					$fileRecord);
+				
+				print $harmoni->request->quickURL("repository", "viewfile", 
+						array(
+							"repository_id" => $mediaAssetRepositoryId->getIdString(),
+							"asset_id" => $mediaId->getIdString(),
+							"record_id" => $fileRecordId->getIdString(),
+							"file_name" => $filename,
+							"websafe" => "true"));
+				
 				print "]]></url>\n";
 				
 				print "\t\t\t</version>\n";
 				print "\t\t</media>\n";
 			}
 		}
+		$harmoni->request->endNamespace();
 				
 		print "\t</slide>\n";
 	}
