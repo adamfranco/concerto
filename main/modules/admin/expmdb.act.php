@@ -163,17 +163,22 @@ class expmdbAction
 	}
 	
 	function exportAssets(&$assets, $rSArray, $id) {
+		$mimeManager =& Services::getService("MIME");
 		while($assets->hasMoreRows()) {
 			$asset =& $assets->next();
 			
+			$mime =& $mimeManager->getMIMETypeForFileName(
+				$asset['fname']));
+			$mimeParts = explode("/", $mime);
+
 			fwrite($this->_currentXML,
 "\t<asset>\n".
 "\t\t<name>".$asset['title']."</name>\n".
 "\t\t<description><![CDATA[".$asset['description']."]]></description>\n".
 "\t\t<type>\n\t\t\t<domain>Asset Types</domain>\n".
 "\t\t\t<authority>edu.middlebury.concerto</authority>\n".
-"\t\t\t<keyword>MediaDB media</keyword>\n".
-"\t\t\t<description>Media exported from MediaDB</description>\n".
+"\t\t\t<keyword>".$mimeParts[0]."</keyword>\n".
+"\t\t\t<description>An asset with a(n) ".$mimeParts[0]." primary component.</description>\n".
 "\t\t</type>\n");
 			if ($rSArray == $this->_dcArray)
 				$this->dcAssetRecord($asset);
