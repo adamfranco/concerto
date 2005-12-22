@@ -19,7 +19,7 @@
 		<p>From here there are a couple of options, depending on how capable the importer is it may be able to import the entire mediadb instance (using the ADMIN import action) if you tar the whole directory from inside the directory. </p>
 	
 		<p style='border: 1px dotted; margin: 20px; padding: 5px;'>tar -czf mdb.tar.gz *</p>
-	
+		
 		<p>It is also entirely possible that this will not work due to memory limitations.  In which case a solution is to import each of the metadata.xml files individually as collections (using the COLLECTIONS import action).</p>
 		<p>In this case it is entirely unnecessary to tar the files because the xml file is using remote file locations and there is only one file for the importer to look at, namely the "metadata.xml" file for the collection.</p>
 		<p>The importing process has been found to be not entirely programmatic, but with minimal intervention the data transfer can be completed quickly:</p>

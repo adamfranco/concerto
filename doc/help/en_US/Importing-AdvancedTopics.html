@@ -1,0 +1,72 @@
+<html>
+	<head>
+		<title>Importing - Advanced Topics</title>
+	</head>
+	<body>
+		<h1>Importing Multiples</h1>
+		<h2><em>Collections</em> - Importing Multiple <em>Collections</em></h2>
+		<div>
+		<h3>Overview</h3>
+		<p>The <em>Collection</em> Importer is capable of importing multiple <em>Collections</em> in a single import.  This is possible only when the files are organized and compressed in the correct structure.  Pay careful attention to the manner in which your archives are created, the importer will not be able to populate your data if it is not organized and labeled correctly.</p>
+		<h3>Instructions</h3>
+		<p>Using the same 'Import <em>Collection(s)</em>' link in <em>Concerto</em> as mentioned in 'Importing - Basics' you can import multiple <em>Collections</em> with the same form as long as your archive uses the proper structure:</p>
+		<h3>Formatting</h3>
+		<ul><li>A single archive file containing one level of directories (named arbitrarily)</li>
+		<li>Each directory represents a separate <em>Collection</em> and should contain:<ul>
+		<li>a single xml file named "metadata.xml"</li>
+		<li>individual data files needed for the import (images, audio, etc.)</li>
+		</ul></li>
+		<li>Each "metadata.xml" file is formatted according to the correct <em>Collection</em> DOCTYPE definition located (here)</li></ul>
+		</div>
+
+
+		<h2>Admin - Importing All of <em>Concerto</em></h2>
+		<div>
+		<h3>Overview</h3>
+		<p>Importing an entire instance of <em>Concerto</em> can be a difficult task.  There are a lot of things that can go wrong when importing such a large amount of data: limits set by various applications may cause the import to fail, other factors such as memory swapping and hard drive limitations may cause the import to grind to a halt.  The option is given to attempt a single import of an entire instance of <em>Concerto</em> however this may not be the choice for you.  There is another option, which is to use the '<em>Collection</em> Importer' as mentioned above to import smaller groups of <em>Collections</em> at a time. </p>
+		</div>
+
+		<h1>Importing Single Unarchived Files</h1>
+		<h2><em>Collections</em> - Importing with Remote Data</h2>
+		<div>
+		<h3>Overview</h3>
+		<p><em>Concerto</em> allows the importing of data for which the data itself is stored remotely (i.e. files on remote servers).  A single "metadata.xml" file can be imported on its own without compression or other files as long as all of the data it requires is referenced properly within the file. This can be done by writing the "metadata.xml" files by hand or programatically for the import.  You can also organize the "metadata.xml" files into the appropriate structure to be imported as an archive, and thus import multiple <em>Collections</em> without the data in the archive.  These are all options to facilitate the population of data into <em>Concerto</em> from other data storage or management environments.</p>
+		<p>Writing an XML file is not as hard as it sounds, and writing a programatic tool to create many XML files from other data management sources can be a rewarding task; although for the average person a quick (example) will suffice for their importing needs.  There are DOCTYPE definitions (here), which are rules for the structure of the XML files that the importer can successfully handle.  Using a tool like (XML Validator?) to validate your XML files against the DOCTYPE definitions will greatly reduce the stress involved with data population, and will help you understand the XML substructure.  In the end there is only one way to guarantee that your XML file will work with the importer, and that is to import it.</p>
+		<h3>Instructions</h3>
+		<ul><li>Use the (example) to get a feel for the XML substructure</li>
+		<li>Validate your XML files against our (DOCTYPE definitions)</li>
+		<li>Import your XML files</li></ul>
+		</div>
+
+
+		<h1>Importing non-XML <em>Assets</em></h1>
+		<h2><em>Assets</em> - Importing Exif <em>Assets</em></h2>
+		<div>
+		<h3>Overview</h3>
+		<p>The 'Exif <em>Asset</em> Importer' is available through the 'Import <em>Assets</em>' link on a <em>Collection</em>.  Exif metadata is stored in image files by cameras and other digital imaging devices to describe many things about the image.  These categories form a standard <em>Schema</em> for cataloging.  <em>Concerto's</em> 'Exif <em>Asset</em> Importer' allows you to map the Exif metadata from it's <em>Schema</em> to a <em>Schema</em> of your choice, or even your own creation.  Because Exif metadata is embedded in the images when importing the images only the Exif metadata and image will be imported.</p>
+		<h3>Instructions</h3>
+		<p>To import a group of <em>Assets</em> with their Exif metadata use the 'Import <em>Assets</em>' link on a <em>Collection</em>.  Once at the form for importing <em>Assets</em> choose to import an archive, and choose Exif from the drop down menu of filetypes.  As long as your archive follows the format presented below the images should be added to the <em>Collection</em> as individual <em>Assets</em> using the <em>Schema</em> defined by the "schema.xml" file described below.</p>
+		<h3>Formatting</h3>
+		<p>First the substructure of the archive itself.  This is the easy part, take images with Exif metadata, and put them into a folder, add a "schema.xml" file for mapping <em>Schemas</em>, compress the archive, and you're done.</p>
+		<p>Now we arrive at the "schema.xml" part.  The 'Exif <em>Asset</em> Importer' uses an XML file named "schema.xml" to map the Exif metadata <em>Schema</em> to the metadata <em>Schema</em> of your choice.  This file has its own DOCTYPE definition (here) and an example (here).  There is also a form in the works for facilitating the creation of this file, allowing you to map the Exif <em>Schema</em> to an existing <em>Schema</em> without writing the XML file yourself.</p>
+		</div>
+
+		<h2><em>Assets</em> - Importing Tab-Delimited <em>Assets</em></h2>
+		<div>
+		<h3>Overview</h3>
+		<p>The 'Tab-Delimited <em>Asset</em> Importer' is available through the 'Import <em>Assets</em>' link on a <em>Collection</em>.  This importer provides the least complicated way to import new files into a <em>Collection</em>.  As with the 'Exif <em>Asset</em> Importer' you need to have a metadata file, this time named "metadata.txt".  This file is what tells the importer the <em>Schema</em> being used and what the metadata is for the <em>Schema</em>.</p>
+		<h3>Instructions</h3>
+		<p>To import a group of <em>Assets</em> listed in a Tab-Delimited "metadata.txt" file use the 'Import <em>Assets</em>' link on a <em>Collection</em>.  Once at the form for importing <em>Assets</em> choose to import an archive, and choose Tab-Delim from the drop down menu of filetypes.  As long as your archive follows the format presented below the entries should be added to the <em>Collection</em> as individual <em>Assets</em> using the <em>Schema</em> defined by the "metadata.txt" file described below.</p>
+		<h3>Formatting</h3>
+		<p>First the substructure of the archive itself.  This is the easy part, take any files you want to become <em>Assets</em>, and put them into a folder, add a "metadata.txt" file for populating a <em>Schema</em> with metadata, compress the archive, and you're done.</p>
+		<p>Now we arrive at the "metadata.txt" part.  The 'Tab-Delimited <em>Asset</em> Importer' uses a text file named "metadata.xml" to populate the named <em>Schema</em> with the metadata in the text file.  This file has its own specifications:
+		<ul><li>(What the columns are and what order they need to be in)</li>
+		</ul>
+		There is an example "metadata.txt" (here).</p>
+		</div>
+		
+
+
+
+</body>
+</html>

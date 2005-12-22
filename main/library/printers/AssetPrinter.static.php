@@ -198,7 +198,7 @@ class AssetPrinter {
 			$harmoni->request->startNamespace("basket");
 			ob_start();
 			print "<a href='".$harmoni->request->quickURL("basket", "add",
-				array("asset_id" => $assetId->getIdString()));
+				array("assets" => $assetId->getIdString()));
 			print "' title='". _('add to basket')."'>";
 			print "<img src='".POLYPHONY_PATH."/main/library/Basket/icons/basketplus.png' height='25px' border='0' alt='"._('Add to <em>Basket</em>')."' />";
 			print "</a>";
