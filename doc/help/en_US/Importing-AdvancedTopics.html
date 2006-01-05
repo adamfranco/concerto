@@ -13,10 +13,10 @@
 		<h3>Formatting</h3>
 		<ul><li>A single archive file containing one level of directories (named arbitrarily)</li>
 		<li>Each directory represents a separate <em>Collection</em> and should contain:<ul>
-		<li>a single xml file named "metadata.xml"</li>
+		<li>a single xml file named "metadata.xml": [example]</li>
 		<li>individual data files needed for the import (images, audio, etc.)</li>
 		</ul></li>
-		<li>Each "metadata.xml" file is formatted according to the correct <em>Collection</em> DOCTYPE definition located (here)</li></ul>
+		<li>Each "metadata.xml" file is formatted according to the correct <em>Collection</em> DOCTYPE definition located [here]</li></ul>
 		</div>
 
 
@@ -31,10 +31,10 @@
 		<div>
 		<h3>Overview</h3>
 		<p><em>Concerto</em> allows the importing of data for which the data itself is stored remotely (i.e. files on remote servers).  A single "metadata.xml" file can be imported on its own without compression or other files as long as all of the data it requires is referenced properly within the file. This can be done by writing the "metadata.xml" files by hand or programatically for the import.  You can also organize the "metadata.xml" files into the appropriate structure to be imported as an archive, and thus import multiple <em>Collections</em> without the data in the archive.  These are all options to facilitate the population of data into <em>Concerto</em> from other data storage or management environments.</p>
-		<p>Writing an XML file is not as hard as it sounds, and writing a programatic tool to create many XML files from other data management sources can be a rewarding task; although for the average person a quick (example) will suffice for their importing needs.  There are DOCTYPE definitions (here), which are rules for the structure of the XML files that the importer can successfully handle.  Using a tool like (XML Validator?) to validate your XML files against the DOCTYPE definitions will greatly reduce the stress involved with data population, and will help you understand the XML substructure.  In the end there is only one way to guarantee that your XML file will work with the importer, and that is to import it.</p>
+		<p>Writing an XML file is not as hard as it sounds, and writing a programatic tool to create many XML files from other data management sources can be a rewarding task; although for the average person a quick [example] will suffice for their importing needs.  There are DOCTYPE definitions [here], which are rules for the structure of the XML files that the importer can successfully handle.  Using a tool like [XML Validator?] to validate your XML files against the DOCTYPE definitions will greatly reduce the stress involved with data population, and will help you understand the XML substructure.  In the end there is only one way to guarantee that your XML file will work with the importer, and that is to import it.</p>
 		<h3>Instructions</h3>
-		<ul><li>Use the (example) to get a feel for the XML substructure</li>
-		<li>Validate your XML files against our (DOCTYPE definitions)</li>
+		<ul><li>Use the [example] to get a feel for the XML substructure</li>
+		<li>[Validate] your XML files against our [DOCTYPE definitions]</li>
 		<li>Import your XML files</li></ul>
 		</div>
 
@@ -48,7 +48,12 @@
 		<p>To import a group of <em>Assets</em> with their Exif metadata use the 'Import <em>Assets</em>' link on a <em>Collection</em>.  Once at the form for importing <em>Assets</em> choose to import an archive, and choose Exif from the drop down menu of filetypes.  As long as your archive follows the format presented below the images should be added to the <em>Collection</em> as individual <em>Assets</em> using the <em>Schema</em> defined by the "schema.xml" file described below.</p>
 		<h3>Formatting</h3>
 		<p>First the substructure of the archive itself.  This is the easy part, take images with Exif metadata, and put them into a folder, add a "schema.xml" file for mapping <em>Schemas</em>, compress the archive, and you're done.</p>
-		<p>Now we arrive at the "schema.xml" part.  The 'Exif <em>Asset</em> Importer' uses an XML file named "schema.xml" to map the Exif metadata <em>Schema</em> to the metadata <em>Schema</em> of your choice.  This file has its own DOCTYPE definition (here) and an example (here).  There is also a form in the works for facilitating the creation of this file, allowing you to map the Exif <em>Schema</em> to an existing <em>Schema</em> without writing the XML file yourself.</p>
+		<p>Now we arrive at the "schema.xml" part.  The 'Exif <em>Asset</em> Importer' uses an XML file named "schema.xml" to map the Exif metadata <em>Schema</em> to the metadata <em>Schema</em> of your choice.  This file has its own DOCTYPE definition [here] and an example [here].  Pay close attention to the following:
+		<ul><li>The 'id' XML elements are for use if you know the id of the <em>Schema</em> you want to use</li>
+		<li>Otherwise giving the 'name' XML elements values matches your <em>Schema</em> by name</li>
+		<li>The 'exifElement' XML element should only contain a name of an EXIF element that will be mapped to the <em>Schema</em> element it is nested inside</li>
+		<li>The optional 'text' XML element is there if you would like every file being imported to have single value prepopulated in the <em>Schema</em> element it is nested inside</li></ul>
+		There is also a form in the works for facilitating the creation of this file, allowing you to map the Exif <em>Schema</em> to an existing <em>Schema</em> without writing the XML file yourself.</p>
 		</div>
 
 		<h2><em>Assets</em> - Importing Tab-Delimited <em>Assets</em></h2>

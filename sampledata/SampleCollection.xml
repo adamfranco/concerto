@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE import PUBLIC "- //Middlebury College//XML-Import//EN" "http://harmoni.sourceforge.net/dtds/harmoni/1.0/XMLImport.dtd">
-<import type="update">
+<import>
 	<repository>
 		<name>Sample Media Collection</name>
 		<description><![CDATA[This collection contains a number of media licensed under the Creative Commons <em>Attribution-NonCommercial-ShareAlike 2.5</em> license. The majority of these are photos by Adam Franco. The audio is by Cargo Cult, while the video was produced by Adam Franco using Cargo Cult in the sound tracks.]]></description>
