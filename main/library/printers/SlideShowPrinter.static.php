@@ -68,10 +68,10 @@ class SlideShowPrinter {
 			$links[] = ob_get_contents();
 			ob_end_clean();
 			
-			$links[] = "<a href='"
-					.$harmoni->request->quickURL("exhibitions", "slideshowxml", 
-						array("slideshow_id" => $assetId->getIdString()))
-					."'>"._("view xml (debug)")."</a>";
+// 			$links[] = "<a href='"
+// 					.$harmoni->request->quickURL("exhibitions", "slideshowxml", 
+// 						array("slideshow_id" => $assetId->getIdString()))
+// 					."'>"._("view xml (debug)")."</a>";
 		}
 		
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $asset->getId())) {
