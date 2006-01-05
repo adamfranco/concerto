@@ -48,7 +48,32 @@ class browsexmlAction
 	 * @since 4/26/05
 	 */
 	function getUnauthorizedMessage () {
-		return _("You are not authorized to access this <em>Asset</em>.");
+		/*********************************************************
+		 * First print the header, then the xml content, then exit before
+		 * the GUI system has a chance to try to theme the output.
+		 *********************************************************/		
+		header("Content-Type: text/xml; charset=\"utf-8\"");
+		
+		print<<<END
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE slideshow PUBLIC "- //Middlebury College//Slide-Show//EN" "http://concerto.sourceforge.net/dtds/viewer/2.0/slideshow.dtd">
+<slideshow>
+
+END;
+		print "\t<title>"._("Not Authorized")."</title>\n";
+		print "\t<slide>\n";
+		
+		// Title
+		print "\t\t<title>"._("Not Authorized")."</title>\n";
+		
+		// Caption
+		print "\t\t<caption><![CDATA[";
+		print _("You are not authorized to access this <em>Asset</em>.");
+		print"]]></caption>\n";
+		print "\t\t<text-position>center</text-position>";
+		print "\t</slide>\n";
+		print "</slideshow>\n";		
+		exit;
 	}
 	
 	/**
