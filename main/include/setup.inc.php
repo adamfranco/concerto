@@ -48,7 +48,9 @@ if (isset($_REQUEST["reset_concerto"])) {
 require_once(HARMONI."/oki2/shared/ConfigurationProperties.class.php");
 require_once(OKI2."/osid/OsidContext.php");
 
-$configs = array(	'harmoni',
+$configs = array(	
+					'validation',
+					'harmoni',
 					'action',
 					'database',
 					'id',
