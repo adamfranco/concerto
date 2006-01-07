@@ -58,6 +58,7 @@ class AssetPrinter {
 		// by slides for each of its children
 			if (ereg("^asset\..*$", $actionString))	{
 				$xmlModule = 'asset';
+				$xmlAction = 'browsexml';
 				$xmlAssetIdString = $harmoni->request->get("asset_id");
 				
 				if ($harmoni->request->get("asset_id") ==
@@ -70,6 +71,7 @@ class AssetPrinter {
 		// for the other assets in the collection.
 			else {
 				$xmlModule = 'collection';
+				$xmlAction = 'browse_outline_xml';
 				$xmlAssetIdString = $assetId->getIdString();
 				$xmlStart = $assetNum - 1;
 			}
@@ -77,7 +79,7 @@ class AssetPrinter {
 			ob_start();
 			print "<a href='#' onclick='Javascript:window.open(";
 			print '"'.VIEWER_URL."?&amp;source=";
-			print urlencode($harmoni->request->quickURL($xmlModule, "browse_outline_xml",
+			print urlencode($harmoni->request->quickURL($xmlModule, $xmlAction,
 						array("collection_id" => $repositoryId->getIdString(),
 						"asset_id" => $xmlAssetIdString,
 						RequestContext::name("limit_by") => RequestContext::value("limit_by"),

@@ -342,10 +342,24 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 	
 	$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($asset);
 	if ($thumbnailURL !== FALSE) {
+		$xmlModule = 'collection';
+		$xmlAssetIdString = $assetId->getIdString();
+		$xmlStart = $num - 1;
+
 		ob_start();
-		print "\n\t<a href='";
-		print $harmoni->request->quickURL("asset", "view", array('asset_id' => $assetId->getIdString()));
-		print "'>";
+		print "<a href='#' onclick='Javascript:window.open(";
+		print '"'.VIEWER_URL."?&amp;source=";
+		print urlencode($harmoni->request->quickURL($xmlModule, "browse_outline_xml",
+					array("collection_id" => RequestContext::value("collection_id"),
+					"asset_id" => $xmlAssetIdString,
+					RequestContext::name("limit_by") => RequestContext::value("limit_by"),
+					RequestContext::name("type") => RequestContext::value("type"),
+					RequestContext::name("searchtype") => RequestContext::value("searchtype"),
+					RequestContext::name("searchstring") => RequestContext::value("searchstring"))));
+		print '&amp;start='.$xmlStart.'", ';
+		print '"'.preg_replace("/[^a-z0-9]/i", '_', $assetId->getIdString()).'", ';
+		print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
+		print ")'>";
 		print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' />";
 		print "\n\t</a>";
 		$component =& new UnstyledBlock(ob_get_contents());
