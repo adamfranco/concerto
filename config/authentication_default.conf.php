@@ -16,7 +16,6 @@
 // :: Start the AuthenticationManager OSID Impl.
 	$configuration =& new ConfigurationProperties;
 	$tokenCollectors = array(
-	$tokenCollectors = array(
 		serialize(new Type ("Authentication", "edu.middlebury.harmoni", "Concerto DB")) 
 			=> new FormActionNamePassTokenCollector($harmoni->request->quickURL("auth","username_password_form")),
 // 		serialize(new Type ("Authentication", "edu.middlebury.harmoni", "Middlebury LDAP")) 
