@@ -3,7 +3,7 @@
 Name: Concerto ChangeLog
 
 
-v. 0.3.0 (The Nebulous Future)
+v. 2.0-beta (2006-01-10)
 ----------------------------------------------------
 		
 	* New feature: Defined Dublin Core and VRA metadata schemas for easy importing. (Adam Franco)

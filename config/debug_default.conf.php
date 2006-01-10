@@ -31,5 +31,10 @@ define ("ENABLE_DWARVES", false);
  * Enable the display of timers and query-counters.
  * (Useful for debugging/testing).
  *********************************************************/
- define ("ENABLE_TIMERS", false);
+define ("ENABLE_TIMERS", false);
  
+/*********************************************************
+ * PHP error reporting setting. uncomment to enable override
+ * of default environment.
+ *********************************************************/
+error_reporting(E_ALL);
