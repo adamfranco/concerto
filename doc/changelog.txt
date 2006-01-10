@@ -3,6 +3,41 @@
 Name: Concerto ChangeLog
 
 
+v. 0.3.0 (The Nebulous Future)
+----------------------------------------------------
+		
+	* New feature: Defined Dublin Core and VRA metadata schemas for easy importing. (Adam Franco)
+		
+	* Change: New main window layout. (Adam Franco)
+		
+	* New feature: Assets can now be recursively deleted. (Christopher Shubert)
+		
+	* Change: Reworked Schema display to allow for large descriptions. (Adam Franco)
+		
+	* New feature: Added XML import-exort interfaces. (Christopher Shubert)
+		
+	* Change: Reworked viewer loading to use AJAX-style loading of individual Asset-information with a more streamlined overview XML document. (Adam Franco)
+		
+	* Change: Improved Exhibition browsing. (Adam Franco)
+		
+	* Change: Asset-View links now work with the viewer. (Christopher Shubert)
+		
+	* Change: Now supports being accessed via https urls. (Adam Franco)
+		
+	* New feature: New theme. (Adam Franco)
+		
+	* New feature: Reworked asset browsing to be more usable. (Adam Franco)
+		
+	* New feature: Implemented asset searching. (Adam Franco)
+		
+	* New feature: Lots of little improvements. (Adam Franco)
+		
+	* New feature: Implemented Asset editing in a single wizard. (Adam Franco)
+		
+	* New feature: Multi-Asset editing. (Adam Franco)
+		
+	* Change: Lots of speed optimizations. (Adam Franco)
+	
 v. 0.2.0 (2005-10-12)
 ----------------------------------------------------
 		

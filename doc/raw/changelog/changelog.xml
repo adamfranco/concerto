@@ -12,10 +12,38 @@
 <changelog name="Concerto ChangeLog">
 	<version number="0.3.0" date="The Nebulous Future">
 		<new author='adam'>
+			Defined Dublin Core and VRA metadata schemas for easy importing.
+		</new>
+		<change author='adam'>
+			New main window layout.
+		</change>
+		<new author='chris'>
+			Assets can now be recursively deleted.
+		</new>
+		<change author='adam'>
+			Reworked Schema display to allow for large descriptions.
+		</change>
+		<new author='chris'>
+			Added XML import-exort interfaces.
+		</new>
+		<change author='adam'>
+			Reworked viewer loading to use AJAX-style loading of individual
+			Asset-information with a more streamlined overview XML document.
+		</change>
+		<change author='adam'>
+			Improved Exhibition browsing.
+		</change>
+		<change author='chris'>
+			Asset-View links now work with the viewer.
+		</change>
+		<change author='adam'>
+			Now supports being accessed via https urls.
+		</change>
+		<new author='adam'>
 			New theme.
 		</new>
 		<new author='adam'>
-			Reworked browsing to be more usable.
+			Reworked asset browsing to be more usable.
 		</new>
 		<new author='adam'>
 			Implemented asset searching.
