@@ -106,9 +106,11 @@ class mainAction
 			
 			ob_start();
 			print "\n<ul>";
-			if ($authZ->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.delete"),
-				$idManager->getId("edu.middlebury.authorization.root"))) {
+			if (defined('ENABLE_RESET') && ENABLE_RESET
+				&& $authZ->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.delete"),
+					$idManager->getId("edu.middlebury.authorization.root"))) 
+			{
 				print "\n\t<li><a href='".$harmoni->request->quickURL(
 					"admin","main", array('reset_concerto' => 'TRUE'))."'>";
 				print _("Reset Concerto");

@@ -128,8 +128,6 @@ if (!isset($_SESSION['table_setup_complete'])) {
 			$adminGroup =& $agentManager->createGroup("Administrators", $groupType, "Users that have access to every function in the system.", $properties);
 			$auditorGroup =& $agentManager->createGroup("Auditors", $groupType, "Users that can view all content in the system but not modify it.", $properties);
 			
-			$dwarfGroup =& $agentManager->createGroup("Dwarves", $groupType,
-				"Test users with varying privileges", $properties);
 			
 			// default administrator account
 			$authNMethodManager =& Services::getService("AuthNMethodManager");
@@ -139,27 +137,11 @@ if (!isset($_SESSION['table_setup_complete'])) {
 			
 			$tokensArray = array("username" => "jadministrator",
 							"password" => "password");
-			$arrayOfTokens[] = $tokensArray;
-			$arrayOfTokens[] = array("username" => "sleepy",
-				"password" => "disney");
-			$arrayOfTokens[] = array("username" => "doc",
-				"password" => "disney");
-			$arrayOfTokens[] = array("username" => "bashful",
-				"password" => "disney");
-			$arrayOfTokens[] = array("username" => "dopey",
-				"password" => "disney");
-			$arrayOfTokens[] = array("username" => "sneezy",
-				"password" => "disney");
-			$arrayOfTokens[] = array("username" => "grumpy",
-				"password" => "disney");
-			$arrayOfTokens[] = array("username" => "happy",
-				"password" => "disney");
-			$adminAuthNTokens = array();
-			foreach ($arrayOfTokens as $key => $tokenArray) {
-				$adminAuthNTokens[] =& $dbAuthMethod->createTokens($tokenArray);
+				
+			$adminAuthNTokens =& $dbAuthMethod->createTokens($tokensArray);
 			// Add it to the system
-				$dbAuthMethod->addTokens($adminAuthNTokens[$key]);
-			}
+			$dbAuthMethod->addTokens($adminAuthNTokens);
+			
 			// Create an agent
 			$agentType =& new Type ("System", "edu.middlebury.harmoni", "Default Agents", "Default agents created for install and setup. They should be removed on production systems.");
 			require_once(HARMONI."oki2/shared/NonReferenceProperties.class.php");
@@ -174,26 +156,55 @@ if (!isset($_SESSION['table_setup_complete'])) {
 
 			// map the agent to the tokens
 			$agentTokenMappingManager =& Services::getService("AgentTokenMappingManager");
-			$agentTokenMappingManager->createMapping($adminAgent->getId(), $adminAuthNTokens[0], $dbAuthType);
+			$agentTokenMappingManager->createMapping($adminAgent->getId(), $adminAuthNTokens, $dbAuthType);
 			
 			// Add the agent to the Administrators group.
 			$adminGroup->add($adminAgent);
-			// the last 3 steps for the dwarves
-			for ($i = 1; $i <= 7; $i++) {
-				$dwarfProperties =& new NonReferenceProperties($agentType);
-				$dwarfProperties->addProperty("name",
-					$arrayOfTokens[$i]['username']);
-				$dwarfProperties->addProperty("first_name",
-					$arrayOfTokens[$i]['username']);
-				$dwarfProperties->addProperty("email",
-					$arrayOfTokens[$i]['username']."@xxxxxxxxx.edu");
-				$dwarfProperties->addProperty("status",
-					"Not a real Dwarf");
-				$dAgent =& $agentManager->createAgent(
-					$arrayOfTokens[$i]['username'], $agentType, $dwarfProperties);
-				$agentTokenMappingManager->createMapping($dAgent->getId(),
-					$adminAuthNTokens[$i], $dbAuthType);
-				$dwarfGroup->add($dAgent);
+			
+			if (defined('ENABLE_DWARVES') && ENABLE_DWARVES) {
+				$dwarfGroup =& $agentManager->createGroup("Dwarves", $groupType,
+					"Test users with varying privileges", $properties);
+					
+				$arrayOfTokens = array();
+				$arrayOfTokens[] = array("username" => "sleepy",
+					"password" => "disney");
+				$arrayOfTokens[] = array("username" => "doc",
+					"password" => "disney");
+				$arrayOfTokens[] = array("username" => "bashful",
+					"password" => "disney");
+				$arrayOfTokens[] = array("username" => "dopey",
+					"password" => "disney");
+				$arrayOfTokens[] = array("username" => "sneezy",
+					"password" => "disney");
+				$arrayOfTokens[] = array("username" => "grumpy",
+					"password" => "disney");
+				$arrayOfTokens[] = array("username" => "happy",
+					"password" => "disney");
+					
+				$dwarfAuthNTokens = array();
+				foreach ($arrayOfTokens as $key => $tokenArray) {
+					$dwarfAuthNTokens[$key] =& $dbAuthMethod->createTokens($tokenArray);
+				// Add it to the system
+					$dbAuthMethod->addTokens($dwarfAuthNTokens[$key]);
+				}
+			
+				// the last 3 steps for the dwarves
+				foreach ($arrayOfTokens as $key => $tokens) {
+					$dwarfProperties =& new NonReferenceProperties($agentType);
+					$dwarfProperties->addProperty("name",
+						$tokens['username']);
+					$dwarfProperties->addProperty("first_name",
+						$tokens['username']);
+					$dwarfProperties->addProperty("email",
+						$tokens['username']."@xxxxxxxxx.edu");
+					$dwarfProperties->addProperty("status",
+						"Not a real Dwarf");
+					$dAgent =& $agentManager->createAgent(
+						$tokens['username'], $agentType, $dwarfProperties);
+					$agentTokenMappingManager->createMapping($dAgent->getId(),
+						$dwarfAuthNTokens[$key], $dbAuthType);
+					$dwarfGroup->add($dAgent);
+				}
 			}
 	
 	/*********************************************************

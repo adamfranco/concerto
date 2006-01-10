@@ -25,7 +25,15 @@ $harmoni->startSession();
  * If we pressed a button to reset concerto, clear the session
  * and delete our tables.
  *********************************************************/
-if (isset($_REQUEST["reset_concerto"])) {
+if (file_exists(MYDIR.'/config/debug.conf.php'))
+	require_once (MYDIR.'/config/debug.conf.php');
+else
+	require_once (MYDIR.'/config/debug_default.conf.php');
+		
+if (isset($_REQUEST["reset_concerto"]) 
+	&& defined('ENABLE_RESET') 
+	&& ENABLE_RESET) 
+{
 	$_SESSION = array();
 	if (file_exists(MYDIR.'/config/database.conf.php'))
 		require_once (MYDIR.'/config/database.conf.php');
@@ -50,6 +58,7 @@ require_once(OKI2."/osid/OsidContext.php");
 
 $configs = array(	
 					'validation',
+					'debug',
 					'harmoni',
 					'action',
 					'database',
