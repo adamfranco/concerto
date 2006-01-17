@@ -33,7 +33,7 @@ class displayAction
 	 * @access public
 	 * @since 4/25/05
 	 */
-	function execute ( &$harmoni ) {
+	function &execute ( &$harmoni ) {
 		/**
 		 * @package concerto.display
 		 * 
@@ -107,6 +107,7 @@ class displayAction
 			$id =& $authN->getUserId($authType);
 			if ("edu.middlebury.agents.anonymous" != $id->getIdString()) {
 				$agent =& $agentM->getAgent($id);
+				$exists = false;
 				foreach (explode("+", $users) as $user) {
 					if ($agent->getDisplayName() == $user)
 						$exists = true;
@@ -165,7 +166,7 @@ class displayAction
 		$mainScreen->add($centerPane,"100%",null, LEFT, TOP);		
 		
 		// Main menu
-		$mainMenu =& ConcertoMenuGenerator::generateMainMenu($harmoni);
+		$mainMenu =& ConcertoMenuGenerator::generateMainMenu($harmoni->getCurrentAction());
 		$centerPane->add($mainMenu,"140px",null, LEFT, TOP);
 		
 		// use the result from previous actions
