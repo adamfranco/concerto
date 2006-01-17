@@ -65,8 +65,8 @@ class expmdbAction
 
 		$collections =& $dbHandler->query($collectionsQuery, $mdbIndex);
 
-		if (!is_dir("/tmp/mdbExport"))
-			mkdir("/tmp/mdbExport");
+		if (!is_dir("/tmp/mdbExport2"))
+			mkdir("/tmp/mdbExport2");
 	// ===== COLUMN TITLES FROM MEDIADB ===== //
 		$this->_pSArray = explode(" ", "subject url creator category01 category02 date publisher contributor type format identifier source language relation coverage rights owner measurements material technique location id_number style_period culture");
 		$this->_dcArray = explode(" ", "title creator subject description publisher contributor date type format identifier source language relation coverage rights");
@@ -102,7 +102,7 @@ class expmdbAction
 	}
 	
 	function openTopXML() {
-		$this->_allXML =& fopen("/tmp/mdbExport/metadata.xml", "w");
+		$this->_allXML =& fopen("/tmp/mdbExport2/metadata.xml", "w");
 		fwrite($this->_allXML,
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<import>\n");
 	}
@@ -113,9 +113,9 @@ class expmdbAction
 	}
 	
 	function openCollectionXML(&$collection) {
-		if (!is_dir("/tmp/mdbExport/".$collection['id']))
-			mkdir("/tmp/mdbExport/".$collection['id']);
-		$this->_currentXML =& fopen("/tmp/mdbExport/".
+		if (!is_dir("/tmp/mdbExport2/".$collection['id']))
+			mkdir("/tmp/mdbExport2/".$collection['id']);
+		$this->_currentXML =& fopen("/tmp/mdbExport2/".
 			$collection['id']."/metadata.xml", "w");
 		fwrite($this->_currentXML,
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<repository>\n");
@@ -168,7 +168,7 @@ class expmdbAction
 			$asset =& $assets->next();
 			
 			$mime =& $mimeManager->getMIMETypeForFileName(
-				$asset['fname']));
+				$asset['fname']);
 			$mimeParts = explode("/", $mime);
 
 			fwrite($this->_currentXML,
