@@ -91,7 +91,7 @@ class AssetEditingAction
 // 		$asset =& $this->getAsset();
 		$wizard =& $this->getWizard($cacheName);
 				
-		$results =& $wizard->getAllValues();
+		$results = $wizard->getAllValues();
 		$initialState =& $wizard->initialState;
 				
 		// Go through all of the assets and update all of the values if they have
@@ -165,8 +165,14 @@ class AssetEditingAction
 	function getReturnUrl () {
 		$repositoryId =& $this->getRepositoryId();
 		$harmoni =& Harmoni::instance();
+		$assets = explode(',', RequestContext::value("assets"));
+		$assetIdString = RequestContext::value("asset_id");
 		
-		if ($assetIdString = RequestContext::value("asset_id")) {
+		if (count($assets) == 1 && (!$assetIdString || $assets[0] == $assetIdString)) {
+			return $harmoni->request->quickURL("asset", "view", 
+					array("collection_id" => $repositoryId->getIdString(), 
+					"asset_id" => $assets[0]));
+		} else if ($assetIdString) {
 			return $harmoni->request->quickURL("asset", "browse", 
 					array("collection_id" => $repositoryId->getIdString(), 
 					"asset_id" => $assetIdString));
@@ -359,7 +365,7 @@ class AssetEditingAction
 			}
 			
 			$parentComponent->addComponent(
-				str_replace(".", "_", $partStructId->getIdString()),
+				preg_replace("/[^a-zA-Z0-9:_\-]/", "_", $partStructId->getIdString()),
 				$component);
 			
 			
@@ -369,7 +375,7 @@ class AssetEditingAction
 	// 		print "\n"._("The Name for this <em>Asset</em>: ");
 			print "\n\t\t</th>";
 			print "\n\t\t<td>";
-			print "\n\t\t\t[[".str_replace(".", "_", $partStructId->getIdString())."]]";
+			print "\n\t\t\t[[".preg_replace("/[^a-zA-Z0-9:_\-]/", "_", $partStructId->getIdString())."]]";
 			print "\n\t\t</td>";
 			print "\n\t</tr>";
 		}
@@ -462,7 +468,9 @@ class AssetEditingAction
 	 * @since 10/24/05
 	 */
 	function hasChangedParts ( &$results, &$initialState, &$recStructId ) {
-		if ($results[$recStructId->getIdString()] != $initialState[$recStructId->getIdString()])
+		$recStructIdString = preg_replace("/[^a-zA-Z0-9:_\-]/", "_",
+								$recStructId->getIdString());
+		if ($results[$recStructIdString] != $initialState[$recStructIdString])
 			return TRUE;
 		
 		return FALSE;
@@ -483,7 +491,7 @@ class AssetEditingAction
 	function updateAssetRecords (&$results, &$initialState, &$recStructId, &$asset) {
 		printpre("<hr>updateAssetRecords:".$asset->getDisplayName());
 		
-		$recStructIdString = str_replace(".", "_", $recStructId->getIdString());
+		$recStructIdString = preg_replace("/[^a-zA-Z0-9:_\-]/", "_",  $recStructId->getIdString());
 		
 		$records =& $asset->getRecordsByRecordStructure($recStructId);
 		if (!$records->hasNext()) {
@@ -509,6 +517,12 @@ class AssetEditingAction
 	 * @since 10/24/05
 	 */
 	function updateRecord (&$results, &$initialState, &$record) {
+		$recordId =& $record->getId();
+		$recStruct =& $record->getRecordStructure();
+		$recStructId =& $recStruct->getId();
+		print "<div style='background-color: #fdd;'>";
+		printpre("Updating record: ".$recordId->getIdString()." for Structure: ".$recStructId->getIdString());
+		
 		$recStruct =& $record->getRecordStructure();
 		
 		$partStructs =& $recStruct->getPartStructures();
@@ -516,7 +530,7 @@ class AssetEditingAction
 			$partStruct =& $partStructs->next();
 			
 			$partStructId = $partStruct->getId();
-			$partStructIdString = str_replace(".", "_", $partStructId->getIdString());
+			$partStructIdString = preg_replace("/[^a-zA-Z0-9:_\-]/", "_", $partStructId->getIdString());
 			
 			if ($partStruct->isRepeatable()) {
 				$this->updateRepeatablePart(
@@ -530,6 +544,8 @@ class AssetEditingAction
 					$partStruct, $record);
 			}
 		}
+		
+		print "</div>";
 	}
 	
 	/**
@@ -548,7 +564,7 @@ class AssetEditingAction
 		$partStructId = $partStruct->getId();
 		
 		$partStructType =& $partStruct->getType();
-		$valueObjClass =& $partStructureType->getKeyword();
+		$valueObjClass =& $partStructType->getKeyword();
 		
 		if ($partResults['checked'] == '1'
 			&& ($partInitialState['checked'] =='0'

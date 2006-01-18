@@ -33,7 +33,7 @@ class multieditAction
 	 */
 	function multieditAction () {
 		$this->_init();
-		
+				
 		$this->_recStructsToIgnore[] = 'FILE';
 		
 		$assetList = RequestContext::value("assets");
@@ -316,7 +316,7 @@ class multieditAction
 		while ($partStructs->hasNext()) {
 			$partStruct =& $partStructs->next();
 			$partstructId =& $partStruct->getId();
-			$partStructIdString = str_replace(".", "_", $partstructId->getIdString());
+			$partStructIdString = preg_replace("/[^a-zA-Z0-9:_\-]/", "_", $partstructId->getIdString());
 			
 			$partComponent =& $step->getChild($partStructIdString);
 			

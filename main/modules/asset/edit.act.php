@@ -669,7 +669,7 @@ class editAction
 			}
 			
 			$parentComponent->addComponent(
-				str_replace(".", "_", $partStructId->getIdString()),
+				preg_replace("/[^a-zA-Z0-9:_\-]/", "_", $partStructId->getIdString()),
 				$component);
 			
 			
@@ -679,7 +679,7 @@ class editAction
 	// 		print "\n"._("The Name for this <em>Asset</em>: ");
 			print "\n\t\t</th>";
 			print "\n\t\t<td>";
-			print "\n\t\t\t[[".str_replace(".", "_", $partStructId->getIdString())."]]";
+			print "\n\t\t\t[[".preg_replace("/[^a-zA-Z0-9:_\-]/", "_",  $partStructId->getIdString())."]]";
 			print "\n\t\t</td>";
 			print "\n\t</tr>";
 		}
@@ -741,7 +741,7 @@ class editAction
 			while ($partStructs->hasNext()) {
 				$partStruct =& $partStructs->next();
 				$partStructId =& $partStruct->getId();
-				$partStructIdString = str_replace(".", "_", $partStructId->getIdString());
+				$partStructIdString = preg_replace("/[^a-zA-Z0-9:_\-]/", "_", $partStructId->getIdString());
 				
 				$partIterator =& $record->getPartsByPartStructure($partStructId);
 				if ($partIterator->hasNext())
@@ -791,7 +791,7 @@ class editAction
 	function updateAssetRecords (&$results, &$initialState, &$recStructId, &$asset) {
 		printpre("<hr>updateAssetRecords:".$asset->getDisplayName());
 		
-		$recStructIdString = str_replace(".", "_", $recStructId->getIdString());
+		$recStructIdString = preg_replace("/[^a-zA-Z0-9:_\-]/", "_", $recStructId->getIdString());
 		$idManager =& Services::getService("Id");
 		$exisistingRecords = array();
 		
@@ -805,7 +805,7 @@ class editAction
 				$recordId =& $record->getId();
 			}
 			
-			$exisistingRecords[] =& $recordId->getIdString();
+			$exisistingRecords[] = $recordId->getIdString();
 			
 			$this->updateRecord($recordResults, 
 				$initialState[$recStructIdString]['records'][$i], $record);
@@ -834,16 +834,25 @@ class editAction
 	function updateSingleValuedPart (&$partResults, &$partInitialState, 
 		&$partStruct, &$record) 
 	{
+		print "PartResults: ";
+		printpre($partResults);
+		print "InitialState: ";
+		printpre($partInitialState);
+		
 		$partStructId = $partStruct->getId();
 		
 		$partStructType =& $partStruct->getType();
-		$valueObjClass =& $partStructureType->getKeyword();
+		$valueObjClass = $partStructType->getKeyword();
 		
-		if ($partResults['partvalue'] != $partInitialState['partvalue'])
+		if ($partResults->isNotEqualTo($partInitialState))
 		{
 			$parts =& $record->getPartsByPartStructure($partStructId);
-			$part =& $parts->next();
-			$part->updateValue(String::withvalue($partResults['partvalue']));
+			if ($parts->hasNext()) {
+				$part =& $parts->next();
+				$part->updateValue($partResults);
+			} else {
+				$part =& $record->createPart($partStructId, $partResults);
+			}
 		}
 	}
 	
