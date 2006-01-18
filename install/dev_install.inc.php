@@ -131,7 +131,7 @@ if (!isset($_SESSION['table_setup_complete'])) {
 			
 			// default administrator account
 			$authNMethodManager =& Services::getService("AuthNMethodManager");
-			$dbAuthType =& new Type ("Authentication", "edu.middlebury.harmoni", "Concerto DB");
+			$dbAuthType =& new Type ("Authentication", "edu.middlebury.harmoni", "Harmoni DB");
 			$dbAuthMethod =& $authNMethodManager->getAuthNMethodForType($dbAuthType);
 			// Create the representation
 			

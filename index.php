@@ -58,7 +58,7 @@ if (defined('ENABLE_TIMERS') && ENABLE_TIMERS) {
 	$dbhandler =& Services::getService("DBHandler");
 	printpre("NumQueries: ".$dbhandler->getTotalNumberOfQueries());
 	
-	// printpre($_SESSION);
+// 	printpreArrayExcept($_SESSION, array('__temporarySets'));
 	// debug::output(session_id());
 	// Debug::printAll();
 }

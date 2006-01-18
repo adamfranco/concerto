@@ -16,7 +16,7 @@
 // :: Start the AuthenticationManager OSID Impl.
 	$configuration =& new ConfigurationProperties;
 	$tokenCollectors = array(
-		serialize(new Type ("Authentication", "edu.middlebury.harmoni", "Concerto DB")) 
+		serialize(new Type ("Authentication", "edu.middlebury.harmoni", "Harmoni DB")) 
 			=> new FormActionNamePassTokenCollector($harmoni->request->quickURL("auth","username_password_form")),
 // 		serialize(new Type ("Authentication", "edu.middlebury.harmoni", "Middlebury LDAP")) 
 // 			=> new FormActionNamePassTokenCollector($harmoni->request->quickURL("auth","username_password_form")),
@@ -31,7 +31,7 @@
 		// set up a Database Authentication Method
 		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/SQLDatabaseAuthNMethod.class.php");
 		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/SQLDatabaseMD5UsernamePasswordAuthNTokens.class.php");
-		$dbAuthType =& new Type ("Authentication", "edu.middlebury.harmoni", "Concerto DB");
+		$dbAuthType =& new Type ("Authentication", "edu.middlebury.harmoni", "Harmoni DB");
 		$dbMethodConfiguration =& new ConfigurationProperties;
 		$dbMethodConfiguration->addProperty('tokens_class', $arg0 = 'SQLDatabaseMD5UsernamePasswordAuthNTokens');
 		$dbMethodConfiguration->addProperty('database_id', $dbID);

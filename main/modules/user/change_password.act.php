@@ -37,7 +37,7 @@ class change_passwordAction
 	function isAuthorizedToExecute () {
 		$authN =& Services::getService("AuthN");
 		return $authN->isUserAuthenticated(new Type ("Authentication", 
-			"edu.middlebury.harmoni", "Concerto DB"));
+			"edu.middlebury.harmoni", "Harmoni DB"));
 	}
 	
 	function getUnauthorizedMessage() {
@@ -66,7 +66,7 @@ class change_passwordAction
 		$authN =& Services::getService("AuthN");
 		
 		$dbAuthType =& new Type ("Authentication", "edu.middlebury.harmoni",
-			"Concerto DB");
+			"Harmoni DB");
 		
 		$centerPane =& $this->getActionRows();
 		
@@ -134,7 +134,7 @@ class change_passwordAction
 		$properties =& $wizard->getAllValues();
 		
 		$dbAuthType =& new Type ("Authentication", "edu.middlebury.harmoni",
-			"Concerto DB");		
+			"Harmoni DB");		
 		$id =& $authN->getUserId($dbAuthType);
 		$it =& $tokenM->getMappingsForAgentId($id);
 
