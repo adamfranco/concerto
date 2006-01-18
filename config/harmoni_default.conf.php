@@ -16,6 +16,7 @@
 // :: set up the $harmoni object :: 
 	$harmoni->config->set("defaultModule","home");
 	$harmoni->config->set("defaultAction","welcome");
+	$harmoni->config->set("programTitle","Concerto");
 	$harmoni->config->set("sessionName","PHPSESSID");
 	$harmoni->config->set("sessionUseCookies",true);
 	$harmoni->config->set("sessionCookiePath","/");
