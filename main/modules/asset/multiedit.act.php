@@ -136,8 +136,12 @@ class multieditAction
 		$vProperty =& $step->addComponent("effective_date", new WVerifiedChangeInput);
 		$property =& $vProperty->setInputComponent(new WTextField);
 		$property->setSize(40);
-	
-		$date =& $this->_assets[0]->getEffectiveDate();
+		
+		if (is_object($this->_assets[0]->getEffectiveDate()))
+			$date =& $this->_assets[0]->getEffectiveDate();
+		else
+			$date = null;
+		
 		$multipleExist = FALSE;
 		for ($i = 1; $i < count($this->_assets); $i++) {
 			if (($date && !$date->isEqualTo($this->_assets[$i]->getEffectiveDate()))
@@ -162,7 +166,10 @@ class multieditAction
 		$property =& $vProperty->setInputComponent(new WTextField);
 		$property->setSize(40);
 				
-		$date =& $this->_assets[0]->getExpirationDate();
+		if (is_object($this->_assets[0]->getExpirationDate()))
+			$date =& $this->_assets[0]->getExpirationDate();
+		else
+			$date = null;
 		$multipleExist = FALSE;
 		for ($i = 1; $i < count($this->_assets); $i++) {
 			if (($date && !$date->isEqualTo($this->_assets[$i]->getExpirationDate()))
@@ -336,14 +343,13 @@ class multieditAction
 	 * Answer a component for a Single-valued Part
 	 * 
 	 * @param object PartStructure $partStruct
-	 * @param array $records
 	 * @return object WizardComponent
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function &getSingleValuedPartStructComponent ( &$partStruct, &$records ) {
+	function &getSingleValuedPartStructComponent ( &$partStruct ) {
 		$property =& new WVerifiedChangeInput;
-		$property =& $property->setInputComponent(
+		$property->setInputComponent(
 			$this->getComponentForPartStruct($partStruct));
 // 		$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 // 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));

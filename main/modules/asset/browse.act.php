@@ -98,14 +98,16 @@ class browseAction
 		print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";
 		print "\n\t<br /><strong>"._("ID#").":</strong> ".$assetId->getIdString();
 	
-		$effectDate =& $asset->getEffectiveDate();
-		if(is_Object($effectDate)) {
+		
+		if(is_object($asset->getEffectiveDate())) {
+			$effectDate =& $asset->getEffectiveDate();
 			$effectDate =& $effectDate->asDate();
 			print  "\n\t<br /><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->asString()."</em>";
 		}
 	
-		$expirationDate =& $asset->getExpirationDate();
-		if(is_Object($expirationDate)) {
+		
+		if(is_object($asset->getExpirationDate())) {
+			$expirationDate =& $asset->getExpirationDate();
 			$expirationDate =& $expirationDate->asDate();
 			print  "\n\t<br /><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->asString()."</em>";
 		}
