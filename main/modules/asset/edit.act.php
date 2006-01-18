@@ -100,17 +100,17 @@ class editAction
 	// Effective Date
 		$property =& $step->addComponent("effective_date", new WTextField);
 		$property->setSize(40);
-		$date =& $this->_assets[0]->getEffectiveDate();
-		if (is_object($date)) {
+		if(is_object($this->_assets[0]->getEffectiveDate())) {
+			$date =& $this->_assets[0]->getEffectiveDate();
 			$date =& $date->asDate();
 			$property->setValue($date->yyyymmddString());
-		}
+		}	
 	
 	// Expiration Date
 		$property =& $step->addComponent("expiration_date", new WTextField);
 		$property->setSize(40);
-		$date =& $this->_assets[0]->getExpirationDate();
-		if (is_object($date)) {
+		if (is_object($this->_assets[0]->getExpirationDate())) {
+			$date =& $this->_assets[0]->getExpirationDate();
 			$date =& $date->asDate();
 			$property->setValue($date->yyyymmddString());
 		}

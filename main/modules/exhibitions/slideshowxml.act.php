@@ -410,13 +410,16 @@ END;
 		print "\t<strong>"._("ID#").":</strong>\n";
 		print "\t".$assetId->getIdString()."\n";
 	
-		$effectDate =& $asset->getEffectiveDate();
-		if(is_object($effectDate))
+		
+		if(is_object($asset->getEffectiveDate())) {
+			$effectDate =& $asset->getEffectiveDate();
 			print  "\t<br />\n\t<strong>"._("Effective Date").":</strong>\n\t<em>".$effectDate->asString()."</em>\n";
-	
-		$expirationDate =& $asset->getExpirationDate();
-		if(is_object($expirationDate))
+		}
+		
+		if(is_object($asset->getExpirationDate())) {
+			$expirationDate =& $asset->getExpirationDate();
 			print  "\t<br />\n\t<strong>"._("Expiration Date").":</strong>\n\t<em>".$expirationDate->asString()."</em>\n";
+		}
 		
 		
 		/*********************************************************
