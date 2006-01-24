@@ -100,12 +100,13 @@ class displayAction
 		ob_start();
 		$authN =& Services::getService("AuthN");
 		$agentM =& Services::getService("Agent");
+		$idM =& Services::getService("Id");
 		$authTypes =& $authN->getAuthenticationTypes();
 		$users = '';
 		while ($authTypes->hasNext()) {
 			$authType =& $authTypes->next();
 			$id =& $authN->getUserId($authType);
-			if ("edu.middlebury.agents.anonymous" != $id->getIdString()) {
+			if (!$id->isEqual($idM->getId('edu.middlebury.agents.anonymous'))) {
 				$agent =& $agentM->getAgent($id);
 				$exists = false;
 				foreach (explode("+", $users) as $user) {
