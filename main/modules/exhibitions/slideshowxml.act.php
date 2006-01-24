@@ -380,9 +380,13 @@ END;
 		
 		if ($parts->hasNext()) {
 			$part =& $parts->next();
-			$value =& $part->getValue();
-		} else
+			if (is_object($part->getValue()))
+				$value =& $part->getValue();
+			else
+				$value = $part->getValue();
+		} else {
 			$value = null;
+		}
 		
 		return $value;
 	}
