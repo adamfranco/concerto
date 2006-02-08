@@ -445,7 +445,7 @@ class editAction
 		foreach (array_keys($results) as $i) {
 			$recordResults =& $results[$i];
 			
-			if ($recordResults['record_id']) {
+			if (isset($recordResults['record_id'])) {
 				$recordId =& $idManager->getId($recordResults['record_id']);
 				$record =& $asset->getRecord($recordId);
 			} else {
