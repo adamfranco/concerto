@@ -48,6 +48,8 @@ class exportexhibmdbAction
 
 		$n_C_Index = $dbHandler->addDatabase(
 			new MySQLDatabase("localhost", "mdb_concerto", "test", "test"));
+
+
 		$dbHandler->connect($n_C_Index);
 		
 		$exhibitionsQuery =& new SelectQuery;
@@ -61,7 +63,7 @@ class exportexhibmdbAction
 		$exhibitionsResults =& $dbHandler->query($exhibitionsQuery, $mdbIndex);
 
 		while ($exhibitionsResults->hasMoreRows()) {
-			$exhibition =& $exhibitionsResults->next();
+			$exhibition = $exhibitionsResults->next();
 			
 			$this->openExhibition($exhibition);
 			
@@ -80,7 +82,7 @@ class exportexhibmdbAction
 				$mdbIndex);
 
 			while ($slideshowsResults->hasNext()) {
-				$slideshow =& $slideshowsResults->next();
+				$slideshow = $slideshowsResults->next();
 				
 				$this->openSlideshow($slideshow);
 				
@@ -97,7 +99,7 @@ class exportexhibmdbAction
 					$slideResult =& $dbHandler->query($slideQuery, $mdbIndex);
 
 					if ($slideResult->getNumberOfRows() == 1) {
-						$slide =& $slideResult->getCurrentRow();
+						$slide = $slideResult->getCurrentRow();
 					
 						$mediaQuery =& new SelectQuery;
 						$mediaQuery->addTable("media");
@@ -107,7 +109,7 @@ class exportexhibmdbAction
 						$mediaResult =& $dbHandler->query($mediaQuery, 
 							$mdbIndex);
 						if ($mediaResult->getNumberOfRows() == 1) {
-							$media =& $mediaResult->getCurrentRow();
+							$media = $mediaResult->getCurrentRow();
 							
 							$idQuery =& new SelectQuery;
 							$idQuery->addTable("dr_file");
@@ -122,7 +124,7 @@ class exportexhibmdbAction
 							$idResult =& $dbHandler->query($idQuery, 
 								$n_C_Index);
 							if ($idResult->getNumberOfRows() == 1) {
-								$idRow =& $idResult->getCurrentRow();
+								$idRow = $idResult->getCurrentRow();
 								$this->addSlide($slide, $idRow['asset_id']);
 							}
 							$idResult->free();
@@ -177,10 +179,16 @@ class exportexhibmdbAction
 	 * @since 8/9/05
 	 */
 	function openExhibition (&$exhibition) {
-		$this->_xmlFile = fopen(
-			"/home/cshubert/public_html/importer/importtest/metadata.xml",
-			"wt");
-		fwrite($this->_xmlFile, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+		if (!is_dir("/tmp/mdbExhibExport3"))
+			mkdir("/tmp/mdbExhibExport3");
+
+		if (!is_dir("/tmp/mdbExhibExport3/".$exhibition['exhibitionId']))
+			mkdir("/tmp/mdbExhibExport3/".$exhibition['exhibitionId']);
+		$this->_xmlFile =& fopen("/tmp/mdbExhibExport3/".
+			$exhibition['exhibitionId']."/metadata.xml", "w");
+		fwrite($this->_xmlFile,
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+
 		fwrite($this->_xmlFile, "<import>\n");
 		fwrite($this->_xmlFile, "\t<repository 
 			id=\"edu.middlebury.concerto.exhibition_repository\">\n");
@@ -292,14 +300,14 @@ class exportexhibmdbAction
 "Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position",
 "Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata");
 
-		if (isset($this->_importer))
-			unset($this->_importer);
-		
-		$this->_importer =& XMLImporter::withFile($array, 
-			"/home/cshubert/public_html/importer/importtest/metadata.xml",
-			"insert");
-
-		$this->_importer->parseAndImportBelow();
+// 		if (isset($this->_importer))
+// 			unset($this->_importer);
+// 		
+// 		$this->_importer =& XMLImporter::withFile($array, 
+// 			"/home/cshubert/public_html/importer/importtest/metadata.xml",
+// 			"insert");
+// 
+// 		$this->_importer->parseAndImportBelow();
 	}
 }
 ?>

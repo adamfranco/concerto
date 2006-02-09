@@ -177,7 +177,7 @@ class importAction extends MainWindowAction {
 		$idManager =& Services::getService("Id");
 		$repositoryManager =& Services::getService("Repository");
 		$wizard =& $this->getWizard($cacheName);
-		$properties =& $wizard->getAllValues();
+		$properties = $wizard->getAllValues();
 
 		$centerPane =& $this->getActionRows();
 		ob_start();
@@ -196,7 +196,12 @@ class importAction extends MainWindowAction {
 		"THUMBNAIL_DATA", "THUMBNAIL_MIME_TYPE", "FILE_SIZE", "DIMENSIONS",
 		"THUMBNAIL_DIMENSIONS", 	
 		"edu.middlebury.harmoni.repository.asset_content", 
-		"edu.middlebury.harmoni.repository.asset_content.Content");
+		"edu.middlebury.harmoni.repository.asset_content.Content", 
+		"edu.middlebury.concerto.exhibition_repository",
+"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure",
+"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id",
+"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position",
+"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata");
 		
 		if ($properties['file_type'] == "XML") {
 		//	define an empty importer for decompression

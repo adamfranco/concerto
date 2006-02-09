@@ -171,7 +171,7 @@ class importAction extends MainWindowAction {
 	function saveWizard($cacheName) {
 		$harmoni =& Harmoni::instance();
 		$wizard =& $this->getWizard($cacheName);
-		$properties =& $wizard->getAllValues();
+		$properties = $wizard->getAllValues();
 
 		$centerPane =& $this->getActionRows();
 		ob_start();
@@ -188,10 +188,14 @@ class importAction extends MainWindowAction {
 		
 		$array = array("FILE", "FILE_DATA", "FILE_NAME", "MIME_TYPE",
 		"THUMBNAIL_DATA", "THUMBNAIL_MIME_TYPE", "FILE_SIZE", "DIMENSIONS",
-		"THUMBNAIL_DIMENSIONS", 	
+		"THUMBNAIL_DIMENSIONS", 
 		"edu.middlebury.harmoni.repository.asset_content", 
 		"edu.middlebury.harmoni.repository.asset_content.Content",
-		"edu.middlebury.concerto.exhibition_repository");
+		"edu.middlebury.concerto.exhibition_repository",
+"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure",
+"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id",
+"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position",
+"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata");
 
 		
 		if ($properties['file_type'] == "XML") {
