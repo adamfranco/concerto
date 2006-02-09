@@ -26,6 +26,7 @@ Recommended Environment Settings:
 	a variety of parameters probably need to be changed from their default values.
 	
 	PHP: (in php.ini or .htaccess files)
+		- magic_quotes_gpc 		(Off)		(Must be set to Off)
 		- post_max_size			(ex: 100M)	(should be larger than the largest media file)
 		- upload_max_filesize 	(ex: 100M)	(should be larger than the largest media file)
 		- max_execution_time	(ex: 6400)	(to allow for large/long import operations)
