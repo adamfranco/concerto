@@ -198,8 +198,9 @@ class displayAction
 		$helpText .= "'>"._("Help")."</a>";
 		$footer->add(new UnstyledBlock($helpText), "50%", null, LEFT, BOTTOM);
 		
-		$footerText = "Concerto v.2.0-Beta &copy;2004 Middlebury College: <a href=''>";
-		$footerText .= _("credits");
+		$footerText = "<a href='doc/changelog.html'>Concerto v.2.0-Beta</a> ";
+		$footerText .= "&copy;2006 Middlebury College: <a href='http://concerto.sourceforge.net'>";
+		$footerText .= _("about");
 		$footerText .= "</a>";
 		$footer->add(new UnstyledBlock($footerText), "50%", null, RIGHT, BOTTOM);
 		

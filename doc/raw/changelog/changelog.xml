@@ -10,7 +10,7 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="2.0-beta" date="2006-01-10">
+	<version number="2.0-beta 2" date="2006-02-09">
 		<new author='adam'>
 			Defined Dublin Core and VRA metadata schemas for easy importing.
 		</new>
