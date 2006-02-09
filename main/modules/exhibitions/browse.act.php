@@ -92,13 +92,13 @@ class browseAction
 				"exhibitions","create_exhibition")."'>".
 				_("Create a new <em>Exhibition</em>")."</a>";
 	//===== Import Link =====//
-			$harmoni->request->startNamespace("import");
-			print  "\t|\t<a href='".
-				$harmoni->request->quickURL("exhibitions", "import_exhibition").
-				"'>".
-				_("Import <em>Exhibition(s)</em>").
-				"</a>";
-			$harmoni->request->endNamespace();
+// 			$harmoni->request->startNamespace("import");
+// 			print  "\t|\t<a href='".
+// 				$harmoni->request->quickURL("exhibitions", "import_exhibition").
+// 				"'>".
+// 				_("Import <em>Exhibition(s)</em>").
+// 				"</a>";
+// 			$harmoni->request->endNamespace();
 			print  "\n</p>";
 		}
 		
