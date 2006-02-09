@@ -18,8 +18,25 @@ Concerto viewer).
 
 Dependencies:
 	- a MySql database
-	- imagemagick
+	- imagemagick		(for thumbnail generation/image-resizing)
 
+Recommended Environment Settings:
+	Concerto should run in a standard PHP environment, however due to the large
+	ammount of processing needed in the manipulation of many large media files
+	a variety of parameters probably need to be changed from their default values.
+	
+	PHP: (in php.ini or .htaccess files)
+		- post_max_size			(ex: 100M)	(should be larger than the largest media file)
+		- upload_max_filesize 	(ex: 100M)	(should be larger than the largest media file)
+		- max_execution_time	(ex: 6400)	(to allow for large/long import operations)
+		- memory_limit 			(ex: 300M)	(should be larger than the largest media file)
+	
+	MySQL: (in my.cnf)
+		- max_allowed_packet	(ex: 100M)	(should be larger than the largest media file)
+
+	Apache: (in httpd.conf or similar)
+		- Timeout				(ex: 6400)	(to allow for large/long import operations)
+	
 Setting up Concerto:
 	1) Create a MySQL database for Concerto to use.
 		A) create the database
