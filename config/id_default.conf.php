@@ -16,6 +16,6 @@
  	$configuration =& new ConfigurationProperties;
 	$configuration->addProperty('database_index', $dbID);
 	$configuration->addProperty('database_name', $dbName);
-	$configuration->addProperty('id_prefix', $arg0 = 'dev_id-');
-	unset($arg0);
+// 	$configuration->addProperty('id_prefix', $arg0 = 'dev_id-');
+// 	unset($arg0);
 	Services::startManagerAsService("IdManager", $context, $configuration);
