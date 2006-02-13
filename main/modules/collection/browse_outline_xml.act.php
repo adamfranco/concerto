@@ -125,16 +125,19 @@ END;
 		
 		print<<<END
 <?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE slideshow PUBLIC "- //Middlebury College//Slide-Show Outline//EN" "http://concerto.sourceforge.net/dtds/viewer/2.0/slideshow_outline.dtd">
+<!DOCTYPE slideshow PUBLIC "- //Middlebury College//Slide-Show//EN" "http://concerto.sourceforge.net/dtds/viewer/2.0/slideshow.dtd">
 <slideshow>
 
 END;
 		print "\t<title>".$repository->getDisplayName()."</title>\n";
 		
 		print "\t<media-sizes>\n";
+		print "\t\t\t\t<size>small</size>\n";
 		print "\t\t\t\t<size>medium</size>\n";
 		print "\t\t\t\t<size>large</size>\n";
 		print "\t</media-sizes>\n";
+		
+		print "\t<default_size>medium</default_size>\n";
 	
 		
 		//***********************************

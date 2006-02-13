@@ -178,6 +178,35 @@ END;
 			print "\t\t<media>\n";
 			
 			/*********************************************************
+			 * Small Version
+			 *********************************************************/
+			print "\t\t\t<version>\n";
+			
+			print "\t\t\t\t<type>";
+			if ($imgProcessor->isFormatSupported($mimeType))
+				print $imgProcessor->getWebsafeFormat($mimeType);
+			else
+				print $mimeType;
+			print "</type>\n";
+			
+			print "\t\t\t\t<size>small</size>\n";
+			
+			print "\t\t\t\t<url><![CDATA[";
+			$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
+				$fileRecord);	
+			print $harmoni->request->quickURL("repository", "viewfile", 
+					array(
+						"repository_id" => $repositoryId->getIdString(),
+						"asset_id" => $assetId->getIdString(),
+						"record_id" => $fileRecordId->getIdString(),
+						"file_name" => $filename,
+						"websafe" => "true",
+						"size" => 400));
+			print "]]></url>\n";
+			
+			print "\t\t\t</version>\n";
+			
+			/*********************************************************
 			 * Medium Version
 			 *********************************************************/
 			print "\t\t\t<version>\n";
@@ -190,21 +219,6 @@ END;
 			print "</type>\n";
 			
 			print "\t\t\t\t<size>medium</size>\n";
-			
-// 			$dimensions = slideshowxmlAction::getFirstPartValueFromRecord("DIMENSIONS", 
-// 				$fileRecord);
-// 								
-// 			if (isset($dimensions[1]) && $dimensions[1] > 0) {
-// 				print "\t\t\t\t<height>";
-// 				print $dimensions[1]."px";
-// 				print "</height>\n";
-// 			}
-// 			
-// 			if (isset($dimensions[0]) && $dimensions[0] > 0) {
-// 				print "\t\t\t\t<width>";
-// 				print $dimensions[0]."px";
-// 				print "</width>\n";	
-// 			}
 			
 			print "\t\t\t\t<url><![CDATA[";
 			$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
