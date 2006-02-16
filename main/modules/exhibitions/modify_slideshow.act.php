@@ -267,8 +267,8 @@ class modify_slideshowAction
 */			
 			$collection = array();
 			$collection['slideId'] =& $slideId;//->getIdString();
-			$collection['title'] =& $slideAsset->getDisplayName();
-			$collection['caption'] =& $slideAsset->getDescription();
+			$collection['title'] = $slideAsset->getDisplayName();
+			$collection['caption'] = $slideAsset->getDescription();
 			$textPositionIterator =& $slideAsset->getPartValuesByPartStructure(
 				$textPositionId);
 			if ($textPositionIterator->hasNext()) {
