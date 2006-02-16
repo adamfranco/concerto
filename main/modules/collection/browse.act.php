@@ -114,21 +114,21 @@ class browseAction
 		$searchBar->setPostHTML("\n</form>");
 		
 		ob_start();	
-		print "\n\t<input type='radio' onchange='this.form.submit();'";
+		print "\n\t<input type='radio' onclick='this.form.submit();'";
 		print " name='".RequestContext::name("limit_by")."'";
 		print " value='all'";
 		if (!RequestContext::value("limit_type") || RequestContext::value("limit_by") == 'all' )
 			print " checked='checked'";
 		print "/>"._("All")."\n<br/>";
 		
-		print "\n\t<input type='radio' onchange='this.form.submit();'";
+		print "\n\t<input type='radio' onclick='this.form.submit();'";
 		print " name='".RequestContext::name("limit_by")."'";
 		print " value='type'";
 		if (RequestContext::value("limit_by") == 'type') {
 			print " checked='checked'";
 			print "/>"._("Type").": ";
 			print "\n\t<select name='".RequestContext::name("type")."'";
-			print " onchange='this.form.submit();'>";
+			print " onclick='this.form.submit();'>";
 				print "\n\t\t<option value=''";
 				if (!RequestContext::value("type"))
 					print " selected='selected'";
@@ -147,14 +147,14 @@ class browseAction
 			print "/>"._("Type")."\n<br/>";
 		}
 		
-		print "\n\t<input type='radio' onchange='this.form.submit();'";
+		print "\n\t<input type='radio' onclick='this.form.submit();'";
 		print " name='".RequestContext::name("limit_by")."'";
 		print " value='search'";
 		if (RequestContext::value("limit_by") == 'search') {
 			print " checked='checked'";
 			print "/>"._("Search").": ";
 			print "\n\t<select name='".RequestContext::name("searchtype")."'";
-			print " onchange='this.form.submit();'>";
+			print " onclick='this.form.submit();'>";
 				$types =& $repository->getSearchTypes();
 				while ($types->hasNext()) {
 					$type =& $types->next();
