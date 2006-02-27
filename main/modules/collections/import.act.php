@@ -79,7 +79,8 @@ class importAction extends MainWindowAction {
 		$uniqueString = "";
 		while($authTypes->hasNextType()) {
 			$authType =& $authTypes->nextType();
-			$uniqueString .= "_".$authN->getUserId($authType);
+			$id =& $authN->getUserId($authType);
+			$uniqueString .= "_".$id->getIdString();
 		}
 
 		$cacheName = 'import_collection_wizard_'.$uniqueString;
@@ -221,7 +222,7 @@ class importAction extends MainWindowAction {
 			else // not compressed, only one xml file
 				$importer =& XMLRepositoryImporter::withFile($array, $newName,
 					$properties['import_type']);
-			$importer->parseAndImport();
+			$importer->parseAndImport("asset");
 		}
 		if ($importer->hasErrors()) {
 		// something happened so tell the end user
@@ -234,8 +235,24 @@ class importAction extends MainWindowAction {
 		// clean and clear
 		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();
+		$url = $this->getReturnUrl();
+		$unescapedurl = preg_replace("/&amp;/", "&", $url);
+		$label = _("Return To Admin Tools");
+		$this->closeWizard($cacheName);
+		print <<< END
+<script type='text/javascript'>
+/* <![CDATA[ */
+	
+	window.location = '$unescapedurl';
+	
+/* ]]> */
+</script>
+<a href='$url'>$label</a>
+
+END;
+		exit();
 		
-		return TRUE;
+//		return TRUE;
 	}
 		
 	/**

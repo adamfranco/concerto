@@ -71,7 +71,8 @@ class importAction extends MainWindowAction {
 		$uniqueString = "";
 		while($authTypes->hasNextType()) {
 			$authType =& $authTypes->nextType();
-			$uniqueString .= "_".$authN->getUserId($authType);
+			$id =& $authN->getUserId($authType);
+			$uniqueString .= "_".$id->getIdString();
 		}
 
 		
@@ -210,7 +211,7 @@ class importAction extends MainWindowAction {
 				$importer =& XMLImporter::withFile($array, $newName,
 					$properties['import_type']);
 					
-			$importer->parseAndImportBelow();
+			$importer->parseAndImportBelow("asset", 75);
 		}
 
 		if ($importer->hasErrors()) {
@@ -225,6 +226,7 @@ class importAction extends MainWindowAction {
 		$url = $this->getReturnUrl();
 		$unescapedurl = preg_replace("/&amp;/", "&", $url);
 		$label = _("Return To Admin Tools");
+		$this->closeWizard($cacheName);
 		print <<< END
 <script type='text/javascript'>
 /* <![CDATA[ */

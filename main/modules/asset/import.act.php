@@ -107,7 +107,17 @@ class importAction extends MainWindowAction {
 		$harmoni->request->passthrough("asset_id");
 		
 		$centerPane =& $this->getActionRows();
-		$cacheName = 'import_asset_wizard';
+
+		$authN =& Services::getService("AuthN");
+		$authTypes =& $authN->getAuthenticationTypes();
+		$uniqueString = "";
+		while($authTypes->hasNextType()) {
+			$authType =& $authTypes->nextType();
+			$id =& $authN->getUserId($authType);
+			$uniqueString .= "_".$id->getIdString();
+		}
+
+		$cacheName = 'import_asset_wizard_'.$uniqueString;
 		
 		$this->runWizard($cacheName, $centerPane);
 		
@@ -234,14 +244,30 @@ class importAction extends MainWindowAction {
 				$newName,
 				$properties['import_type']);
 
-			$importer->parseAndImportBelow();
+			$importer->parseAndImportBelow("asset");
 			
 			$matrixMaker->dropIdMatrix();
 			unset($matrixMaker);
 		}
 		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();
-		return TRUE;
+		$url = $this->getReturnUrl();
+		$unescapedurl = preg_replace("/&amp;/", "&", $url);
+		$label = _("Return To Admin Tools");
+		$this->closeWizard($cacheName);
+		print <<< END
+<script type='text/javascript'>
+/* <![CDATA[ */
+	
+	window.location = '$unescapedurl';
+	
+/* ]]> */
+</script>
+<a href='$url'>$label</a>
+
+END;
+		exit();
+//		return TRUE;
 	}
 		
 	/**
