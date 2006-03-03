@@ -63,6 +63,7 @@ $configs = array(
 					'action',
 					'database',
 					'id',
+					'logging',
 					'authentication',
 					'gui',
 					'language',
