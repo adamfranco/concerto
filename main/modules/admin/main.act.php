@@ -134,6 +134,19 @@ class mainAction
 			$actionRows->add($introText, "100%", null, CENTER, CENTER);
 			ob_end_clean();
 		}
+		
+		$actionRows->add(new Heading(_("Logs"), 2));
+		
+		ob_start();
+		print "\n<ul>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("logs","browse")."'>";
+		print _("Browse Logs");
+		print "</a></li>";
+		print "\n</ul>";
+		
+		$introText =& new Block(ob_get_contents(),2);
+		$actionRows->add($introText, "100%", null, CENTER, CENTER);
+		ob_end_clean();
 	}
 }
 
