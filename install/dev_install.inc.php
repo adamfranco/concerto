@@ -28,11 +28,12 @@ if (!isset($_SESSION['table_setup_complete'])) {
 	$genericResult =& $dbHandler->query($query, $dbID);
 	$result =& $genericResult->returnAsSelectQueryResult();
 	if ($result->hasNext()) {
+		$_SESSION['table_setup_complete'] = TRUE;
+		RequestContext::locationHeader($_SERVER['PHP_SELF']);
+		
 		print "<h2>Tables exist in the database. Not creating tables.</h2>";
 		print "<h2>If you have just run the installer, comment out it's line in the config to start using Concerto.</h2>";
-		$_SESSION['table_setup_complete'] = TRUE;
-	
-		RequestContext::locationHeader($_SERVER['PHP_SELF']);
+		exit;
 	}
 	
 	print "<h1>Creating tables and default data set.</h1>";
