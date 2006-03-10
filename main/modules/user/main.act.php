@@ -122,7 +122,7 @@ class mainAction
 		print "\n<ul>".
 			"\n\t<li><a href='".
 			$harmoni->request->quickURL("user", "change_password")."'>".
-			_("Change ConcertoDB Password").
+			_("Change 'Harmoni DB' Password").
 			"</li>";
 			
 		$introText =& new Block(ob_get_contents(),2);
