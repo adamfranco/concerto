@@ -189,6 +189,21 @@ class create_exhibitionAction
 			$asset->updateExpirationDate(
 				DateAndTime::fromString($properties['datestep']['expiration_date']));
 		
+		// Log the success or failure
+		if (Services::serviceAvailable("Logging")) {
+			$loggingManager =& Services::getService("Logging");
+			$log =& $loggingManager->getLogForWriting("Concerto");
+			$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+							"A format in which the acting Agent[s] and the target nodes affected are specified.");
+			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+							"Normal events.");
+			
+			$item =& new AgentNodeEntryItem("Create Node", "Exhibition added");
+			$item->addNodeId($assetId);
+			
+			$log->appendLogWithTypes($item,	$formatType, $priorityType);
+		}
+		
 		return TRUE;
 	}
 	

@@ -229,6 +229,21 @@ class modify_exhibitionAction
 			$asset->updateExpirationDate(
 				DateAndTime::fromString($properties['datestep']['expiration_date']));
 		
+		// Log the success or failure
+		if (Services::serviceAvailable("Logging")) {
+			$loggingManager =& Services::getService("Logging");
+			$log =& $loggingManager->getLogForWriting("Concerto");
+			$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+							"A format in which the acting Agent[s] and the target nodes affected are specified.");
+			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+							"Normal events.");
+			
+			$item =& new AgentNodeEntryItem("Modify Node", "Exhibition Modified");
+			$item->addNodeId($asset->getId());
+			
+			$log->appendLogWithTypes($item,	$formatType, $priorityType);
+		}
+		
 		$harmoni->request->endNamespace();
 		return TRUE;
 	}

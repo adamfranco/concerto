@@ -363,6 +363,22 @@ class add_slideshowAction
 				$slideRecord->createPart($targetIdPartStructId, $targetId);
 				
 			}
+			
+			// Log the success or failure
+			if (Services::serviceAvailable("Logging")) {
+				$loggingManager =& Services::getService("Logging");
+				$log =& $loggingManager->getLogForWriting("Concerto");
+				$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+								"A format in which the acting Agent[s] and the target nodes affected are specified.");
+				$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+								"Normal events.");
+				
+				$item =& new AgentNodeEntryItem("Create Node", "Slideshow added");
+				$item->addNodeId($slideshowAssetId);
+				$item->addNodeId($exhibitionAsset);
+				
+				$log->appendLogWithTypes($item,	$formatType, $priorityType);
+			}
 						
 			return TRUE;
 		} 

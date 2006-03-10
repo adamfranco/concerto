@@ -349,6 +349,22 @@ class addAction
 				$parentAsset->addAsset($assetId);
 			}
 			
+			// Log the success or failure
+			if (Services::serviceAvailable("Logging")) {
+				$loggingManager =& Services::getService("Logging");
+				$log =& $loggingManager->getLogForWriting("Concerto");
+				$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+								"A format in which the acting Agent[s] and the target nodes affected are specified.");
+				$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+								"Normal events.");
+				
+				$item =& new AgentNodeEntryItem("Create Node", "Asset added");
+				$item->addNodeId($assetId);
+				$item->addNodeId($repository->getId());
+				
+				$log->appendLogWithTypes($item,	$formatType, $priorityType);
+			}
+			
 			return TRUE;
 		} 
 		// If we don't have authorization to add to the picked parent, send us back to

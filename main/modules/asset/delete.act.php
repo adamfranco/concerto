@@ -85,9 +85,28 @@ class deleteAction
 		$repository =& $repositoryManager->getRepository(
 				$idManager->getId(
 					RequestContext::value('collection_id')));
+		$asset =& $repository->getAsset(
+			$idManager->getId(RequestContext::value('asset_id')));
+		
+		// Log the action
+		if (Services::serviceAvailable("Logging")) {
+			$loggingManager =& Services::getService("Logging");
+			$log =& $loggingManager->getLogForWriting("Concerto");
+			$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+							"A format in which the acting Agent[s] and the target nodes affected are specified.");
+			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+							"Normal events.");
+			
+			$item =& new AgentNodeEntryItem("Delete Node", "Asset deleted:\n<br/>&nbsp; &nbsp; &nbsp;".$asset->getDisplayName());
+			$item->addNodeId($asset->getId());
+			$item->addNodeId($repository->getId());
+			
+			$log->appendLogWithTypes($item,	$formatType, $priorityType);
+		}
+		
 		$repository->deleteAsset(
 				$idManager->getId(RequestContext::value('asset_id')));
-
+		
 		RequestContext::locationHeader($harmoni->request->quickURL(
 			"collection", "browse",
 			array("collection_id" => RequestContext::value('collection_id'))));

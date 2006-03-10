@@ -85,6 +85,26 @@ class delete_slideshowAction
 		$repository =& $repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
+		
+		$asset =& $repository->getAsset(
+			$idManager->getId(RequestContext::value('slideshow_id')));
+		
+		// Log the action
+		if (Services::serviceAvailable("Logging")) {
+			$loggingManager =& Services::getService("Logging");
+			$log =& $loggingManager->getLogForWriting("Concerto");
+			$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+							"A format in which the acting Agent[s] and the target nodes affected are specified.");
+			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+							"Normal events.");
+			
+			$item =& new AgentNodeEntryItem("Delete Node", "Slideshow deleted:\n<br/>&nbsp; &nbsp; &nbsp;".$asset->getDisplayName());
+			$item->addNodeId($asset->getId());
+			$item->addNodeId($idManager->getId(RequestContext::value('exhibition_id')));
+			
+			$log->appendLogWithTypes($item,	$formatType, $priorityType);
+		}
+		
 		$repository->deleteAsset(
 				$idManager->getId(RequestContext::value('slideshow_id')));
 

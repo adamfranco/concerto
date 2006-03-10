@@ -145,17 +145,43 @@ class change_passwordAction
 				$tokens =& $mapping->getTokens();
 		}
 		if (isset($tokens)) {
+			$authNMethodManager =& Services::getService("AuthNMethodManager");
+			$dbAuthMethod =& $authNMethodManager->getAuthNMethodForType($dbAuthType);
+				
 			$uname = $tokens->getUsername();
-			if (($properties['new_password'] != '') && 
+			
+			// Validate the old password
+			$oldTokens = $dbAuthMethod->createTokens(
+							array(	'username' => $uname, 
+									'password' => $properties['old_password']));
+			if (!$dbAuthMethod->authenticateTokens($oldTokens)) {
+				$error = "Invalid old password";
+				$localizedError = _("Invalid old password, please try again.")."\n<br/>";
+			}
+			
+			// Reset the password if old tokens are valid and new tokens are valid
+			else if (($properties['new_password'] != '') && 
 				($properties['new_password'] == $properties['n_p_again'])) {
-				$authNMethodManager =&
-					Services::getService("AuthNMethodManager");
-				$dbAuthMethod =&
-					$authNMethodManager->getAuthNMethodForType($dbAuthType);
+					
+				// Log the action
+				if (Services::serviceAvailable("Logging")) {
+					$loggingManager =& Services::getService("Logging");
+					$log =& $loggingManager->getLogForWriting("Authentication");
+					$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+									"A format in which the acting Agent[s] and the target nodes affected are specified.");
+					$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+									"Normal events.");
+					
+					$item =& new AgentNodeEntryItem("Modify Agent", "Password changed for:\n<br/>&nbsp; &nbsp; &nbsp;".$uname."\n<br/>&nbsp; &nbsp; &nbsp;".$dbAuthType->getKeyword());
+					$item->addAgentId($id);
+					
+					$log->appendLogWithTypes($item,	$formatType, $priorityType);
+				}
 
 				$t_array = array("username" => $uname, 
 					"password" => $properties['new_password']);
 				$authNTokens =& $dbAuthMethod->createTokens($t_array);
+				
 				// Add it to the system and login with new password
 				if ($dbAuthMethod->supportsTokenUpdates()) {
 					$dbAuthMethod->updateTokens($tokens, $authNTokens);
@@ -168,13 +194,30 @@ class change_passwordAction
 					return TRUE;
 				}
 				
-			} else 
-				$error = "Invalid new password, try again<br />\n";
+			} else {
+				$error = "Invalid new password";
+				$localizedError = _("Invalid new password, please try again.")."\n<br/>";
+			}
 		 } 
-		 if (isset($error)) {	
+		 if (isset($error)) {
+		 	// Log the action
+			if (Services::serviceAvailable("Logging")) {
+				$loggingManager =& Services::getService("Logging");
+				$log =& $loggingManager->getLogForWriting("Authentication");
+				$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+								"A format in which the acting Agent[s] and the target nodes affected are specified.");
+				$priorityType =& new Type("logging", "edu.middlebury", "Error",
+								"Normal events.");
+				
+				$item =& new AgentNodeEntryItem("Modify Agent", "Password change error:\n<br/>&nbsp; &nbsp; &nbsp;".$error."\n<br/>for:\n<br/>&nbsp; &nbsp; &nbsp;".$uname."\n<br/>&nbsp; &nbsp; &nbsp;".$dbAuthType->getKeyword());
+				$item->addAgentId($id);
+				
+				$log->appendLogWithTypes($item,	$formatType, $priorityType);
+			}
+		 	
 		 	$this->closeWizard($cacheName);
 		 	RequestContext::locationHeader($harmoni->request->quickURL("user",
-		 		"change_password", array("error" => $error)));
+		 		"change_password", array("error" => $localizedError)));
 		}
 	}
 	

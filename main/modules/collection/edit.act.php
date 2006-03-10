@@ -315,6 +315,21 @@ class editAction
 				}
 			}
 			
+			// Log the success or failure
+			if (Services::serviceAvailable("Logging")) {
+				$loggingManager =& Services::getService("Logging");
+				$log =& $loggingManager->getLogForWriting("Concerto");
+				$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+								"A format in which the acting Agent[s] and the target nodes affected are specified.");
+				$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+								"Normal events.");
+				
+				$item =& new AgentNodeEntryItem("Modify Node", "Repository modified");
+				$item->addNodeId($repository->getId());
+				
+				$log->appendLogWithTypes($item,	$formatType, $priorityType);
+			}
+			
 			// Move to Schema creation if that button is pressed.
 			if ($properties['schema']['_create_schema']) {
 				$this->closeWizard($cacheName);

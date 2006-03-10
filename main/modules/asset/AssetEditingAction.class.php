@@ -110,6 +110,13 @@ class AssetEditingAction
 		
 		$authZMan =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
+		
+		// Log the success or failure
+		if (Services::serviceAvailable("Logging")) {
+			$loggingManager =& Services::getService("Logging");
+			$log =& $loggingManager->getLogForWriting("Concerto");			
+			$item =& new AgentNodeEntryItem("Modify Node", "Asset[s] modified");
+		}
 	 		 	
 	 	foreach (array_keys($this->_assets) as $key) {
 	 		$asset =& $this->_assets[$key];
@@ -136,6 +143,9 @@ class AssetEditingAction
 					}
 					
 				}
+				
+				if (isset($item))
+					$item->addNodeId($asset->getId());
 			}
 			
 			if ($results['parentstep'] != $initialState['parentstep']) {
@@ -147,6 +157,17 @@ class AssetEditingAction
 				} else
 					$this->updateAssetParent($results['parentstep']['parent'], $asset);
 			}
+	 	}
+	 	
+	 	if (isset($log) && isset($item)) {
+			$item->addNodeId($repository->getId());
+			
+			$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+							"A format in which the acting Agent[s] and the target nodes affected are specified.");
+			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+							"Normal events.");
+			
+			$log->appendLogWithTypes($item,	$formatType, $priorityType);
 	 	}
 		
 // 		printpre($results);

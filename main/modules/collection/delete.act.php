@@ -78,9 +78,24 @@ class deleteAction
 		
 		$idManager =& Services::getService("Id");
 		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
-				$idManager->getId(RequestContext::value('collection_id')));
-
+		$repositoryId =& $idManager->getId(RequestContext::value('collection_id'));
+		$repository =& $repositoryManager->getRepository($repositoryId);
+		
+		// Log the success or failure
+		if (Services::serviceAvailable("Logging")) {
+			$loggingManager =& Services::getService("Logging");
+			$log =& $loggingManager->getLogForWriting("Concerto");
+			$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+							"A format in which the acting Agent[s] and the target nodes affected are specified.");
+			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+							"Normal events.");
+			
+			$item =& new AgentNodeEntryItem("Delete Node", "Repository deleted:\n<br/>&nbsp; &nbsp; &nbsp;".$repository->getDisplayName());
+			$item->addNodeId($repositoryId);
+			
+			$log->appendLogWithTypes($item,	$formatType, $priorityType);
+		}
+		
 		$repositoryManager->deleteRepository(
 			$idManager->getId(RequestContext::value('collection_id')));
 		
