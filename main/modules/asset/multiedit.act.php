@@ -220,7 +220,7 @@ class multieditAction
 		
 		// Effective Date
 		if ($results['effective_date']['checked'] == '1') {
-			$effDate =& $asset->getEffectiveDate();
+			$effDate = $asset->getEffectiveDate();
 			$newEffDate =& DateAndTime::fromString($results['effective_date']['value']);
 			if (is_object($effDate) && !$effDate->isEqualTo($newEffDate))
 				$asset->updateEffectiveDate($newEffDate);
@@ -228,7 +228,7 @@ class multieditAction
 		
 		// Expiration Date
 		if ($results['expiration_date']['checked'] == '1') {
-			$expDate =& $asset->getEffectiveDate();
+			$expDate = $asset->getEffectiveDate();
 			$newExpDate =& DateAndTime::fromString($results['expiration_date']['value']);
 			if (is_object($expDate) && !$expDate->isEqualTo($newExpDate))
 				$asset->updateEffectiveDate($newExpDate);
