@@ -304,7 +304,7 @@ class addAction
 			// Get the type from the select if one is specified
 			if ($properties['typestep']['option_type'] != 'NONE') {
 				$typeString = urldecode($properties['typestep']['option_type']);
-				$assetType = HarmoniType::stringToType($typeString);
+				$assetType = HarmoniType::fromString($typeString);
 			} 
 			// Otherwise, Generate the type from the specified fields
 			else {

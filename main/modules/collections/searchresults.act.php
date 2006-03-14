@@ -62,7 +62,7 @@ class searchresultsAction
 		$idManager =& Services::getService("Id");
 		
 		// get the search type.
-		$searchType =& HarmoniType::stringToType(urldecode(
+		$searchType =& HarmoniType::fromString(urldecode(
     	$harmoni->request->get('search_type')));
 		
 		// Get the Search criteria

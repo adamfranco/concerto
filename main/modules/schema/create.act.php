@@ -300,7 +300,7 @@ class createAction
 			// Create the PartStructures
 			$partStructureProperties =& $properties['elementstep']['elements'];
 			foreach (array_keys($partStructureProperties) as $index) {
-				$type =& HarmoniType::stringToType(urldecode(
+				$type =& HarmoniType::fromString(urldecode(
 					$partStructureProperties[$index]['type']), " :: ");
 				$partStructure =& $recordStructure->createPartStructure(
 								$partStructureProperties[$index]['display_name'],

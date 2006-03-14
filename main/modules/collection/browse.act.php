@@ -226,7 +226,7 @@ class browseAction
 		// Get the assets to display
 		//***********************************
 		$searchProperties =& new HarmoniProperties(
-					Type::stringToType("repository::harmoni::order"));
+					Type::fromString("repository::harmoni::order"));
 		if (!($order = RequestContext::value("order")))
 			$order = 'DisplayName';
 		$searchProperties->addProperty("order", $order);
@@ -234,7 +234,7 @@ class browseAction
 		switch (RequestContext::value("limit_by")) {
 			case 'type':
 				if (RequestContext::value("type")) {
-					$assets =& $repository->getAssetsByType(Type::stringToType(RequestContext::value("type")));
+					$assets =& $repository->getAssetsByType(Type::fromString(RequestContext::value("type")));
 					break;
 				}
 				
@@ -246,7 +246,7 @@ class browseAction
 					
 					$assets =& $repository->getAssetsBySearch(
 						$searchString,
-						Type::stringToType(RequestContext::value("searchtype")),
+						Type::fromString(RequestContext::value("searchtype")),
 						$searchProperties);
 					break;
 				}

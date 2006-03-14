@@ -77,7 +77,7 @@ class browsetypeAction
 		$repository =& $this->getRepository();
 
 		// The type
-		$type =& HarmoniType::stringToType(urldecode(RequestContext::value('type')));
+		$type =& HarmoniType::fromString(urldecode(RequestContext::value('type')));
 		
 		// function links
 		ob_start();

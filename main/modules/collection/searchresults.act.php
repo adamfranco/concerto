@@ -79,7 +79,7 @@ class searchresultsAction
 
 
 		// get the search type.
-		$searchType =& HarmoniType::stringToType(urldecode(
+		$searchType =& HarmoniType::fromString(urldecode(
 			RequestContext::value('search_type')));
 		
 		// Get the Search criteria

@@ -65,7 +65,7 @@ class browsetypeAction
 		ob_end_clean();
 		$actionRows->add($layout, null, null, CENTER, CENTER);
 		
-		$type =& HarmoniType::stringToType(urldecode(RequestContext::value('type')));
+		$type =& HarmoniType::fromString(urldecode(RequestContext::value('type')));
 
 		$repositoryManager =& Services::getService("Repository");
 		
