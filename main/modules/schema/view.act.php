@@ -106,7 +106,7 @@ class viewAction
 		print "\n<th>"._("Description")."</th>";
 		print "\n<th>"._("IsMandatory?")."</th>";
 		print "\n<th>"._("IsRepeatable?")."</th>";
-		print "\n<th>"._("IsPopulatedByRepository?")."</th>";
+// 		print "\n<th>"._("IsPopulatedByRepository?")."</th>";
 		print "\n</tr>";
 		$partStructures =& $recordStructure->getPartStructures();
 		$partStructureArray = array();
@@ -127,7 +127,7 @@ class viewAction
 			print "\n<td><em>".$partStructure->getDescription()."</em></td>";
 			print "\n<td>".(($partStructure->isMandatory())?"TRUE":"FALSE")."</td>";
 			print "\n<td>".(($partStructure->isRepeatable())?"TRUE":"FALSE")."</td>";
-			print "\n<td>".(($partStructure->isPopulatedByRepository())?"TRUE":"FALSE")."</td>";
+// 			print "\n<td>".(($partStructure->isPopulatedByRepository())?"TRUE":"FALSE")."</td>";
 			print "\n</tr>";
 		}
 		print "\n</table>";

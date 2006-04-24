@@ -9,6 +9,7 @@
  */ 
 
 require_once(MYDIR."/main/library/abstractActions/RecordStructureAction.class.php");
+require_once(HARMONI."debugHandler/PlainTextDebugHandlerPrinter.class.php");
 
 /**
  * 
@@ -120,6 +121,7 @@ class editAction
 		$formatProp->setValue($recordStructure->getFormat());
 		
 		
+		
 		// Create the step text
 		ob_start();
 		
@@ -148,7 +150,8 @@ class editAction
 		$elementStep->setDisplayName(_("Elements"));
 		ob_start();
 		print "<h2>"._("Elements")."</h2>";
-		print "\n<p>"._("Here you can re-arrange and add new elements to the schema.")."</p>";
+		print "\n<p>"._("Here you can modify the properties of elements and add new elements to the schema.")."</p>";
+		print "\n<p>"._("<strong>Important:</strong> Elements marked with an asterisk (<span style='color: red'>*</span>) can not be changed after the element is created.")."</p>";
 		print "[[elements]]";
 		print "[[new_elements]]";
 		$elementStep->setContent(ob_get_contents());
@@ -158,6 +161,9 @@ class editAction
 		$multField =& new WRepeatableComponentCollection();
 		$elementStep->addComponent("elements", $multField);
 		
+		$property =& $multField->addComponent(
+			"id", 
+			new WHiddenField());
 		
 		$property =& $multField->addComponent(
 			"display_name", 
@@ -213,11 +219,11 @@ class editAction
 		$property->setLabel(_("yes"));
 		$property->setReadOnly(TRUE);
 		
-		$property =& $multField->addComponent(
-			"populatedbydr", 
-			new WCheckBox());
-		$property->setChecked(false);
-		$property->setLabel(_("yes"));
+// 		$property =& $multField->addComponent(
+// 			"populatedbydr", 
+// 			new WCheckBox());
+// 		$property->setChecked(false);
+// 		$property->setLabel(_("yes"));
 		
 		// We don't have any PartStructures yet, so we can't get them.
 		
@@ -237,9 +243,9 @@ class editAction
 				print "[[description]]";
 			print "\n</td></tr>";
 			
-			print "\n<tr><td>";
+			print "\n<tr><td style='color: red;'>";
 				print _("Type")."... ";
-			print "\n</td><td>";
+			print "\n *</td><td>";
 				print "[[type]]";
 			print "\n</td></tr>";
 	
@@ -249,17 +255,17 @@ class editAction
 				print "[[mandatory]]";
 			print "\n</td></tr>";
 			
-			print "\n<tr><td>";
+			print "\n<tr><td style='color: red;'>";
 				print _("isRepeatable? ");
-			print "\n</td><td>";
+			print "\n *</td><td>";
 				print "[[repeatable]]";
 			print "\n</td></tr>";
 			
-			print "\n<tr><td>";
-				print _("isPopulatedByRepository? ");
-			print "\n</td><td>";
-				print "[[populatedbydr]]";
-			print "\n</td></tr>";
+// 			print "\n<tr><td>";
+// 				print _("isPopulatedByRepository? ");
+// 			print "\n</td><td>";
+// 				print "[[populatedbydr]]";
+// 			print "\n</td></tr>";
 			
 			print "</table>";
 		
@@ -275,15 +281,14 @@ class editAction
 			$partStructure =& $partStructures->next();
 			$collection = array();
 			$partStructureId =& $partStructure->getId();
-			$collection['part_structure_id'] = preg_replace(
-					"/[^a-zA-Z0-9:_\-]/", "_", $partStructureId->getIdString());
+			$collection['id'] = $partStructureId->getIdString();
 			$collection['display_name'] = $partStructure->getDisplayName();
 			$collection['description'] = $partStructure->getDescription();
 			$type =& $partStructure->getType();
 			$collection['type'] = urlencode(HarmoniType::typeToString($type, " :: "));
 			$collection['mandatory'] = $partStructure->isMandatory();
 			$collection['repeatable'] = $partStructure->isRepeatable();
-			$collection['populatedbydr'] = $partStructure->isPopulatedByRepository();
+// 			$collection['populatedbydr'] = $partStructure->isPopulatedByRepository();
 			
 			$multField->addValueCollection($collection);
 			$i++;
@@ -352,11 +357,11 @@ class editAction
 		$property->setChecked(false);
 		$property->setLabel(_("yes"));
 		
-		$property =& $multField->addComponent(
-			"populatedbydr", 
-			new WCheckBox());
-		$property->setChecked(false);
-		$property->setLabel(_("yes"));
+// 		$property =& $multField->addComponent(
+// 			"populatedbydr", 
+// 			new WCheckBox());
+// 		$property->setChecked(false);
+// 		$property->setLabel(_("yes"));
 		
 		// We don't have any PartStructures yet, so we can't get them.
 		
@@ -376,9 +381,9 @@ class editAction
 				print "[[description]]";
 			print "\n</td></tr>";
 			
-			print "\n<tr><td>";
+			print "\n<tr><td style='color: red;'>";
 				print _("Select a Type")."... ";
-			print "\n</td><td>";
+			print "\n *</td><td>";
 				print "[[type]]";
 			print "\n</td></tr>";
 	
@@ -388,17 +393,17 @@ class editAction
 				print "[[mandatory]]";
 			print "\n</td></tr>";
 			
-			print "\n<tr><td>";
+			print "\n<tr><td style='color: red;'>";
 				print _("isRepeatable? ");
-			print "\n</td><td>";
+			print "\n *</td><td>";
 				print "[[repeatable]]";
 			print "\n</td></tr>";
 			
-			print "\n<tr><td>";
-				print _("isPopulatedByRepository? ");
-			print "\n</td><td>";
-				print "[[populatedbydr]]";
-			print "\n</td></tr>";
+// 			print "\n<tr><td>";
+// 				print _("isPopulatedByRepository? ");
+// 			print "\n</td><td>";
+// 				print "[[populatedbydr]]";
+// 			print "\n</td></tr>";
 			
 			print "</table>";
 		
@@ -421,43 +426,68 @@ class editAction
 	 * @since 4/28/05
 	 */
 	function saveWizard ( $cacheName ) {
+// 		Debug::level(100);
 		$wizard =& $this->getWizard($cacheName);
 		// If all properties validate then go through the steps nessisary to
 		// save the data.
 		if ($wizard->validate()) {
-			$properties =& $wizard->getAllValues();
+			$properties = $wizard->getAllValues();
 			
 			$repository =& $this->getRepository();
+			$recordStructure =& $this->getRecordStructure();
 			
-			// Create the info Structure
-			$recordStructure =& $repository->createRecordStructure($properties['namedesc']['display_name'], 
-									$properties['namedesc']['description'], 
-									$properties['namedesc']['format'],
-									$properties['namedesc']['display_name']);
-			Debug::printAll();
+			if ($properties['namedesc']['display_name'] != $recordStructure->getDisplayName())
+				$recordStructure->updateDisplayName($properties['namedesc']['display_name']);
+			if ($properties['namedesc']['description'] != $recordStructure->getDescription())
+				$recordStructure->updateDescription($properties['namedesc']['description']);
+			if ($properties['namedesc']['format'] != $recordStructure->getFormat())
+				$recordStructure->updateFormat($properties['namedesc']['format']);
+
 			$recordStructureId =& $recordStructure->getId();
+			$idManager =& Services::getService("Id");
 			
 			// Create a set for the RecordStructure
 			$setManager =& Services::getService("Sets");
 			$set =& $setManager->getPersistentSet($recordStructureId);
 
-			// Store up the positions for later setting after all of the ids have
-			// been added to the set and we can do checking to make sure that 
-			// the specified positions are valid.
-			$positions = array();
+			// Update the existing part structures
+			foreach (array_keys($properties['elementstep']['elements']) as $index) {
+				$partStructProps =& $properties['elementstep']['elements'][$index];
+				
+				$partStructId =& $idManager->getId($partStructProps['id']);				
+				$partStruct =& $recordStructure->getPartStructure($partStructId);	
+				
+				
+				if (!$set->isInSet($partStructId))
+					$set->addItem($partStructId);
+				$set->moveToPosition($partStructId, $index);
+				
+				
+				if ($partStructProps['display_name'] != $partStruct->getDisplayName())
+					$partStruct->updateDisplayName($partStructProps['display_name']);
+				if ($partStructProps['description'] != $partStruct->getDescription())
+					$partStruct->updateDescription($partStructProps['description']);
+				if ($partStructProps['mandatory'] != $partStruct->isMandatory())
+					$partStruct->updateIsMandatory($partStructProps['mandatory']);
+// 				if ($partStructProps['repeatable'] != $partStruct->isRepeatable())
+// 					$partStruct->updateIsRepeatable($partStructProps['repeatable']);
+// 				if ($partStructProps['populatedbydr'] != $partStruct->isPopulatedByRepository())
+// 					$partStruct->updateIsPopulatedByRepository($partStructProps['populatedbydr']);
+			}
 			
-			// Create the PartStructures
-			$partStructureProperties =& $properties['elementstep']['elements'];
-			foreach (array_keys($partStructureProperties) as $index) {
+			// Create the new PartStructures
+			foreach (array_keys($properties['elementstep']['new_elements']) as $index) {
+				$partStructProps =& $properties['elementstep']['new_elements'][$index];
+				
 				$type =& HarmoniType::fromString(urldecode(
-					$partStructureProperties[$index]['type']), " :: ");
+					$partStructProps['type']), " :: ");
 				$partStructure =& $recordStructure->createPartStructure(
-								$partStructureProperties[$index]['display_name'],
-								$partStructureProperties[$index]['description'],
+								$partStructProps['display_name'],
+								$partStructProps['description'],
 								$type,
-								(($partStructureProperties[$index]['mandatory'])?TRUE:FALSE),
-								(($partStructureProperties[$index]['repeatable'])?TRUE:FALSE),
-								(($partStructureProperties[$index]['populatedbydr'])?TRUE:FALSE)
+								(($partStructProps['mandatory'])?TRUE:FALSE),
+								(($partStructProps['repeatable'])?TRUE:FALSE),
+								FALSE
 								);
 				
 				$partStructureId =& $partStructure->getId();
@@ -481,6 +511,9 @@ class editAction
 				$log->appendLogWithTypes($item,	$formatType, $priorityType);
 			}
 			
+			
+// 			Debug::printAll(new PlainTextDebugHandlerPrinter);
+// 			exit;
 			return TRUE;
 			
 		} else {
