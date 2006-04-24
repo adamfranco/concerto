@@ -158,7 +158,7 @@ class editAction
 		ob_end_clean();
 		
 	// Existing Elements
-		$multField =& new WRepeatableComponentCollection();
+		$multField =& new WOrderedRepeatableComponentCollection();
 		$elementStep->addComponent("elements", $multField);
 		
 		$property =& $multField->addComponent(
@@ -190,13 +190,14 @@ class editAction
 		$recordStructures =& $repository->getRecordStructures();
 		if (!$recordStructures->hasNext())
 			throwError(new Error("No RecordStructures availible.", "Concerto"));
-			
+		
+		$dmpType =& new Type("RecordStructures", "edu.middlebury.harmoni", "DataManagerPrimatives", "RecordStructures stored in the Harmoni DataManager.");
 		while ($recordStructures->hasNext()) {
 			// we want just the datamanager structure types, so just 
 			// get the first structure that has Format "DataManagerPrimatives"
-			$recordStructure =& $recordStructures->next();
-			if ($recordStructure->getFormat() == "DataManagerPrimatives") {
-				$types =& $recordStructure->getPartStructureTypes();
+			$tmpRecordStructure =& $recordStructures->next();
+			if ($dmpType->isEqual($tmpRecordStructure->getType())) {
+				$types =& $tmpRecordStructure->getPartStructureTypes();
 				while ($types->hasNext()) {
 					$type =& $types->next();
 					$property->addOption(urlencode(HarmoniType::typeToString($type, " :: ")),HarmoniType::typeToString($type, " :: "));
@@ -275,23 +276,24 @@ class editAction
 		ob_end_clean();
 		
 		// Add the existing Elements/PartStructures
-		$partStructures =& $recordStructure->getPartStructures();
+		// First load the ordered PartStructures, then the rest
 		$i = 0;
+		$setManager =& Services::getService("Sets");
+		$set =& $setManager->getPersistentSet($recordStructure->getId());
+		$set->reset();
+		while ($set->hasNext()) {
+			$partStructure =& $recordStructure->getPartStructure($set->next());
+			$this->addPartStructureCollection($multField, $partStructure);
+			$i++;
+		}
+			
+		$partStructures =& $recordStructure->getPartStructures();
 		while ($partStructures->hasNext()) {
 			$partStructure =& $partStructures->next();
-			$collection = array();
-			$partStructureId =& $partStructure->getId();
-			$collection['id'] = $partStructureId->getIdString();
-			$collection['display_name'] = $partStructure->getDisplayName();
-			$collection['description'] = $partStructure->getDescription();
-			$type =& $partStructure->getType();
-			$collection['type'] = urlencode(HarmoniType::typeToString($type, " :: "));
-			$collection['mandatory'] = $partStructure->isMandatory();
-			$collection['repeatable'] = $partStructure->isRepeatable();
-// 			$collection['populatedbydr'] = $partStructure->isPopulatedByRepository();
-			
-			$multField->addValueCollection($collection);
-			$i++;
+			if (!$set->isInSet($partStructure->getId())) {
+				$this->addPartStructureCollection($multField, $partStructure);
+				$i++;
+			}
 		}
 		$multField->setMiminum($i);
 		$multField->setMaximum($i);
@@ -333,8 +335,8 @@ class editAction
 		while ($recordStructures->hasNext()) {
 			// we want just the datamanager structure types, so just 
 			// get the first structure that has Format "DataManagerPrimatives"
-			$recordStructure =& $recordStructures->next();
-			if ($recordStructure->getFormat() == "DataManagerPrimatives") {
+			$tmpRecordStructure =& $recordStructures->next();
+			if ($dmpType->isEqual($tmpRecordStructure->getType())) {
 				$types =& $recordStructure->getPartStructureTypes();
 				while ($types->hasNext()) {
 					$type =& $types->next();
@@ -414,6 +416,28 @@ class editAction
 		
 		return $wizard;
 	}
+	
+	/**
+	 * Add a partStructure Collection to a multField
+	 * 
+	 * @param <##>
+	 * @return void
+	 * @access public
+	 * @since 4/24/06
+	 */
+	function addPartStructureCollection ( &$multField, &$partStructure ) {
+		$collection = array();
+		$partStructureId =& $partStructure->getId();
+		$collection['id'] = $partStructureId->getIdString();
+		$collection['display_name'] = $partStructure->getDisplayName();
+		$collection['description'] = $partStructure->getDescription();
+		$type =& $partStructure->getType();
+		$collection['type'] = urlencode(HarmoniType::typeToString($type, " :: "));
+		$collection['mandatory'] = $partStructure->isMandatory();
+		$collection['repeatable'] = $partStructure->isRepeatable();
+// 			$collection['populatedbydr'] = $partStructure->isPopulatedByRepository();
+		$multField->addValueCollection($collection);
+	}
 		
 	/**
 	 * Save our results. Tearing down and unsetting the Wizard is handled by
@@ -432,6 +456,7 @@ class editAction
 		// save the data.
 		if ($wizard->validate()) {
 			$properties = $wizard->getAllValues();
+// 			printpre($properties);
 			
 			$repository =& $this->getRepository();
 			$recordStructure =& $this->getRecordStructure();
@@ -451,8 +476,12 @@ class editAction
 			$set =& $setManager->getPersistentSet($recordStructureId);
 
 			// Update the existing part structures
+			$i = 0;
 			foreach (array_keys($properties['elementstep']['elements']) as $index) {
 				$partStructProps =& $properties['elementstep']['elements'][$index];
+				
+// 				print "\n<hr/>";
+// 				printpre($partStructProps['id']);
 				
 				$partStructId =& $idManager->getId($partStructProps['id']);				
 				$partStruct =& $recordStructure->getPartStructure($partStructId);	
@@ -460,7 +489,7 @@ class editAction
 				
 				if (!$set->isInSet($partStructId))
 					$set->addItem($partStructId);
-				$set->moveToPosition($partStructId, $index);
+				$set->moveToPosition($partStructId, $i);
 				
 				
 				if ($partStructProps['display_name'] != $partStruct->getDisplayName())
@@ -473,6 +502,7 @@ class editAction
 // 					$partStruct->updateIsRepeatable($partStructProps['repeatable']);
 // 				if ($partStructProps['populatedbydr'] != $partStruct->isPopulatedByRepository())
 // 					$partStruct->updateIsPopulatedByRepository($partStructProps['populatedbydr']);
+				$i++;
 			}
 			
 			// Create the new PartStructures

@@ -169,11 +169,12 @@ class createAction
 		if (!$recordStructures->hasNext())
 			throwError(new Error("No RecordStructures availible.", "Concerto"));
 			
+		$dmpType =& new Type("RecordStructures", "edu.middlebury.harmoni", "DataManagerPrimatives", "RecordStructures stored in the Harmoni DataManager.");
 		while ($recordStructures->hasNext()) {
 			// we want just the datamanager structure types, so just 
 			// get the first structure that has Format "DataManagerPrimatives"
 			$recordStructure =& $recordStructures->next();
-			if ($recordStructure->getFormat() == "DataManagerPrimatives") {
+			if ($dmpType->isEqual($recordStructure->getType())) {
 				$types =& $recordStructure->getPartStructureTypes();
 				while ($types->hasNext()) {
 					$type =& $types->next();
