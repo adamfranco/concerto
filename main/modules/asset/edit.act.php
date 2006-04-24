@@ -229,7 +229,7 @@ class editAction
 		$component =& $vComponent->setInputComponent(new WTextField);
 		
 		$component =& $repeatableComponent->addComponent("file_size", new WTextField());
-		$component->setReadOnly(TRUE);
+		$component->setEnabled(FALSE, TRUE);
 		
 		
 		$vComponent =& $repeatableComponent->addComponent("mime_type", new WVerifiedChangeInput());

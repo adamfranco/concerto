@@ -153,7 +153,6 @@ class editAction
 		print "\n<p>"._("Here you can modify the properties of elements and add new elements to the schema.")."</p>";
 		print "\n<p>"._("<strong>Important:</strong> Elements marked with an asterisk (<span style='color: red'>*</span>) can not be changed after the element is created.")."</p>";
 		print "[[elements]]";
-		print "[[new_elements]]";
 		$elementStep->setContent(ob_get_contents());
 		ob_end_clean();
 		
@@ -205,7 +204,6 @@ class editAction
 				break;
 			}
 		}
-		$property->setReadOnly(TRUE);		
 		
 		$property =& $multField->addComponent(
 			"mandatory", 
@@ -218,7 +216,6 @@ class editAction
 			new WCheckBox());
 // 		$property->setChecked(false);
 		$property->setLabel(_("yes"));
-		$property->setReadOnly(TRUE);
 		
 // 		$property =& $multField->addComponent(
 // 			"populatedbydr", 
@@ -295,124 +292,7 @@ class editAction
 				$i++;
 			}
 		}
-		$multField->setMiminum($i);
-		$multField->setMaximum($i);
 		$multField->setStartingNumber(0);
-		$multField->setAreElementsRemovable(FALSE);
-		
-		
-	// New Elements	
-		$multField =& new WRepeatableComponentCollection();
-		$elementStep->addComponent("new_elements", $multField);
-		$multField->setStartingNumber(0);
-		
-		$property =& $multField->addComponent(
-			"display_name", 
-			new WTextField());
-		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
-		$property->setErrorText(_("A value for this field is required."));
-		$property->setSize(20);
-		
-		$property =& $multField->addComponent(
-			"description", 
-			WTextArea::withRowsAndColumns(2, 30));
-		
-		
-		
-		$property =& $multField->addComponent(
-			"type", 
-			new WSelectList());
-		$defaultType =& new Type ("Repository", "edu.middlebury.harmoni", "string");
-		$property->setValue(urlencode(HarmoniType::typeToString($defaultType, " :: ")));
-		
-		// We are going to assume that all RecordStructures have the same PartStructureTypes
-		// in this Repository. This will allow us to list PartStructureTypes before
-		// the RecordStructure is actually created.
-		$recordStructures =& $repository->getRecordStructures();
-		if (!$recordStructures->hasNext())
-			throwError(new Error("No RecordStructures availible.", "Concerto"));
-			
-		while ($recordStructures->hasNext()) {
-			// we want just the datamanager structure types, so just 
-			// get the first structure that has Format "DataManagerPrimatives"
-			$tmpRecordStructure =& $recordStructures->next();
-			if ($dmpType->isEqual($tmpRecordStructure->getType())) {
-				$types =& $recordStructure->getPartStructureTypes();
-				while ($types->hasNext()) {
-					$type =& $types->next();
-					$property->addOption(urlencode(HarmoniType::typeToString($type, " :: ")),HarmoniType::typeToString($type, " :: "));
-				}
-				break;
-			}
-		}
-		
-		
-		$property =& $multField->addComponent(
-			"mandatory", 
-			new WCheckBox());
-		$property->setChecked(false);
-		$property->setLabel(_("yes"));
-		
-		$property =& $multField->addComponent(
-			"repeatable", 
-			new WCheckBox());
-		$property->setChecked(false);
-		$property->setLabel(_("yes"));
-		
-// 		$property =& $multField->addComponent(
-// 			"populatedbydr", 
-// 			new WCheckBox());
-// 		$property->setChecked(false);
-// 		$property->setLabel(_("yes"));
-		
-		// We don't have any PartStructures yet, so we can't get them.
-		
-		ob_start();
-
-		print "\n<table border=\"0\">";
-			
-			print "\n<tr><td>";
-				print _("DisplayName").": ";
-			print "\n</td><td>";
-				print "[[display_name]]";
-			print "\n</td></tr>";
-			
-			print "\n<tr><td>";
-				print _("Description").": ";
-			print "\n</td><td>";
-				print "[[description]]";
-			print "\n</td></tr>";
-			
-			print "\n<tr><td style='color: red;'>";
-				print _("Select a Type")."... ";
-			print "\n *</td><td>";
-				print "[[type]]";
-			print "\n</td></tr>";
-	
-			print "\n<tr><td>";
-				print _("isMandatory? ");
-			print "\n</td><td>";
-				print "[[mandatory]]";
-			print "\n</td></tr>";
-			
-			print "\n<tr><td style='color: red;'>";
-				print _("isRepeatable? ");
-			print "\n *</td><td>";
-				print "[[repeatable]]";
-			print "\n</td></tr>";
-			
-// 			print "\n<tr><td>";
-// 				print _("isPopulatedByRepository? ");
-// 			print "\n</td><td>";
-// 				print "[[populatedbydr]]";
-// 			print "\n</td></tr>";
-			
-			print "</table>";
-		
-		
-	
-		$multField->setElementLayout(ob_get_contents());
-		ob_end_clean();
 		
 		return $wizard;
 	}
@@ -435,8 +315,13 @@ class editAction
 		$collection['type'] = urlencode(HarmoniType::typeToString($type, " :: "));
 		$collection['mandatory'] = $partStructure->isMandatory();
 		$collection['repeatable'] = $partStructure->isRepeatable();
-// 			$collection['populatedbydr'] = $partStructure->isPopulatedByRepository();
-		$multField->addValueCollection($collection);
+// 		$collection['populatedbydr'] = $partStructure->isPopulatedByRepository();
+
+		$newCollection =& $multField->addValueCollection($collection, false);
+		
+		$newCollection['type']->setEnabled(false, true);
+		$newCollection['repeatable']->setEnabled(false, true);
+// 		$newCollection['populatedbydr']->setEnabled(false, true);
 	}
 		
 	/**
@@ -480,50 +365,43 @@ class editAction
 			foreach (array_keys($properties['elementstep']['elements']) as $index) {
 				$partStructProps =& $properties['elementstep']['elements'][$index];
 				
-// 				print "\n<hr/>";
-// 				printpre($partStructProps['id']);
+				print "\n<hr/>";
+				printpre($partStructProps['id']);
 				
-				$partStructId =& $idManager->getId($partStructProps['id']);				
-				$partStruct =& $recordStructure->getPartStructure($partStructId);	
-				
+				if ($partStructProps['id']) {
+					$partStructId =& $idManager->getId($partStructProps['id']);				
+					$partStruct =& $recordStructure->getPartStructure($partStructId);	
+					
+					if ($partStructProps['display_name'] != $partStruct->getDisplayName())
+						$partStruct->updateDisplayName($partStructProps['display_name']);
+					if ($partStructProps['description'] != $partStruct->getDescription())
+						$partStruct->updateDescription($partStructProps['description']);
+					if ($partStructProps['mandatory'] != $partStruct->isMandatory())
+						$partStruct->updateIsMandatory($partStructProps['mandatory']);
+	// 				if ($partStructProps['repeatable'] != $partStruct->isRepeatable())
+	// 					$partStruct->updateIsRepeatable($partStructProps['repeatable']);
+	// 				if ($partStructProps['populatedbydr'] != $partStruct->isPopulatedByRepository())
+	// 					$partStruct->updateIsPopulatedByRepository($partStructProps['populatedbydr']);
+				} else {
+					$type =& HarmoniType::fromString(urldecode(
+						$partStructProps['type']), " :: ");
+					$partStructure =& $recordStructure->createPartStructure(
+									$partStructProps['display_name'],
+									$partStructProps['description'],
+									$type,
+									(($partStructProps['mandatory'])?TRUE:FALSE),
+									(($partStructProps['repeatable'])?TRUE:FALSE),
+									FALSE
+									);
+					
+					$partStructId =& $partStructure->getId();
+				}
 				
 				if (!$set->isInSet($partStructId))
 					$set->addItem($partStructId);
 				$set->moveToPosition($partStructId, $i);
 				
-				
-				if ($partStructProps['display_name'] != $partStruct->getDisplayName())
-					$partStruct->updateDisplayName($partStructProps['display_name']);
-				if ($partStructProps['description'] != $partStruct->getDescription())
-					$partStruct->updateDescription($partStructProps['description']);
-				if ($partStructProps['mandatory'] != $partStruct->isMandatory())
-					$partStruct->updateIsMandatory($partStructProps['mandatory']);
-// 				if ($partStructProps['repeatable'] != $partStruct->isRepeatable())
-// 					$partStruct->updateIsRepeatable($partStructProps['repeatable']);
-// 				if ($partStructProps['populatedbydr'] != $partStruct->isPopulatedByRepository())
-// 					$partStruct->updateIsPopulatedByRepository($partStructProps['populatedbydr']);
 				$i++;
-			}
-			
-			// Create the new PartStructures
-			foreach (array_keys($properties['elementstep']['new_elements']) as $index) {
-				$partStructProps =& $properties['elementstep']['new_elements'][$index];
-				
-				$type =& HarmoniType::fromString(urldecode(
-					$partStructProps['type']), " :: ");
-				$partStructure =& $recordStructure->createPartStructure(
-								$partStructProps['display_name'],
-								$partStructProps['description'],
-								$type,
-								(($partStructProps['mandatory'])?TRUE:FALSE),
-								(($partStructProps['repeatable'])?TRUE:FALSE),
-								FALSE
-								);
-				
-				$partStructureId =& $partStructure->getId();
-				// Add the PartStructureId to the set
-				if (!$set->isInSet($partStructureId))
-					$set->addItem($partStructureId);
 			}
 			
 			// Log the success or failure
