@@ -87,8 +87,16 @@ class viewAction
 		
 		
 		print "<h3>".$recordStructure->getDisplayName()."</h3>";
+		
 		print "<em>".$recordStructure->getDescription()."</em>";
 		print "<br /><strong>"._("Format").":</strong> ".$recordStructure->getFormat()."";
+		
+		print "<br/><a href='";
+		print $harmoni->request->quickURL(
+			"schema", "edit", array(
+				"collection_id" => $repositoryId->getIdString(),
+				"recordstructure_id" => $recordStructureId->getIdString()));
+		print "'>"._("Modify")."</a>";
 		
 		// Print out the PartStructures
 		print "<h4>"._("Elements").":</h4>";
