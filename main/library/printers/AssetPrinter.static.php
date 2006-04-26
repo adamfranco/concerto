@@ -79,13 +79,21 @@ class AssetPrinter {
 			ob_start();
 			print "<a href='#' onclick='Javascript:window.open(";
 			print '"'.VIEWER_URL."?&amp;source=";
-			print urlencode($harmoni->request->quickURL($xmlModule, $xmlAction,
-						array("collection_id" => $repositoryId->getIdString(),
+			
+			$params = array("collection_id" => $repositoryId->getIdString(),
 						"asset_id" => $xmlAssetIdString,
 						RequestContext::name("limit_by") => RequestContext::value("limit_by"),
 						RequestContext::name("type") => RequestContext::value("type"),
-						RequestContext::name("searchtype") => RequestContext::value("searchtype"),
-						RequestContext::name("searchstring") => RequestContext::value("searchstring"))));
+						RequestContext::name("searchtype") => RequestContext::value("searchtype"));
+						
+			if (RequestContext::value("searchtype")) {
+				$searchModuleManager =& Services::getService("RepositorySearchModules");
+				foreach ($searchModuleManager->getCurrentValues(Type::fromString(RequestContext::value("searchtype"))) as $key => $value) {
+					$params[$key] = $value;
+				}
+			}
+			
+			print urlencode($harmoni->request->quickURL($xmlModule, $xmlAction, $params));
 			print '&amp;start='.$xmlStart.'", ';
 			print '"'.preg_replace("/[^a-z0-9]/i", '_', $assetId->getIdString()).'", ';
 			print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';

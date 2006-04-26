@@ -124,14 +124,17 @@ END;
 				}
 				
 			case 'search':
+				$searchModuleManager =& Services::getService("RepositorySearchModules");
+				$selectedSearchType =& Type::fromString(RequestContext::value("searchtype"));
+				
 				if (RequestContext::value("searchtype") 
-					&& RequestContext::value("searchstring")) 
+					&& $searchModuleManager->getSearchCriteria($selectedSearchType)) 
 				{
-					$searchString = RequestContext::value("searchstring");
+					$criteria = $searchModuleManager->getSearchCriteria($selectedSearchType);
 					
 					$assets =& $repository->getAssetsBySearch(
-						$searchString,
-						Type::fromString(RequestContext::value("searchtype")),
+						$criteria,
+						$selectedSearchType,
 						$searchProperties);
 					break;
 				}

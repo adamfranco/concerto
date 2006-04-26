@@ -99,7 +99,7 @@ class searchAction
 			print "\n<h3>".$typeString."</h3>";
 			
 			$harmoni =& Harmoni::instance();
-			print "\n".$searchModules->createSearchForm($searchType, 
+			print "\n".$searchModules->createSearchForm($repository, $searchType, 
 				$harmoni->request->quickURL("collections", "searchresults",
 					array("search_type" => urlencode($typeString))));
 		}

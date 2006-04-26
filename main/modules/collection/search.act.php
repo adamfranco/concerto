@@ -109,7 +109,7 @@ class searchAction
 							."::".$searchType->getAuthority()
 							."::".$searchType->getKeyword();
 			print "\n<h3>".$typeString."</h3>";
-			print "\n".$searchModules->createSearchForm($searchType, $harmoni->request->quickURL("collection", "searchresults", array("collection_id" => $repositoryId->getIdString(), "asset_type" => urlencode($typeString))));
+			print "\n".$searchModules->createSearchForm($repository, $searchType, $harmoni->request->quickURL("collection", "searchresults", array("collection_id" => $repositoryId->getIdString(), "asset_type" => urlencode($typeString))));
 		}
 		
 		$searchFields =& new Block(ob_get_contents(), 3);

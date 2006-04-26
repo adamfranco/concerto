@@ -12,6 +12,8 @@ require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/TextAlignSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/MinHeightSP.class.php");
 require_once(HARMONI."/Primitives/Collections-Text/HtmlString.class.php");
+require_once(POLYPHONY."/main/library/RepositorySearchModules/RepositorySearchModuleManager.class.php");
+
 
 /**
  * 
@@ -158,15 +160,24 @@ class browseAction
 				$types =& $repository->getSearchTypes();
 				while ($types->hasNext()) {
 					$type =& $types->next();
+					if (!isset($firstSearchType))
+						$firstSearchType =& $type;
+					
 					print "\n\t\t<option value='".Type::typeToString($type)."'";
-					if (RequestContext::value("searchtype") == Type::typeToString($type))
+					if (RequestContext::value("searchtype") == Type::typeToString($type)) {
 						print " selected='selected'";
-					print ">".Type::typeToString($type)."</option>";
+						$selectedSearchType =& $type;
+					}
+					print ">".$type->getKeyword()."</option>";
 				}			
 			print "\n\t</select>";
-			print "\n\t<input type='text'";
-			print " name='".RequestContext::name("searchstring")."'";
-			print " value='".RequestContext::value("searchstring")."'/>";
+			
+			if (!isset($selectedSearchType))
+				$selectedSearchType =& $firstSearchType;
+				
+			$searchModuleManager =& Services::getService("RepositorySearchModules");
+			print $searchModuleManager->createSearchFields($repository, $selectedSearchType);
+			
 			print "\n\t<input type='submit'>";
 			print "\n<br/>";
 		} else {
@@ -240,13 +251,13 @@ class browseAction
 				
 			case 'search':
 				if (RequestContext::value("searchtype") 
-					&& RequestContext::value("searchstring")) 
-				{
-					$searchString = RequestContext::value("searchstring");
+					&& $searchModuleManager->getSearchCriteria($selectedSearchType)) 
+				{				
+					$criteria = $searchModuleManager->getSearchCriteria($selectedSearchType);
 					
 					$assets =& $repository->getAssetsBySearch(
-						$searchString,
-						Type::fromString(RequestContext::value("searchtype")),
+						$criteria,
+						$selectedSearchType,
 						$searchProperties);
 					break;
 				}
@@ -284,7 +295,7 @@ class browseAction
 		else
 			$columns = $defaultCols;
 			
-		$resultPrinter =& new IteratorResultPrinter($assets, $columns, $numPerPage, "printAssetShort", $harmoni);
+		$resultPrinter =& new IteratorResultPrinter($assets, $columns, $numPerPage, "printAssetShort", $selectedSearchType);
 		
 		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
 		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
@@ -319,7 +330,8 @@ class browseAction
 
 
 // Callback function for printing Assets
-function printAssetShort(& $asset, &$harmoni, $num) {
+function printAssetShort(& $asset, $selectedSearchType, $num) {
+	$harmoni =& Harmoni::instance();
 	$container =& new Container(new YLayout, BLOCK, EMPHASIZED_BLOCK);
 	$fillContainerSC =& new StyleCollection("*.fillcontainer", "fillcontainer", "Fill Container", "Elements with this style will fill their container.");
 	$fillContainerSC->addSP(new MinHeightSP("88%"));
@@ -349,13 +361,18 @@ function printAssetShort(& $asset, &$harmoni, $num) {
 		ob_start();
 		print "<a href='#' onclick='Javascript:window.open(";
 		print '"'.VIEWER_URL."?&amp;source=";
-		print urlencode($harmoni->request->quickURL($xmlModule, "browse_outline_xml",
-					array("collection_id" => RequestContext::value("collection_id"),
+		$params = array("collection_id" => RequestContext::value("collection_id"),
 					"asset_id" => $xmlAssetIdString,
 					RequestContext::name("limit_by") => RequestContext::value("limit_by"),
 					RequestContext::name("type") => RequestContext::value("type"),
-					RequestContext::name("searchtype") => RequestContext::value("searchtype"),
-					RequestContext::name("searchstring") => RequestContext::value("searchstring"))));
+					RequestContext::name("searchtype") => RequestContext::value("searchtype"));
+		if ($selectedSearchType) {
+			$searchModuleManager =& Services::getService("RepositorySearchModules");
+			foreach ($searchModuleManager->getCurrentValues($selectedSearchType) as $key => $value) {
+				$params[$key] = $value;
+			}
+		}
+		print urlencode($harmoni->request->quickURL($xmlModule, "browse_outline_xml", $params));
 		print '&amp;start='.$xmlStart.'", ';
 		print '"'.preg_replace("/[^a-z0-9]/i", '_', $assetId->getIdString()).'", ';
 		print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';

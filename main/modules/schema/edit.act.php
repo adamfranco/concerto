@@ -169,11 +169,11 @@ class editAction
 			new WTextField());
 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setErrorText(_("A value for this field is required."));
-		$property->setSize(20);
+		$property->setSize(40);
 		
 		$property =& $multField->addComponent(
 			"description", 
-			WTextArea::withRowsAndColumns(2, 30));
+			WTextArea::withRowsAndColumns(2, 40));
 		
 		
 		
@@ -226,7 +226,7 @@ class editAction
 		
 		$property =& $multField->addComponent(
 			"authoritative_values", 
-			WTextArea::withRowsAndColumns(10, 30));
+			WTextArea::withRowsAndColumns(10, 40));
 			
 		$property =& $multField->addComponent(
 			"allow_addition", 
