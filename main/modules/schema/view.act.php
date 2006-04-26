@@ -101,14 +101,14 @@ class viewAction
 		// Print out the PartStructures
 		print "<h4>"._("Elements").":</h4>";
 		print "\n<table border='1'>";
-		print "\n<th>"._("Order")."</th>";
-		print "\n<th>"._("DisplayName")."</th>";
-		print "\n<th>"._("Description")."</th>";
-		print "\n<th>"._("Mandatory?")."</th>";
-		print "\n<th>"._("Repeatable?")."</th>";
-// 		print "\n<th>"._("IsPopulatedByRepository?")."</th>";
-		print "\n<th>"._("Authoritative Values")."</th>";
-		print "\n<th>"._("Allow User Addition of Authoritative Values?")."</th>";
+		print "\n<th style='text-align: center'>"._("Order")."</th>";
+		print "\n<th style='text-align: center'>"._("DisplayName")."</th>";
+		print "\n<th style='text-align: center'>"._("Description")."</th>";
+		print "\n<th style='text-align: center'>"._("Mandatory?")."</th>";
+		print "\n<th style='text-align: center'>"._("Repeatable?")."</th>";
+// 		print "\n<th style='text-align: center'>"._("IsPopulatedByRepository?")."</th>";
+		print "\n<th style='text-align: center'>"._("Authoritative Values")."</th>";
+		print "\n<th style='text-align: center'>"._("Allow User<br/>Addition of<br/>Authoritative<br/>Values?")."</th>";
 		print "\n</tr>";
 		$partStructures =& $recordStructure->getPartStructures();
 		$partStructureArray = array();
