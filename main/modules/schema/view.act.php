@@ -104,9 +104,11 @@ class viewAction
 		print "\n<th>"._("Order")."</th>";
 		print "\n<th>"._("DisplayName")."</th>";
 		print "\n<th>"._("Description")."</th>";
-		print "\n<th>"._("IsMandatory?")."</th>";
-		print "\n<th>"._("IsRepeatable?")."</th>";
+		print "\n<th>"._("Mandatory?")."</th>";
+		print "\n<th>"._("Repeatable?")."</th>";
 // 		print "\n<th>"._("IsPopulatedByRepository?")."</th>";
+		print "\n<th>"._("Authoritative Values")."</th>";
+		print "\n<th>"._("Allow User Addition of Authoritative Values?")."</th>";
 		print "\n</tr>";
 		$partStructures =& $recordStructure->getPartStructures();
 		$partStructureArray = array();
@@ -122,12 +124,27 @@ class viewAction
 		foreach (array_keys($partStructureArray) as $key) {
 			$partStructure =& $partStructureArray[$key];
 			print "\n<tr>";
-			print "\n<td>".($key+1)."</td>";
-			print "\n<td><strong>".$partStructure->getDisplayName()."</strong></td>";
-			print "\n<td><em>".$partStructure->getDescription()."</em></td>";
-			print "\n<td>".(($partStructure->isMandatory())?"TRUE":"FALSE")."</td>";
-			print "\n<td>".(($partStructure->isRepeatable())?"TRUE":"FALSE")."</td>";
-// 			print "\n<td>".(($partStructure->isPopulatedByRepository())?"TRUE":"FALSE")."</td>";
+			print "\n<td style='vertical-align: top;'>".($key+1)."</td>";
+			print "\n<td style='vertical-align: top;'><strong>".$partStructure->getDisplayName()."</strong></td>";
+			print "\n<td style='vertical-align: top;'><em>".$partStructure->getDescription()."</em></td>";
+			print "\n<td style='vertical-align: top; text-align: center'>".(($partStructure->isMandatory())?"<strong>"._("Yes")."</strong>":_("No"))."</td>";
+			print "\n<td style='vertical-align: top; text-align: center'>".(($partStructure->isRepeatable())?"<strong>"._("Yes")."</strong>":_("No"))."</td>";
+// 			print "\n<td style='text-align: center'>".(($partStructure->isPopulatedByRepository())?"<strong>"._("Yes")."</strong>":_("No"))."</td>";
+			print "\n<td style='vertical-align: top; text-align: left;'>";
+			$authoritativeValues =& $partStructure->getAuthoritativeValues();
+			if ($authoritativeValues->hasNext()) {
+				print "\n\t<ul style='margin: 0px; padding-left: 20px; max-height: 200px; overflow: auto;";
+				if ($authoritativeValues->count() > 12)
+					print " height: 200px;";	// IE Doesn't understand max-height
+				print "'>";
+				while ($authoritativeValues->hasNext()) {
+					$value =& $authoritativeValues->next();
+					print "\n\t\t<li>".$value->asString()."</li>";
+				}
+				print "\n\t</ul>";
+			}
+			print "\n</td>";
+			print "\n<td style='vertical-align: top; text-align: center'>".(($partStructure->isUserAdditionAllowed())?"<strong>"._("Yes")."</strong>":_("No"))."</td>";
 			print "\n</tr>";
 		}
 		print "\n</table>";

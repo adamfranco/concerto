@@ -223,7 +223,17 @@ class editAction
 // 		$property->setChecked(false);
 // 		$property->setLabel(_("yes"));
 		
-		// We don't have any PartStructures yet, so we can't get them.
+		
+		$property =& $multField->addComponent(
+			"authoritative_values", 
+			WTextArea::withRowsAndColumns(10, 30));
+			
+		$property =& $multField->addComponent(
+			"allow_addition", 
+			new WCheckBox());
+		$property->setChecked(false);
+		$property->setLabel(_("yes"));
+		
 		
 		ob_start();
 
@@ -264,6 +274,21 @@ class editAction
 // 			print "\n</td><td>";
 // 				print "[[populatedbydr]]";
 // 			print "\n</td></tr>";
+
+			print "\n<tr><td>";
+				print _("Authoritative Values: ");
+			print "\n</td><td>";
+				print "[[authoritative_values]]";
+			print "\n</td></tr>";
+			
+			print "\n<tr><td>";
+				print _("Allow User Addition of Authoritative Values: ");
+				print "\n\t<br/><span style='font-style: italic; font-size: small'>";
+				print _("If checked, the Asset editing interface will be allow new authoritative values to be added to this element. If not checked, new values can only be added here.");
+				print "</span>";
+			print "\n</td><td>";
+				print "[[allow_addition]]";
+			print "\n</td></tr>";
 			
 			print "</table>";
 		
@@ -316,7 +341,19 @@ class editAction
 		$collection['mandatory'] = $partStructure->isMandatory();
 		$collection['repeatable'] = $partStructure->isRepeatable();
 // 		$collection['populatedbydr'] = $partStructure->isPopulatedByRepository();
+		
+		$authoritativeValues =& $partStructure->getAuthoritativeValues();
+		$collection['authoritative_values'] = '';
+		while ($authoritativeValues->hasNext()) {
+			$value =& $authoritativeValues->next();
+			$collection['authoritative_values'] .= preg_replace('/[\n\r]/', '', 
+				$value->asString());
+			$collection['authoritative_values'] .= "\n";
+		}
+		$collection['allow_addition'] = $partStructure->isUserAdditionAllowed();
 
+		
+		
 		$newCollection =& $multField->addValueCollection($collection, false);
 		
 		$newCollection['type']->setEnabled(false, true);
@@ -385,7 +422,7 @@ class editAction
 				} else {
 					$type =& HarmoniType::fromString(urldecode(
 						$partStructProps['type']), " :: ");
-					$partStructure =& $recordStructure->createPartStructure(
+					$partStruct =& $recordStructure->createPartStructure(
 									$partStructProps['display_name'],
 									$partStructProps['description'],
 									$type,
@@ -394,9 +431,31 @@ class editAction
 									FALSE
 									);
 					
-					$partStructId =& $partStructure->getId();
+					$partStructId =& $partStruct->getId();
 				}
 				
+				// Authoritative values
+				$valuesString = trim($partStructProps['authoritative_values']);
+				if ($valuesString) {
+					$authoritativeStrings = explode("\n", $valuesString);
+					array_walk($authoritativeStrings, "removeExcessWhitespace");
+					
+					// Remove and missing values
+					$authoritativeValues =& $partStruct->getAuthoritativeValues();
+					while ($authoritativeValues->hasNext()) {
+						$value =& $authoritativeValues->next();
+						if (!in_array($value->asString(), $authoritativeStrings))
+							$partStruct->removeAuthoritativeValue($value);
+					}
+					
+					// Add new values
+					foreach ($authoritativeStrings as $valueString) {
+						if ($valueString)
+							$partStruct->addAuthoritativeValueAsString($valueString);
+					}
+				}
+				
+				// Order of part structures
 				if (!$set->isInSet($partStructId))
 					$set->addItem($partStructId);
 				$set->moveToPosition($partStructId, $i);
@@ -445,4 +504,16 @@ class editAction
 			array("collection_id" => $repositoryId->getIdString(),
 				"recordstructure_id" => $recordStructureId->getIdString()));
 	}
+}
+
+/**
+ * 
+ * 
+ * @param <##>
+ * @return <##>
+ * @access public
+ * @since 4/26/06
+ */
+function removeExcessWhitespace (&$string) {
+	$string = trim($string);
 }
