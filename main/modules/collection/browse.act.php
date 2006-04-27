@@ -175,10 +175,11 @@ class browseAction
 			
 			if (!isset($selectedSearchType))
 				$selectedSearchType =& $firstSearchType;
-				
-			print $searchModuleManager->createSearchFields($repository, $selectedSearchType);
 			
-			print "\n\t<input type='submit'>";
+			print "\n\t<div style='margin-left: 25px;'>";
+			print "\n\t\t".$searchModuleManager->createSearchFields($repository, $selectedSearchType);			
+			print "\n\t\t<input type='submit'>";
+			print "\n\t</div>";
 			print "\n<br/>";
 		} else {
 			print "/>"._("Search")."\n<br/>";
@@ -251,9 +252,9 @@ class browseAction
 				
 			case 'search':
 				if (isset($selectedSearchType)
-					&& $searchModuleManager->getSearchCriteria($selectedSearchType)) 
+					&& $searchModuleManager->getSearchCriteria($repository, $selectedSearchType)) 
 				{				
-					$criteria = $searchModuleManager->getSearchCriteria($selectedSearchType);
+					$criteria = $searchModuleManager->getSearchCriteria($repository, $selectedSearchType);
 					
 					$assets =& $repository->getAssetsBySearch(
 						$criteria,

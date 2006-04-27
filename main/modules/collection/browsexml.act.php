@@ -128,9 +128,9 @@ END;
 				$selectedSearchType =& Type::fromString(RequestContext::value("searchtype"));
 				
 				if (RequestContext::value("searchtype") 
-					&& $searchModuleManager->getSearchCriteria($selectedSearchType)) 
+					&& $searchModuleManager->getSearchCriteria($repository, $selectedSearchType)) 
 				{
-					$criteria = $searchModuleManager->getSearchCriteria($selectedSearchType);
+					$criteria = $searchModuleManager->getSearchCriteria($repository, $selectedSearchType);
 					
 					$assets =& $repository->getAssetsBySearch(
 						$criteria,

@@ -84,7 +84,7 @@ class searchresultsAction
 		
 		// Get the Search criteria
 		$searchModules =& Services::getService("RepositorySearchModules");
-		$searchCriteria =& $searchModules->getSearchCriteria($searchType);
+		$searchCriteria =& $searchModules->getSearchCriteria($repository, $searchType);
 		
 		// function links
 		ob_start();
