@@ -156,7 +156,7 @@ class browseAction
 			print " checked='checked'";
 			print "/>"._("Search").": ";
 			print "\n\t<select name='".RequestContext::name("searchtype")."'";
-			print " onclick='this.form.submit();'>";
+			print " onchange='this.form.submit();'>";
 				$types =& $repository->getSearchTypes();
 				while ($types->hasNext()) {
 					$type =& $types->next();
@@ -295,6 +295,9 @@ class browseAction
 		else
 			$columns = $defaultCols;
 			
+			
+		if (!isset($selectedSearchType))
+			$selectedSearchType = null;
 		$resultPrinter =& new IteratorResultPrinter($assets, $columns, $numPerPage, "printAssetShort", $selectedSearchType);
 		
 		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
