@@ -130,7 +130,7 @@ class browseAction
 			print " checked='checked'";
 			print "/>"._("Type").": ";
 			print "\n\t<select name='".RequestContext::name("type")."'";
-			print " onclick='this.form.submit();'>";
+			print " onchange='this.form.submit();'>";
 				print "\n\t\t<option value=''";
 				if (!RequestContext::value("type"))
 					print " selected='selected'";
@@ -141,7 +141,7 @@ class browseAction
 					print "\n\t\t<option value='".Type::typeToString($type)."'";
 					if (RequestContext::value("type") == Type::typeToString($type))
 						print " selected='selected'";
-					print ">".Type::typeToString($type)."</option>";
+					print ">".$type->getKeyword()."</option>";
 				}			
 			print "\n\t</select>";
 			print "\n<br/>";
@@ -149,6 +149,7 @@ class browseAction
 			print "/>"._("Type")."\n<br/>";
 		}
 		
+		$searchModuleManager =& Services::getService("RepositorySearchModules");
 		print "\n\t<input type='radio' onclick='this.form.submit();'";
 		print " name='".RequestContext::name("limit_by")."'";
 		print " value='search'";
@@ -175,7 +176,6 @@ class browseAction
 			if (!isset($selectedSearchType))
 				$selectedSearchType =& $firstSearchType;
 				
-			$searchModuleManager =& Services::getService("RepositorySearchModules");
 			print $searchModuleManager->createSearchFields($repository, $selectedSearchType);
 			
 			print "\n\t<input type='submit'>";
@@ -250,7 +250,7 @@ class browseAction
 				}
 				
 			case 'search':
-				if (RequestContext::value("searchtype") 
+				if (isset($selectedSearchType)
 					&& $searchModuleManager->getSearchCriteria($selectedSearchType)) 
 				{				
 					$criteria = $searchModuleManager->getSearchCriteria($selectedSearchType);
