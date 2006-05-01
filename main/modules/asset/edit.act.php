@@ -833,25 +833,37 @@ class editAction
 	 */
 	function updateSingleValuedPart (&$partResults, &$partInitialState, 
 		&$partStruct, &$record) 
-	{
-		print "PartResults: ";
-		printpre($partResults);
-		print "InitialState: ";
-		printpre($partInitialState);
+	{	
+// 		print "<hr/>";
+// 		print "PartResults: ";
+// 		printpre($partResults);
+// 		print "InitialState: ";
+// 		printpre($partInitialState);
 		
 		$partStructId = $partStruct->getId();
 		
 		$partStructType =& $partStruct->getType();
 		$valueObjClass = $partStructType->getKeyword();
 		
-		if ($partResults->isNotEqualTo($partInitialState))
+		if (is_array($partResults)) {
+			if ($partResults['new']->asString() && $partStruct->isUserAdditionAllowed()) {
+				$partStruct->addAuthoritativeValue($partResults['new']);
+				$value =& $partResults['new'];
+			} else {
+				$value =& $partResults['selected'];
+			}
+		} else {
+			$value =& $partResults;
+		}
+		
+		if ($value->isNotEqualTo($partInitialState))
 		{
 			$parts =& $record->getPartsByPartStructure($partStructId);
 			if ($parts->hasNext()) {
 				$part =& $parts->next();
-				$part->updateValue($partResults);
+				$part->updateValue($value);
 			} else {
-				$part =& $record->createPart($partStructId, $partResults);
+				$part =& $record->createPart($partStructId, $value);
 			}
 		}
 	}

@@ -454,6 +454,8 @@ class editAction
 							$partStruct->addAuthoritativeValueAsString($valueString);
 					}
 				}
+				$partStruct->setUserAdditionAllowed(
+					(($partStructProps['allow_addition'])?TRUE:FALSE));
 				
 				// Order of part structures
 				if (!$set->isInSet($partStructId))

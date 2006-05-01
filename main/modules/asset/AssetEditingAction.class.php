@@ -93,6 +93,11 @@ class AssetEditingAction
 				
 		$results = $wizard->getAllValues();
 		$initialState =& $wizard->initialState;
+		
+		print "<hr><div style='background-color: #afa;'>";
+		printpre($results);
+		printpre($initialState);
+		print "</div>";
 				
 		// Go through all of the assets and update all of the values if they have
 		// changed.
@@ -463,14 +468,10 @@ class AssetEditingAction
 	 * @since 10/26/05
 	 */
 	function &getComponentForPartStruct ( &$partStruct ) {
-		$partStructType =& $partStruct->getType();
-		
-		// get the datamanager data type
-		$dataType = $partStructType->getKeyword();
-		
-		// get the correct component for this data type
-		$component =& PrimitiveIOManager::createComponent($dataType);
 
+		// get the correct component for this data type
+		$component =& PrimitiveIOManager::createComponentForPartStructure($partStruct);
+		
 		$hasMethods =& HasMethodsValidatorRule::getRule("setSize");
 		if ($hasMethods->check($component))
 			$component->setSize(40);
@@ -543,6 +544,10 @@ class AssetEditingAction
 		$recStructId =& $recStruct->getId();
 		print "<div style='background-color: #fdd;'>";
 		printpre("Updating record: ".$recordId->getIdString()." for Structure: ".$recStructId->getIdString());
+		print "Results: ";
+		printpre($results);
+		print "InitialState: ";
+		printpre($initialState);
 		
 		$recStruct =& $record->getRecordStructure();
 		
@@ -559,6 +564,7 @@ class AssetEditingAction
 					$initialState[$partStructIdString], 
 					$partStruct, $record);
 			} else {
+				print "Updating singValuedPart";
 				$this->updateSingleValuedPart(
 					$results[$partStructIdString],
 					$initialState[$partStructIdString], 
