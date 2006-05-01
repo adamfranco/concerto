@@ -889,6 +889,9 @@ class editAction
 		$partStructId = $partStruct->getId();
 		$partValsHandled = array();
 		
+		printpre("<hr/>");
+		printpre($partResults);
+		
 		$parts =& $record->getPartsByPartStructure($partStructId);
 		while ($parts->hasNext()) {
 			$part =& $parts->next();
@@ -897,7 +900,10 @@ class editAction
 			
 			// Check for existance in the results.
 			// if the value is not in the results, remove the part and continue.
-			if (!$this->inWizArray($partVal, 'partvalue', $partResults)) {
+			if (!$this->inWizArray($partVal, 'partvalue', $partResults)
+				&& !$this->inWizArray($partVal, 'selected', $partResults)
+				&& !$this->inWizArray($partVal, 'new', $partResults))
+			{
 				$record->deletePart($part->getId());
 				$partValsHandled[] = $partStrVal;
 				
@@ -919,10 +925,20 @@ class editAction
 		// Go through all of the Wizard result values. If any of them haven't
 		// been handled and need to be, add them.
 		foreach ($partResults as $key => $valueArray) {
-			$valueStr = $valueArray['partvalue']->asString();
+			if (is_array($valueArray['partvalue'])) {
+				if ($valueArray['partvalue']['new']->asString() && $partStruct->isUserAdditionAllowed()) {
+					$partStruct->addAuthoritativeValue($valueArray['partvalue']['new']);
+					$value =& $valueArray['partvalue']['new'];
+				} else {
+					$value =& $valueArray['partvalue']['selected'];
+				}
+			} else {
+				$value =& $valueArray['partvalue'];
+			}
+			$valueStr = $value->asString();
 			
 			if (!in_array($valueStr, $partValsHandled)) {
-				$part =& $record->createPart($partStructId, $valueArray['partvalue']);
+				$part =& $record->createPart($partStructId, $value);
 				
 				$partId =& $part->getId();
 				printpre("\tAdding Part: Id: ".$partId->getIdString()." Value: ".$valueStr);
