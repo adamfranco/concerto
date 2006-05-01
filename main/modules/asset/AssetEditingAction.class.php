@@ -559,12 +559,13 @@ class AssetEditingAction
 			$partStructIdString = preg_replace("/[^a-zA-Z0-9:_\-]/", "_", $partStructId->getIdString());
 			
 			if ($partStruct->isRepeatable()) {
+				printpre("Updating RepeatablePart: ".$partStruct->getDisplayName());
 				$this->updateRepeatablePart(
 					$results[$partStructIdString], 
 					$initialState[$partStructIdString], 
 					$partStruct, $record);
 			} else {
-				print "Updating singValuedPart";
+				printpre("Updating SingleValuedPart: ".$partStruct->getDisplayName());
 				$this->updateSingleValuedPart(
 					$results[$partStructIdString],
 					$initialState[$partStructIdString], 
@@ -591,15 +592,32 @@ class AssetEditingAction
 		$partStructId = $partStruct->getId();
 		
 		$partStructType =& $partStruct->getType();
-		$valueObjClass =& $partStructType->getKeyword();
+		$valueObjClass = $partStructType->getKeyword();
+		
+		if (is_array($partResults['value'])) {
+			if ($partResults['value']['new']->asString() && $partStruct->isUserAdditionAllowed()) {
+				$partStruct->addAuthoritativeValue($partResults['value']['new']);
+				$value =& $partResults['value']['new'];
+				$initialValue = ($partInitialState['value']['selected'] || $partInitialState['value']['new']);
+			} else {
+				$value =& $partResults['value']['selected'];
+				$initialValue = $partInitialState['value']['selected'];
+			}
+		} else {
+			$value =& $partResults['value'];
+			$initialValue = $partInitialState['value'];
+		}
 		
 		if ($partResults['checked'] == '1'
 			&& ($partInitialState['checked'] =='0'
-				|| $partResults['value'] != $partInitialState['value']))
+				|| $value != $initialValue))
 		{
 			$parts =& $record->getPartsByPartStructure($partStructId);
 			$part =& $parts->next();
-			$part->updateValue(String::withvalue($partResults['value']));
+			if (is_object($value))
+				$part->updateValue($value);
+			else
+				$part->updateValue(String::withvalue($value));
 		}
 	}
 	
@@ -632,12 +650,16 @@ class AssetEditingAction
 			
 			// Check for existance in the results.
 			// if the value is not in the results, remove the part and continue.
-			if (!$this->inWizArray($partVal, 'value', $partResults)) {
+			if (!$this->inWizArray($partVal, 'value', $partResults)
+				&& !$this->inWizArray($partVal, 'selected', $partResults)
+				&& !$this->inWizArray($partVal, 'new', $partResults)) 
+			{
 				$record->deletePart($part->getId());
 				$partValsHandled[] = $partStrVal;
 				
 				$partId =& $part->getId();
 				printpre("\tDeleting Part: Id: ".$partId->getIdString()." Value: ".$partStrVal);
+				printpre("\t\tNot in:".print_r($partResults, true));
 				
 				continue;
 			}
@@ -655,13 +677,27 @@ class AssetEditingAction
 		// been handled and need to be, add them.
 		foreach ($partResults as $key => $valueArray) {
 			$checked = ($valueArray['partvalue']['checked'] == '1')?true:false;
-			$valueStr = $valueArray['partvalue']['value']->asString();
+
+			if (is_array($valueArray['partvalue']['value'])) {
+				if ($valueArray['partvalue']['value']['new']->asString() 
+					&& $partStruct->isUserAdditionAllowed()) 
+				{
+					$partStruct->addAuthoritativeValue(
+						$valueArray['partvalue']['value']['new']);
+					$value =& $valueArray['partvalue']['value']['new'];
+				} else {
+					$value =& $valueArray['partvalue']['value']['selected'];
+				}
+			} else {
+				$value =& $valueArray['partvalue']['value'];
+			}
+			$valueStr = $value->asString();
 			
 			if ($checked && !in_array($valueStr, $partValsHandled)) {
-				$part =& $record->createPart($partStructId, $valueArray['partvalue']['value']);
+				$part =& $record->createPart($partStructId, $value);
 				
 				$partId =& $part->getId();
-				printpre("\tAdding Part: Id: ".$partId->getIdString()." Value: ".$partStrVal);
+				printpre("\tAdding Part: Id: ".$partId->getIdString()." Value: ".$valueStr);
 			}
 		}
 	}
@@ -678,16 +714,12 @@ class AssetEditingAction
 	 * @since 10/25/05
 	 */
 	function inWizArray ($val, $key, $parentArray) {
-		foreach ( $parentArray as $i => $componentArray ) {
-			foreach ($componentArray as $j => $subComponentArray) {
-				if ($j == $key && $val->isEqualTo($subComponentArray))
+		foreach ( $parentArray as $i => $child ) {
+			if ($i == $key && $val->isEqualTo($child))
+				return true;
+			else if (is_array($child)) {
+				if ($this->inWizArray($val, $key, $child))
 					return TRUE;
-				else if (is_array($subComponentArray) 
-					&& isset($subComponentArray[$key])
-					&& $val->isEqualTo($subComponentArray[$key]))
-				{
-					return TRUE;
-				}
 			}
 		}
 		return FALSE;
