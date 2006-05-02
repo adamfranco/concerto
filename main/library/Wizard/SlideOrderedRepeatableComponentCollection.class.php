@@ -64,7 +64,7 @@ class SlideOrderedRepeatableComponentCollection
 		// then, check if any "buttons" or anything were pressed to add/remove elements
 		$this->_addFromBasketButton->update($fieldName."_addfrombasket");
 		if ($this->_addFromBasketButton->getAllValues()) {
-			$basket =& BasketManager::getBasket();
+			$basket =& Basket::instance();
 			$basket->reset();
 			while ($basket->hasNext()) {
 				$assetId =& $basket->next();

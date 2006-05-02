@@ -9,7 +9,7 @@
  */ 
 
 require_once(POLYPHONY."/main/library/AbstractActions/Action.class.php");
-require_once(POLYPHONY."/main/library/Basket/BasketManager.class.php");
+require_once(POLYPHONY."/main/library/Basket/Basket.class.php");
 
 /**
  * build the frame of the window
@@ -186,7 +186,8 @@ class displayAction
 		// Right Column
 		$rightColumn =& $centerPane->add(new Container($yLayout, OTHER, 1), "140px", null, LEFT, TOP);
 		// Basket
-		$rightColumn->add(BasketManager::getSmallBasketBlock(), "100%", null, LEFT, TOP);
+		$basket =& Basket::instance();
+		$rightColumn->add($basket->getSmallBasketBlock(), "100%", null, LEFT, TOP);
 		if (ereg("^(collection|asset)\.browse$", $harmoni->getCurrentAction()))
 			$rightColumn->add(AssetPrinter::getMultiEditOptionsBlock(), "100%", null, LEFT, TOP);
 		
