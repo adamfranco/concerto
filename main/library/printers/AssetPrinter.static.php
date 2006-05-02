@@ -143,6 +143,22 @@ class AssetPrinter {
 			}
 		}
 	//===== Edit Link =====//
+		$params = array("collection_id" => $repositoryId->getIdString(),
+						"asset_id" => $xmlAssetIdString,
+						RequestContext::name("limit_by") => RequestContext::value("limit_by"),
+						RequestContext::name("type") => RequestContext::value("type"),
+						RequestContext::name("searchtype") => RequestContext::value("searchtype"));
+						
+		if (RequestContext::value("searchtype")) {
+			$searchModuleManager =& Services::getService("RepositorySearchModules");
+			foreach ($searchModuleManager->getCurrentValues(Type::fromString(RequestContext::value("searchtype"))) as $key => $value) {
+				$params[$key] = $value;
+			}
+		}		
+		$harmoni->history->markReturnURL("concerto/asset/edit-return",
+			$harmoni->request->mkURL(null, null, $params));
+		
+		
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.modify"),
 				$assetId)) {

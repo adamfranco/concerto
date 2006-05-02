@@ -357,7 +357,7 @@ class editAction
 		$newCollection =& $multField->addValueCollection($collection, false);
 		
 		$newCollection['type']->setEnabled(false, true);
-		$newCollection['repeatable']->setEnabled(false, true);
+// 		$newCollection['repeatable']->setEnabled(false, true);
 // 		$newCollection['populatedbydr']->setEnabled(false, true);
 	}
 		
@@ -415,8 +415,8 @@ class editAction
 						$partStruct->updateDescription($partStructProps['description']);
 					if ($partStructProps['mandatory'] != $partStruct->isMandatory())
 						$partStruct->updateIsMandatory($partStructProps['mandatory']);
-	// 				if ($partStructProps['repeatable'] != $partStruct->isRepeatable())
-	// 					$partStruct->updateIsRepeatable($partStructProps['repeatable']);
+					if ($partStructProps['repeatable'] != $partStruct->isRepeatable())
+						$partStruct->updateIsRepeatable(($partStructProps['repeatable']?TRUE:FALSE));
 	// 				if ($partStructProps['populatedbydr'] != $partStruct->isPopulatedByRepository())
 	// 					$partStruct->updateIsPopulatedByRepository($partStructProps['populatedbydr']);
 				} else {

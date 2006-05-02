@@ -189,8 +189,13 @@ class AssetEditingAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
-		$repositoryId =& $this->getRepositoryId();
 		$harmoni =& Harmoni::instance();
+		
+		return $harmoni->history->getReturnURL("concerto/asset/edit-return");
+		
+		// old implementation:
+		$repositoryId =& $this->getRepositoryId();
+		
 		$assets = explode(',', RequestContext::value("assets"));
 		$assetIdString = RequestContext::value("asset_id");
 		
