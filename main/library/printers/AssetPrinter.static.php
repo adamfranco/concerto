@@ -252,10 +252,6 @@ class AssetPrinter {
 		$editSingleURL = str_replace("&amp;", "&", 
 			$harmoni->request->quickURL("asset", "edit"));
 		
-		$harmoni->request->startNamespace("basket");
-		$addBasketURL = str_replace("&amp;", "&", 
-			$harmoni->request->quickURL("basket", "add", array("assets" => "xxxxx")));
-		$harmoni->request->endNamespace();
 		
 		$pleaseSelectString = _("Please select some Assets.");
 		print<<<END
@@ -301,28 +297,29 @@ class AssetPrinter {
 		else
 			alert('$pleaseSelectString');
 	}
-	
+
+	/**
+	 * New Adding of checked to the basket. Now uses the basket's own javascript
+	 * for adding assets
+	 * 
+	 * @return void
+	 * @access public
+	 * @since 5/2/06
+	 */
 	function addCheckedAssetsToBasket() {
-		var addBasketURL = new String('$addBasketURL');
-		var assetList = '';
+		var assetList = new Array;
 		var assetElements = document.getElementsByName('$checkboxName');
-		var numChecked = 0;
 		
 		for (var i = 0; i < assetElements.length; i++) {
-			if (!assetElements[i].disabled && assetElements[i].checked == true) {
-				if (numChecked > 0)
-					assetList += ',';
-				assetList += assetElements[i].value;
-				numChecked++;
+			if (!assetElements[i].disabled && assetElements[i].checked == true) {				
+				assetList.push(assetElements[i].value);
+				assetElements[i].checked = false;
 			}
 		}
 		
-		var regex = new RegExp("xxxxx");
-		addBasketURL = addBasketURL.replace(regex, assetList);
 		
-		
-		if (numChecked >= 1)
-			window.location = addBasketURL;
+		if (assetList.length >= 1)
+			addAssetsToBasket(assetList);
 		else
 			alert('$pleaseSelectString');
 	}
