@@ -220,20 +220,12 @@ class AssetPrinter {
 	//===== Basket Link =====//
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.view"),
-				$assetId)) {
-			$harmoni->request->startNamespace("basket");
-			ob_start();
-			print "<a href='".$harmoni->request->quickURL("basket", "add",
-				array("assets" => $assetId->getIdString()));
-			print "' title='". _('add to basket')."'>";
-			print "<img src='".POLYPHONY_PATH."/main/library/Basket/icons/basketplus.png' height='25px' border='0' alt='"._('Add to <em>Basket</em>')."' />";
-			print "</a>";
+				$assetId)) 
+		{
 			
-			$links[] = ob_get_contents();
-			ob_end_clean();
-			$harmoni->request->endNamespace();
-			$harmoni->history->markReturnURL("polyphony/basket",
-				$harmoni->request->mkURLWithPassthrough());
+			$basket =& Basket::instance();
+			$links[] = $basket->getAddLink($assetId);
+			
 		}
 		print  implode("\n\t | ", $links);
 	}
