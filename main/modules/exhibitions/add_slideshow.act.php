@@ -267,7 +267,7 @@ class add_slideshowAction
 		$exhibitionAsset =& $repository->getAsset(
 				$idManager->getId(RequestContext::value('exhibition_id')));
 		
-		$properties =& $wizard->getAllValues();
+		$properties = $wizard->getAllValues();
 		
 		// First, verify that we chose a parent that we can add children to.
 		if ($authZ->isUserAuthorized(
@@ -375,7 +375,7 @@ class add_slideshowAction
 				
 				$item =& new AgentNodeEntryItem("Create Node", "Slideshow added");
 				$item->addNodeId($slideshowAssetId);
-				$item->addNodeId($exhibitionAsset);
+				$item->addNodeId($exhibitionAsset->getId());
 				
 				$log->appendLogWithTypes($item,	$formatType, $priorityType);
 			}

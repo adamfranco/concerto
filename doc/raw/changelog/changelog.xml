@@ -11,6 +11,14 @@
 
 <changelog name="Concerto ChangeLog">
 	<version number="2.0-beta 3" date="TheNebulusFuturo">
+		<fix author='adam'>
+			Modify Slideshow: neither the SlideShow title nor description are 
+			updating with this action.
+		</fix>
+		<fix author='adam'>
+			Modify Slideshow: adding a text only slide results in no slides 
+			being shown when viewing slideshow...
+		</fix>
 		<change author='adam'>
 			Made the Add-Asset-To-Basket process work via AJAX rather than reloading
 			the page.

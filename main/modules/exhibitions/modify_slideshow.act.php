@@ -368,6 +368,14 @@ class modify_slideshowAction
 			$slideshowAssetId =& $slideshowAsset->getId();
 			$this->_slideshowAssetId =& $slideshowAssetId;
 			
+			// Update the Name and description
+			if ($properties['namedescstep']['display_name'])
+				$slideshowAsset->updateDisplayName(
+					$properties['namedescstep']['display_name']);
+			if ($properties['namedescstep']['description'])
+				$slideshowAsset->updateDescription(
+					$properties['namedescstep']['description']);	
+			
 			// Update the effective/expiration dates
 			if ($properties['datestep']['effective_date'])
 				$slideshowAsset->updateEffectiveDate(
@@ -403,7 +411,7 @@ class modify_slideshowAction
 			while ($slideIterator->hasNext()) {
 				$currentSlide =& $slideIterator->next();
 				$id =& $currentSlide->getId();
-				$existingSlides[] =& $id->getIdString();
+				$existingSlides[] = $id->getIdString();
 			}
 
 			$pSlideOrder->removeAllItems();
@@ -509,7 +517,6 @@ class modify_slideshowAction
 				
 				$item =& new AgentNodeEntryItem("Modify Node", "Slideshow Modified");
 				$item->addNodeId($slideshowAssetId);
-				$item->addNodeId($idManager->getId(RequestContext::value('exhibition_id')));
 				
 				$log->appendLogWithTypes($item,	$formatType, $priorityType);
 			}

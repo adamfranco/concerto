@@ -138,7 +138,7 @@ END;
 				$unorderedSlides[] =& $slideAsset;
 		}
 		ksort($orderedSlides);
-		$slides =& array_merge($orderedSlides, $unorderedSlides);
+		$slides = array_merge($orderedSlides, $unorderedSlides);
 		unset($orderedSlides, $unorderedSlides);
 		
 		foreach(array_keys($slides) as $key) {
@@ -231,10 +231,10 @@ END;
 		
 		// Text-Position
 		print "\t\t<text-position>";
-		if (!isset($mediaId))
-			print "center";
-		else if (isset($textPosition))
+		if (isset($textPosition))
 			print $textPosition->asString();
+		else if (!isset($mediaId))
+			print "center";
 		print "</text-position>\n";
 		
 		/*********************************************************
@@ -245,6 +245,9 @@ END;
 				$idManager->getId("edu.middlebury.authorization.view"),
 				$mediaId))		
 		{
+			$harmoni =& Harmoni::instance();
+			$harmoni->request->startNamespace("polyphony-repository");
+		
 			$mediaAsset =& $repositoryManager->getAsset($mediaId);
 			$mediaAssetRepository =& $mediaAsset->getRepository();
 			$mediaAssetRepositoryId =& $mediaAssetRepository->getId();
@@ -252,8 +255,7 @@ END;
 			$fileRecords =& $mediaAsset->getRecordsByRecordStructure(
 				$idManager->getId("FILE"));
 				
-			$harmoni =& Harmoni::instance();
-			$harmoni->request->startNamespace("polyphony-repository");
+			
 			$imgProcessor =& Services::getService("ImageProcessor");
 			
 			while ($fileRecords->hasNext()) {
@@ -356,8 +358,8 @@ END;
 				print "\t\t\t</version>\n";
 				print "\t\t</media>\n";
 			}
+			$harmoni->request->endNamespace();
 		}
-		$harmoni->request->endNamespace();
 				
 		print "\t</slide>\n";
 	}
