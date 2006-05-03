@@ -123,6 +123,8 @@ END;
 END;
 		print "\t<title>".$parentAsset->getDisplayName()."</title>\n";
 		
+		print "\t<default_size>medium</default_size>\n";
+		
 		// Print out the slide for the parent asset
 		$this->printAssetXML($parentAsset, $idManager->getId($harmoni->request->value("record_id")));
 		
@@ -154,6 +156,7 @@ END;
 	 * @since 10/14/05
 	 */
 	function printAssetXML( &$asset, $recordId) {
+		$harmoni =& Harmoni::instance();
 		
 		$assetId =& $asset->getId();
 		$repository =& $asset->getRepository();
@@ -185,21 +188,122 @@ END;
 		/*********************************************************
 		 * Files
 		 *********************************************************/
+		$imgProcessor =& Services::getService("ImageProcessor");
 		while ($fileRecords->hasNext()) {
 			$fileRecord =& $fileRecords->next();
 			$fileRecordId =& $fileRecord->getId();
-			if ($fileRecordId == $recordId) {
+			if ($fileRecordId->isEqual($recordId)) {		
+				$dimensions = slideshowxmlAction::getFirstPartValueFromRecord(
+					"DIMENSIONS", 
+					$fileRecord);
+				$mimeType = slideshowxmlAction::getFirstPartValueFromRecord(
+					"MIME_TYPE", 
+					$fileRecord);
+				
+				$harmoni->request->startNamespace("polyphony-repository");			
 				print "\t\t<media>\n";
+				
+				/*********************************************************
+				 * Small Version
+				 *********************************************************/
 				print "\t\t\t<version>\n";
 				
 				print "\t\t\t\t<type>";
-				print slideshowxmlAction::getFirstPartValueFromRecord("MIME_TYPE", $fileRecord);
+				if ($imgProcessor->isFormatSupported($mimeType))
+					print $imgProcessor->getWebsafeFormat($mimeType);
+				else
+					print $mimeType;
 				print "</type>\n";
 				
-				print "\t\t\t\t<size>original</size>\n";
+				print "\t\t\t\t<size>small</size>\n";
 				
-				$dimensions = slideshowxmlAction::getFirstPartValueFromRecord("DIMENSIONS", 
-					$fileRecord);
+				if ((isset($dimensions[1]) && $dimensions[1] > 0)
+					&& (isset($dimensions[0]) && $dimensions[0] > 0)) 
+				{
+					$newHeight = round(400*$dimensions[1]/$dimensions[0]);
+					$newWidth = round(400*$dimensions[0]/$dimensions[1]);
+					
+					print "\t\t\t\t<height>";
+					print $newHeight."px";
+					print "</height>\n";
+				
+					print "\t\t\t\t<width>";
+					print $newWidth."px";
+					print "</width>\n";	
+				}
+				
+				print "\t\t\t\t<url><![CDATA[";
+				$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
+					$fileRecord);	
+				print $harmoni->request->quickURL("repository", "viewfile", 
+						array(
+							"repository_id" => $repositoryId->getIdString(),
+							"asset_id" => $assetId->getIdString(),
+							"record_id" => $fileRecordId->getIdString(),
+							"file_name" => $filename,
+							"websafe" => "true",
+							"size" => 400));
+				print "]]></url>\n";
+				
+				print "\t\t\t</version>\n";
+				
+				/*********************************************************
+				 * Medium Version
+				 *********************************************************/
+				print "\t\t\t<version>\n";
+				
+				print "\t\t\t\t<type>";
+				if ($imgProcessor->isFormatSupported($mimeType))
+					print $imgProcessor->getWebsafeFormat($mimeType);
+				else
+					print $mimeType;
+				print "</type>\n";
+				
+				print "\t\t\t\t<size>medium</size>\n";
+				
+				if ((isset($dimensions[1]) && $dimensions[1] > 0)
+					&& (isset($dimensions[0]) && $dimensions[0] > 0)) 
+				{
+					$newHeight = round(800*$dimensions[1]/$dimensions[0]);
+					$newWidth = round(800*$dimensions[0]/$dimensions[1]);
+					
+					print "\t\t\t\t<height>";
+					print $newHeight."px";
+					print "</height>\n";
+				
+					print "\t\t\t\t<width>";
+					print $newWidth."px";
+					print "</width>\n";	
+				}
+				
+				print "\t\t\t\t<url><![CDATA[";
+				$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
+					$fileRecord);	
+				print $harmoni->request->quickURL("repository", "viewfile", 
+						array(
+							"repository_id" => $repositoryId->getIdString(),
+							"asset_id" => $assetId->getIdString(),
+							"record_id" => $fileRecordId->getIdString(),
+							"file_name" => $filename,
+							"websafe" => "true",
+							"size" => 800));
+				print "]]></url>\n";
+				
+				print "\t\t\t</version>\n";
+				
+				/*********************************************************
+				 * Large Version
+				 *********************************************************/
+				print "\t\t\t<version>\n";
+				
+				print "\t\t\t\t<type>";
+				if ($imgProcessor->isFormatSupported($mimeType))
+					print $imgProcessor->getWebsafeFormat($mimeType);
+				else
+					print $mimeType;
+				print "</type>\n";
+				
+				print "\t\t\t\t<size>large</size>\n";
 									
 				if (isset($dimensions[1]) && $dimensions[1] > 0) {
 					print "\t\t\t\t<height>";
@@ -215,24 +319,57 @@ END;
 				
 				print "\t\t\t\t<url><![CDATA[";
 				$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
-					$fileRecord);
+					$fileRecord);	
+				print $harmoni->request->quickURL("repository", "viewfile", 
+						array(
+							"repository_id" => $repositoryId->getIdString(),
+							"asset_id" => $assetId->getIdString(),
+							"record_id" => $fileRecordId->getIdString(),
+							"file_name" => $filename,
+							"websafe" => "true"));
+				print "]]></url>\n";
 				
-				$harmoni =& Harmoni::instance();
-				$harmoni->request->startNamespace("polyphony-repository");
+				print "\t\t\t</version>\n";
 				
+				
+				/*********************************************************
+				 * Original Version
+				 *********************************************************/
+				print "\t\t\t<version>\n";
+				
+				print "\t\t\t\t<type>";
+				print $mimeType;
+				print "</type>\n";
+				
+				print "\t\t\t\t<size>original</size>\n";
+									
+				if (isset($dimensions[1]) && $dimensions[1] > 0) {
+					print "\t\t\t\t<height>";
+					print $dimensions[1]."px";
+					print "</height>\n";
+				}
+				
+				if (isset($dimensions[0]) && $dimensions[0] > 0) {
+					print "\t\t\t\t<width>";
+					print $dimensions[0]."px";
+					print "</width>\n";	
+				}
+				
+				print "\t\t\t\t<url><![CDATA[";
+				$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
+					$fileRecord);	
 				print $harmoni->request->quickURL("repository", "viewfile", 
 						array(
 							"repository_id" => $repositoryId->getIdString(),
 							"asset_id" => $assetId->getIdString(),
 							"record_id" => $fileRecordId->getIdString(),
 							"file_name" => $filename));
-				
-				
-				$harmoni->request->endNamespace();
 				print "]]></url>\n";
 				
 				print "\t\t\t</version>\n";
+				
 				print "\t\t</media>\n";
+				$harmoni->request->endNamespace();
 			}
 		}
 		

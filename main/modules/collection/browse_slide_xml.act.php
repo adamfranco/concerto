@@ -175,6 +175,12 @@ END;
 			$fileRecord =& $fileRecords->next();
 			$fileRecordId =& $fileRecord->getId();
 			$mimeType = slideshowxmlAction::getFirstPartValueFromRecord("MIME_TYPE", $fileRecord);
+			
+			$dimensions = slideshowxmlAction::getFirstPartValueFromRecord(
+				"DIMENSIONS", 
+				$fileRecord);
+			
+			
 			print "\t\t<media>\n";
 			
 			/*********************************************************
@@ -190,6 +196,21 @@ END;
 			print "</type>\n";
 			
 			print "\t\t\t\t<size>small</size>\n";
+			
+			if ((isset($dimensions[1]) && $dimensions[1] > 0)
+				&& (isset($dimensions[0]) && $dimensions[0] > 0)) 
+			{
+				$newHeight = round(400*$dimensions[1]/$dimensions[0]);
+				$newWidth = round(400*$dimensions[0]/$dimensions[1]);
+				
+				print "\t\t\t\t<height>";
+				print $newHeight."px";
+				print "</height>\n";
+			
+				print "\t\t\t\t<width>";
+				print $newWidth."px";
+				print "</width>\n";	
+			}
 			
 			print "\t\t\t\t<url><![CDATA[";
 			$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
@@ -220,6 +241,21 @@ END;
 			
 			print "\t\t\t\t<size>medium</size>\n";
 			
+			if ((isset($dimensions[1]) && $dimensions[1] > 0)
+				&& (isset($dimensions[0]) && $dimensions[0] > 0)) 
+			{
+				$newHeight = round(800*$dimensions[1]/$dimensions[0]);
+				$newWidth = round(800*$dimensions[0]/$dimensions[1]);
+				
+				print "\t\t\t\t<height>";
+				print $newHeight."px";
+				print "</height>\n";
+			
+				print "\t\t\t\t<width>";
+				print $newWidth."px";
+				print "</width>\n";	
+			}
+			
 			print "\t\t\t\t<url><![CDATA[";
 			$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
 				$fileRecord);	
@@ -248,21 +284,18 @@ END;
 			print "</type>\n";
 			
 			print "\t\t\t\t<size>large</size>\n";
+								
+			if (isset($dimensions[1]) && $dimensions[1] > 0) {
+				print "\t\t\t\t<height>";
+				print $dimensions[1]."px";
+				print "</height>\n";
+			}
 			
-// 			$dimensions = slideshowxmlAction::getFirstPartValueFromRecord("DIMENSIONS", 
-// 				$fileRecord);
-// 								
-// 			if (isset($dimensions[1]) && $dimensions[1] > 0) {
-// 				print "\t\t\t\t<height>";
-// 				print $dimensions[1]."px";
-// 				print "</height>\n";
-// 			}
-// 			
-// 			if (isset($dimensions[0]) && $dimensions[0] > 0) {
-// 				print "\t\t\t\t<width>";
-// 				print $dimensions[0]."px";
-// 				print "</width>\n";	
-// 			}
+			if (isset($dimensions[0]) && $dimensions[0] > 0) {
+				print "\t\t\t\t<width>";
+				print $dimensions[0]."px";
+				print "</width>\n";	
+			}
 			
 			print "\t\t\t\t<url><![CDATA[";
 			$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
@@ -274,6 +307,43 @@ END;
 						"record_id" => $fileRecordId->getIdString(),
 						"file_name" => $filename,
 						"websafe" => "true"));
+			print "]]></url>\n";
+			
+			print "\t\t\t</version>\n";
+			
+			
+			/*********************************************************
+			 * Original Version
+			 *********************************************************/
+			print "\t\t\t<version>\n";
+			
+			print "\t\t\t\t<type>";
+			print $mimeType;
+			print "</type>\n";
+			
+			print "\t\t\t\t<size>original</size>\n";
+								
+			if (isset($dimensions[1]) && $dimensions[1] > 0) {
+				print "\t\t\t\t<height>";
+				print $dimensions[1]."px";
+				print "</height>\n";
+			}
+			
+			if (isset($dimensions[0]) && $dimensions[0] > 0) {
+				print "\t\t\t\t<width>";
+				print $dimensions[0]."px";
+				print "</width>\n";	
+			}
+			
+			print "\t\t\t\t<url><![CDATA[";
+			$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
+				$fileRecord);	
+			print $harmoni->request->quickURL("repository", "viewfile", 
+					array(
+						"repository_id" => $repositoryId->getIdString(),
+						"asset_id" => $assetId->getIdString(),
+						"record_id" => $fileRecordId->getIdString(),
+						"file_name" => $filename));
 			print "]]></url>\n";
 			
 			print "\t\t\t</version>\n";
