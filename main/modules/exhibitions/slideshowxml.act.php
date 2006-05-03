@@ -274,158 +274,161 @@ END;
 			
 				print "\t\t<media>\n";
 				
-				/*********************************************************
-				 * Small Version
-				 *********************************************************/
-				print "\t\t\t<version>\n";
-				
-				print "\t\t\t\t<type>";
-				if ($imgProcessor->isFormatSupported($mimeType))
-					print $imgProcessor->getWebsafeFormat($mimeType);
-				else
-					print $mimeType;
-				print "</type>\n";
-				
-				print "\t\t\t\t<size>small</size>\n";
-				
-				if ((isset($dimensions[1]) && $dimensions[1] > 0)
-					&& (isset($dimensions[0]) && $dimensions[0] > 0)) 
-				{
-						$origHeight = $dimensions[1];
-						$origWidth = $dimensions[0];
-						
-						if ($origHeight > $origWidth) {
-							print "\t\t\t\t<height>";
-							print "400px";
-							print "</height>\n";
+				// Give multiple sizes for images
+				if (preg_match('/^image.*$/', $mimeType)) {
+					
+					/*********************************************************
+					 * Small Version
+					 *********************************************************/
+					print "\t\t\t<version>\n";
+					
+					print "\t\t\t\t<type>";
+					if ($imgProcessor->isFormatSupported($mimeType))
+						print $imgProcessor->getWebsafeFormat($mimeType);
+					else
+						print $mimeType;
+					print "</type>\n";
+					
+					print "\t\t\t\t<size>small</size>\n";
+					
+					if ((isset($dimensions[1]) && $dimensions[1] > 0)
+						&& (isset($dimensions[0]) && $dimensions[0] > 0)) 
+					{
+							$origHeight = $dimensions[1];
+							$origWidth = $dimensions[0];
 							
-							$newWidth = round(400*$origWidth/$origHeight);
-							print "\t\t\t\t<width>";
-							print $newWidth."px";
-							print "</width>\n";	
-						} else {					
-							$newHeight = round(400*$origHeight/$origWidth);
-							print "\t\t\t\t<height>";
-							print $newHeight."px";
-							print "</height>\n";
-						
-							print "\t\t\t\t<width>";
-							print "400px";
-							print "</width>\n";
-						}
-				}
-				
-				print "\t\t\t\t<url><![CDATA[";
-				$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
-					$fileRecord);	
-				print $harmoni->request->quickURL("repository", "viewfile", 
-						array(
-							"repository_id" => $mediaAssetRepositoryId->getIdString(),
-							"asset_id" => $mediaId->getIdString(),
-							"record_id" => $fileRecordId->getIdString(),
-							"file_name" => $filename,
-							"websafe" => "true",
-							"size" => 400));
-				print "]]></url>\n";
-				
-				print "\t\t\t</version>\n";
-				
-				/*********************************************************
-				 * Medium Version
-				 *********************************************************/
-				print "\t\t\t<version>\n";
-				
-				print "\t\t\t\t<type>";
-				if ($imgProcessor->isFormatSupported($mimeType))
-					print $imgProcessor->getWebsafeFormat($mimeType);
-				else
-					print $mimeType;
-				print "</type>\n";
-				
-				print "\t\t\t\t<size>medium</size>\n";
-				
-				if ((isset($dimensions[1]) && $dimensions[1] > 0)
-					&& (isset($dimensions[0]) && $dimensions[0] > 0)) 
-				{
-						$origHeight = $dimensions[1];
-						$origWidth = $dimensions[0];
-						
-						if ($origHeight > $origWidth) {
-							print "\t\t\t\t<height>";
-							print "800px";
-							print "</height>\n";
+							if ($origHeight > $origWidth) {
+								print "\t\t\t\t<height>";
+								print "400px";
+								print "</height>\n";
+								
+								$newWidth = round(400*$origWidth/$origHeight);
+								print "\t\t\t\t<width>";
+								print $newWidth."px";
+								print "</width>\n";	
+							} else {					
+								$newHeight = round(400*$origHeight/$origWidth);
+								print "\t\t\t\t<height>";
+								print $newHeight."px";
+								print "</height>\n";
 							
-							$newWidth = round(800*$origWidth/$origHeight);
-							print "\t\t\t\t<width>";
-							print $newWidth."px";
-							print "</width>\n";	
-						} else {					
-							$newHeight = round(800*$origHeight/$origWidth);
-							print "\t\t\t\t<height>";
-							print $newHeight."px";
-							print "</height>\n";
-						
-							print "\t\t\t\t<width>";
-							print "800px";
-							print "</width>\n";
-						}
+								print "\t\t\t\t<width>";
+								print "400px";
+								print "</width>\n";
+							}
+					}
+					
+					print "\t\t\t\t<url><![CDATA[";
+					$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
+						$fileRecord);	
+					print $harmoni->request->quickURL("repository", "viewfile", 
+							array(
+								"repository_id" => $mediaAssetRepositoryId->getIdString(),
+								"asset_id" => $mediaId->getIdString(),
+								"record_id" => $fileRecordId->getIdString(),
+								"file_name" => $filename,
+								"websafe" => "true",
+								"size" => 400));
+					print "]]></url>\n";
+					
+					print "\t\t\t</version>\n";
+					
+					/*********************************************************
+					 * Medium Version
+					 *********************************************************/
+					print "\t\t\t<version>\n";
+					
+					print "\t\t\t\t<type>";
+					if ($imgProcessor->isFormatSupported($mimeType))
+						print $imgProcessor->getWebsafeFormat($mimeType);
+					else
+						print $mimeType;
+					print "</type>\n";
+					
+					print "\t\t\t\t<size>medium</size>\n";
+					
+					if ((isset($dimensions[1]) && $dimensions[1] > 0)
+						&& (isset($dimensions[0]) && $dimensions[0] > 0)) 
+					{
+							$origHeight = $dimensions[1];
+							$origWidth = $dimensions[0];
+							
+							if ($origHeight > $origWidth) {
+								print "\t\t\t\t<height>";
+								print "800px";
+								print "</height>\n";
+								
+								$newWidth = round(800*$origWidth/$origHeight);
+								print "\t\t\t\t<width>";
+								print $newWidth."px";
+								print "</width>\n";	
+							} else {					
+								$newHeight = round(800*$origHeight/$origWidth);
+								print "\t\t\t\t<height>";
+								print $newHeight."px";
+								print "</height>\n";
+							
+								print "\t\t\t\t<width>";
+								print "800px";
+								print "</width>\n";
+							}
+					}
+					
+					print "\t\t\t\t<url><![CDATA[";
+					$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
+						$fileRecord);	
+					print $harmoni->request->quickURL("repository", "viewfile", 
+							array(
+								"repository_id" => $mediaAssetRepositoryId->getIdString(),
+								"asset_id" => $mediaId->getIdString(),
+								"record_id" => $fileRecordId->getIdString(),
+								"file_name" => $filename,
+								"websafe" => "true",
+								"size" => 800));
+					print "]]></url>\n";
+					
+					print "\t\t\t</version>\n";
+					
+					/*********************************************************
+					 * Large Version
+					 *********************************************************/
+					print "\t\t\t<version>\n";
+					
+					print "\t\t\t\t<type>";
+					if ($imgProcessor->isFormatSupported($mimeType))
+						print $imgProcessor->getWebsafeFormat($mimeType);
+					else
+						print $mimeType;
+					print "</type>\n";
+					
+					print "\t\t\t\t<size>large</size>\n";
+										
+					if (isset($dimensions[1]) && $dimensions[1] > 0) {
+						print "\t\t\t\t<height>";
+						print $dimensions[1]."px";
+						print "</height>\n";
+					}
+					
+					if (isset($dimensions[0]) && $dimensions[0] > 0) {
+						print "\t\t\t\t<width>";
+						print $dimensions[0]."px";
+						print "</width>\n";	
+					}
+					
+					print "\t\t\t\t<url><![CDATA[";
+					$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
+						$fileRecord);	
+					print $harmoni->request->quickURL("repository", "viewfile", 
+							array(
+								"repository_id" => $mediaAssetRepositoryId->getIdString(),
+								"asset_id" => $mediaId->getIdString(),
+								"record_id" => $fileRecordId->getIdString(),
+								"file_name" => $filename,
+								"websafe" => "true"));
+					print "]]></url>\n";
+					
+					print "\t\t\t</version>\n";
 				}
-				
-				print "\t\t\t\t<url><![CDATA[";
-				$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
-					$fileRecord);	
-				print $harmoni->request->quickURL("repository", "viewfile", 
-						array(
-							"repository_id" => $mediaAssetRepositoryId->getIdString(),
-							"asset_id" => $mediaId->getIdString(),
-							"record_id" => $fileRecordId->getIdString(),
-							"file_name" => $filename,
-							"websafe" => "true",
-							"size" => 800));
-				print "]]></url>\n";
-				
-				print "\t\t\t</version>\n";
-				
-				/*********************************************************
-				 * Large Version
-				 *********************************************************/
-				print "\t\t\t<version>\n";
-				
-				print "\t\t\t\t<type>";
-				if ($imgProcessor->isFormatSupported($mimeType))
-					print $imgProcessor->getWebsafeFormat($mimeType);
-				else
-					print $mimeType;
-				print "</type>\n";
-				
-				print "\t\t\t\t<size>large</size>\n";
-									
-				if (isset($dimensions[1]) && $dimensions[1] > 0) {
-					print "\t\t\t\t<height>";
-					print $dimensions[1]."px";
-					print "</height>\n";
-				}
-				
-				if (isset($dimensions[0]) && $dimensions[0] > 0) {
-					print "\t\t\t\t<width>";
-					print $dimensions[0]."px";
-					print "</width>\n";	
-				}
-				
-				print "\t\t\t\t<url><![CDATA[";
-				$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
-					$fileRecord);	
-				print $harmoni->request->quickURL("repository", "viewfile", 
-						array(
-							"repository_id" => $mediaAssetRepositoryId->getIdString(),
-							"asset_id" => $mediaId->getIdString(),
-							"record_id" => $fileRecordId->getIdString(),
-							"file_name" => $filename,
-							"websafe" => "true"));
-				print "]]></url>\n";
-				
-				print "\t\t\t</version>\n";
-				
 				
 				/*********************************************************
 				 * Original Version
