@@ -11,6 +11,16 @@
 
 <changelog name="Concerto ChangeLog">
 	<version number="2.0-beta 3" date="TheNebulusFuturo">
+		<change author='adam'>
+			Made the Add-Asset-To-Basket process work via AJAX rather than reloading
+			the page.
+		</change>
+		<new author='adam'>
+			Implemented Authority-Lists for Part values.
+		</new>
+		<new author='adam'>
+			Implemented logging of changes via the OSID Logging service.
+		</new>
 		<change author='chris'>
 			Added StatusStars Status Bar to all importer actions.
 		</change>
