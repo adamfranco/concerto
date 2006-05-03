@@ -220,16 +220,28 @@ END;
 				if ((isset($dimensions[1]) && $dimensions[1] > 0)
 					&& (isset($dimensions[0]) && $dimensions[0] > 0)) 
 				{
-					$newHeight = round(400*$dimensions[1]/$dimensions[0]);
-					$newWidth = round(400*$dimensions[0]/$dimensions[1]);
+					$origHeight = $dimensions[1];
+					$origWidth = $dimensions[0];
 					
-					print "\t\t\t\t<height>";
-					print $newHeight."px";
-					print "</height>\n";
-				
-					print "\t\t\t\t<width>";
-					print $newWidth."px";
-					print "</width>\n";	
+					if ($origHeight > $origWidth) {
+						print "\t\t\t\t<height>";
+						print "400px";
+						print "</height>\n";
+						
+						$newWidth = round(400*$origWidth/$origHeight);
+						print "\t\t\t\t<width>";
+						print $newWidth."px";
+						print "</width>\n";	
+					} else {					
+						$newHeight = round(400*$origHeight/$origWidth);
+						print "\t\t\t\t<height>";
+						print $newHeight."px";
+						print "</height>\n";
+					
+						print "\t\t\t\t<width>";
+						print "400px";
+						print "</width>\n";
+					}
 				}
 				
 				print "\t\t\t\t<url><![CDATA[";
@@ -264,16 +276,28 @@ END;
 				if ((isset($dimensions[1]) && $dimensions[1] > 0)
 					&& (isset($dimensions[0]) && $dimensions[0] > 0)) 
 				{
-					$newHeight = round(800*$dimensions[1]/$dimensions[0]);
-					$newWidth = round(800*$dimensions[0]/$dimensions[1]);
+					$origHeight = $dimensions[1];
+					$origWidth = $dimensions[0];
 					
-					print "\t\t\t\t<height>";
-					print $newHeight."px";
-					print "</height>\n";
-				
-					print "\t\t\t\t<width>";
-					print $newWidth."px";
-					print "</width>\n";	
+					if ($origHeight > $origWidth) {
+						print "\t\t\t\t<height>";
+						print "800px";
+						print "</height>\n";
+						
+						$newWidth = round(800*$origWidth/$origHeight);
+						print "\t\t\t\t<width>";
+						print $newWidth."px";
+						print "</width>\n";	
+					} else {					
+						$newHeight = round(800*$origHeight/$origWidth);
+						print "\t\t\t\t<height>";
+						print $newHeight."px";
+						print "</height>\n";
+					
+						print "\t\t\t\t<width>";
+						print "800px";
+						print "</width>\n";
+					}
 				}
 				
 				print "\t\t\t\t<url><![CDATA[";

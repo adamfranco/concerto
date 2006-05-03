@@ -566,22 +566,24 @@ class editAction
 		}
 		
 		// if the "use custom" box was checked store the height.
-		if ($results['height']['checked'] == '1'
-			&& ereg("^([0-9]+)px$", $results['height']['value'], $matches)) 
-		{
+		if ($results['height']['checked'] == '1') {
 			$dimArray = $parts['DIMENSIONS']->getValue();
-			$dimArray[1] = $matches[1];
+			if (ereg("^([0-9]+)px$", $results['height']['value'], $matches))
+				$dimArray[1] = $matches[1];
+			else
+				$dimArray[1] = 0;
 			print "Setting DIMENSIONS to:"; printpre($dimArray);
 			$parts['DIMENSIONS']->updateValue($dimArray);
 		}
 		unset($dimArray, $matches);
 		
 		// if the "use custom" box was checked store the width.
-		if ($results['width']['checked'] == '1'
-			&& ereg("^([0-9]+)px$", $results['width']['value'], $matches)) 
-		{
+		if ($results['width']['checked'] == '1') {
 			$dimArray = $parts['DIMENSIONS']->getValue();
-			$dimArray[0] = $matches[1];
+			if (ereg("^([0-9]+)px$", $results['width']['value'], $matches))
+				$dimArray[0] = $matches[1];
+			else
+				$dimArray[0] = 0;
 			print "Setting DIMENSIONS to:"; printpre($dimArray);
 			$parts['DIMENSIONS']->updateValue($dimArray);
 		}
