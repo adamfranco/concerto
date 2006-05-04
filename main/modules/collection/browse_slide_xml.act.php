@@ -151,7 +151,7 @@ END;
 		
 		// Caption
 		print "\t\t<caption><![CDATA[";
-		slideshowxmlAction::printAsset($asset);
+		$this->printAsset($asset);
 		print"]]></caption>\n";
 		
 		// Text-Position
@@ -195,10 +195,10 @@ END;
 		$harmoni =& Harmoni::instance();
 		$harmoni->request->startNamespace("polyphony-repository");
 		
-		$dimensions = slideshowxmlAction::getFirstPartValueFromRecord(
+		$dimensions = $this->getFirstPartValueFromRecord(
 			"DIMENSIONS", 
 			$fileRecord);
-		$mimeType = slideshowxmlAction::getFirstPartValueFromRecord(
+		$mimeType = $this->getFirstPartValueFromRecord(
 			"MIME_TYPE", 
 			$fileRecord);
 		
@@ -249,7 +249,7 @@ END;
 			}
 			
 			print "\t\t\t\t<url><![CDATA[";
-			$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
+			$filename = $this->getFirstPartValueFromRecord("FILE_NAME", 
 				$fileRecord);	
 			print $harmoni->request->quickURL("repository", "viewfile", 
 					array(
@@ -305,7 +305,7 @@ END;
 			}
 			
 			print "\t\t\t\t<url><![CDATA[";
-			$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
+			$filename = $this->getFirstPartValueFromRecord("FILE_NAME", 
 				$fileRecord);	
 			print $harmoni->request->quickURL("repository", "viewfile", 
 					array(
@@ -346,7 +346,7 @@ END;
 			}
 			
 			print "\t\t\t\t<url><![CDATA[";
-			$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
+			$filename = $this->getFirstPartValueFromRecord("FILE_NAME", 
 				$fileRecord);	
 			print $harmoni->request->quickURL("repository", "viewfile", 
 					array(
@@ -384,7 +384,7 @@ END;
 		}
 		
 		print "\t\t\t\t<url><![CDATA[";
-		$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
+		$filename = $this->getFirstPartValueFromRecord("FILE_NAME", 
 			$fileRecord);	
 		print $harmoni->request->quickURL("repository", "viewfile", 
 				array(
@@ -400,6 +400,147 @@ END;
 		$harmoni->request->endNamespace();
 	}
 
+	/**
+	 * Answer the first Part's value object for the given PartStructureIdString 
+	 * and Record 
+	 * 
+	 * @param string $partStructIdString
+	 * @param object Record $record
+	 * @return object SObject
+	 * @access public
+	 * @since 9/28/05
+	 */
+	function &getFirstPartValueFromRecord ( $partStructIdString, &$record ) {
+		$idManager =& Services::getService("Id");
+		
+		$parts =& $record->getPartsByPartStructure(
+			$idManager->getId($partStructIdString));
+		
+		if ($parts->hasNext()) {
+			$part =& $parts->next();
+			if (is_object($part->getValue()))
+				$value =& $part->getValue();
+			else
+				$value = $part->getValue();
+		} else {
+			$value = null;
+		}
+		
+		return $value;
+	}
+	
+	/**
+	 * Print out the full metadata for the Asset;
+	 * 
+	 * @param object Asset
+	 * @return void
+	 * @access public
+	 * @since 9/28/05
+	 */
+	function printAsset ( &$asset ) {
+		/*********************************************************
+		 * Asset Info
+		 *********************************************************/
+		$assetId =& $asset->getId();
+		print "\n<div>\n";
+		print "\t<strong>"._("DisplayName").":</strong>\n";
+		print "\t".$asset->getDisplayName()."\n";
+		print "\t<br />\n";
+		print "\t<strong>"._("Description").":</strong>\n";
+		print "\t".$asset->getDescription()."\n";
+		print "\t<br />\n";
+		print "\t<strong>"._("ID#").":</strong>\n";
+		print "\t".$assetId->getIdString()."\n";
+	
+		
+		if(is_object($asset->getEffectiveDate())) {
+			$effectDate =& $asset->getEffectiveDate();
+			print  "\t<br />\n\t<strong>"._("Effective Date").":</strong>\n\t<em>".$effectDate->asString()."</em>\n";
+		}
+		
+		if(is_object($asset->getExpirationDate())) {
+			$expirationDate =& $asset->getExpirationDate();
+			print  "\t<br />\n\t<strong>"._("Expiration Date").":</strong>\n\t<em>".$expirationDate->asString()."</em>\n";
+		}
+		
+		
+		/*********************************************************
+		 * Info Records
+		 *********************************************************/
+		$printedRecordIds = array();
+		
+		// Get the set of RecordStructures so that we can print them in order.
+		$setManager =& Services::getService("Sets");
+		$idManager =& Services::getService("Id");
+		$repository =& $asset->getRepository();
+		$structSet =& $setManager->getPersistentSet($repository->getId());
+		
+		// First, lets go through the info structures listed in the set and print out
+		// the info records for those structures in order.
+		$structSet->reset();
+		while ($structSet->hasNext()) {
+			$structureId =& $structSet->next();
+			if (!$structureId->isEqual($idManager->getId("FILE"))) {
+				$records =& $asset->getRecordsByRecordStructure($structureId);
+				while ($records->hasNext()) {
+					$record =& $records->next();
+					$recordId =& $record->getId();
+					$printedRecordIds[] = $recordId->getIdString();
+			
+					print "\t<div style='padding: 5px; border-top: 1px solid;'>\n";
+	 				$this->printRecord($repository->getId(), $assetId, $record);
+					print "\t</div>\n";
+				}
+			}
+		}
+		
+		/*********************************************************
+		 * Asset Content
+		 *********************************************************/
+		
+		/*********************************************************
+		 * Close up our tags.
+		 *********************************************************/
+		print "</div>\n";
+	}
+	
+	/**
+	 * Print out a record
+	 * 
+	 * @param object Id $repositoryId
+	 * @param object Id $assetId
+	 * @param object Record $record
+	 * @return void
+	 * @access public
+	 * @since 9/28/05
+	 */
+	function printRecord ( &$repositoryId, &$assetId, &$record ) {
+		$recordStructure =& $record->getRecordStructure();
+		$structureId =& $recordStructure->getId();
+		
+		print "\t\t<div style='font-weight: bold; font-style: italic; font-size: large;'>";
+		print $recordStructure->getDisplayName().":</div>\n";
+		
+		// Print out the fields parts for this structure
+		$setManager =& Services::getService("Sets");
+		$partStructureSet =& $setManager->getPersistentSet($structureId);
+		
+		$partStructureArray = array();
+		// Print out the ordered parts/fields
+		$partStructureSet->reset();
+		while ($partStructureSet->hasNext()) {
+			$partStructureId =& $partStructureSet->next();
+			$partStructureArray[] =& $recordStructure->getPartStructure($partStructureId);
+		}
+		// Get the rest of the parts (the unordered ones);
+		$partStructureIterator =& $recordStructure->getPartStructures();
+		while ($partStructureIterator->hasNext()) {
+			$partStructure =& $partStructureIterator->next();
+			if (!$partStructureSet->isInSet($partStructure->getId()))
+				$partStructureArray[] =& $partStructure;
+		}
+		
+		$moduleManager =& Services::getService("InOutModules");
+		print $moduleManager->generateDisplayForPartStructures($repositoryId, $assetId, $record, $partStructureArray);
+	}
 }
-
-require_once(MYDIR."/main/modules/exhibitions/slideshowxml.act.php");

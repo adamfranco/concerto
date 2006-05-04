@@ -172,7 +172,7 @@ END;
 		
 		// Caption
 		print "\t\t<caption><![CDATA[";
-// 		slideshowxmlAction::printAsset($asset);
+// 		$this->printAsset($asset);
 		print"]]></caption>\n";
 		
 		// Text-Position
