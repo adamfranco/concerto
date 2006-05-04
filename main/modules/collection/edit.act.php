@@ -353,8 +353,7 @@ class editAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
-		$repositoryId =& $this->getRepositoryId();
 		$harmoni =& Harmoni::instance();
-		return $harmoni->request->quickURL("collection", "browse", array("collection_id" => $repositoryId->getIdString()));
+		return $harmoni->history->getReturnURL("concerto/collection/edit-return");
 	}
 }

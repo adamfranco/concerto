@@ -91,6 +91,21 @@ class RepositoryPrinter {
 				$idManager->getId("edu.middlebury.authorization.modify"), 
 				$repositoryId)) 
 		{
+		
+			$params = array("collection_id" => $repositoryId->getIdString(),
+							RequestContext::name("starting_number") => RequestContext::value("starting_number"),
+							RequestContext::name("limit_by") => RequestContext::value("limit_by"),
+							RequestContext::name("type") => RequestContext::value("type"),
+							RequestContext::name("searchtype") => RequestContext::value("searchtype"));			
+			if (RequestContext::value("searchtype")) {
+				$searchModuleManager =& Services::getService("RepositorySearchModules");
+				foreach ($searchModuleManager->getCurrentValues(Type::fromString(RequestContext::value("searchtype"))) as $key => $value) {
+					$params[$key] = $value;
+				}
+			}		
+			$harmoni->history->markReturnURL("concerto/collection/edit-return",
+				$harmoni->request->mkURL(null, null, $params));
+		
 			$url->setModuleAction("collection", "edit");
 			$links[] = "<a href='".$url->write()."'>";
 			$links[count($links) - 1] .= _("Edit")."</a>";

@@ -146,6 +146,7 @@ class AssetPrinter {
 	//===== Edit Link =====//
 		$params = array("collection_id" => $repositoryId->getIdString(),
 						"asset_id" => $xmlAssetIdString,
+						RequestContext::name("starting_number") => RequestContext::value("starting_number"),
 						RequestContext::name("limit_by") => RequestContext::value("limit_by"),
 						RequestContext::name("type") => RequestContext::value("type"),
 						RequestContext::name("searchtype") => RequestContext::value("searchtype"));
