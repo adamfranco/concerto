@@ -8,8 +8,7 @@
  * @version $Id$
  */ 
 
-require_once(MYDIR."/main/library/abstractActions/AssetAction.class.php");
-require_once(MYDIR."/main/modules/exhibitions/slideshowxml.act.php");
+require_once(MYDIR."/main/modules/collection/browse_outline_xml.act.php");
 
 /**
  * 
@@ -22,7 +21,7 @@ require_once(MYDIR."/main/modules/exhibitions/slideshowxml.act.php");
  * @version $Id$
  */
 class browsexmlAction 
-	extends AssetAction
+	extends browse_outline_xmlAction
 {
 	/**
 	 * Check Authorizations
@@ -41,39 +40,14 @@ class browsexmlAction
 	}
 	
 	/**
-	 * Return the "unauthorized" string to pring
+	 * This is the class-specific string for the message.
 	 * 
-	 * @return string
+	 * @return void
 	 * @access public
-	 * @since 4/26/05
+	 * @since 5/4/06
 	 */
-	function getUnauthorizedMessage () {
-		/*********************************************************
-		 * First print the header, then the xml content, then exit before
-		 * the GUI system has a chance to try to theme the output.
-		 *********************************************************/		
-		header("Content-Type: text/xml; charset=\"utf-8\"");
-		
-		print<<<END
-<?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE slideshow PUBLIC "- //Middlebury College//Slide-Show//EN" "http://concerto.sourceforge.net/dtds/viewer/2.0/slideshow.dtd">
-<slideshow>
-
-END;
-		print "\t<title>"._("Not Authorized")."</title>\n";
-		print "\t<slide>\n";
-		
-		// Title
-		print "\t\t<title>"._("Not Authorized")."</title>\n";
-		
-		// Caption
-		print "\t\t<caption><![CDATA[";
-		print _("You are not authorized to access this <em>Asset</em>.");
-		print"]]></caption>\n";
-		print "\t\t<text-position>center</text-position>";
-		print "\t</slide>\n";
-		print "</slideshow>\n";		
-		exit;
+	function printUnauthorizedString () {
+		print _("You are not authorized to access this <em>Collection</em>.");
 	}
 	
 	/**
@@ -89,153 +63,48 @@ END;
 	}
 	
 	/**
-	 * Build the content for this action
+	 * Answer the title of this slideshow
 	 * 
-	 * @return boolean
+	 * @return string
 	 * @access public
-	 * @since 4/26/05
+	 * @since 5/4/06
 	 */
-	function buildContent () {
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
-		
-		$repository =& $this->getRepository();
-		$parentAsset =& $this->getAsset();
-		$parentAssetId =& $parentAsset->getId();
-				
-		$harmoni->request->passthrough("collection_id");
-		$harmoni->request->passthrough("asset_id");	
-		
-		
-		/*********************************************************
-		 * First print the header, then the xml content, then exit before
-		 * the GUI system has a chance to try to theme the output.
-		 *********************************************************/		
-		header("Content-Type: text/xml; charset=\"utf-8\"");
-		
-		print<<<END
-<?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE slideshow PUBLIC "- //Middlebury College//Slide-Show//EN" "http://concerto.sourceforge.net/dtds/viewer/2.0/slideshow.dtd">
-<slideshow>
-
-END;
-		print "\t<title>".$parentAsset->getDisplayName()."</title>\n";
-		
-		// Print out the slide for the parent asset
-		$this->printAssetXML($parentAsset);
-		
-		//***********************************
-		// Get the child assets to display
-		//***********************************
-		$assets =& $parentAsset->getAssets();
-		
-		while ($assets->hasNext()) {
-			$asset =& $assets->next();
-			if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
-			{
-				$this->printAssetXML($asset);
-			}
-		}
-		
-		print "</slideshow>\n";		
-		exit;
+	function getTitle () {
+		$asset =& $this->getAsset();
+		return $asset->getDisplayName();
 	}
-	
-	
 	
 	/**
-	 * Function for printing the asset block of the slideshow XML file
+	 * Pass throught he needed parameters
 	 * 
-	 * @param object Asset $asset
 	 * @return void
 	 * @access public
-	 * @since 10/14/05
+	 * @since 5/4/06
 	 */
-	function printAssetXML( &$asset) {
-		
-		$assetId =& $asset->getId();
-		$repository =& $asset->getRepository();
-		$repositoryId =& $repository->getId();
-		$idManager =& Services::getService("Id");
-		
-		
-		// ------------------------------------------
-		print "\t<slide>\n";
-		
-		// Title
-		print "\t\t<title><![CDATA[";
-		print htmlspecialchars($asset->getDisplayName(), ENT_COMPAT, 'UTF-8');
-		print "]]></title>\n";
-		
-		// Caption
-		print "\t\t<caption><![CDATA[";
-		slideshowxmlAction::printAsset($asset);
-		print"]]></caption>\n";
-		
-		// Text-Position
-		print "\t\t<text-position>";
-			print "right";
-		print "</text-position>\n";
-		
-		$fileRecords =& $asset->getRecordsByRecordStructure(
-			$idManager->getId("FILE"));
-		
-		/*********************************************************
-		 * Files
-		 *********************************************************/
-		while ($fileRecords->hasNext()) {
-			$fileRecord =& $fileRecords->next();
-			$fileRecordId =& $fileRecord->getId();
-			print "\t\t<media>\n";
-			print "\t\t\t<version>\n";
-			
-			print "\t\t\t\t<type>";
-			print slideshowxmlAction::getFirstPartValueFromRecord("MIME_TYPE", $fileRecord);
-			print "</type>\n";
-			
-			print "\t\t\t\t<size>original</size>\n";
-			
-			$dimensions = slideshowxmlAction::getFirstPartValueFromRecord("DIMENSIONS", 
-				$fileRecord);
-								
-			if (isset($dimensions[1]) && $dimensions[1] > 0) {
-				print "\t\t\t\t<height>";
-				print $dimensions[1]."px";
-				print "</height>\n";
-			}
-			
-			if (isset($dimensions[0]) && $dimensions[0] > 0) {
-				print "\t\t\t\t<width>";
-				print $dimensions[0]."px";
-				print "</width>\n";	
-			}
-			
-			print "\t\t\t\t<url><![CDATA[";
-			$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
-				$fileRecord);
-			
-			$harmoni =& Harmoni::instance();
-			$harmoni->request->startNamespace("polyphony-repository");
-			
-			print $harmoni->request->quickURL("repository", "viewfile", 
-					array(
-						"repository_id" => $repositoryId->getIdString(),
-						"asset_id" => $assetId->getIdString(),
-						"record_id" => $fileRecordId->getIdString(),
-						"file_name" => $filename));
-			
-			
-			$harmoni->request->endNamespace();
-			print "]]></url>\n";
-			
-			print "\t\t\t</version>\n";
-			print "\t\t</media>\n";
-		}
-		
-		
-		print "\t</slide>\n";
+	function setPassthrough () {
+		$harmoni =& Harmoni::instance();
+		$harmoni->request->passthrough("collection_id");
+		$harmoni->request->passthrough("asset_id");
 	}
-
+	
+	/**
+	 * Answer the assets to display in the slideshow
+	 * 
+	 * @return object AssetIterator
+	 * @access public
+	 * @since 5/4/06
+	 */
+	function &getAssets () {
+		$parentAsset =& $this->getAsset();
+		
+		$assets = array();
+		$assets[] =& $parentAsset;
+		
+		$childAssets =& $parentAsset->getAssets();
+		while ($childAssets->hasNext())
+			$assets[] =& $childAssets->next();
+		
+		$iterator =& new HarmoniIterator($assets);
+		return $iterator;
+	}
 }
