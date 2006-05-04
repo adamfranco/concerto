@@ -227,6 +227,14 @@ class browseAction
 		print " onchange='this.form.submit();'>";
 		$this->printSelectOption("order", 'DisplayName', 'DisplayName', _('DisplayName'));
 		$this->printSelectOption("order", 'DisplayName', 'Id', _('Id'));
+		$this->printSelectOption("order", 'DisplayName', 'ModificationDate', _('Modification Date'));
+		$this->printSelectOption("order", 'DisplayName', 'CreationDate', _('Creation Date'));
+		print "\n\t</select>";
+		
+		print "\n\t<select name='".RequestContext::name("direction")."'";
+		print " onchange='this.form.submit();'>";
+		$this->printSelectOption("direction", 'ASC', 'ASC', _('Ascending'));
+		$this->printSelectOption("direction", 'ASC', 'DESC', _('Descending'));
 		print "\n\t</select>";
 		print "</div>";
 		
@@ -242,6 +250,10 @@ class browseAction
 		if (!($order = RequestContext::value("order")))
 			$order = 'DisplayName';
 		$searchProperties->addProperty("order", $order);
+		
+		if (!($direction = RequestContext::value("direction")))
+			$direction = 'ASC';
+		$searchProperties->addProperty("direction", $direction);
 					
 		switch (RequestContext::value("limit_by")) {
 			case 'type':

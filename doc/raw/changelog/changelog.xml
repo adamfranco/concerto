@@ -11,6 +11,9 @@
 
 <changelog name="Concerto ChangeLog">
 	<version number="2.0-beta 3" date="TheNebulusFuturo">
+		<new author='adam'>
+			Assets and Asset-search-order now support modification and creation times.
+		</new>
 		<fix author='adam'>
 			After editing Collections, the user is now returned to the previous
 			page they were viewing.
