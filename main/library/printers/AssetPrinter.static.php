@@ -95,7 +95,8 @@ class AssetPrinter {
 			
 			print urlencode($harmoni->request->quickURL($xmlModule, $xmlAction, $params));
 			print '&amp;start='.$xmlStart.'", ';
-			print '"'.preg_replace("/[^a-z0-9]/i", '_', $assetId->getIdString()).'", ';
+// 			print '"'.preg_replace("/[^a-z0-9]/i", '_', $assetId->getIdString()).'", ';
+			print '"_blank", ';
 			print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
 			print ")'>";
 			print _("View")."</a>";			

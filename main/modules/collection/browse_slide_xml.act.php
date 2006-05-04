@@ -465,6 +465,14 @@ END;
 		
 		
 		/*********************************************************
+		 * Expanding to child assets
+		 *********************************************************/
+		$children =& $asset->getAssets();
+		if ($children->hasNext()) {
+			$this->printChildViewerLink($asset);
+		}
+		
+		/*********************************************************
 		 * Info Records
 		 *********************************************************/
 		$printedRecordIds = array();
@@ -542,5 +550,39 @@ END;
 		
 		$moduleManager =& Services::getService("InOutModules");
 		print $moduleManager->generateDisplayForPartStructures($repositoryId, $assetId, $record, $partStructureArray);
+	}
+	
+	/**
+	 * Print a link/button to open a viewer that will display the children
+	 * 
+	 * @param object Asset $asset
+	 * @return void
+	 * @access public
+	 * @since 5/4/06
+	 */
+	function printChildViewerLink ( &$asset ) {
+		$harmoni =& Harmoni::instance();
+		
+		$assetId =& $asset->getId();
+		$repository =& $asset->getRepository();
+		$repositoryId =& $repository->getId();
+		
+		print "\t<br />\n";
+		print "\t<input type='button'";
+		print " value='"._("View child-Assets")."'";
+		print " onclick='";
+		print "Javascript:window.open(";
+		print '"'.VIEWER_URL."?&amp;source=";
+		
+		$params = array("collection_id" => $repositoryId->getIdString(),
+					"asset_id" => $assetId->getIdString());
+		
+		print urlencode($harmoni->request->quickURL('asset', 'browsexml', $params));
+		print '&amp;start=1", ';
+// 		print '"'.preg_replace("/[^a-z0-9]/i", '_', $assetId->getIdString()).'", ';
+		print '"_blank", ';
+		print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
+		print ")";
+		print "' />\n";
 	}
 }

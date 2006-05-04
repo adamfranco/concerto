@@ -378,7 +378,8 @@ function printAssetShort(& $asset, $selectedSearchType, $num) {
 		}
 		print urlencode($harmoni->request->quickURL($xmlModule, "browse_outline_xml", $params));
 		print '&amp;start='.$xmlStart.'", ';
-		print '"'.preg_replace("/[^a-z0-9]/i", '_', $assetId->getIdString()).'", ';
+// 		print '"'.preg_replace("/[^a-z0-9]/i", '_', $assetId->getIdString()).'", ';
+		print '"_blank", ';
 		print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
 		print ")'>";
 		print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' />";
