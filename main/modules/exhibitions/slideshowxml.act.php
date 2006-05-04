@@ -8,7 +8,7 @@
  * @version $Id$
  */ 
 
-require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
+require_once(MYDIR."/main/modules/collection/browse_slide_xml.act.php");
 
 /**
  * 
@@ -21,7 +21,7 @@ require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php
  * @version $Id$
  */
 class slideshowxmlAction 
-	extends MainWindowAction
+	extends browse_slide_xmlAction
 {
 	/**
 	 * Check Authorizations
@@ -83,6 +83,49 @@ END;
 	}
 	
 	/**
+	 * Return the heading text for this action, or an empty string.
+	 * 
+	 * @return string
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function getHeadingText () {
+		$slideshowAsset =& $this->getAsset();
+		return _("View the")
+			." <em>".$slideshowAsset->getDisplayName()."</em> "
+			._(" Slideshow");
+	}
+	
+	/**
+	 * Answer the repository used for this action
+	 * 
+	 * @return object Repository
+	 * @access public
+	 * @since 5/4/06
+	 */
+	function &getRepository () {
+		$idManager =& Services::getService("Id");
+		$repositoryManager =& Services::getService("Repository");		
+		return $repositoryManager->getRepository(
+				$idManager->getId(
+					"edu.middlebury.concerto.exhibition_repository"));
+	}
+	
+	/**
+	 * Answer the asset used for this action
+	 * 
+	 * @return object Asset
+	 * @access public
+	 * @since 5/4/06
+	 */
+	function &getAsset () {
+		$idManager =& Services::getService("Id");
+		$slideshowId =& $idManager->getId(RequestContext::value('slideshow_id'));
+		$repository =& $this->getRepository();
+		return $repository->getAsset($slideshowId);
+	}
+	
+	/**
 	 * Build the content for this action
 	 * 
 	 * @return void
@@ -91,22 +134,9 @@ END;
 	 */
 	function buildContent () {
 		$harmoni =& Harmoni::instance();
-// 		$harmoni->request->startNamespace("modify_slideshow");
-
-		$actionRows =& $this->getActionRows();
-		
 		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		
-		$slideshowId =& $idManager->getId(RequestContext::value('slideshow_id'));
-		
-		$repository =& $repositoryManager->getRepository(
-				$idManager->getId(
-					"edu.middlebury.concerto.exhibition_repository"));
-		$slideshowAsset =& $repository->getAsset($slideshowId);
-				
-// 		$harmoni->request->endNamespace();
-		
+	
+		$slideshowAsset =& $this->getAsset();
 		
 		/*********************************************************
 		 * First print the header, then the xml content, then exit before
@@ -125,7 +155,7 @@ END;
 		print "\t<default_size>medium</default_size>\n";
 		
 		$setManager =& Services::getService("Sets");
-		$slideshowSet =& $setManager->getPersistentSet($slideshowId);
+		$slideshowSet =& $setManager->getPersistentSet($slideshowAsset->getId());
 		$slideIterator =& $slideshowAsset->getAssets();
 		$orderedSlides = array();
 		$unorderedSlides = array();
@@ -246,230 +276,16 @@ END;
 			&& $authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.view"),
 				$mediaId))		
-		{
-			$harmoni =& Harmoni::instance();
-			$harmoni->request->startNamespace("polyphony-repository");
-		
+		{		
 			$mediaAsset =& $repositoryManager->getAsset($mediaId);
 			$mediaAssetRepository =& $mediaAsset->getRepository();
 			$mediaAssetRepositoryId =& $mediaAssetRepository->getId();
 			
 			$fileRecords =& $mediaAsset->getRecordsByRecordStructure(
 				$idManager->getId("FILE"));
-				
-			
-			$imgProcessor =& Services::getService("ImageProcessor");
-			
-			while ($fileRecords->hasNext()) {
-				$fileRecord =& $fileRecords->next();
-				$fileRecordId =& $fileRecord->getId();
-				
-				$mimeType = $this->getFirstPartValueFromRecord("MIME_TYPE", $fileRecord);
-				
-								
-				$dimensions = slideshowxmlAction::getFirstPartValueFromRecord(
-					"DIMENSIONS", 
-					$fileRecord);
-				
-			
-				print "\t\t<media>\n";
-				
-				// Give multiple sizes for images
-				if (preg_match('/^image.*$/', $mimeType)) {
-					
-					/*********************************************************
-					 * Small Version
-					 *********************************************************/
-					print "\t\t\t<version>\n";
-					
-					print "\t\t\t\t<type>";
-					if ($imgProcessor->isFormatSupported($mimeType))
-						print $imgProcessor->getWebsafeFormat($mimeType);
-					else
-						print $mimeType;
-					print "</type>\n";
-					
-					print "\t\t\t\t<size>small</size>\n";
-					
-					if ((isset($dimensions[1]) && $dimensions[1] > 0)
-						&& (isset($dimensions[0]) && $dimensions[0] > 0)) 
-					{
-							$origHeight = $dimensions[1];
-							$origWidth = $dimensions[0];
 							
-							if ($origHeight > $origWidth) {
-								print "\t\t\t\t<height>";
-								print "400px";
-								print "</height>\n";
-								
-								$newWidth = round(400*$origWidth/$origHeight);
-								print "\t\t\t\t<width>";
-								print $newWidth."px";
-								print "</width>\n";	
-							} else {					
-								$newHeight = round(400*$origHeight/$origWidth);
-								print "\t\t\t\t<height>";
-								print $newHeight."px";
-								print "</height>\n";
-							
-								print "\t\t\t\t<width>";
-								print "400px";
-								print "</width>\n";
-							}
-					}
-					
-					print "\t\t\t\t<url><![CDATA[";
-					$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
-						$fileRecord);	
-					print $harmoni->request->quickURL("repository", "viewfile", 
-							array(
-								"repository_id" => $mediaAssetRepositoryId->getIdString(),
-								"asset_id" => $mediaId->getIdString(),
-								"record_id" => $fileRecordId->getIdString(),
-								"file_name" => $filename,
-								"websafe" => "true",
-								"size" => 400));
-					print "]]></url>\n";
-					
-					print "\t\t\t</version>\n";
-					
-					/*********************************************************
-					 * Medium Version
-					 *********************************************************/
-					print "\t\t\t<version>\n";
-					
-					print "\t\t\t\t<type>";
-					if ($imgProcessor->isFormatSupported($mimeType))
-						print $imgProcessor->getWebsafeFormat($mimeType);
-					else
-						print $mimeType;
-					print "</type>\n";
-					
-					print "\t\t\t\t<size>medium</size>\n";
-					
-					if ((isset($dimensions[1]) && $dimensions[1] > 0)
-						&& (isset($dimensions[0]) && $dimensions[0] > 0)) 
-					{
-							$origHeight = $dimensions[1];
-							$origWidth = $dimensions[0];
-							
-							if ($origHeight > $origWidth) {
-								print "\t\t\t\t<height>";
-								print "800px";
-								print "</height>\n";
-								
-								$newWidth = round(800*$origWidth/$origHeight);
-								print "\t\t\t\t<width>";
-								print $newWidth."px";
-								print "</width>\n";	
-							} else {					
-								$newHeight = round(800*$origHeight/$origWidth);
-								print "\t\t\t\t<height>";
-								print $newHeight."px";
-								print "</height>\n";
-							
-								print "\t\t\t\t<width>";
-								print "800px";
-								print "</width>\n";
-							}
-					}
-					
-					print "\t\t\t\t<url><![CDATA[";
-					$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
-						$fileRecord);	
-					print $harmoni->request->quickURL("repository", "viewfile", 
-							array(
-								"repository_id" => $mediaAssetRepositoryId->getIdString(),
-								"asset_id" => $mediaId->getIdString(),
-								"record_id" => $fileRecordId->getIdString(),
-								"file_name" => $filename,
-								"websafe" => "true",
-								"size" => 800));
-					print "]]></url>\n";
-					
-					print "\t\t\t</version>\n";
-					
-					/*********************************************************
-					 * Large Version
-					 *********************************************************/
-					print "\t\t\t<version>\n";
-					
-					print "\t\t\t\t<type>";
-					if ($imgProcessor->isFormatSupported($mimeType))
-						print $imgProcessor->getWebsafeFormat($mimeType);
-					else
-						print $mimeType;
-					print "</type>\n";
-					
-					print "\t\t\t\t<size>large</size>\n";
-										
-					if (isset($dimensions[1]) && $dimensions[1] > 0) {
-						print "\t\t\t\t<height>";
-						print $dimensions[1]."px";
-						print "</height>\n";
-					}
-					
-					if (isset($dimensions[0]) && $dimensions[0] > 0) {
-						print "\t\t\t\t<width>";
-						print $dimensions[0]."px";
-						print "</width>\n";	
-					}
-					
-					print "\t\t\t\t<url><![CDATA[";
-					$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
-						$fileRecord);	
-					print $harmoni->request->quickURL("repository", "viewfile", 
-							array(
-								"repository_id" => $mediaAssetRepositoryId->getIdString(),
-								"asset_id" => $mediaId->getIdString(),
-								"record_id" => $fileRecordId->getIdString(),
-								"file_name" => $filename,
-								"websafe" => "true"));
-					print "]]></url>\n";
-					
-					print "\t\t\t</version>\n";
-				}
-				
-				/*********************************************************
-				 * Original Version
-				 *********************************************************/
-				print "\t\t\t<version>\n";
-				
-				print "\t\t\t\t<type>";
-				print $mimeType;
-				print "</type>\n";
-				
-				print "\t\t\t\t<size>original</size>\n";
-									
-				if (isset($dimensions[1]) && $dimensions[1] > 0) {
-					print "\t\t\t\t<height>";
-					print $dimensions[1]."px";
-					print "</height>\n";
-				}
-				
-				if (isset($dimensions[0]) && $dimensions[0] > 0) {
-					print "\t\t\t\t<width>";
-					print $dimensions[0]."px";
-					print "</width>\n";	
-				}
-				
-				print "\t\t\t\t<url><![CDATA[";
-				$filename = slideshowxmlAction::getFirstPartValueFromRecord("FILE_NAME", 
-					$fileRecord);	
-				print $harmoni->request->quickURL("repository", "viewfile", 
-						array(
-							"repository_id" => $mediaAssetRepositoryId->getIdString(),
-							"asset_id" => $mediaId->getIdString(),
-							"record_id" => $fileRecordId->getIdString(),
-							"file_name" => $filename));
-				print "]]></url>\n";
-				
-				print "\t\t\t</version>\n";
-				
-				
-				print "\t\t</media>\n";
-			}
-			$harmoni->request->endNamespace();
+			while ($fileRecords->hasNext())
+				$this->printFileRecord($fileRecords->next(), $mediaAssetRepositoryId, $mediaId);
 		}
 				
 		print "\t</slide>\n";
