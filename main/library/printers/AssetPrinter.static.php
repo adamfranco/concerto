@@ -268,7 +268,9 @@ class AssetPrinter {
 		print "\n\t</optgroup>";
 		print "\n\t<optgroup label='"._("Basket")."'>";
 		print "\n\t<option onclick='addCheckedAssetsToBasket(); this.selected=false;'>";
-		print _("Add Checked To Basket")."</option>";		
+		print _("Add Checked To Basket")."</option>";
+		print "\n\t<option onclick='Basket.empty(); this.selected=false;'>";
+		print _("Empty Basket")."</option>";	
 		print "\n\t</optgroup>";
 		print "\n\t<optgroup label='"._("Modify")."'>";
 		print "\n\t<option onclick='editCheckedAssets(); this.selected=false;'>";
@@ -352,7 +354,7 @@ class AssetPrinter {
 		
 		
 		if (assetList.length >= 1)
-			addAssetsToBasket(assetList);
+			Basket.addAssets(assetList);
 		else
 			alert('$pleaseSelectString');
 	}
