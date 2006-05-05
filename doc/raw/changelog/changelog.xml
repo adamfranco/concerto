@@ -11,6 +11,9 @@
 
 <changelog name="Concerto ChangeLog">
 	<version number="2.0-beta 3" date="TheNebulusFuturo">
+		<change author='adam'>
+			Check/uncheck/etc commands in browse mode are now in a select list.
+		</change>
 		<new author='adam'>
 			Assets and Asset-search-order now support modification and creation times.
 		</new>

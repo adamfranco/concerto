@@ -245,6 +245,37 @@ class AssetPrinter {
 		$harmoni->request->startNamespace("AssetMultiEdit");
 		
 		ob_start();
+		
+// 		print "<input type='button' onclick='checkAllAssets();'";
+// 		print "value='"._("Check All")."'/>";
+// 		
+// 		print "\n<br/><input type='button' onclick='uncheckAllAssets();'";
+// 		print "value='"._("Un-Check All")."'/>";
+// 		
+// 		print "\n<br/><input type='button' onclick='editCheckedAssets();'";
+// 		print "value='"._("Edit Checked")."'/>";
+// 		
+// 		print "\n<br/><input type='button' onclick='addCheckedAssetsToBasket();'";
+// 		print "value='"._("Add Checked To Basket")."'/>";
+		
+		print "\n<select>";
+		print "\n\t<option>"._("Commands...")."</option>";
+		print "\n\t<optgroup label='"._("Select")."'>";
+		print "\n\t\t<option onclick='checkAllAssets(); this.selected=false;'>";
+		print _("Check All")."</option>";
+		print "\n\t\t<option onclick='uncheckAllAssets(); this.selected=false;'>";
+		print _("Un-Check All")."</option>";
+		print "\n\t</optgroup>";
+		print "\n\t<optgroup label='"._("Basket")."'>";
+		print "\n\t<option onclick='addCheckedAssetsToBasket(); this.selected=false;'>";
+		print _("Add Checked To Basket")."</option>";		
+		print "\n\t</optgroup>";
+		print "\n\t<optgroup label='"._("Modify")."'>";
+		print "\n\t<option onclick='editCheckedAssets(); this.selected=false;'>";
+		print _("Edit Checked")."</option>";
+		print "\n\t</optgroup>";		
+		print "\n</select>";
+		
 		$idManager =& Services::getService("Id");
 		
 		$checkboxName = RequestContext::name("asset");
@@ -331,18 +362,6 @@ class AssetPrinter {
 // ]]>
 </script>
 END;
-		
-		print "<input type='button' onclick='checkAllAssets();'";
-		print "value='"._("Check All")."'/>";
-		
-		print "\n<br/><input type='button' onclick='uncheckAllAssets();'";
-		print "value='"._("Un-Check All")."'/>";
-		
-		print "\n<br/><input type='button' onclick='editCheckedAssets();'";
-		print "value='"._("Edit Checked")."'/>";
-		
-		print "\n<br/><input type='button' onclick='addCheckedAssetsToBasket();'";
-		print "value='"._("Add Checked To Basket")."'/>";
 		
 		$block = new Block(ob_get_contents(), 4);
 		ob_end_clean();
