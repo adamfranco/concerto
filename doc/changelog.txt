@@ -3,7 +3,30 @@
 Name: Concerto ChangeLog
 
 
-v. 2.0-beta (2006-02-09)
+v. 2.0-beta 3 (2006-05-05)
+----------------------------------------------------
+		
+	* Change: Check/uncheck/etc commands in browse mode are now in a select list. (Adam Franco)
+		
+	* New feature: Assets and Asset-search-order now support modification and creation times. (Adam Franco)
+		
+	* Bug Fix: After editing Collections, the user is now returned to the previous page they were viewing. (Adam Franco)
+		
+	* Change: Unified the slideshow display functions into a class hierarchy rather than being repeated in each class. (Adam Franco)
+		
+	* Bug Fix: Modify Slideshow: neither the SlideShow title nor description are updating with this action. (Adam Franco)
+		
+	* Bug Fix: Modify Slideshow: adding a text only slide results in no slides being shown when viewing slideshow... (Adam Franco)
+		
+	* Change: Made the Add-Asset-To-Basket process work via AJAX rather than reloading the page. (Adam Franco)
+		
+	* New feature: Implemented Authority-Lists for Part values. (Adam Franco)
+		
+	* New feature: Implemented logging of changes via the OSID Logging service. (Adam Franco)
+		
+	* Change: Added StatusStars Status Bar to all importer actions. (Christopher Shubert)
+	
+v. 2.0-beta 2 (2006-02-09)
 ----------------------------------------------------
 		
 	* New feature: Defined Dublin Core and VRA metadata schemas for easy importing. (Adam Franco)
