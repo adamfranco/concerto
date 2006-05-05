@@ -20,7 +20,7 @@ require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php
  */
 
 
-class deleteAction
+class multdeleteAction
 	extends MainWindowAction
 {
 
@@ -35,9 +35,35 @@ class deleteAction
 		// Check that the user can delete this exhibition
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
-		return $authZ->isUserAuthorized(
+		$assetIds =& $this->getAssetIds();
+		foreach ($assetIds as $id) {
+			if (!$authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.delete"), 
-					$idManager->getId(RequestContext::value('asset_id')));
+					$id))
+			{
+				return false;
+			}
+		}
+		return true;	
+	}
+	
+	/**
+	 * Answer the assetIds passed
+	 * 
+	 * @return ref array
+	 * @access public
+	 * @since 5/5/06
+	 */
+	function &getAssetIds () {
+		if (!isset($this->_assetIds)) {
+			$idManager =& Services::getService("Id");
+			$assetIdStrings = explode(",", RequestContext::value('assets'));
+			$this->_assetIds = array();
+			foreach ($assetIdStrings as $idString)
+				$this->_assetIds[] =& $idManager->getId($idString);
+		}
+		
+		return $this->_assetIds;
 	}
 	
 	/**
@@ -48,7 +74,7 @@ class deleteAction
 	 * @since 4/26/05
 	 */
 	function getUnauthorizedMessage () {
-		return _("You are not authorized to delete this <em>Asset</em> or its <em>Assets</em>.");
+		return _("You are not authorized to delete these <em>Assets</em>.");
 	}
 
 	/**
@@ -59,14 +85,7 @@ class deleteAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
-				$idManager->getId(
-					RequestContext::value('collection_id')));
-		$asset =& $repository->getAsset(
-				$idManager->getId(RequestContext::value('asset_id')));
-		return _("Delete Asset")." <em>".$asset->getDisplayName()."</em> ";
+		return _("Delete Assets");
 	}
 	
 	/**
@@ -85,8 +104,6 @@ class deleteAction
 		$repository =& $repositoryManager->getRepository(
 				$idManager->getId(
 					RequestContext::value('collection_id')));
-		$asset =& $repository->getAsset(
-			$idManager->getId(RequestContext::value('asset_id')));
 		
 		// Log the action
 		if (Services::serviceAvailable("Logging")) {
@@ -96,16 +113,18 @@ class deleteAction
 							"A format in which the acting Agent[s] and the target nodes affected are specified.");
 			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
 							"Normal events.");
-			
-			$item =& new AgentNodeEntryItem("Delete Node", "Asset deleted:\n<br/>&nbsp; &nbsp; &nbsp;".$asset->getDisplayName());
-			$item->addNodeId($asset->getId());
-			$item->addNodeId($repository->getId());
-			
-			$log->appendLogWithTypes($item,	$formatType, $priorityType);
 		}
-		
-		$repository->deleteAsset(
-				$idManager->getId(RequestContext::value('asset_id')));
+		foreach ($this->getAssetIds() as $id) {
+			$asset =& $repository->getAsset($id);
+			if (isset($log)) {
+				$item =& new AgentNodeEntryItem("Delete Node", 
+					"Asset deleted:\n<br/>&nbsp; &nbsp; &nbsp;".$asset->getDisplayName());
+				$item->addNodeId($asset->getId());
+				$item->addNodeId($repository->getId());
+				$log->appendLogWithTypes($item,	$formatType, $priorityType);
+			}
+			$repository->deleteAsset($id);
+		}
 		
 		$harmoni->history->goBack("concerto/asset/delete-return");
 	}

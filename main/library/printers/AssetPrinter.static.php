@@ -49,49 +49,57 @@ class AssetPrinter {
 		
 		$links = array();
 		
+		/*********************************************************
+		 * Parameters to pass on through our links
+		 *********************************************************/
+		// If we are in an asset, the viewer should contain the asset followed
+		// by slides for each of its children
 		$actionString = $harmoni->getCurrentAction();
+		if (ereg("^asset\..*$", $actionString))	{
+			$xmlModule = 'asset';
+			$xmlAction = 'browsexml';
+			$xmlAssetIdString = $harmoni->request->get("asset_id");
+			
+			if ($harmoni->request->get("asset_id") ==
+					$assetId->getIdString())
+				$xmlStart = 0;
+			else
+				$xmlStart = $assetNum;
+		} 
+	// Otherwise, the viewer should contain the asset allong with slides
+	// for the other assets in the collection.
+		else {
+			$xmlModule = 'collection';
+			$xmlAction = 'browse_outline_xml';
+			$xmlAssetIdString = $assetId->getIdString();
+			$xmlStart = $assetNum - 1;
+		}
+		$params = array("collection_id" => $repositoryId->getIdString(),
+					"asset_id" => $xmlAssetIdString,
+					RequestContext::name("starting_number") => RequestContext::value("starting_number"),
+					RequestContext::name("limit_by") => RequestContext::value("limit_by"),
+					RequestContext::name("order") => RequestContext::value("order"),
+					RequestContext::name("direction") => RequestContext::value("direction"),
+					RequestContext::name("type") => RequestContext::value("type"),
+					RequestContext::name("searchtype") => RequestContext::value("searchtype"));
+						
+		if (RequestContext::value("searchtype")) {
+			$searchModuleManager =& Services::getService("RepositorySearchModules");
+			foreach ($searchModuleManager->getCurrentValues(Type::fromString(RequestContext::value("searchtype"))) as $key => $value) {
+				$params[$key] = $value;
+			}
+		}	
+		
+		
 	//===== View Links =====/
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.view"),
 				$assetId)) {
-		// If we are in an asset, the viewer should contain the asset followed
-		// by slides for each of its children
-			if (ereg("^asset\..*$", $actionString))	{
-				$xmlModule = 'asset';
-				$xmlAction = 'browsexml';
-				$xmlAssetIdString = $harmoni->request->get("asset_id");
-				
-				if ($harmoni->request->get("asset_id") ==
-						$assetId->getIdString())
-					$xmlStart = 0;
-				else
-					$xmlStart = $assetNum;
-			} 
-		// Otherwise, the viewer should contain the asset allong with slides
-		// for the other assets in the collection.
-			else {
-				$xmlModule = 'collection';
-				$xmlAction = 'browse_outline_xml';
-				$xmlAssetIdString = $assetId->getIdString();
-				$xmlStart = $assetNum - 1;
-			}
+		
 		//===== Viewer Link =====//
 			ob_start();
 			print "<a href='#' onclick='Javascript:window.open(";
 			print '"'.VIEWER_URL."?&amp;source=";
-			
-			$params = array("collection_id" => $repositoryId->getIdString(),
-						"asset_id" => $xmlAssetIdString,
-						RequestContext::name("limit_by") => RequestContext::value("limit_by"),
-						RequestContext::name("type") => RequestContext::value("type"),
-						RequestContext::name("searchtype") => RequestContext::value("searchtype"));
-						
-			if (RequestContext::value("searchtype")) {
-				$searchModuleManager =& Services::getService("RepositorySearchModules");
-				foreach ($searchModuleManager->getCurrentValues(Type::fromString(RequestContext::value("searchtype"))) as $key => $value) {
-					$params[$key] = $value;
-				}
-			}
 			
 			print urlencode($harmoni->request->quickURL($xmlModule, $xmlAction, $params));
 			print '&amp;start='.$xmlStart.'", ';
@@ -143,20 +151,7 @@ class AssetPrinter {
 					$links[] = _("browse");
 			}
 		}
-	//===== Edit Link =====//
-		$params = array("collection_id" => $repositoryId->getIdString(),
-						"asset_id" => $xmlAssetIdString,
-						RequestContext::name("starting_number") => RequestContext::value("starting_number"),
-						RequestContext::name("limit_by") => RequestContext::value("limit_by"),
-						RequestContext::name("type") => RequestContext::value("type"),
-						RequestContext::name("searchtype") => RequestContext::value("searchtype"));
-						
-		if (RequestContext::value("searchtype")) {
-			$searchModuleManager =& Services::getService("RepositorySearchModules");
-			foreach ($searchModuleManager->getCurrentValues(Type::fromString(RequestContext::value("searchtype"))) as $key => $value) {
-				$params[$key] = $value;
-			}
-		}		
+	//===== Edit Link =====//	
 		$harmoni->history->markReturnURL("concerto/asset/edit-return",
 			$harmoni->request->mkURL(null, null, $params));
 		
@@ -177,7 +172,8 @@ class AssetPrinter {
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.delete"),
 				$assetId)) {
-			$harmoni->history->markReturnURL("concerto/asset/delete-return");
+			$harmoni->history->markReturnURL("concerto/asset/delete-return",
+				$harmoni->request->mkURL(null, null, $params));
 			ob_start();
 			print "<a href='Javascript:deleteAsset(\"".$assetId->getIdString().
 				"\", \"".$repositoryId->getIdString()."\", \"".
@@ -275,6 +271,8 @@ class AssetPrinter {
 		print "\n\t<optgroup label='"._("Modify")."'>";
 		print "\n\t<option onclick='editCheckedAssets(); this.selected=false;'>";
 		print _("Edit Checked")."</option>";
+		print "\n\t<option onclick='deleteCheckedAssets(); this.selected=false;'>";
+		print _("Delete Checked")."</option>";
 		print "\n\t</optgroup>";		
 		print "\n</select>";
 		
@@ -287,8 +285,11 @@ class AssetPrinter {
 		$editSingleURL = str_replace("&amp;", "&", 
 			$harmoni->request->quickURL("asset", "edit"));
 		
+		$deleteMultiURL = str_replace("&amp;", "&", 
+			$harmoni->request->quickURL("asset", "multdelete"));
 		
 		$pleaseSelectString = _("Please select some Assets.");
+		$confirmDeleteString = _("Are you sure that you wish to permenantly delete these assets?");
 		print<<<END
 
 <script type='text/javascript'>
@@ -329,6 +330,27 @@ class AssetPrinter {
 			window.location = editMultiURL + assetList;
 		else if (numChecked == 1)
 			window.location = editSingleURL + assetList;
+		else
+			alert('$pleaseSelectString');
+	}
+	
+	function deleteCheckedAssets() {
+		var deleteMultiURL = '$deleteMultiURL';
+		var assetList = '&assets=';
+		var assetElements = document.getElementsByName('$checkboxName');
+		var numChecked = 0;
+		
+		for (var i = 0; i < assetElements.length; i++) {
+			if (!assetElements[i].disabled && assetElements[i].checked == true) {
+				if (numChecked > 0)
+					assetList += ',';
+				assetList += assetElements[i].value;
+				numChecked++;
+			}
+		}
+		
+		if (numChecked >= 1 && confirm('$confirmDeleteString'))
+			window.location = deleteMultiURL + assetList;
 		else
 			alert('$pleaseSelectString');
 	}
