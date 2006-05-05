@@ -6,6 +6,8 @@ Name: Concerto ChangeLog
 v. 2.0-beta 3 (2006-05-05)
 ----------------------------------------------------
 		
+	* Bug Fix: AddSlidshow now has all of the text-position options displayed. (Adam Franco)
+		
 	* Change: Check/uncheck/etc commands in browse mode are now in a select list. (Adam Franco)
 		
 	* New feature: Assets and Asset-search-order now support modification and creation times. (Adam Franco)
