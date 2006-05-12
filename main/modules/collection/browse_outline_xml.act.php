@@ -10,6 +10,8 @@
 
 require_once(MYDIR."/main/library/abstractActions/AssetAction.class.php");
 require_once(MYDIR."/main/modules/exhibitions/slideshowxml.act.php");
+require_once(HARMONI."oki2/shared/MultiIteratorIterator.class.php");
+
 
 /**
  * 
@@ -196,7 +198,18 @@ END;
 				$hasRootSearch = TRUE;
 				break;
 			}
-		}	
+		}
+		
+		// if we are limiting by type
+		if (RequestContext::value("limit_by_type") == 'true') {
+			$types =& $repository->getAssetTypes();
+			$selectedTypes = array();
+			while ($types->hasNext()) {
+				$type =& $types->next();
+				if (RequestContext::value("type___".Type::typeToString($type)) == 'true')
+					$selectedTypes[] =& $type;
+			}
+		}
 		
 		//***********************************
 		// Get the assets to display
@@ -206,42 +219,40 @@ END;
 		if (!($order = RequestContext::value("order")))
 			$order = 'DisplayName';
 		$searchProperties->addProperty("order", $order);
+		
+		if (!($direction = RequestContext::value("direction")))
+			$direction = 'ASC';
+		$searchProperties->addProperty("direction", $direction);
+		
+		if (isset($selectedTypes) && count($selectedTypes)) {
+			$searchProperties->addProperty("allowed_types", $selectedTypes);
+		}
 					
-		switch (RequestContext::value("limit_by")) {
-			case 'type':
-				if (RequestContext::value("type")) {
-					$assets =& $repository->getAssetsByType(Type::fromString(RequestContext::value("type")));
-					break;
-				}
-				
-			case 'search':
-				$searchModuleManager =& Services::getService("RepositorySearchModules");
-				$selectedSearchType =& Type::fromString(RequestContext::value("searchtype"));
-				
-				if (RequestContext::value("searchtype") 
-					&& $searchModuleManager->getSearchCriteria($repository, $selectedSearchType)) 
-				{
-					$criteria = $searchModuleManager->getSearchCriteria($repository, $selectedSearchType);
-					
-					$assets =& $repository->getAssetsBySearch(
-						$criteria,
-						$selectedSearchType,
-						$searchProperties);
-					break;
-				}
+
+		if (isset($selectedSearchType)
+			&& $searchModuleManager->getSearchCriteria($repository, $selectedSearchType)) 
+		{				
+			$criteria = $searchModuleManager->getSearchCriteria($repository, $selectedSearchType);
 			
-			default:
-				if ($hasRootSearch) {
-					$criteria = NULL;
-					$assets =& $repository->getAssetsBySearch(
-						$criteria, 
-						$rootSearchType, 
-						$searchProperties);
-				} 
-				// Otherwise, just get all the assets
-				else {
-					$assets =& $repository->getAssets();
-				}
+			$assets =& $repository->getAssetsBySearch(
+				$criteria,
+				$selectedSearchType,
+				$searchProperties);
+		} else if (isset($selectedTypes) && count($selectedTypes)) {
+			$assets =& new MultiIteratorIterator($null = null);
+			foreach (array_keys($selectedTypes) as $key) {
+				$assets->addIterator($repository->getAssetsByType($selectedTypes[$key]));
+			}
+		} else if ($hasRootSearch) {
+			$criteria = NULL;
+			$assets =& $repository->getAssetsBySearch(
+				$criteria, 
+				$rootSearchType, 
+				$searchProperties);
+		} 
+		// Otherwise, just get all the assets
+		else {
+			$assets =& $repository->getAssets();
 		}
 		
 		return $assets;

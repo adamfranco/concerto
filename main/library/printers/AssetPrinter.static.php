@@ -37,7 +37,7 @@ class AssetPrinter {
 	 * @access public
 	 * @date 8/6/04
 	 */
-	function printAssetFunctionLinks (& $harmoni, &$asset, $repositoryId = NULL, $assetNum = 0) {
+	function printAssetFunctionLinks (& $harmoni, &$asset, $repositoryId = NULL, $assetNum = 0, $includeEditDelete = true) {
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
 		
@@ -77,7 +77,7 @@ class AssetPrinter {
 		$params = array("collection_id" => $repositoryId->getIdString(),
 					"asset_id" => $xmlAssetIdString,
 					RequestContext::name("starting_number") => RequestContext::value("starting_number"),
-					RequestContext::name("limit_by") => RequestContext::value("limit_by"),
+					RequestContext::name("limit_by_type") => RequestContext::value("limit_by_type"),
 					RequestContext::name("order") => RequestContext::value("order"),
 					RequestContext::name("direction") => RequestContext::value("direction"),
 					RequestContext::name("type") => RequestContext::value("type"),
@@ -88,7 +88,19 @@ class AssetPrinter {
 			foreach ($searchModuleManager->getCurrentValues(Type::fromString(RequestContext::value("searchtype"))) as $key => $value) {
 				$params[$key] = $value;
 			}
-		}	
+		}
+		
+		// if we are limiting by type
+		if (RequestContext::value("limit_by_type") == 'true') {
+			$types =& $repository->getAssetTypes();
+			$selectedTypes = array();
+			while ($types->hasNext()) {
+				$type =& $types->next();
+				if (RequestContext::value("type___".Type::typeToString($type)) == 'true')
+					$params[RequestContext::name("type___".Type::typeToString($type))] = 
+						RequestContext::value("type___".Type::typeToString($type));
+			}
+		}
 		
 		
 	//===== View Links =====/
@@ -143,7 +155,7 @@ class AssetPrinter {
 						$assetId->getIdString() != 
 						$harmoni->request->get('asset_id')) {
 					$links[] = "<a href='".
-						$harmoni->request->quickURL("asset", "browse", 
+						$harmoni->request->quickURL("asset", "browseAsset", 
 						array("collection_id" => $repositoryId->getIdString(),
 						"asset_id" => $assetId->getIdString()))."'>";
 					$links[count($links) - 1] .= _("Browse")."</a>";
@@ -155,66 +167,69 @@ class AssetPrinter {
 		$harmoni->history->markReturnURL("concerto/asset/edit-return",
 			$harmoni->request->mkURL(null, null, $params));
 		
-		
-		if ($authZ->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.modify"),
-				$assetId)) {
-			if ($actionString != "asset.edit") {
-				$links[] = "<a href='".$harmoni->request->quickURL(
-					"asset", "edit", 
-					array("collection_id" => $repositoryId->getIdString(), 
-					"assets" => $assetId->getIdString()))."'>";
-				$links[count($links) - 1] .= _("Edit")."</a>";
-			} else
-				$links[] = _("edit");
-		}
-	//===== Delete Link =====//
-		if ($authZ->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.delete"),
-				$assetId)) {
-			$harmoni->history->markReturnURL("concerto/asset/delete-return",
-				$harmoni->request->mkURL(null, null, $params));
-			ob_start();
-			print "<a href='Javascript:deleteAsset(\"".$assetId->getIdString().
-				"\", \"".$repositoryId->getIdString()."\", \"".
-				$harmoni->request->quickURL("asset", "delete",
-				array("collection_id" => $repositoryId->getIdString(),
-				"asset_id" => $assetId->getIdString()))."\");'>";
-			print _("Delete")."</a>";
-			$links[] = ob_get_contents();
-			ob_end_clean();
-			
-			print "\n<script type='text/javascript'>\n//<![CDATA[";
-			print "\n	function deleteAsset(assetId, repositoryId, url) {";
-			print "\n		if (confirm(\""._("Are you sure you want to delete this Asset?")."\")) {";
-			print "\n			window.location = url;";
-			print "\n		}";
-			print "\n	}";
-			print "\n//]]>\n</script>\n";
-		}
-	//===== Add Child Asset Link =====//
-		if ($authZ->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.add_children"),
-				$assetId)) {
-			if (ereg("^asset\..*$", $actionString) && 
-					$harmoni->request->get("asset_id") == 
-					$assetId->getIdString()) {
-				$links[] = "<a href='".$harmoni->request->quickURL(
-					"asset", "add",
+		if ($includeEditDelete) {
+			if ($authZ->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.modify"),
+					$assetId)) {
+				if ($actionString != "asset.edit") {
+					$links[] = "<a href='".$harmoni->request->quickURL(
+						"asset", "edit", 
+						array("collection_id" => $repositoryId->getIdString(), 
+						"assets" => $assetId->getIdString()))."'>";
+					$links[count($links) - 1] .= _("Edit")."</a>";
+				} else
+					$links[] = _("edit");
+			}
+		//===== Delete Link =====//
+			if ($authZ->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.delete"),
+					$assetId)) {
+				$harmoni->history->markReturnURL("concerto/asset/delete-return",
+					$harmoni->request->mkURL(null, null, $params));
+				ob_start();
+				print "<a href='Javascript:deleteAsset(\"".$assetId->getIdString().
+					"\", \"".$repositoryId->getIdString()."\", \"".
+					$harmoni->request->quickURL("asset", "delete",
 					array("collection_id" => $repositoryId->getIdString(),
-					"parent" => $assetId->getIdString()))."'>";
-				$links[count($links) - 1] .= _("Add Child <em>Asset</em>").
-					"</a>";
-	//===== Import Link =====//
-// 				$harmoni->request->startNamespace("import");
-// 				$links[] = "<a href='".$harmoni->request->quickURL(
-// 					"asset", "import",
-// 					array("collection_id" => $repositoryId->getIdString(), 
-// 					"asset_id" => $assetId->getIdString()))."'>".
-// 					_("Import Child <em>Asset(s)</em>")."</a>";
-// 				$harmoni->request->endNamespace();
+					"asset_id" => $assetId->getIdString()))."\");'>";
+				print _("Delete")."</a>";
+				$links[] = ob_get_contents();
+				ob_end_clean();
+				
+				print "\n<script type='text/javascript'>\n//<![CDATA[";
+				print "\n	function deleteAsset(assetId, repositoryId, url) {";
+				print "\n		if (confirm(\""._("Are you sure you want to delete this Asset?")."\")) {";
+				print "\n			window.location = url;";
+				print "\n		}";
+				print "\n	}";
+				print "\n//]]>\n</script>\n";
+			}
+		
+		//===== Add Child Asset Link =====//
+			if ($authZ->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.add_children"),
+					$assetId)) {
+				if (ereg("^asset\..*$", $actionString) && 
+						$harmoni->request->get("asset_id") == 
+						$assetId->getIdString()) {
+					$links[] = "<a href='".$harmoni->request->quickURL(
+						"asset", "add",
+						array("collection_id" => $repositoryId->getIdString(),
+						"parent" => $assetId->getIdString()))."'>";
+					$links[count($links) - 1] .= _("Add Child <em>Asset</em>").
+						"</a>";
+		//===== Import Link =====//
+	// 				$harmoni->request->startNamespace("import");
+	// 				$links[] = "<a href='".$harmoni->request->quickURL(
+	// 					"asset", "import",
+	// 					array("collection_id" => $repositoryId->getIdString(), 
+	// 					"asset_id" => $assetId->getIdString()))."'>".
+	// 					_("Import Child <em>Asset(s)</em>")."</a>";
+	// 				$harmoni->request->endNamespace();
+				}
 			}
 		}
+		
 	//===== Basket Link =====//
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.view"),
@@ -254,24 +269,27 @@ class AssetPrinter {
 // 		print "\n<br/><input type='button' onclick='addCheckedAssetsToBasket();'";
 // 		print "value='"._("Add Checked To Basket")."'/>";
 		
-		print "\n<select>";
-		print "\n\t<option>"._("Commands...")."</option>";
+		print "\n<select onchange=' ";
+		print 'eval(this.value); ';
+		print 'this.value="return";';
+		print "'>";
+		print "\n\t<option selected='selected' value='return'>"._("Commands...")."</option>";
 		print "\n\t<optgroup label='"._("Select")."'>";
-		print "\n\t\t<option onclick='checkAllAssets(); this.selected=false;'>";
+		print "\n\t\t<option value='checkAllAssets();'>";
 		print _("Check All")."</option>";
-		print "\n\t\t<option onclick='uncheckAllAssets(); this.selected=false;'>";
+		print "\n\t\t<option value='uncheckAllAssets();'>";
 		print _("Un-Check All")."</option>";
 		print "\n\t</optgroup>";
-		print "\n\t<optgroup label='"._("Basket")."'>";
-		print "\n\t<option onclick='addCheckedAssetsToBasket(); this.selected=false;'>";
-		print _("Add Checked To Basket")."</option>";
-		print "\n\t<option onclick='Basket.empty(); this.selected=false;'>";
-		print _("Empty Basket")."</option>";	
+		print "\n\t<optgroup label='"._("Selection")."'>";
+		print "\n\t<option value='addCheckedAssetsToBasket();'>";
+		print _("Add Checked To Selection")."</option>";
+		print "\n\t<option value='Basket.empty();'>";
+		print _("Empty Selection")."</option>";	
 		print "\n\t</optgroup>";
 		print "\n\t<optgroup label='"._("Modify")."'>";
-		print "\n\t<option onclick='editCheckedAssets(); this.selected=false;'>";
+		print "\n\t<option value='editCheckedAssets();'>";
 		print _("Edit Checked")."</option>";
-		print "\n\t<option onclick='deleteCheckedAssets(); this.selected=false;'>";
+		print "\n\t<option value='deleteCheckedAssets();'>";
 		print _("Delete Checked")."</option>";
 		print "\n\t</optgroup>";		
 		print "\n</select>";

@@ -8,11 +8,12 @@
  * @version $Id$
  */ 
 
-require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
+require_once(MYDIR."/main/library/abstractActions/AssetAction.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/TextAlignSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/MinHeightSP.class.php");
 require_once(HARMONI."/Primitives/Collections-Text/HtmlString.class.php");
 require_once(POLYPHONY."/main/library/RepositorySearchModules/RepositorySearchModuleManager.class.php");
+require_once(HARMONI."oki2/shared/MultiIteratorIterator.class.php");
 
 
 /**
@@ -26,7 +27,7 @@ require_once(POLYPHONY."/main/library/RepositorySearchModules/RepositorySearchMo
  * @version $Id$
  */
 class browseAction 
-	extends RepositoryAction
+	extends AssetAction
 {
 	/**
 	 * Check Authorizations
@@ -65,9 +66,102 @@ class browseAction
 	 */
 	function getHeadingText () {
 		$repository =& $this->getRepository();
-		return _("Browse Assets in the")
-			." <em>".$repository->getDisplayName()."</em> "
-			._(" Collection");
+		$description =& HtmlString::fromString($repository->getDescription());
+		$description->clean();
+		return $repository->getDisplayName()
+			."<div style='font-size: small; margin-left: 25px;'>".$description->asString()."</div> ";
+	}
+	
+	/**
+	 * Register updates to the display properites inthe session
+	 * 
+	 * @return void
+	 * @access public
+	 * @since 5/11/06
+	 */
+	function registerDisplayProperties () {
+		$properties = array (
+			'thumbnail_size' => 200,
+			
+			'hide_thumbnail' => 'false',
+			'hide_displayName' => 'false',
+			'hide_description' => 'false',
+			'hide_id' => 'true',
+			'hide_controls' => 'false',
+			
+			'assets_per_page' => 9,
+			'asset_columns' => 3,
+			
+			'asset_order' => 'DisplayName',
+			'asset_order_direction' => 'ASC'
+			
+		);
+				
+		foreach($properties as $name => $default) {
+			if (RequestContext::value('form_submitted'))
+				$_SESSION[$name] = RequestContext::value($name);
+			else if (!isset($_SESSION[$name]))
+				$_SESSION[$name] = $default;
+		}			
+	}
+	
+	/**
+	 * Register the search and page state of this collection so that the
+	 * next time that we return to it, we will get the same view.
+	 * 
+	 * @return void
+	 * @access public
+	 * @since 5/11/06
+	 */
+	function registerCollectionState () {
+		$id =& $this->getRepositoryId();
+				
+		if (!isset($_SESSION['collection_state']))
+			$_SESSION['collection_state'] = array();
+		if (!isset($_SESSION['collection_state'][$id->getIdString()]))
+			$_SESSION['collection_state'][$id->getIdString()] = array();
+		
+		$this->_state =& $_SESSION['collection_state'][$id->getIdString()];
+		
+		// top-level properties
+		$properties = array (
+			'limit_by_type' => 'false'			
+		);
+		
+		foreach($properties as $name => $default) {
+			if (RequestContext::value('form_submitted'))
+				$this->_state[$name] = RequestContext::value($name);
+			else if (!isset($this->_state[$name]))
+				$this->_state[$name] = $default;
+		}
+		
+		// Search type
+		if (RequestContext::value('searchtype'))
+			$this->_state['searchtype'] = Type::fromString(RequestContext::value('searchtype'));
+		else if (!isset($this->_state['searchtype']))
+			$this->_state['searchtype'] = new Type(
+										"Repository",
+										"edu.middlebury.harmoni",
+										"Keyword", 
+										"Search with a string for keywords.");
+		
+		
+		// if we are limiting by type
+		if ($this->_state["limit_by_type"] == 'true') {
+			$repository =& $this->getRepository();
+			$types =& $repository->getAssetTypes();
+			if (!isset($this->_state["selectedTypes"]))
+				$this->_state["selectedTypes"] = array();
+			
+			while ($types->hasNext()) {
+				$type =& $types->next();
+				if (RequestContext::value("type___".Type::typeToString($type)) == 'true') {
+					$this->_state["selectedTypes"][Type::typeToString($type)] =& $type;
+				} else if (RequestContext::name('form_submitted'))
+					unset($this->_state["selectedTypes"][Type::typeToString($type)]);
+			}
+		}
+		
 	}
 	
 	/**
@@ -78,6 +172,10 @@ class browseAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
+	
+		$this->registerDisplayProperties();
+		$this->registerCollectionState();
+		
 		$actionRows =& $this->getActionRows();
 		$harmoni =& Harmoni::instance();
 		
@@ -105,213 +203,296 @@ class browseAction
 		$actionRows->add($layout, "100%", null, CENTER, CENTER);
 		
 		
-		$searchBar =& new Container(new XLayout(), BLOCK, STANDARD_BLOCK);
+		$searchBar =& new Container(new YLayout(), BLOCK, STANDARD_BLOCK);
 		$actionRows->add($searchBar, "100%", null, CENTER, CENTER);
 		
 		
 		// Limit selection form
 		$currentUrl =& $harmoni->request->mkURL();	
 		$searchBar->setPreHTML(
-			"\n<form action='".$currentUrl->write()."' method='post'>");
+			"\n<form action='".$currentUrl->write()."' method='post'>
+	<input type='hidden' name='".RequestContext::name('form_submitted')."' value='true'/>");
 		$searchBar->setPostHTML("\n</form>");
 		
 		ob_start();	
-		print "\n\t<input type='radio' onclick='this.form.submit();'";
-		print " name='".RequestContext::name("limit_by")."'";
-		print " value='all'";
-		if (!RequestContext::value("limit_type") || RequestContext::value("limit_by") == 'all' )
-			print " checked='checked'";
-		print "/>"._("All")."\n<br/>";
-		
-		print "\n\t<input type='radio' onclick='this.form.submit();'";
-		print " name='".RequestContext::name("limit_by")."'";
-		print " value='type'";
-		if (RequestContext::value("limit_by") == 'type') {
-			print " checked='checked'";
-			print "/>"._("Type").": ";
-			print "\n\t<select name='".RequestContext::name("type")."'";
-			print " onchange='this.form.submit();'>";
-				print "\n\t\t<option value=''";
-				if (!RequestContext::value("type"))
+		// search fields
+		print "\n<div style='margin-bottom: 10px;'>";
+		$searchModuleManager =& Services::getService("RepositorySearchModules");
+// 		print _("Search").": ";		
+		print "\n\t<select name='".RequestContext::name("searchtype")."'";
+		print " onchange='this.form.submit();'>";
+			$types =& $repository->getSearchTypes();
+			while ($types->hasNext()) {
+				$type =& $types->next();				
+				print "\n\t\t<option value='".Type::typeToString($type)."'";
+				if ($this->_state['searchtype']->isEqual($type)) {
 					print " selected='selected'";
-				print ">"._("All Types")."</option>";
-				$types =& $repository->getAssetTypes();
-				while ($types->hasNext()) {
-					$type =& $types->next();
-					print "\n\t\t<option value='".Type::typeToString($type)."'";
-					if (RequestContext::value("type") == Type::typeToString($type))
-						print " selected='selected'";
-					print ">".$type->getKeyword()."</option>";
-				}			
-			print "\n\t</select>";
-			print "\n<br/>";
+				}
+				print ">".$type->getKeyword()."</option>";
+			}			
+		print "\n\t</select>";
+		
+// 		print "\n\t<div style='margin-left: 25px;'>";
+		print "\n\t\t".$searchModuleManager->createSearchFields($repository, $this->_state['searchtype']);	
+		
+		// submit
+		print "\n\t<input type='submit' value='"._("Search")."' />";
+		
+// 		print "\n\t</div>";
+		print "\n</div>";
+		
+		
+		// Type limits
+		print "\n<div style='margin-bottom: 10px;'>";
+		print "\n\t<input type='checkbox' onchange='TypeLimitList.toggle(this, this.nextSibling.nextSibling);'";
+		print " name='".RequestContext::name("limit_by_type")."'";
+		print " value='true'";
+		if ($this->_state["limit_by_type"] == 'true') {
+			print " checked='checked'";
+			$typesDisplay = 'block';
 		} else {
-			print "/>"._("Type")."\n<br/>";
+			$typesDisplay = 'none';
+		}
+		print "/>"._("Limit to Types...")." ";
+		
+		print "\n\t<div id='listDiv' style='margin-left:25px; display: ".$typesDisplay.";'>";
+		
+		if ($this->_state["limit_by_type"] == 'true') {
+			print "\n\t<table border='0'>";
+			print "\n\t\t<tr>";
+			$i = 0;
+			$types =& $repository->getAssetTypes();
+			$selectedTypes = array();
+			while ($types->hasNext()) {
+				print "\n\t\t\t<td>";
+				$type =& $types->next();
+				print "\n\t\t\t\t<input type='checkbox'";
+				print " name='".RequestContext::name("type___".Type::typeToString($type))."'";
+				print " value='true'";
+				if (array_key_exists(Type::typeToString($type), $this->_state["selectedTypes"]))
+					print " checked='checked'";
+				print "/>".$type->getKeyword()."";
+				print "\n\t\t\t<td>";
+				$i++;
+				if (($i % 4) == 0)
+					print "\n\t\t</tr>\n\t\t<tr>";
+			}
+			print "\n\t\t</tr>";
+			print "\n\t</table>";			
 		}
 		
-		$searchModuleManager =& Services::getService("RepositorySearchModules");
-		print "\n\t<input type='radio' onclick='this.form.submit();'";
-		print " name='".RequestContext::name("limit_by")."'";
-		print " value='search'";
-		if (RequestContext::value("limit_by") == 'search') {
-			print " checked='checked'";
-			print "/>"._("Search").": ";
-			print "\n\t<select name='".RequestContext::name("searchtype")."'";
-			print " onchange='this.form.submit();'>";
-				$types =& $repository->getSearchTypes();
-				while ($types->hasNext()) {
-					$type =& $types->next();
-					if (!isset($firstSearchType))
-						$firstSearchType =& $type;
-					
-					print "\n\t\t<option value='".Type::typeToString($type)."'";
-					if (RequestContext::value("searchtype") == Type::typeToString($type)) {
-						print " selected='selected'";
-						$selectedSearchType =& $type;
+		print "\n\t</div>";
+		
+		$repositoryId =& $repository->getId();
+		$loadListUrl = str_replace('&amp;', '&', 
+							$harmoni->request->quickUrl('collection', 'typeList', 
+								array('collection_id', $repositoryId->getIdString())));
+		$errorString = _('error');
+		$loadingString = _('loading types');
+		print <<< END
+
+	<script type='text/javascript'>
+	/* <![CDATA[ */
+		
+		/**
+		 * The type limit list, a static class for managing the type limit list
+		 * 
+		 * @since 5/10/06
+		 */
+		function TypeLimitList () {
+			
+		}
+		
+		/**
+		 * Toggle the showing and collapsing of the type limit list
+		 * 
+		 * @param element listDiv
+		 * @return void
+		 * @access public
+		 * @since 5/10/06
+		 */
+		TypeLimitList.toggle = function (checkbox, listDiv) {
+			if (!checkbox.checked) {
+				listDiv.style.display = 'none';
+				TypeLimitList.uncheckChildren(listDiv);
+				return;
+			} else {
+				// if we have not loaded our table, load it via AJAX
+				var hasChildTable = false;
+				for (var i = 0; i < listDiv.childNodes.length; i++) {
+					if (listDiv.childNodes[i].nodeName.toUpperCase() == 'TABLE') {
+						hasChildTable = true;
+						break;
 					}
-					print ">".$type->getKeyword()."</option>";
-				}			
-			print "\n\t</select>";
+				}
+				
+				if (!hasChildTable) {
+					TypeLimitList.load(listDiv, '$loadListUrl');
+				}
+				
+				listDiv.style.display = 'block';
+				TypeLimitList.checkChildren(listDiv);
+			}
+		}
+		
+		/**
+		 * uncheck all of the descendent checkboxes of a node
+		 * 
+		 * @param element node
+		 * @return void
+		 * @access public
+		 * @since 5/10/06
+		 */
+		TypeLimitList.load = function( destinationNode, url ) {
+			/*********************************************************
+			 * Do the AJAX request and repopulate the basket with 
+			 * the contents of the result
+			 *********************************************************/
+			 
+			destinationNode.innerHTML = "<div style='text-decoration: blink;'>$loadingString</div>";
+						
+			// branch for native XMLHttpRequest object (Mozilla, Safari, etc)
+			if (window.XMLHttpRequest)
+				var req = new XMLHttpRequest();
+				
+			// branch for IE/Windows ActiveX version
+			else if (window.ActiveXObject)
+				var req = new ActiveXObject("Microsoft.XMLHTTP");
 			
-			if (!isset($selectedSearchType))
-				$selectedSearchType =& $firstSearchType;
 			
-			print "\n\t<div style='margin-left: 25px;'>";
-			print "\n\t\t".$searchModuleManager->createSearchFields($repository, $selectedSearchType);			
-			print "\n\t\t<input type='submit'>";
-			print "\n\t</div>";
-			print "\n<br/>";
-		} else {
-			print "/>"._("Search")."\n<br/>";
-		}		
+			if (req) {
+				req.onreadystatechange = function () {
+					// only if req shows "loaded"
+					if (req.readyState == 4) {
+						// only if we get a good load should we continue.
+						if (req.status == 200) {
+							destinationNode.innerHTML = req.responseText;
+							TypeLimitList.checkChildren(destinationNode);
+						} else {
+							destinationNode.innerHTML = "<div style='background-color: #FAA; border: 1px solid; padding: 5px;'>$errorString</div>";
+							alert("There was a problem retrieving the XML data:\\n" +
+								req.statusText);
+						}
+					}
+				}
+				
+				req.open("GET", url, true);
+				req.send(null);
+			}
+		}
 		
-		$searchForm =& new UnstyledBlock(ob_get_contents());
-		ob_end_clean();
-		$searchBar->add($searchForm, "70%", null, LEFT, TOP);
+		/**
+		 * uncheck all of the descendent checkboxes of a node
+		 * 
+		 * @param element node
+		 * @return void
+		 * @access public
+		 * @since 5/10/06
+		 */
+		TypeLimitList.uncheckChildren = function( node ) {
+			if (node.type == 'checkbox') {
+				node.checked = false;
+// 				alert('unchecking: ' + node.name);
+			}
+			
+			for (var i = 0; i < node.childNodes.length; i++) {
+				TypeLimitList.uncheckChildren(node.childNodes[i]);
+			}
+		}
 		
+		/**
+		 * check all of the descendent checkboxes of a node
+		 * 
+		 * @param element node
+		 * @return void
+		 * @access public
+		 * @since 5/10/06
+		 */
+		TypeLimitList.checkChildren = function( node ) {
+			if (node.type == 'checkbox') {
+				node.checked = true;
+// 				alert('checking: ' + node.name);
+			}
+			
+			for (var i = 0; i < node.childNodes.length; i++) {
+				TypeLimitList.checkChildren(node.childNodes[i]);
+			}
+		}
+	
+	/* ]]> */
+	</script>
 		
-		// view options
-		ob_start();
-		print "\n<div style='text-align: right'>";
-		print "\n\t\t"._("Assets Per Page").": ";
+END;
 		
-		if (isset($_SESSION["assetsPerPage"]))
-			$defaultNumPerPage = $_SESSION["assetsPerPage"];
-		else
-			$defaultNumPerPage = 6;
+		print "\n</div>";
+		$searchBar->add(new UnstyledBlock(ob_get_clean()), null, null, LEFT, TOP);
 		
-		print "\n\t<select name='".RequestContext::name("num_per_page")."'";
-		print " onchange='this.form.submit();'>";			
-		for ($i = 1; $i < 20; $i++)
-			$this->printSelectOption("num_per_page", $defaultNumPerPage, $i);
-		for ($i = 20; $i < 100; $i=$i+10)
-			$this->printSelectOption("num_per_page", $defaultNumPerPage, $i);
-		for ($i = 100; $i <= 1000; $i=$i+100)
-			$this->printSelectOption("num_per_page", $defaultNumPerPage, $i);
-		print "\n\t</select>";
-		
-		print "\n\t\t<br/>"._("Columns").": ";
-		
-		if (isset($_SESSION["assetColumns"]))
-			$defaultCols = $_SESSION["assetColumns"];
-		else
-			$defaultCols = 3;
-		
-		print "\n\t<select name='".RequestContext::name("columns")."'";
-		print " onchange='this.form.submit();'>";
-		for ($i = 1; $i < 20; $i++)
-			$this->printSelectOption("columns", $defaultCols, $i);
-		print "\n\t</select>";
-		
-		print "\n\t<select name='".RequestContext::name("order")."'";
-		print " onchange='this.form.submit();'>";
-		$this->printSelectOption("order", 'DisplayName', 'DisplayName', _('DisplayName'));
-		$this->printSelectOption("order", 'DisplayName', 'Id', _('Id'));
-		$this->printSelectOption("order", 'DisplayName', 'ModificationDate', _('Modification Date'));
-		$this->printSelectOption("order", 'DisplayName', 'CreationDate', _('Creation Date'));
-		print "\n\t</select>";
-		
-		print "\n\t<select name='".RequestContext::name("direction")."'";
-		print " onchange='this.form.submit();'>";
-		$this->printSelectOption("direction", 'ASC', 'ASC', _('Ascending'));
-		$this->printSelectOption("direction", 'ASC', 'DESC', _('Descending'));
-		print "\n\t</select>";
-		print "</div>";
-		
-		$searchForm =& new UnstyledBlock(ob_get_contents());
-		ob_end_clean();
-		$searchBar->add($searchForm, "30%", null, RIGHT, TOP);
+
 		
 		//***********************************
 		// Get the assets to display
 		//***********************************
 		$searchProperties =& new HarmoniProperties(
 					Type::fromString("repository::harmoni::order"));
-		if (!($order = RequestContext::value("order")))
-			$order = 'DisplayName';
-		$searchProperties->addProperty("order", $order);
+		$searchProperties->addProperty("order", $_SESSION["asset_order"]);
+		$searchProperties->addProperty("direction", $_SESSION['asset_order_direction']);
 		
-		if (!($direction = RequestContext::value("direction")))
-			$direction = 'ASC';
-		$searchProperties->addProperty("direction", $direction);
-					
-		switch (RequestContext::value("limit_by")) {
-			case 'type':
-				if (RequestContext::value("type")) {
-					$assets =& $repository->getAssetsByType(Type::fromString(RequestContext::value("type")));
-					break;
-				}
-				
-			case 'search':
-				if (isset($selectedSearchType)
-					&& $searchModuleManager->getSearchCriteria($repository, $selectedSearchType)) 
-				{				
-					$criteria = $searchModuleManager->getSearchCriteria($repository, $selectedSearchType);
-					
-					$assets =& $repository->getAssetsBySearch(
-						$criteria,
-						$selectedSearchType,
-						$searchProperties);
-					break;
-				}
-			
-			default:
-				if ($hasRootSearch) {
-					$criteria = NULL;
-					$assets =& $repository->getAssetsBySearch(
-						$criteria, 
-						$rootSearchType, 
-						$searchProperties);
-				} 
-				// Otherwise, just get all the assets
-				else {
-					$assets =& $repository->getAssets();
-				}
+		if (isset($this->_state['selectedTypes']) && count($this->_state['selectedTypes'])) {
+			$searchProperties->addProperty("allowed_types", $this->_state['selectedTypes']);
 		}
+					
+
+		if (isset($this->_state['searchtype'])
+			&& $searchModuleManager->getSearchCriteria($repository, $this->_state['searchtype'])) 
+		{				
+			$criteria = $searchModuleManager->getSearchCriteria($repository, $this->_state['searchtype']);
+			
+			$assets =& $repository->getAssetsBySearch(
+				$criteria,
+				$this->_state['searchtype'],
+				$searchProperties);
+		} else if (isset($this->_state['selectedTypes']) && count($this->_state['selectedTypes'])) {
+			$assets =& new MultiIteratorIterator($null = null);
+			foreach (array_keys($this->_state['selectedTypes']) as $key) {
+				$assets->addIterator($repository->getAssetsByType($this->_state['selectedTypes'][$key]));
+			}
+		} else if ($hasRootSearch) {
+			$criteria = NULL;
+			$assets =& $repository->getAssetsBySearch(
+				$criteria, 
+				$rootSearchType, 
+				$searchProperties);
+		} 
+		// Otherwise, just get all the assets
+		else {
+			$assets =& $repository->getAssets();
+		}
+		
 		
 		//***********************************
 		// print the results
-		//***********************************
-		if (RequestContext::value("num_per_page")) {
-			$numPerPage = RequestContext::value("num_per_page");
-			$_SESSION["assetsPerPage"] = $numPerPage;
-		} else if (isset($_SESSION["assetsPerPage"]))
-			$numPerPage = $_SESSION["assetsPerPage"];
-		else
-			$numPerPage = $defaultNumPerPage;
-			
-		if (RequestContext::value("columns")) {
-			$columns = RequestContext::value("columns");
-			$_SESSION["assetColumns"] = $columns;
-		} else if (isset($_SESSION["assetColumns"]))
-			$columns = $_SESSION["assetColumns"];
-		else
-			$columns = $defaultCols;
-			
-			
-		if (!isset($selectedSearchType))
-			$selectedSearchType = null;
-		$resultPrinter =& new IteratorResultPrinter($assets, $columns, $numPerPage, "printAssetShort", $selectedSearchType);
+		//***********************************			
+		
+		$params = array();
+		$params["collection_id"] = RequestContext::value("collection_id");
+		$params[RequestContext::name("limit_by_type")] = RequestContext::value("limit_by_type");
+		$params[RequestContext::name("type")] = RequestContext::value("type");
+		$params[RequestContext::name("searchtype")] = RequestContext::value("searchtype");
+		if (isset($this->_state['searchtype'])) {
+			$searchModuleManager =& Services::getService("RepositorySearchModules");
+			foreach ($searchModuleManager->getCurrentValues($this->_state['searchtype']) as $key => $value) {
+				$params[$key] = $value;
+			}
+		}
+		if (isset($this->_state['selectedTypes']) && count($this->_state['selectedTypes'])) {
+			foreach(array_keys($this->_state['selectedTypes']) as $typeString) {
+				$params[RequestContext::name("type___".$typeString)] = 
+					RequestContext::value("type___".$typeString);
+			}
+		}
+		
+		
+		$resultPrinter =& new IteratorResultPrinter($assets, $_SESSION["asset_columns"], $_SESSION["assets_per_page"], "printAssetShort", $params);
 		
 		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
 		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
@@ -319,6 +500,146 @@ class browseAction
 		
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 		
+		
+		/*********************************************************
+		 * Display options
+		 *********************************************************/
+		$searchBar->add($this->getDisplayOptions($resultPrinter), null, null, LEFT, TOP);
+	}
+	
+	/**
+	 * Anser the display options GUI component
+	 * 
+	 * @param object ResultPrinter $resultPrinter
+	 * @return object Component The GUI component for the display options
+	 * @access public
+	 * @since 5/11/06
+	 */
+	function &getDisplayOptions ( &$resultPrinter ) {
+		// view options
+		ob_start();
+		print "\n<div style='text-align: left'>";
+		print "\n\t\t"._("Display")." ";
+		
+		print "\n\t<select name='".RequestContext::name("assets_per_page")."'";
+		print " onchange='this.form.submit();'>";			
+		for ($i = 1; $i < 20; $i++)
+			$this->printSelectOption("assets_per_page", $_SESSION["assets_per_page"], $i);
+		for ($i = 20; $i < 100; $i=$i+10)
+			$this->printSelectOption("assets_per_page", $_SESSION["assets_per_page"], $i);
+		for ($i = 100; $i <= 1000; $i=$i+100)
+			$this->printSelectOption("assets_per_page", $_SESSION["assets_per_page"], $i);
+		print "\n\t</select>";
+		
+		print "\n\t\t"._("per page, in")." ";
+		
+		
+		print "\n\t<select name='".RequestContext::name("asset_columns")."'";
+		print " onchange='this.form.submit();'>";
+		for ($i = 1; $i < 20; $i++)
+			$this->printSelectOption("columns", $_SESSION["asset_columns"], $i);
+		print "\n\t</select>";
+		
+		print " "._("columns. Order by")." ";
+		
+		print "\n\t<select name='".RequestContext::name("asset_order")."'";
+		print " onchange='this.form.submit();'>";
+		$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'DisplayName', _('Title'));
+		$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'Id', _('Id'));
+		$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'ModificationDate', _('Modification Date'));
+		$this->printSelectOption("asset_order", $_SESSION["asset_order"], _('Creation Date'));
+		print "\n\t</select>";
+		
+		print "\n\t<select name='".RequestContext::name("asset_order_direction")."'";
+		print " onchange='this.form.submit();'>";
+		$this->printSelectOption("asset_order_direction", $_SESSION["asset_order_direction"], 'ASC', _('Ascending'));
+		$this->printSelectOption("asset_order_direction", $_SESSION["asset_order_direction"], 'DESC', _('Descending'));
+		print "\n\t</select>";
+		
+		// more display options
+		$onChange = " onchange='this.form.action += \"&".$resultPrinter->startingNumberParam()."=".$resultPrinter->getStartingNumber()."\"; this.form.submit();'";
+		print "\n\t<span";
+		print " style='font-weight: bold; text-decoration: underline; cursor: pointer'";
+		print " onclick='";
+		print 'if (this.nextSibling.nextSibling.style.display=="none") {';
+		print 		'this.nextSibling.nextSibling.style.display="block"; ';
+		print 		'this.innerHTML="'._("less...").'";';
+		print '} else {';
+		print 		'this.nextSibling.nextSibling.style.display="none";';
+		print 		'this.innerHTML="'._("more...").'";';
+		print '}';
+		print "'>"._("more...")."</span>";
+		print "\n\t<div style='display: none'>";
+		
+		print _("Image Size:")." ";
+		
+		print "\n\t\t<select";
+		print " name='".RequestContext::name("thumbnail_size")."'";
+		print $onChange;
+		print ">";
+		$sizes = array(50, 100, 150, 200);
+		foreach ($sizes as $size) {
+			print "\n\t\t\t<option value='$size'";
+			if ($_SESSION["thumbnail_size"] == $size)
+				print " selected='selected'";
+			print "'>".$size."px</option>";
+		}
+		print "\n\t\t</select> &nbsp;&nbsp;";
+		
+		print _("Hide:")." ";
+		
+		print "\n\t\t&nbsp;&nbsp;<input type='checkbox'";
+		print " name='".RequestContext::name("hide_thumbnail")."'";
+		print $onChange;
+		print " value='true'";
+		if ($_SESSION["hide_thumbnail"] == 'true')
+			print " checked='checked'";
+		print "/> ";
+		print _("Thumbnails,");
+		
+		print "\n\t\t&nbsp;&nbsp;<input type='checkbox'";
+		print " name='".RequestContext::name("hide_displayName")."'";
+		print $onChange;
+		print " value='true'";
+		if ($_SESSION["hide_displayName"] == 'true')
+			print " checked='checked'";
+		print "/> ";
+		print _("Title,");
+		
+		print "\n\t\t&nbsp;&nbsp;<input type='checkbox'";
+		print " name='".RequestContext::name("hide_description")."'";
+		print $onChange;
+		print " value='true'";
+		if ($_SESSION["hide_description"] == 'true')
+			print " checked='checked'";
+		print "/> ";
+		print _("Description,");
+		
+		print "\n\t\t&nbsp;&nbsp;<input type='checkbox'";
+		print " name='".RequestContext::name("hide_id")."'";
+		print $onChange;
+		print " value='true'";
+		if ($_SESSION["hide_id"] == 'true')
+			print " checked='checked'";
+		print "/> ";
+		print _("Id,");
+		
+		print "\n\t\t&nbsp;&nbsp;<input type='checkbox'";
+		print " name='".RequestContext::name("hide_controls")."'";
+		print $onChange;
+		print " value='true'";
+		if ($_SESSION["hide_controls"] == 'true')
+			print " checked='checked'";
+		print "/> ";
+		print _("Controls");
+		
+		
+		
+		print "\n\t</div>";
+		print "</div>";
+		
+		$block =& new UnstyledBlock(ob_get_clean());
+		return $block;
 	}
 	
 	/**
@@ -346,7 +667,7 @@ class browseAction
 
 
 // Callback function for printing Assets
-function printAssetShort(& $asset, $selectedSearchType, $num) {
+function printAssetShort(& $asset, $params, $num) {
 	$harmoni =& Harmoni::instance();
 	$container =& new Container(new YLayout, BLOCK, EMPHASIZED_BLOCK);
 	$fillContainerSC =& new StyleCollection("*.fillcontainer", "fillcontainer", "Fill Container", "Elements with this style will fill their container.");
@@ -356,55 +677,61 @@ function printAssetShort(& $asset, $selectedSearchType, $num) {
 	$centered =& new StyleCollection("*.centered", "centered", "Centered", "Centered Text");
 	$centered->addSP(new TextAlignSP("center"));	
 	
-	ob_start();
 	$assetId =& $asset->getId();
-	print "\n\t<strong>".htmlspecialchars($asset->getDisplayName())."</strong>";
-	print "\n\t<br/>"._("ID#").": ".$assetId->getIdString();
-	$description =& HtmlString::withValue($asset->getDescription());
-	$description->trim(25);
-	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	
+	
+	if ($_SESSION["hide_thumbnail"] != 'true') {
+		$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($asset);
+		if ($thumbnailURL !== FALSE) {
+			$xmlModule = 'collection';
+			$xmlAssetIdString = $assetId->getIdString();
+			$xmlStart = $num - 1;
+			
+			$thumbSize = $_SESSION["thumbnail_size"]."px";
+	
+			ob_start();
+			print "\n<div style='height: $thumbSize; width: $thumbSize; margin: auto;'>";
+			print "\n\t<a style='cursor: pointer;'";
+			print " onclick='Javascript:window.open(";
+			print '"'.VIEWER_URL."?&amp;source=";
+			$params["asset_id"] = $xmlAssetIdString;
+			print urlencode($harmoni->request->quickURL($xmlModule, "browse_outline_xml", $params));
+			print '&amp;start='.$xmlStart.'", ';
+	// 		print '"'.preg_replace("/[^a-z0-9]/i", '_', $assetId->getIdString()).'", ';
+			print '"_blank", ';
+			print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
+			print ")'>";
+			print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' style='max-height: $thumbSize; max-width: $thumbSize;' />";
+			print "\n\t</a>";
+			print "\n</div>";
+			$component =& new UnstyledBlock(ob_get_contents());
+			$component->addStyle($centered);
+			ob_end_clean();
+			$container->add($component, "100%", null, CENTER, CENTER);
+		}
+	}
+	
+	ob_start();
+	if ($_SESSION["hide_displayName"] != 'true')
+		print "\n\t<div style='font-weight: bold; height: 50px; overflow: auto;'>".htmlspecialchars($asset->getDisplayName())."</div>";
+	if ($_SESSION["hide_id"] != 'true')
+		print "\n\t<div>"._("ID#").": ".$assetId->getIdString()."</div>";
+	if ($_SESSION["hide_description"] != 'true') {
+		$description =& HtmlString::withValue($asset->getDescription());
+		$description->trim(25);
+		print  "\n\t<div style='font-size: smaller; height: 50px; overflow: auto;'>".$description->asString()."</div>";	
+	}
 	
 	$component =& new UnstyledBlock(ob_get_contents());
 	ob_end_clean();
 	$container->add($component, "100%", null, LEFT, TOP);
 	
-	$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($asset);
-	if ($thumbnailURL !== FALSE) {
-		$xmlModule = 'collection';
-		$xmlAssetIdString = $assetId->getIdString();
-		$xmlStart = $num - 1;
-
-		ob_start();
-		print "<a href='#' onclick='Javascript:window.open(";
-		print '"'.VIEWER_URL."?&amp;source=";
-		$params = array("collection_id" => RequestContext::value("collection_id"),
-					"asset_id" => $xmlAssetIdString,
-					RequestContext::name("limit_by") => RequestContext::value("limit_by"),
-					RequestContext::name("type") => RequestContext::value("type"),
-					RequestContext::name("searchtype") => RequestContext::value("searchtype"));
-		if ($selectedSearchType) {
-			$searchModuleManager =& Services::getService("RepositorySearchModules");
-			foreach ($searchModuleManager->getCurrentValues($selectedSearchType) as $key => $value) {
-				$params[$key] = $value;
-			}
-		}
-		print urlencode($harmoni->request->quickURL($xmlModule, "browse_outline_xml", $params));
-		print '&amp;start='.$xmlStart.'", ';
-// 		print '"'.preg_replace("/[^a-z0-9]/i", '_', $assetId->getIdString()).'", ';
-		print '"_blank", ';
-		print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
-		print ")'>";
-		print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' />";
-		print "\n\t</a>";
-		$component =& new UnstyledBlock(ob_get_contents());
-		$component->addStyle($centered);
-		ob_end_clean();
-		$container->add($component, "100%", null, CENTER, CENTER);
-	}
-	
 	
 	ob_start();
-	
+	print "<div style='margin-top: 5px; font-size: small;'>";
+	if ($_SESSION["hide_controls"] != 'true') {
+		AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num, false);
+		print " | ";
+	}
 	$authZ =& Services::getService("AuthZ");
 	$idManager =& Services::getService("Id");
 	$harmoni->request->startNamespace("AssetMultiEdit");
@@ -413,15 +740,11 @@ function printAssetShort(& $asset, $selectedSearchType, $num) {
 	print " value='".$assetId->getIdString()."'";
 	if (!$authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $assetId))
 		print " disabled='disabled'";
-	print "/> | ";
+	print "/>";
 	$harmoni->request->endNamespace();
+	print "</div>";
 	
-	AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num);
-	
-	$component =& new UnstyledBlock(ob_get_contents());
-	$component->addStyle($centered);
-	ob_end_clean();
-	$container->add($component, "100%", null, CENTER, BOTTOM);
+	$container->add(new UnstyledBlock(ob_get_clean()), "100%", null, RIGHT, BOTTOM);
 	
 	return $container;
 }

@@ -163,13 +163,8 @@ class displayAction
 		$mainScreen->add($headRow, "100%", null, LEFT, TOP);
 		
 	// :: Center Pane ::
-		$centerPane =& new Container($xLayout, OTHER, 1);
-		$mainScreen->add($centerPane,"100%",null, LEFT, TOP);		
-		
-		// Main menu
-		$mainMenu =& ConcertoMenuGenerator::generateMainMenu($harmoni->getCurrentAction());
-		$centerPane->add($mainMenu,"140px",null, LEFT, TOP);
-		
+		$centerPane =& $mainScreen->add(new Container($xLayout, OTHER, 1), "100%", null, LEFT, TOP);		
+				
 		// use the result from previous actions
 		if ($harmoni->printedResult) {
 			$contentDestination =& new Container($yLayout, OTHER, 1);
@@ -183,13 +178,16 @@ class displayAction
 		// use the result from previous actions
 		$contentDestination->add($harmoni->result, null, null, CENTER, TOP); 
 		
-		// Right Column
-		$rightColumn =& $centerPane->add(new Container($yLayout, OTHER, 1), "140px", null, LEFT, TOP);
+		// Menu Column
+		$menuColumn =& $centerPane->add(new Container($yLayout, OTHER, 1), "140px", null, LEFT, TOP);
+		// Main menu
+		$mainMenu =& ConcertoMenuGenerator::generateMainMenu($harmoni->getCurrentAction());
+		$menuColumn->add($mainMenu, "140px", null, LEFT, TOP);
 		// Basket
 		$basket =& Basket::instance();
-		$rightColumn->add($basket->getSmallBasketBlock(), "100%", null, LEFT, TOP);
-		if (ereg("^(collection|asset)\.browse$", $harmoni->getCurrentAction()))
-			$rightColumn->add(AssetPrinter::getMultiEditOptionsBlock(), "100%", null, LEFT, TOP);
+		if (ereg("^(collection|asset)\.browse(Asset)?$", $harmoni->getCurrentAction()))
+			$menuColumn->add(AssetPrinter::getMultiEditOptionsBlock(), "100%", null, LEFT, TOP);
+		$menuColumn->add($basket->getSmallBasketBlock(), "100%", null, LEFT, TOP);
 		
 	// :: Footer ::
 		$footer =& new Container (new XLayout, FOOTER, 1);

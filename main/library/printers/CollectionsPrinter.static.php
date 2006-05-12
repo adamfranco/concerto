@@ -47,7 +47,7 @@ class CollectionsPrinter {
 				._("Browse")
 				."</a>";
 		} else {
-			$links[] = _("browse");
+			$links[] = _("Browse");
 		}
 	//===== TypeBrowse Link =====//
 		if ($actionString != "collections.typebrowse" ) {

@@ -97,6 +97,7 @@ class viewAction
 			$description->clean();
 			print  "\n\t<div>".$description->asString()."</div>";
 			print  "\n\t<br /><strong>"._("ID#").":</strong> ".$assetId->getIdString();
+			print  "\n\t<br /><strong>"._("Type").":</strong> ".Type::typeToString($asset->getAssetType());
 		
 			if(is_object($asset->getEffectiveDate())) {
 				$effectDate =& $asset->getEffectiveDate();

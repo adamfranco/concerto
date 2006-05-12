@@ -57,7 +57,7 @@ class SimpleTheme extends Theme {
 		$links =& new StyleCollection("a", null, "Link Style", "Style settings affecting the look and feel of links.");
 		$links->addSP(new TextDecorationSP("underline"));
 		$links->addSP(new ColorSP("#FFF"));
-		$links->addSP(new FontWeightSP("bold"));
+// 		$links->addSP(new FontWeightSP("bold"));
 		$this->addGlobalStyle($links);
 // 
 // 		$links_hover =& new StyleCollection("a:hover", null, "Link Hover Style", "Style settings affecting the look and feel of hover links.");

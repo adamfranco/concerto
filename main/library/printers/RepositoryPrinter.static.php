@@ -56,7 +56,7 @@ class RepositoryPrinter {
 				$links[] = "<a href='".$url->write()."'>";
 				$links[count($links) - 1] .= _("Browse")."</a>";
 			} else {
-				$links[] = _("browse");
+				$links[] = _("Browse");
 			}
 	//===== TypeBrowse Link =====//
 // 			if ($actionString != "collection.typebrowse") {
@@ -75,6 +75,23 @@ class RepositoryPrinter {
 // 				$links[] = _("search");
 // 			}
 		}
+		
+	 //===== Add Link =====//
+	 	if ($authZ->isUserAuthorized(
+	 			$idManager->getId("edu.middlebury.authorization.add_children"), 
+	 			$repositoryId)) {
+			$url->setModuleAction("asset", "add");
+			$links[] = "<a href='".$url->write()."'>";
+			$links[count($links) - 1] .= _("Add")."</a>";
+	//===== Import Link =====//
+			$harmoni->request->startNamespace("import");
+			$links[] = "<a href='".$harmoni->request->quickURL(
+				"collection", "import",
+				array("collection_id" => $repositoryId->getIdString()))."'>";
+			$links[count($links) - 1] .= _("Import")."</a>";
+			$harmoni->request->endNamespace();
+		}
+			
 	//===== Export Link =====//
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.view"),
@@ -133,21 +150,7 @@ class RepositoryPrinter {
 			print "\n	}";
 			print "\n//]]>\n</script>\n";
 		}
-	 //===== Add Link =====//
-	 	if ($authZ->isUserAuthorized(
-	 			$idManager->getId("edu.middlebury.authorization.add_children"), 
-	 			$repositoryId)) {
-			$url->setModuleAction("asset", "add");
-			$links[] = "<a href='".$url->write()."'>";
-			$links[count($links) - 1] .= _("Add <em>Asset</em>")."</a>";
-	//===== Import Link =====//
-			$harmoni->request->startNamespace("import");
-			$links[] = "<a href='".$harmoni->request->quickURL(
-				"collection", "import",
-				array("collection_id" => $repositoryId->getIdString()))."'>";
-			$links[count($links) - 1] .= _("Import <em>Assets</em>")."</a>";
-			$harmoni->request->endNamespace();
-		}
+	
 		print  implode("\n\t | ", $links);
 	}
 }

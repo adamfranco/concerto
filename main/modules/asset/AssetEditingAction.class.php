@@ -204,7 +204,7 @@ class AssetEditingAction
 					array("collection_id" => $repositoryId->getIdString(), 
 					"asset_id" => $assets[0]));
 		} else if ($assetIdString) {
-			return $harmoni->request->quickURL("asset", "browse", 
+			return $harmoni->request->quickURL("asset", "browseAsset", 
 					array("collection_id" => $repositoryId->getIdString(), 
 					"asset_id" => $assetIdString));
 		} else {
