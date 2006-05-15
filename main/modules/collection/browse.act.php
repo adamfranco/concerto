@@ -83,11 +83,11 @@ class browseAction
 		$properties = array (
 			'thumbnail_size' => 200,
 			
-			'hide_thumbnail' => 'false',
-			'hide_displayName' => 'false',
-			'hide_description' => 'false',
-			'hide_id' => 'true',
-			'hide_controls' => 'false',
+			'show_thumbnail' => 'true',
+			'show_displayName' => 'true',
+			'show_description' => 'true',
+			'show_id' => 'true',
+			'show_controls' => 'true',
 			
 			'assets_per_page' => 9,
 			'asset_columns' => 3,
@@ -497,7 +497,7 @@ END;
 			$criteria = NULL;
 			$assets =& $repository->getAssetsBySearch(
 				$criteria, 
-				$rootSearchType, 
+				new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", ""), 
 				$searchProperties);
 		} 
 		// Otherwise, just get all the assets
@@ -516,6 +516,7 @@ END;
 	 * @since 5/15/06
 	 */
 	function hasRootSearch () {
+		$repository =& $this->getRepository();
 		// If the Repository supports searching of root assets, just get those
 		$rootSearchType =& new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", "");
 		$searchTypes =& $repository->getSearchTypes();
@@ -606,49 +607,49 @@ END;
 		}
 		print "\n\t\t</select> &nbsp;&nbsp;";
 		
-		print _("Hide:")." ";
+		print _("Show:")." ";
 		
 		print "\n\t\t&nbsp;&nbsp;<input type='checkbox'";
-		print " name='".RequestContext::name("hide_thumbnail")."'";
+		print " name='".RequestContext::name("show_thumbnail")."'";
 		print $onChange;
 		print " value='true'";
-		if ($_SESSION["hide_thumbnail"] == 'true')
+		if ($_SESSION["show_thumbnail"] == 'true')
 			print " checked='checked'";
 		print "/> ";
 		print _("Thumbnails,");
 		
 		print "\n\t\t&nbsp;&nbsp;<input type='checkbox'";
-		print " name='".RequestContext::name("hide_displayName")."'";
+		print " name='".RequestContext::name("show_displayName")."'";
 		print $onChange;
 		print " value='true'";
-		if ($_SESSION["hide_displayName"] == 'true')
+		if ($_SESSION["show_displayName"] == 'true')
 			print " checked='checked'";
 		print "/> ";
 		print _("Title,");
 		
 		print "\n\t\t&nbsp;&nbsp;<input type='checkbox'";
-		print " name='".RequestContext::name("hide_description")."'";
+		print " name='".RequestContext::name("show_description")."'";
 		print $onChange;
 		print " value='true'";
-		if ($_SESSION["hide_description"] == 'true')
+		if ($_SESSION["show_description"] == 'true')
 			print " checked='checked'";
 		print "/> ";
 		print _("Description,");
 		
 		print "\n\t\t&nbsp;&nbsp;<input type='checkbox'";
-		print " name='".RequestContext::name("hide_id")."'";
+		print " name='".RequestContext::name("show_id")."'";
 		print $onChange;
 		print " value='true'";
-		if ($_SESSION["hide_id"] == 'true')
+		if ($_SESSION["show_id"] == 'true')
 			print " checked='checked'";
 		print "/> ";
 		print _("Id,");
 		
 		print "\n\t\t&nbsp;&nbsp;<input type='checkbox'";
-		print " name='".RequestContext::name("hide_controls")."'";
+		print " name='".RequestContext::name("show_controls")."'";
 		print $onChange;
 		print " value='true'";
-		if ($_SESSION["hide_controls"] == 'true')
+		if ($_SESSION["show_controls"] == 'true')
 			print " checked='checked'";
 		print "/> ";
 		print _("Controls");
@@ -699,7 +700,7 @@ function printAssetShort(& $asset, $params, $num) {
 	
 	$assetId =& $asset->getId();
 	
-	if ($_SESSION["hide_thumbnail"] != 'true') {
+	if ($_SESSION["show_thumbnail"] == 'true') {
 		$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($asset);
 		if ($thumbnailURL !== FALSE) {
 			$xmlModule = 'collection';
@@ -731,11 +732,11 @@ function printAssetShort(& $asset, $params, $num) {
 	}
 	
 	ob_start();
-	if ($_SESSION["hide_displayName"] != 'true')
+	if ($_SESSION["show_displayName"] == 'true')
 		print "\n\t<div style='font-weight: bold; height: 50px; overflow: auto;'>".htmlspecialchars($asset->getDisplayName())."</div>";
-	if ($_SESSION["hide_id"] != 'true')
+	if ($_SESSION["show_id"] == 'true')
 		print "\n\t<div>"._("ID#").": ".$assetId->getIdString()."</div>";
-	if ($_SESSION["hide_description"] != 'true') {
+	if ($_SESSION["show_description"] == 'true') {
 		$description =& HtmlString::withValue($asset->getDescription());
 		$description->trim(25);
 		print  "\n\t<div style='font-size: smaller; height: 50px; overflow: auto;'>".$description->asString()."</div>";	
@@ -748,7 +749,7 @@ function printAssetShort(& $asset, $params, $num) {
 	
 	ob_start();
 	print "<div style='margin-top: 5px; font-size: small;'>";
-	if ($_SESSION["hide_controls"] != 'true') {
+	if ($_SESSION["show_controls"] == 'true') {
 		AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num, false);
 		print " | ";
 	}
