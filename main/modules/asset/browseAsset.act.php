@@ -65,6 +65,30 @@ class browseAssetAction
 	}
 	
 	/**
+	 * Register the search and page state of this collection so that the
+	 * next time that we return to it, we will get the same view.
+	 * 
+	 * @return void
+	 * @access public
+	 * @since 5/11/06
+	 */
+	function registerState () {
+		$this->_state =& $this->getState($this->getAssetId());
+				
+		// unset our starting number if we have the new search terms
+		if (RequestContext::value('form_submitted')
+			|| isset($_REQUEST[ResultPrinter::startingNumberParam()])
+			|| ($this->_state['numPerPage'] != $_SESSION['assets_per_page']))
+		{
+			$this->_state['startingNumber'] = ResultPrinter::getStartingNumber();
+			$this->_state['numPerPage'] = $_SESSION['assets_per_page'];
+		} else if (!isset($this->_state['startingNumber'])) {
+			$this->_state['startingNumber'] = 1;
+			$this->_state['numPerPage'] = $_SESSION['assets_per_page'];
+		}		
+	}
+	
+	/**
 	 * Build the content for this action
 	 * 
 	 * @return void
@@ -74,6 +98,7 @@ class browseAssetAction
 	function buildContent () {
 		
 		$this->registerDisplayProperties();
+		$this->registerState();
 		
 		$actionRows =& $this->getActionRows();
 		$harmoni =& Harmoni::instance();
@@ -161,7 +186,11 @@ class browseAssetAction
 		}
 		
 		
-		$resultPrinter =& new IteratorResultPrinter($assets, $_SESSION["asset_columns"], $_SESSION["assets_per_page"], "printAssetShort", $params);
+		$resultPrinter =& new IteratorResultPrinter($assets, 
+									$_SESSION["asset_columns"], 
+									$_SESSION["assets_per_page"], 
+									"printAssetShort", $params);
+		$resultPrinter->setStartingNumber($this->_state['startingNumber']);
 		
 		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
 		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
@@ -176,7 +205,8 @@ class browseAssetAction
 		 *********************************************************/
 		$currentUrl =& $harmoni->request->mkURL();	
 		$searchBar->setPreHTML(
-			"\n<form action='".$currentUrl->write()."' method='post'>");
+			"\n<form action='".$currentUrl->write()."' method='post'>
+	<input type='hidden' name='".RequestContext::name('form_submitted')."' value='true'/>");
 		$searchBar->setPostHTML("\n</form");
 		
 		ob_start();

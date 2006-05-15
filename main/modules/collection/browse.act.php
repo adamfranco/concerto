@@ -106,6 +106,23 @@ class browseAction
 	}
 	
 	/**
+	 * Answer the state array for the given Id
+	 * 
+	 * @param object Id 4id
+	 * @return ref array
+	 * @access public
+	 * @since 5/15/06
+	 */
+	function &getState (&$id) {
+		if (!isset($_SESSION['browse_state']))
+			$_SESSION['browse_state'] = array();
+		if (!isset($_SESSION['browse_state'][$id->getIdString()]))
+			$_SESSION['browse_state'][$id->getIdString()] = array();
+		
+		return $_SESSION['browse_state'][$id->getIdString()];
+	}
+	
+	/**
 	 * Register the search and page state of this collection so that the
 	 * next time that we return to it, we will get the same view.
 	 * 
@@ -113,16 +130,9 @@ class browseAction
 	 * @access public
 	 * @since 5/11/06
 	 */
-	function registerCollectionState () {
-		$id =& $this->getRepositoryId();
+	function registerState () {				
+		$this->_state =& $this->getState($this->getRepositoryId());
 				
-		if (!isset($_SESSION['collection_state']))
-			$_SESSION['collection_state'] = array();
-		if (!isset($_SESSION['collection_state'][$id->getIdString()]))
-			$_SESSION['collection_state'][$id->getIdString()] = array();
-		
-		$this->_state =& $_SESSION['collection_state'][$id->getIdString()];
-		
 		// top-level properties
 		$properties = array (
 			'limit_by_type' => 'false'			
@@ -145,21 +155,46 @@ class browseAction
 										"Keyword", 
 										"Search with a string for keywords.");
 		
+		// Search Criteria
+		$searchModuleManager =& Services::getService("RepositorySearchModules");
+		if (RequestContext::value('form_submitted'))
+			$this->_state['currentSearchValues'] = $searchModuleManager->getCurrentValues(
+										$this->_state['searchtype']);
+		else if (isset($this->_state['currentSearchValues']))
+			$searchModuleManager->setCurrentValues(
+										$this->_state['searchtype'],
+										$this->_state['currentSearchValues']);
+			
+		
 		
 		// if we are limiting by type
 		if ($this->_state["limit_by_type"] == 'true') {
+			if (!isset($this->_state["selectedTypes"])) {
+				$this->_state["selectedTypes"] = array();
+			}
+			
 			$repository =& $this->getRepository();
 			$types =& $repository->getAssetTypes();
-			if (!isset($this->_state["selectedTypes"]))
-				$this->_state["selectedTypes"] = array();
-			
 			while ($types->hasNext()) {
 				$type =& $types->next();
 				if (RequestContext::value("type___".Type::typeToString($type)) == 'true') {
 					$this->_state["selectedTypes"][Type::typeToString($type)] =& $type;
-				} else if (RequestContext::name('form_submitted'))
+				} else if (RequestContext::value('form_submitted')) {
 					unset($this->_state["selectedTypes"][Type::typeToString($type)]);
+				}
 			}
+		}
+		
+		// unset our starting number if we have the new search terms
+		if (RequestContext::value('form_submitted')
+			|| isset($_REQUEST[ResultPrinter::startingNumberParam()])
+			|| ($this->_state['numPerPage'] != $_SESSION['assets_per_page']))
+		{
+			$this->_state['startingNumber'] = ResultPrinter::getStartingNumber();
+			$this->_state['numPerPage'] = $_SESSION['assets_per_page'];
+		} else if (!isset($this->_state['startingNumber'])) {
+			$this->_state['startingNumber'] = 1;
+			$this->_state['numPerPage'] = $_SESSION['assets_per_page'];
 		}
 		
 	}
@@ -174,7 +209,7 @@ class browseAction
 	function buildContent () {
 	
 		$this->registerDisplayProperties();
-		$this->registerCollectionState();
+		$this->registerState();
 		
 		$actionRows =& $this->getActionRows();
 		$harmoni =& Harmoni::instance();
@@ -444,6 +479,8 @@ END;
 									$_SESSION["asset_columns"], 
 									$_SESSION["assets_per_page"], 
 									"printAssetShort", $params);
+									
+		$resultPrinter->setStartingNumber($this->_state['startingNumber']);
 		
 		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
 		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
