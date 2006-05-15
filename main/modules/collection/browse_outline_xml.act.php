@@ -8,8 +8,7 @@
  * @version $Id$
  */ 
 
-require_once(MYDIR."/main/library/abstractActions/AssetAction.class.php");
-require_once(MYDIR."/main/modules/exhibitions/slideshowxml.act.php");
+require_once(MYDIR."/main/modules/collection/browse.act.php");
 require_once(HARMONI."oki2/shared/MultiIteratorIterator.class.php");
 
 
@@ -24,7 +23,7 @@ require_once(HARMONI."oki2/shared/MultiIteratorIterator.class.php");
  * @version $Id$
  */
 class browse_outline_xmlAction 
-	extends AssetAction
+	extends browseAction
 {
 	/**
 	 * Check Authorizations
@@ -110,8 +109,9 @@ END;
 	 * @access public
 	 * @since 4/26/05
 	 */
-	function buildContent () {		
+	function buildContent () {
 		$this->setPassthrough();
+		$this->registerCollectionState();
 						
 		/*********************************************************
 		 * First print the header, then the xml content, then exit before
@@ -177,87 +177,7 @@ END;
 	function setPassthrough () {
 		$harmoni =& Harmoni::instance();
 		$harmoni->request->passthrough("collection_id");
-	}
-	
-	/**
-	 * Answer the assets to display in the slideshow
-	 * 
-	 * @return object AssetIterator
-	 * @access public
-	 * @since 5/4/06
-	 */
-	function &getAssets () {
-		$repository =& $this->getRepository();
-		
-		// If the Repository supports searching of root assets, just get those
-		$hasRootSearch = FALSE;
-		$rootSearchType =& new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", "");
-		$searchTypes =& $repository->getSearchTypes();
-		while ($searchTypes->hasNext()) {
-			if ($rootSearchType->isEqual( $searchTypes->next() )) {
-				$hasRootSearch = TRUE;
-				break;
-			}
-		}
-		
-		// if we are limiting by type
-		if (RequestContext::value("limit_by_type") == 'true') {
-			$types =& $repository->getAssetTypes();
-			$selectedTypes = array();
-			while ($types->hasNext()) {
-				$type =& $types->next();
-				if (RequestContext::value("type___".Type::typeToString($type)) == 'true')
-					$selectedTypes[] =& $type;
-			}
-		}
-		
-		//***********************************
-		// Get the assets to display
-		//***********************************
-		$searchProperties =& new HarmoniProperties(
-					Type::fromString("repository::harmoni::order"));
-		if (!($order = RequestContext::value("order")))
-			$order = 'DisplayName';
-		$searchProperties->addProperty("order", $order);
-		
-		if (!($direction = RequestContext::value("direction")))
-			$direction = 'ASC';
-		$searchProperties->addProperty("direction", $direction);
-		
-		if (isset($selectedTypes) && count($selectedTypes)) {
-			$searchProperties->addProperty("allowed_types", $selectedTypes);
-		}
-					
-
-		if (isset($selectedSearchType)
-			&& $searchModuleManager->getSearchCriteria($repository, $selectedSearchType)) 
-		{				
-			$criteria = $searchModuleManager->getSearchCriteria($repository, $selectedSearchType);
-			
-			$assets =& $repository->getAssetsBySearch(
-				$criteria,
-				$selectedSearchType,
-				$searchProperties);
-		} else if (isset($selectedTypes) && count($selectedTypes)) {
-			$assets =& new MultiIteratorIterator($null = null);
-			foreach (array_keys($selectedTypes) as $key) {
-				$assets->addIterator($repository->getAssetsByType($selectedTypes[$key]));
-			}
-		} else if ($hasRootSearch) {
-			$criteria = NULL;
-			$assets =& $repository->getAssetsBySearch(
-				$criteria, 
-				$rootSearchType, 
-				$searchProperties);
-		} 
-		// Otherwise, just get all the assets
-		else {
-			$assets =& $repository->getAssets();
-		}
-		
-		return $assets;
-	}
-	
+	}	
 	
 	
 	/**

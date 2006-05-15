@@ -183,17 +183,6 @@ class browseAction
 				
 		$harmoni->request->passthrough("collection_id");
 		
-		// If the Repository supports searching of root assets, just get those
-		$hasRootSearch = FALSE;
-		$rootSearchType =& new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", "");
-		$searchTypes =& $repository->getSearchTypes();
-		while ($searchTypes->hasNext()) {
-			if ($rootSearchType->isEqual( $searchTypes->next() )) {
-				$hasRootSearch = TRUE;
-				break;
-			}
-		}		
-		
 		// function links
 		ob_start();
 		print _("Collection").": ";
@@ -427,47 +416,6 @@ END;
 		print "\n</div>";
 		$searchBar->add(new UnstyledBlock(ob_get_clean()), null, null, LEFT, TOP);
 		
-
-		
-		//***********************************
-		// Get the assets to display
-		//***********************************
-		$searchProperties =& new HarmoniProperties(
-					Type::fromString("repository::harmoni::order"));
-		$searchProperties->addProperty("order", $_SESSION["asset_order"]);
-		$searchProperties->addProperty("direction", $_SESSION['asset_order_direction']);
-		
-		if (isset($this->_state['selectedTypes']) && count($this->_state['selectedTypes'])) {
-			$searchProperties->addProperty("allowed_types", $this->_state['selectedTypes']);
-		}
-					
-
-		if (isset($this->_state['searchtype'])
-			&& $searchModuleManager->getSearchCriteria($repository, $this->_state['searchtype'])) 
-		{				
-			$criteria = $searchModuleManager->getSearchCriteria($repository, $this->_state['searchtype']);
-			
-			$assets =& $repository->getAssetsBySearch(
-				$criteria,
-				$this->_state['searchtype'],
-				$searchProperties);
-		} else if (isset($this->_state['selectedTypes']) && count($this->_state['selectedTypes'])) {
-			$assets =& new MultiIteratorIterator($null = null);
-			foreach (array_keys($this->_state['selectedTypes']) as $key) {
-				$assets->addIterator($repository->getAssetsByType($this->_state['selectedTypes'][$key]));
-			}
-		} else if ($hasRootSearch) {
-			$criteria = NULL;
-			$assets =& $repository->getAssetsBySearch(
-				$criteria, 
-				$rootSearchType, 
-				$searchProperties);
-		} 
-		// Otherwise, just get all the assets
-		else {
-			$assets =& $repository->getAssets();
-		}
-		
 		
 		//***********************************
 		// print the results
@@ -492,7 +440,10 @@ END;
 		}
 		
 		
-		$resultPrinter =& new IteratorResultPrinter($assets, $_SESSION["asset_columns"], $_SESSION["assets_per_page"], "printAssetShort", $params);
+		$resultPrinter =& new IteratorResultPrinter($this->getAssets(),
+									$_SESSION["asset_columns"], 
+									$_SESSION["assets_per_page"], 
+									"printAssetShort", $params);
 		
 		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
 		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
@@ -505,6 +456,75 @@ END;
 		 * Display options
 		 *********************************************************/
 		$searchBar->add($this->getDisplayOptions($resultPrinter), null, null, LEFT, TOP);
+	}
+	
+	/**
+	 * Answer the assets that we are searching for
+	 * 
+	 * @return object Iterator
+	 * @access public
+	 * @since 5/15/06
+	 */
+	function &getAssets () {
+		$repository =& $this->getRepository();
+		$searchModuleManager =& Services::getService("RepositorySearchModules");		
+		
+		$searchProperties =& new HarmoniProperties(
+					Type::fromString("repository::harmoni::order"));
+		$searchProperties->addProperty("order", $_SESSION["asset_order"]);
+		$searchProperties->addProperty("direction", $_SESSION['asset_order_direction']);
+		
+		if (isset($this->_state['selectedTypes']) && count($this->_state['selectedTypes'])) {
+			$searchProperties->addProperty("allowed_types", $this->_state['selectedTypes']);
+		}
+					
+
+		if (isset($this->_state['searchtype'])
+			&& $searchModuleManager->getSearchCriteria($repository, $this->_state['searchtype'])) 
+		{				
+			$criteria = $searchModuleManager->getSearchCriteria($repository, $this->_state['searchtype']);
+			
+			$assets =& $repository->getAssetsBySearch(
+				$criteria,
+				$this->_state['searchtype'],
+				$searchProperties);
+		} else if (isset($this->_state['selectedTypes']) && count($this->_state['selectedTypes'])) {
+			$assets =& new MultiIteratorIterator($null = null);
+			foreach (array_keys($this->_state['selectedTypes']) as $key) {
+				$assets->addIterator($repository->getAssetsByType($this->_state['selectedTypes'][$key]));
+			}
+		} else if ($this->hasRootSearch()) {
+			$criteria = NULL;
+			$assets =& $repository->getAssetsBySearch(
+				$criteria, 
+				$rootSearchType, 
+				$searchProperties);
+		} 
+		// Otherwise, just get all the assets
+		else {
+			$assets =& $repository->getAssets();
+		}
+		
+		return $assets;
+	}
+	
+	/**
+	 * Answer true if this repository supports root search
+	 * 
+	 * @return boolean
+	 * @access public
+	 * @since 5/15/06
+	 */
+	function hasRootSearch () {
+		// If the Repository supports searching of root assets, just get those
+		$rootSearchType =& new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", "");
+		$searchTypes =& $repository->getSearchTypes();
+		while ($searchTypes->hasNext()) {
+			if ($rootSearchType->isEqual( $searchTypes->next() ))
+				return true;
+		}
+		
+		return false;
 	}
 	
 	/**
