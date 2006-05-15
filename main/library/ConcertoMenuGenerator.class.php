@@ -7,6 +7,8 @@
  *
  * @version $Id$
  */
+ 
+require_once(dirname(__FILE__)."/abstractActions/AssetAction.class.php");
 
 /**
  * The MenuGenerator class is a static class used for the generation of Menus in
@@ -22,7 +24,9 @@
  * @version $Id$
  */
 
-class ConcertoMenuGenerator {
+class ConcertoMenuGenerator 
+	extends AssetAction
+{
 
 	/**
 	 * Generates a menu layout based on the current action.
@@ -30,7 +34,7 @@ class ConcertoMenuGenerator {
 	 *		"module.action" .
 	 * @return object MenuLayout
 	 */
-	function &generateMainMenu($harmoni) {
+	function &generateMainMenu() {
 		
 		$harmoni =& Harmoni::instance();
 		
@@ -57,14 +61,32 @@ class ConcertoMenuGenerator {
 		if (ereg("collection(s)?|asset", $module)) {			
 			// Collection root
 			if (ereg("^(collection|asset)$", $module)) {
-				// Name browse
-				$mainMenu_item5 =& new MenuItemLink(
-						_("Collection"),
+				// Repository Link
+				$repository =& $this->getRepository();
+				if ($repository)
+					$linkTitle = $repository->getDisplayName();
+				else
+					$linkTitle = _("Collection");
+				$mainMenu->add(
+					new MenuItemLink(
+						$linkTitle,
 						$harmoni->request->quickURL("collection", "browse",
 							array('collection_id' => $harmoni->request->get('collection_id'))),
-						($module == "collection")?TRUE:FALSE, 2
-				);
-				$mainMenu->add($mainMenu_item5, "100%", null, LEFT, CENTER);
+						($module == "collection")?TRUE:FALSE, 2), 
+					"100%", null, LEFT, CENTER);
+					
+				// Asset Link
+				$asset =& $this->getAsset();
+				if ($asset) {
+					$assetId =& $asset->getId();
+					$mainMenu->add(
+					new MenuItemLink(
+						$asset->getDisplayName(),
+						$harmoni->request->quickURL("asset", "browseAsset",
+							array('asset_id' => $assetId->getIdString())),
+						($module == "asset")?TRUE:FALSE, 3), 
+					"100%", null, LEFT, CENTER);
+				}
 			}
 		}
 		

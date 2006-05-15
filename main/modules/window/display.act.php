@@ -181,8 +181,8 @@ class displayAction
 		// Menu Column
 		$menuColumn =& $centerPane->add(new Container($yLayout, OTHER, 1), "140px", null, LEFT, TOP);
 		// Main menu
-		$mainMenu =& ConcertoMenuGenerator::generateMainMenu($harmoni->getCurrentAction());
-		$menuColumn->add($mainMenu, "140px", null, LEFT, TOP);
+		$menuGenerator =& new ConcertoMenuGenerator;
+		$menuColumn->add($menuGenerator->generateMainMenu(), "140px", null, LEFT, TOP);
 		// Basket
 		$basket =& Basket::instance();
 		if (ereg("^(collection|asset)\.browse(Asset)?$", $harmoni->getCurrentAction()))

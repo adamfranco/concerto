@@ -279,6 +279,30 @@ class SimpleTheme extends Theme {
 		$menuLink1_selected->addSP(new PaddingSP("5px"));
 		$menuLink1_selected->addSP(new MarginLeftSP("10px"));
 		$this->addStyleForComponentType($menuLink1_selected, MENU_ITEM_LINK_SELECTED, 2);
+		
+		// =====================================================================
+		// Menu Unselected Link 3 style
+		$menuLink1_unselected =& new StyleCollection("*.menuLink3_unselected a", "menuLink3_unselected", "Unselected Menu Link ", "A 3nd level unselected menu link.");
+		$menuLink1_unselected->addSP(new DisplaySP("block"));
+		$menuLink1_unselected->addSP(new BackgroundColorSP("#FD9453"));
+		$menuLink1_unselected->addSP(new ColorSP("#FFF"));
+		$menuLink1_unselected->addSP(new PaddingSP("5px"));
+		$menuLink1_unselected->addSP(new MarginLeftSP("20px"));
+		$this->addStyleForComponentType($menuLink1_unselected, MENU_ITEM_LINK_UNSELECTED, 3);
+		
+		$menuLink1_hover =& new StyleCollection("*.menuLink3_hover a:hover", "menuLink3_hover", "Menu Link 3 Hover", "A 3nd level menu link hover behavior.");
+		$menuLink1_hover->addSP(new BackgroundColorSP("#C77441"));
+		$this->addStyleForComponentType($menuLink1_hover, MENU_ITEM_LINK_UNSELECTED, 3);
+		
+		// =====================================================================
+		// Menu Selected Link 3 style
+		$menuLink1_selected =& new StyleCollection("*.menuLink3_selected a", "menuLink3_selected", "Selected Menu Link 3", "A 3nd level selected menu link.");
+		$menuLink1_selected->addSP(new DisplaySP("block"));
+		$menuLink1_selected->addSP(new BackgroundColorSP("#C77441"));
+		$menuLink1_selected->addSP(new ColorSP("#FFF"));
+		$menuLink1_selected->addSP(new PaddingSP("5px"));
+		$menuLink1_selected->addSP(new MarginLeftSP("20px"));
+		$this->addStyleForComponentType($menuLink1_selected, MENU_ITEM_LINK_SELECTED, 3);
 	}
 
 

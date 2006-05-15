@@ -34,6 +34,11 @@ class AssetAction
 	 */
 	function &getAssetId () {
 		$harmoni =& Harmoni::instance();
+		if (!$harmoni->request->get('asset_id')) {
+			$false = false;
+			return $false;
+		}
+			
 		$idManager =& Services::getService("Id");
 		return $idManager->getId($harmoni->request->get('asset_id'));
 	}
@@ -46,6 +51,12 @@ class AssetAction
 	 * @since 4/26/05
 	 */
 	function &getAsset () {
+		$assetId =& $this->getAssetId();
+		if (!$assetId) {
+			$false = false;
+			return $false;
+		}
+			
 		// Get the Repository
 		$repository =& $this->getRepository();
 		return $repository->getAsset($this->getAssetId());
@@ -62,11 +73,17 @@ class AssetAction
 		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
 		$repositoryManager =& Services::getService("Repository");
-
-		if (!is_null($harmoni->request->get('collection_id'))) {
-			return parent::getRepositoryId();
+		
+		$repositoryId =& parent::getRepositoryId();
+		if ($repositoryId) {
+			return $repositoryId;
 		} else {
-			$asset =& $repositoryManager->getAsset($this->getAssetId());
+			$assetId =& $this->getAssetId();
+			if (!$assetId) {
+				$false = false;
+				return $false;
+			}
+			$asset =& $repositoryManager->getAsset($assetId);
 			$repository =& $asset->getRepository();
 			return $repository->getId();
 		}

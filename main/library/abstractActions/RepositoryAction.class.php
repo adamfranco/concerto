@@ -34,6 +34,11 @@ class RepositoryAction
 	 */
 	function &getRepositoryId () {
 		$harmoni =& Harmoni::instance();
+		if (!$harmoni->request->get('collection_id')) {
+			$false = false;
+			return $false;
+		}
+		
 		$idManager =& Services::getService("Id");
 		return $idManager->getId($harmoni->request->get('collection_id'));
 	}
@@ -46,9 +51,15 @@ class RepositoryAction
 	 * @since 4/26/05
 	 */
 	function &getRepository () {
+		$repositoryId =& $this->getRepositoryId();
+		if (!$repositoryId) {
+			$false = false;
+			return $false;
+		}
+		
 		// Get the Repository
 		$repositoryManager =& Services::getService("Repository");
-		return $repositoryManager->getRepository($this->getRepositoryId());
+		return $repositoryManager->getRepository($repositoryId);
 	}
 	
 }
