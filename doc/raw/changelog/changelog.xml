@@ -23,6 +23,13 @@
 		<change author='adam'>
 			Unifying browsing of sub-assets and collection.
 		</change>
+		<new author='adam'>
+			The user's browsing position in collections and assets is now stored
+			and retreived from the session.
+		</new>
+		<new author='adam'>
+			The full hierarchy of ancestor assets is now desplayed in the menu.
+		</new>
 	</version>
 	<version number="2.0-beta 3" date="2006-05-05">
 		<fix author='adam'>

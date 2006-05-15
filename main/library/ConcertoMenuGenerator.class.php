@@ -78,14 +78,22 @@ class ConcertoMenuGenerator
 				// Asset Link
 				$asset =& $this->getAsset();
 				if ($asset) {
-					$assetId =& $asset->getId();
-					$mainMenu->add(
-					new MenuItemLink(
-						$asset->getDisplayName(),
-						$harmoni->request->quickURL("asset", "browseAsset",
-							array('asset_id' => $assetId->getIdString())),
-						($module == "asset")?TRUE:FALSE, 3), 
-					"100%", null, LEFT, CENTER);
+					$assets = array();
+					$assets[] =& $asset;
+					$this->addFirstParents($asset, $assets);
+					
+					$j = 0;
+					for ($i = count($assets) - 1; $i >= 0 ; $i--) {
+						$assetId =& $assets[$i]->getId();
+						$mainMenu->add(
+							new MenuItemLink(
+								$assets[$i]->getDisplayName(),
+								$harmoni->request->quickURL("asset", "browseAsset",
+									array('asset_id' => $assetId->getIdString())),
+								($module == "asset")?TRUE:FALSE, $j+3), 
+							"100%", null, LEFT, CENTER);
+						$j++;
+					}
 				}
 			}
 		}
@@ -123,6 +131,23 @@ class ConcertoMenuGenerator
 	
 	
 		return $mainMenu;
+	}
+	
+	/**
+	 * Answer the first parent of an asset or false
+	 * 
+	 * @param object Asset
+	 * @return mixed object or false
+	 * @access public
+	 * @since 5/15/06
+	 */
+	function addFirstParents ( &$asset, &$assetArray ) {
+		$parents =& $asset->getParents();
+		if ($parents->hasNext()) {
+			$parent =& $parents->next();
+			$assetArray[] =& $parent;
+			$this->addFirstParents($parent, $assetArray);
+		}
 	}
 }
 
