@@ -10,6 +10,20 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
+	<version number="2.0-beta 4" date="The Nebulous Future">
+		<change author='adam'>
+			"Basket" is now being displayed as "Selection"
+		</change>
+		<change author='adam'>
+			Reworking Collection browsing interface to be more intuitive.
+		</change>
+		<change author='adam'>
+			Adding Display options to the Browsing interface.
+		</change>
+		<change author='adam'>
+			Unifying browsing of sub-assets and collection.
+		</change>
+	</version>
 	<version number="2.0-beta 3" date="2006-05-05">
 		<fix author='adam'>
 			AddSlidshow now has all of the text-position options displayed.
