@@ -74,6 +74,18 @@ class SlideShowPrinter {
 // 					."'>"._("view xml (debug)")."</a>";
 		}
 		
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId())) {
+			if ($actionString != "exhibitions.browseSlideshow") {
+				$links[] = "<a href='".$harmoni->request->quickURL(
+					"exhibitions", "browseSlideshow",
+					array("asset_id" => $assetId->getIdString())).
+					"'>";
+				$links[count($links) - 1] .= _("Browse")."</a>";
+			} else {
+				$links[] = _("Browse");
+			}
+		}
+		
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $asset->getId())) {
 			$harmoni->request->startNamespace('modify_slideshow');
 			if ($actionString != "exhibitions.modify_slideshow") {

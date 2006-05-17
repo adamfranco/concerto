@@ -188,6 +188,7 @@ class browseAction
 		// unset our starting number if we have the new search terms
 		if (RequestContext::value('form_submitted')
 			|| isset($_REQUEST[ResultPrinter::startingNumberParam()])
+			|| !isset($this->_state['numPerPage'])
 			|| ($this->_state['numPerPage'] != $_SESSION['assets_per_page']))
 		{
 			$this->_state['startingNumber'] = ResultPrinter::getStartingNumber();
@@ -195,8 +196,23 @@ class browseAction
 		} else if (!isset($this->_state['startingNumber'])) {
 			$this->_state['startingNumber'] = 1;
 			$this->_state['numPerPage'] = $_SESSION['assets_per_page'];
-		}
+		}	
+	}
+	
+	/**
+	 * Initialize our state
+	 * 
+	 * @return void
+	 * @access public
+	 * @since 5/17/06
+	 */
+	function init () {
+		$this->registerDisplayProperties();
+		$this->registerState();
 		
+		$harmoni =& Harmoni::instance();
+		$harmoni->request->passthrough("collection_id");
+		$harmoni->request->passthrough("asset_id");
 	}
 	
 	/**
@@ -207,17 +223,13 @@ class browseAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-	
-		$this->registerDisplayProperties();
-		$this->registerState();
+		$this->init();
 		
 		$actionRows =& $this->getActionRows();
 		$harmoni =& Harmoni::instance();
 		
 		$repository =& $this->getRepository();
-				
-		$harmoni->request->passthrough("collection_id");
-		
+						
 		// function links
 		ob_start();
 		print _("Collection").": ";
@@ -454,8 +466,35 @@ END;
 		
 		//***********************************
 		// print the results
-		//***********************************			
+		//***********************************
+		$resultPrinter =& new IteratorResultPrinter($this->getAssets(),
+									$_SESSION["asset_columns"], 
+									$_SESSION["assets_per_page"], 
+									"printAssetShort", $this->getParams());
+									
+		$resultPrinter->setStartingNumber($this->_state['startingNumber']);
 		
+		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
+		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
+		$resultLayout->setPostHTML("</form>");
+		
+		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
+		
+		
+		/*********************************************************
+		 * Display options
+		 *********************************************************/
+		$searchBar->add($this->getDisplayOptions($resultPrinter), null, null, LEFT, TOP);
+	}
+	
+	/**
+	 * Answer the parameters to pass in a url
+	 * 
+	 * @return array
+	 * @access public
+	 * @since 5/17/06
+	 */
+	function getParams () {
 		$params = array();
 		$params["collection_id"] = RequestContext::value("collection_id");
 		$params[RequestContext::name("limit_by_type")] = RequestContext::value("limit_by_type");
@@ -474,25 +513,7 @@ END;
 			}
 		}
 		
-		
-		$resultPrinter =& new IteratorResultPrinter($this->getAssets(),
-									$_SESSION["asset_columns"], 
-									$_SESSION["assets_per_page"], 
-									"printAssetShort", $params);
-									
-		$resultPrinter->setStartingNumber($this->_state['startingNumber']);
-		
-		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
-		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
-		$resultLayout->setPostHTML("</form>");
-		
-		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
-		
-		
-		/*********************************************************
-		 * Display options
-		 *********************************************************/
-		$searchBar->add($this->getDisplayOptions($resultPrinter), null, null, LEFT, TOP);
+		return $params;
 	}
 	
 	/**
@@ -573,7 +594,7 @@ END;
 	 * @access public
 	 * @since 5/11/06
 	 */
-	function &getDisplayOptions ( &$resultPrinter ) {
+	function &getDisplayOptions ( &$resultPrinter, $allowReordering = TRUE) {
 		// view options
 		ob_start();
 		print "\n<div style='text-align: left'>";
@@ -598,21 +619,24 @@ END;
 			$this->printSelectOption("columns", $_SESSION["asset_columns"], $i);
 		print "\n\t</select>";
 		
-		print " "._("columns. Order by")." ";
-		
-		print "\n\t<select name='".RequestContext::name("asset_order")."'";
-		print " onchange='this.form.submit();'>";
-		$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'DisplayName', _('Title'));
-		$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'Id', _('Id'));
-		$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'ModificationDate', _('Modification Date'));
-		$this->printSelectOption("asset_order", $_SESSION["asset_order"], _('Creation Date'));
-		print "\n\t</select>";
-		
-		print "\n\t<select name='".RequestContext::name("asset_order_direction")."'";
-		print " onchange='this.form.submit();'>";
-		$this->printSelectOption("asset_order_direction", $_SESSION["asset_order_direction"], 'ASC', _('Ascending'));
-		$this->printSelectOption("asset_order_direction", $_SESSION["asset_order_direction"], 'DESC', _('Descending'));
-		print "\n\t</select>";
+		print " "._("columns.");
+		if ($allowReordering) {
+			print " "._("Order by")." ";
+			
+			print "\n\t<select name='".RequestContext::name("asset_order")."'";
+			print " onchange='this.form.submit();'>";
+			$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'DisplayName', _('Title'));
+			$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'Id', _('Id'));
+			$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'ModificationDate', _('Modification Date'));
+			$this->printSelectOption("asset_order", $_SESSION["asset_order"], _('Creation Date'));
+			print "\n\t</select>";
+			
+			print "\n\t<select name='".RequestContext::name("asset_order_direction")."'";
+			print " onchange='this.form.submit();'>";
+			$this->printSelectOption("asset_order_direction", $_SESSION["asset_order_direction"], 'ASC', _('Ascending'));
+			$this->printSelectOption("asset_order_direction", $_SESSION["asset_order_direction"], 'DESC', _('Descending'));
+			print "\n\t</select>";
+		}
 		
 		// more display options
 		$onChange = " onchange='this.form.action += \"&".$resultPrinter->startingNumberParam()."=".$resultPrinter->getStartingNumber()."\"; this.form.submit();'";

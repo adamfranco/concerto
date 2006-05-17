@@ -197,7 +197,7 @@ class editAction
 //			print "\n\t<strong>".a."</strong>";
 			$description =& HtmlString::withValue($recordStructure->getDescription());
 			$description->trim(100);	// trim to 100 words
-			print "\n</td><td valign='top'>\n\t<div style='font-style: italics'>".$description->asString()."</div>";
+			print "\n</td><td valign='top'>\n\t<div style='font-style: italic'>".$description->asString()."</div>";
 			$harmoni->history->markReturnURL(
 				"concerto/collection/edit/".$repositoryId->getIdString());
 			print " <a href='";

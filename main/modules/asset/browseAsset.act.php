@@ -61,7 +61,7 @@ class browseAssetAction
 	 */
 	function getHeadingText () {
 		$asset =& $this->getAsset();
-		return _("Browsing Asset")." <em>".$asset->getDisplayName()."</em> ";
+		return _("Browsing")." <em>".$asset->getDisplayName()."</em> ";
 	}
 	
 	/**
@@ -78,6 +78,7 @@ class browseAssetAction
 		// unset our starting number if we have the new search terms
 		if (RequestContext::value('form_submitted')
 			|| isset($_REQUEST[ResultPrinter::startingNumberParam()])
+			|| !isset($this->_state['numPerPage'])
 			|| ($this->_state['numPerPage'] != $_SESSION['assets_per_page']))
 		{
 			$this->_state['startingNumber'] = ResultPrinter::getStartingNumber();
@@ -96,15 +97,10 @@ class browseAssetAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		
-		$this->registerDisplayProperties();
-		$this->registerState();
+		$this->init();
 		
 		$actionRows =& $this->getActionRows();
 		$harmoni =& Harmoni::instance();
-		
-		$harmoni->request->passthrough("collection_id");
-		$harmoni->request->passthrough("asset_id");
 		
 		$asset =& $this->getAsset();
 		$assetId =& $asset->getId();
@@ -112,9 +108,7 @@ class browseAssetAction
 		// function links
 		ob_start();
 		AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
-		$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
-		ob_end_clean();
-		$actionRows->add($layout, null, null, CENTER, CENTER);
+		$actionRows->add(new Block(ob_get_clean(), STANDARD_BLOCK), null, null, CENTER, CENTER);
 		
 		ob_start();
 		print "\n<table width='100%'>\n<tr><td style='text-align: left; vertical-align: top'>";				
@@ -167,29 +161,10 @@ class browseAssetAction
 		//***********************************
 		// print the results
 		//***********************************
-		$params = array();
-		$params["collection_id"] = RequestContext::value("collection_id");
-		$params[RequestContext::name("limit_by_type")] = RequestContext::value("limit_by_type");
-		$params[RequestContext::name("type")] = RequestContext::value("type");
-		$params[RequestContext::name("searchtype")] = RequestContext::value("searchtype");
-		if (isset($selectedSearchType)) {
-			$searchModuleManager =& Services::getService("RepositorySearchModules");
-			foreach ($searchModuleManager->getCurrentValues($selectedSearchType) as $key => $value) {
-				$params[$key] = $value;
-			}
-		}
-		if (isset($selectedTypes) && count($selectedTypes)) {
-			foreach(array_keys($selectedTypes) as $key) {
-				$params[RequestContext::name("type___".Type::typeToString($selectedTypes[$key]))] = 
-					RequestContext::value("type___".Type::typeToString($selectedTypes[$key]));
-			}
-		}
-		
-		
 		$resultPrinter =& new IteratorResultPrinter($assets, 
 									$_SESSION["asset_columns"], 
 									$_SESSION["assets_per_page"], 
-									"printAssetShort", $params);
+									"printAssetShort", $this->getParams());
 		$resultPrinter->setStartingNumber($this->_state['startingNumber']);
 		
 		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
