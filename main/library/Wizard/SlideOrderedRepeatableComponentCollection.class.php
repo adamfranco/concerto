@@ -10,6 +10,7 @@
  */ 
 
 require_once(POLYPHONY."/main/library/Wizard/Components/WOrderedRepeatableComponentCollection.class.php");
+require_once(POLYPHONY."/main/library/Wizard/Components/WSelectList.class.php");
 
 /**
  * This component allows for the creation of ordered repeatable components or groups of components. 
@@ -116,10 +117,14 @@ class SlideOrderedRepeatableComponentCollection
 				print "\n<br/>".
 					$this->_collections[$key]["_moveup"]->getMarkup(
 					$fieldName."_".$key."__moveup");
+			
 			if ($this->_orderedSet->hasNext())
 				print "\n<br/>".
 					$this->_collections[$key]["_movedown"]->getMarkup(
 					$fieldName."_".$key."__movedown");
+			
+			print "\n<br/>".$this->_collections[$key]["_moveToPosition"]->getMarkup($fieldName."_".$key."__moveToPosition");
+			print $this->_collections[$key]["_moveToPositionChoice"]->getMarkup($fieldName."_".$key."__moveToPositionChoice");
 			
 			print "</td><td style='border-bottom: 1px solid #555;'>";
 			
