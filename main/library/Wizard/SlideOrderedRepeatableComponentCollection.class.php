@@ -75,6 +75,7 @@ class SlideOrderedRepeatableComponentCollection
 				$element['_assetId']->setValue($assetId);
 			}
 			$basket->removeAllItems();
+			$this->rebuildPositionSelects();
 		}
 		
 		return $ok;
