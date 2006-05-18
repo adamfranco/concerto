@@ -12,6 +12,9 @@
 <changelog name="Concerto ChangeLog">
 	<version number="2.0-beta 4" date="The Nebulous Future">
 		<change author='adam'>
+			Reworked them, moved user/admin tools
+		</change>
+		<change author='adam'>
 			"Basket" is now being displayed as "Selection"
 		</change>
 		<change author='adam'>

@@ -185,17 +185,6 @@ class ConcertoMenuGenerator
 				$mainMenu->add($item, "100%", null, LEFT, CENTER);
 			}
 		}
-		
-		$mainMenu_item8 =& new MenuItemLink(
-			_("User Tools"),
-			$harmoni->request->quickURL("user", "main"), 
-			(ereg("^user$", $module))?TRUE:FALSE, 1);
-		$mainMenu->add($mainMenu_item8, "100%", null, LEFT, CENTER);
-		
-		$mainMenu_item7 =& new MenuItemLink(_("Admin Tools"),
-			$harmoni->request->quickURL("admin", "main"), 
-			(ereg("^admin$",$module))?TRUE:FALSE, 1);
-		$mainMenu->add($mainMenu_item7, "100%", null, LEFT, CENTER);
 	
 	
 		return $mainMenu;

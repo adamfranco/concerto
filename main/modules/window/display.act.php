@@ -152,12 +152,24 @@ class displayAction
 				"\n\t <input type='submit' value='Log In' />".
 				"\n</small></form></div>\n";
 			$harmoni->request->endNamespace();
-		}		
+		}	
+		$loginRow->add(new Component(ob_get_clean(), BLANK, 2), null, null, RIGHT, TOP);
 		
+		
+		// User tools
+		ob_start();
+		print "<div style='font-size: small; margin-top: 8px;'>";
+		print "<a href='".$harmoni->request->quickURL("user", "main")."'>";
+		print _("User Tools");
+		print "</a>";
+		print " | ";
+		print "<a href='".$harmoni->request->quickURL("admin", "main")."'>";
+		print _("Admin Tools");
+		print "</a>";
+		print "</div>";
 
-		$loginForm =& new Component(ob_get_contents(), BLANK, 2);
-		$loginRow->add($loginForm, null, null, RIGHT, TOP);
-		ob_end_clean();
+		$loginRow->add(new Component(ob_get_clean(), BLANK, 2), null, null, RIGHT, BOTTOM);
+		
 		
 		//Add the headerRow to the mainScreen
 		$mainScreen->add($headRow, "100%", null, LEFT, TOP);
@@ -187,7 +199,7 @@ class displayAction
 		$basket =& Basket::instance();
 		if (ereg("^(collection|asset)\.browse(Asset)?$", $harmoni->getCurrentAction()))
 			$menuColumn->add(AssetPrinter::getMultiEditOptionsBlock(), "100%", null, LEFT, TOP);
-		$menuColumn->add($basket->getSmallBasketBlock(), "100%", null, LEFT, TOP);
+		$menuColumn->add($basket->getSmallBasketBlock(EMPHASIZED_BLOCK), "100%", null, LEFT, TOP);
 		
 	// :: Footer ::
 		$footer =& new Container (new XLayout, FOOTER, 1);
