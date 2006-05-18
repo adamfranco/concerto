@@ -92,8 +92,8 @@ class browseAction
 			'assets_per_page' => 9,
 			'asset_columns' => 3,
 			
-			'asset_order' => 'DisplayName',
-			'asset_order_direction' => 'ASC'
+			'asset_order' => 'ModificationDate',
+			'asset_order_direction' => 'DESC'
 			
 		);
 				
