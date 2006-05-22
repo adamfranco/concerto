@@ -41,6 +41,8 @@ class browseAction
 		$authZ =& Services::getService("AuthZ");
 
 		$idManager =& Services::getService("Id");
+		if (!$this->getRepositoryId())
+			return false;
 		return $authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.access"), 
 					$this->getRepositoryId());
