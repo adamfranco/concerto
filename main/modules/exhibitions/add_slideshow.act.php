@@ -278,9 +278,9 @@ class add_slideshowAction
 				$exhibitionAsset->getId()))
 		{
 			
-			$slideshowAssetType = new HarmoniType("exhibitions", 
+			$slideshowAssetType = new HarmoniType("Asset Types", 
 										"edu.middlebury.concerto", 
-										"slideshow", 
+										"Slideshow", 
 										"Slide-Shows are ordered collections of slides that contain captions and may reference media Assets.");
 			
 			
@@ -304,9 +304,9 @@ class add_slideshowAction
 			
 			
 			// --- Slides ---
-			$slideAssetType = new HarmoniType("exhibitions", 
+			$slideAssetType = new HarmoniType("Asset Types", 
 										"edu.middlebury.concerto", 
-										"slide", 
+										"Slide", 
 										"Slides are components of Slide-Shows that contain captions and may reference media Assets.");
 			$slideRecordStructId =& $idManager->getId(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure");
