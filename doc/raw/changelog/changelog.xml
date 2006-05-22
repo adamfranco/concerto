@@ -10,7 +10,7 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="2.0-beta 4" date="The Nebulous Future">
+	<version number="2.0-beta 4" date="2006-05-19">
 		<change author='adam'>
 			Reworked them, moved user/admin tools
 		</change>

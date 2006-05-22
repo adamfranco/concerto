@@ -33,6 +33,7 @@ class browse_outline_xmlAction
 	 * @since 4/26/05
 	 */
 	function isAuthorizedToExecute () {
+		return true;
 		// Check that the user can access this collection
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
@@ -111,7 +112,7 @@ END;
 	 */
 	function buildContent () {
 		$this->setPassthrough();
-		$this->registerCollectionState();
+		$this->registerState();
 						
 		/*********************************************************
 		 * First print the header, then the xml content, then exit before

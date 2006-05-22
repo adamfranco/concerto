@@ -3,6 +3,23 @@
 Name: Concerto ChangeLog
 
 
+v. 2.0-beta 4 (2006-05-19)
+----------------------------------------------------
+		
+	* Change: Reworked them, moved user/admin tools (Adam Franco)
+		
+	* Change: "Basket" is now being displayed as "Selection" (Adam Franco)
+		
+	* Change: Reworking Collection browsing interface to be more intuitive. (Adam Franco)
+		
+	* Change: Adding Display options to the Browsing interface. (Adam Franco)
+		
+	* Change: Unifying browsing of sub-assets and collection. (Adam Franco)
+		
+	* New feature: The user's browsing position in collections and assets is now stored and retreived from the session. (Adam Franco)
+		
+	* New feature: The full hierarchy of ancestor assets is now desplayed in the menu. (Adam Franco)
+	
 v. 2.0-beta 3 (2006-05-05)
 ----------------------------------------------------
 		
