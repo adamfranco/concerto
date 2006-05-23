@@ -153,7 +153,7 @@ class exportAction
 	function saveWizard ( $cacheName ) {
 		$wizard =& $this->getWizard($cacheName);
 				
-		$properties =& $wizard->getAllValues();
+		$properties = $wizard->getAllValues();
 		// instantiate new exporter
 		$exporter =& XMLExporter::withCompression($properties['compression']);
 		// export all of concerto to this location

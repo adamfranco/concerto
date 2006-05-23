@@ -177,7 +177,7 @@ class exportAction
 
 		$wizard =& $this->getWizard($cacheName);
 				
-		$properties =& $wizard->getAllValues();
+		$properties = $wizard->getAllValues();
 		
 		$repositoryId =& $idManager->getId(
 			RequestContext::value('collection_id'));
