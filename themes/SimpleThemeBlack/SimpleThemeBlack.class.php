@@ -23,6 +23,7 @@ require_once(HARMONI."GUIManager/StyleProperties/FontWeightSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/TextAlignSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/TextDecorationSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/DisplaySP.class.php");
+require_once(HARMONI."GUIManager/StyleProperties/CursorSP.class.php");
 
 /**
  * A simple theme with rounded boxes.
@@ -57,6 +58,7 @@ class SimpleThemeBlack extends Theme {
 		$collection =& new StyleCollection("a", null, "Link Style", "Style settings affecting the look and feel of links.");
 		$collection->addSP(new TextDecorationSP("underline"));
 		$collection->addSP(new ColorSP("#FFF"));
+		$collection->addSP(new CursorSP("pointer"));
 // 		$collection->addSP(new FontWeightSP("bold"));
 		$this->addGlobalStyle($collection);
 // 
