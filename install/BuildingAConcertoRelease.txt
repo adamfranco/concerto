@@ -1,0 +1,57 @@
+Building/Packaging a Concerto Release
+by Adam Franco 2006-05-24
+
+--------------------------------------------------------------------------------
+| export concerto, polyphony, harmoni, and the viewer into a working directory:
+--------------------------------------------------------------------------------
+cvs -d:ext:adamfranco@concerto.cvs.sourceforge.net:/cvsroot/concerto export -r concerto-2_0_0 -d concerto-2.0.0 concerto; 
+cvs -d:ext:adamfranco@concerto.cvs.sourceforge.net:/cvsroot/concerto export -r viewer-2_1_3 -d concerto-viewer-2.1.3 viewer2; 
+cvs -d:ext:adamfranco@harmoni.cvs.sourceforge.net:/cvsroot/harmoni export -r harmoni-0_6_2 -d harmoni-0.6.2 harmoni; 
+cvs -d:ext:adamfranco@harmoni.cvs.sourceforge.net:/cvsroot/harmoni export -r polyphony-0_5_2 -d polyphony-0.5.2 polyphony; 
+
+--------------------------------------------------------------------------------
+| copy concerto and the various packages into a concerto-bundle directory
+--------------------------------------------------------------------------------
+cp -R concerto-2.0.0 concerto-2.0.0-bundle; 
+cp -R concerto-viewer-2.1.3 concerto-2.0.0-bundle/; 
+cp -R harmoni-0.6.2 concerto-2.0.0-bundle/; 
+cp -R polyphony-0.5.2 concerto-2.0.0-bundle/; 
+
+--------------------------------------------------------------------------------
+| copy the DOMIT XML Libraries into the concerto-bundle directory
+--------------------------------------------------------------------------------
+cp -R ../Concerto2-beta3Files/concerto-2.0-beta_3-bundle/domit concerto-2.0.0-bundle/; 
+
+--------------------------------------------------------------------------------
+| Edit the following configuration files to ensure the proper paths:
+--------------------------------------------------------------------------------
+vim concerto-2.0.0-bundle/main/include/libraries.inc.php
+
+	16c16
+	< $harmoniPath = MYDIR."/../harmoni/harmoni.inc.php";
+	---
+	> $harmoniPath = MYDIR."/harmoni-0.6.2/harmoni.inc.php";
+	28,29c28,29
+	< define("POLYPHONY_DIR", MYDIR."/../polyphony/");
+	< define("POLYPHONY_PATH", MYPATH."/../polyphony/");
+	---
+	> define("POLYPHONY_DIR", MYDIR."/polyphony-0.5.2/");
+	> define("POLYPHONY_PATH", MYPATH."/polyphony-0.5.2/");
+
+	
+vim concerto-2.0.0-bundle/config/viewer_default.conf.php
+
+	16c16
+	< define ("VIEWER_URL", dirname(MYURL)."/../viewer2/");
+	---
+	> define ("VIEWER_URL", dirname(MYURL)."/concerto-viewer-2.1.3/");
+	
+--------------------------------------------------------------------------------
+| make tarballs/zips of all directories:
+--------------------------------------------------------------------------------
+rm *.zip *.tar.gz; find ./ -type d -maxdepth 1 -mindepth 1 -exec tar -czf {}.tar.gz {} \; -exec zip -qr {}.zip {} \; ; 
+
+--------------------------------------------------------------------------------
+| upload to sourceforge, then login to sourceforge and create the release:
+--------------------------------------------------------------------------------
+ncftpput upload.sourceforge.net incoming *.gz *.zip;
