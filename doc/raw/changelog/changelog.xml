@@ -10,9 +10,24 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
+	<version number="2.0.0" date="2006-05-24">
+		<fix author='adam'>
+			Theme: ensuring that all links get the pointer cursor even if they don't
+			have an href, but just and onclick.
+		</fix>
+		<change author='adam'>
+			Changing to 'Asset Types' domain for slideshows/slides. 
+		</change>
+		<change author='adam'>
+			Adding 'currently open slideshows' to main menu.
+		</change>
+		<fix author='adam'>
+			CollectionBrowse now returns unauthorized if a collection id isn't passed.
+		</fix>
+	</version>
 	<version number="2.0-beta 4" date="2006-05-19">
 		<change author='adam'>
-			Reworked them, moved user/admin tools
+			Reworked theme, moved user/admin tools
 		</change>
 		<change author='adam'>
 			"Basket" is now being displayed as "Selection"

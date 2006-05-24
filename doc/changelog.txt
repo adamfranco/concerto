@@ -3,10 +3,21 @@
 Name: Concerto ChangeLog
 
 
+v. 2.0.0 (2006-05-24)
+----------------------------------------------------
+		
+	* Bug Fix: Theme: ensuring that all links get the pointer cursor even if they don't have an href, but just and onclick. (Adam Franco)
+		
+	* Change: Changing to 'Asset Types' domain for slideshows/slides. (Adam Franco)
+		
+	* Change: Adding 'currently open slideshows' to main menu. (Adam Franco)
+		
+	* Bug Fix: CollectionBrowse now returns unauthorized if a collection id isn't passed. (Adam Franco)
+	
 v. 2.0-beta 4 (2006-05-19)
 ----------------------------------------------------
 		
-	* Change: Reworked them, moved user/admin tools (Adam Franco)
+	* Change: Reworked theme, moved user/admin tools (Adam Franco)
 		
 	* Change: "Basket" is now being displayed as "Selection" (Adam Franco)
 		
