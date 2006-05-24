@@ -13,7 +13,7 @@
  * @version $Id$
  */
 
-require_once(dirname(__FILE__)."/../themes/SimpleTheme/MutableSimpleTheme.class.php");
+//require_once(dirname(__FILE__)."/../themes/SimpleTheme/MutableSimpleTheme.class.php");
 
 // require_once(dirname(__FILE__)."/../themes/SimpleTheme/SimpleTheme.class.php");
 // 
