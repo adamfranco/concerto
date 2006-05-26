@@ -3,8 +3,18 @@
 Name: Concerto ChangeLog
 
 
-v. 2.0.0 (2006-05-24)
+v. 2.0.0 (2006-05-26)
 ----------------------------------------------------
+		
+	* Bug Fix: Now can remove empty part values. (Adam Franco)
+		
+	* Change: Assets by default now don't show ids in the browse mode. (Adam Franco)
+		
+	* Bug Fix: ExhibitionBrowse now only prints description block when a description exists. (Adam Franco)
+		
+	* Bug Fix: ExhibitionBrowse theme now matches CollectionsBrowse (Adam Franco)
+		
+	* Bug Fix: ExhibitionBrowse now orders by title. (Adam Franco)
 		
 	* Bug Fix: Theme: ensuring that all links get the pointer cursor even if they don't have an href, but just and onclick. (Adam Franco)
 		

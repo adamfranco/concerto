@@ -453,7 +453,7 @@ class editAction
 				$recordId =& $record->getId();
 			}
 			
-			$exisistingRecords[] =& $recordId->getIdString();
+			$exisistingRecords[] = $recordId->getIdString();
 			
 			$this->updateFileRecord($recordResults, 
 				$initialState[$i], $record);
@@ -902,9 +902,10 @@ class editAction
 			
 			// Check for existance in the results.
 			// if the value is not in the results, remove the part and continue.
-			if (!$this->inWizArray($partVal, 'partvalue', $partResults)
-				&& !$this->inWizArray($partVal, 'selected', $partResults)
-				&& !$this->inWizArray($partVal, 'new', $partResults))
+			if (!$partStrVal
+				|| (!$this->inWizArray($partVal, 'partvalue', $partResults)
+					&& !$this->inWizArray($partVal, 'selected', $partResults)
+					&& !$this->inWizArray($partVal, 'new', $partResults)))
 			{
 				$record->deletePart($part->getId());
 				$partValsHandled[] = $partStrVal;
