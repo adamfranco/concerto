@@ -10,7 +10,17 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="2.0.0" date="2006-05-24">
+	<version number="2.0.0" date="2006-05-26">
+		<fix author='adam'>
+			ExhibitionBrowse now only prints description block when a description
+			exists.
+		</fix>
+		<fix author='adam'>
+			ExhibitionBrowse theme now matches CollectionsBrowse
+		</fix>
+		<fix author='adam'>
+			ExhibitionBrowse now orders by title.
+		</fix>
 		<fix author='adam'>
 			Theme: ensuring that all links get the pointer cursor even if they don't
 			have an href, but just and onclick.

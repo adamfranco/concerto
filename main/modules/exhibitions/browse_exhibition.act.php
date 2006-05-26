@@ -94,9 +94,7 @@ class browse_exhibitionAction
 		// function links
 		ob_start();
 		ExhibitionPrinter::printFunctionLinks($asset);
-		$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
-		ob_end_clean();
-		$actionRows->add($layout, null, null, CENTER, CENTER);
+		$actionRows->add(new Block(ob_get_clean(), STANDARD_BLOCK), null, null, CENTER, CENTER);
 		
 		
 		/*********************************************************
@@ -104,7 +102,8 @@ class browse_exhibitionAction
 		 *********************************************************/
 		$description =& HtmlString::withValue($asset->getDescription());
 		$description->clean();
-		$actionRows->add(new Block($description->asString(), STANDARD_BLOCK), "100%", null, LEFT, CENTER);
+		if (strlen($description->asString()))
+			$actionRows->add(new Block($description->asString(), STANDARD_BLOCK), "100%", null, LEFT, CENTER);
 		
 		//***********************************
 		// Get the assets to display
@@ -133,8 +132,8 @@ function printAssetShort(& $asset, &$harmoni) {
 	ob_start();
 	
 	$assetId =& $asset->getId();
-	print  "\n\t<strong>".$asset->getDisplayName()."</strong> - "._("ID#").": ".
-			$assetId->getIdString();
+	print  "\n\t<div style='font-weight: bold' title='"._("ID#").": ".
+			$assetId->getIdString()."'>".$asset->getDisplayName()."</div>";
 	$description =& HtmlString::withValue($asset->getDescription());
 	$description->clean();
 	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	

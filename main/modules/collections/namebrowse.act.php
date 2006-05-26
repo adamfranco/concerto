@@ -108,8 +108,8 @@ function printRepositoryShort(& $repository, & $harmoni) {
 	ob_start();
 	
 	$repositoryId =& $repository->getId();
-	print  "\n\t<strong>".$repository->getDisplayName()."</strong> - "._("ID#").": ".
-			$repositoryId->getIdString();
+	print  "\n\t<div style='font-weight: bold' title='"._("ID#").": ".
+			$repositoryId->getIdString()."'>".$repository->getDisplayName()."</div>";
 	$description =& HtmlString::withValue($repository->getDescription());
 	$description->trim(100);
 	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	

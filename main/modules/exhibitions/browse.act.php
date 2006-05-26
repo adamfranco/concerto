@@ -111,7 +111,15 @@ class browseAction
 		//***********************************
 		if ($hasRootSearch) {
 			$criteria = NULL;
-			$assets =& $repository->getAssetsBySearch($criteria, $rootSearchType, $searchProperties = NULL);
+			
+			$searchProperties =& new HarmoniProperties(
+					Type::fromString("repository::harmoni::order"));
+			$searchProperties->addProperty("order", $arg = "DisplayName");
+			unset($arg);
+			$searchProperties->addProperty("direction", $arg = "ASC");
+			unset($arg);
+			
+			$assets =& $repository->getAssetsBySearch($criteria, $rootSearchType, $searchProperties);
 		} 
 		// Otherwise, just get all the assets
 		else {
@@ -133,7 +141,8 @@ function printAssetShort(&$asset, &$harmoni) {
 	ob_start();
 	
 	$assetId =& $asset->getId();
-	print  "\n\t<strong>".$asset->getDisplayName()."</strong>";
+	print  "\n\t<div style='font-weight: bold' title='"._("ID#").": ".
+			$assetId->getIdString()."'>".$asset->getDisplayName()."</div>";
 	$description =& HtmlString::withValue($asset->getDescription());
 	$description->trim(100);
 	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	
@@ -150,7 +159,7 @@ function printAssetShort(&$asset, &$harmoni) {
 		print "\n\t</a>";
 	}
 	
-	$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
+	$layout =& new Block(ob_get_contents(), EMPHASIZED_BLOCK);
 	ob_end_clean();
 	return $layout;
 }
