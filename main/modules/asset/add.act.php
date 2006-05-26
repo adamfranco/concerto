@@ -292,7 +292,7 @@ class addAction
 	
 		$repository =& $this->getRepository();
 		
-		$properties =& $wizard->getAllValues();
+		$properties = $wizard->getAllValues();
 		
 		// First, verify that we chose a parent that we can add children to.
 		if (!$properties['parentstep']['parent'] 

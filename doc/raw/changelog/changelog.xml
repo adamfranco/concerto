@@ -11,6 +11,9 @@
 
 <changelog name="Concerto ChangeLog">
 	<version number="2.0.0" date="2006-05-26">
+		<change author='adam'>
+			Assets by default now don't show ids in the browse mode.
+		</change>
 		<fix author='adam'>
 			ExhibitionBrowse now only prints description block when a description
 			exists.

@@ -88,7 +88,7 @@ class browseAction
 			'show_thumbnail' => 'true',
 			'show_displayName' => 'true',
 			'show_description' => 'true',
-			'show_id' => 'true',
+			'show_id' => 'false',
 			'show_controls' => 'true',
 			
 			'assets_per_page' => 9,
