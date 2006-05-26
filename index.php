@@ -62,5 +62,4 @@ if (defined('ENABLE_TIMERS') && ENABLE_TIMERS) {
 	// debug::output(session_id());
 	// Debug::printAll();
 }
-
 ?>

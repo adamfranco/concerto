@@ -212,17 +212,21 @@ class importAction extends MainWindowAction {
 				unset($importer);
 				$dir = opendir($directory);
 				while ($file = readdir($dir)) // each folder is a collection
-					if (is_dir($directory."/".$file) && $file != "." && $file != "..")
+					if (is_dir($directory."/".$file) && $file != "." && $file != "..") {
 						$importer =& XMLRepositoryImporter::withFile(
 							$array,
 							$directory."/".$file."/metadata.xml", 
 							$properties['import_type']);
-				closedir($dir);
+						$importer->parseAndImport("asset");
+						unset($importer);
+					}
+					closedir($dir);
 			}
-			else // not compressed, only one xml file
+			else {// not compressed, only one xml file
 				$importer =& XMLRepositoryImporter::withFile($array, $newName,
 					$properties['import_type']);
-			$importer->parseAndImport("asset");
+				$importer->parseAndImport("asset");
+			}
 		}
 		if ($importer->hasErrors()) {
 		// something happened so tell the end user

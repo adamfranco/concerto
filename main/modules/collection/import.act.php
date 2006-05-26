@@ -247,7 +247,7 @@ class importAction extends MainWindowAction {
 					$repositoryManager->getRepository($idManager->getId(
 					$harmoni->request->get('collection_id'))), $newName,
 					$properties['import_type']);
-			$importer->parseAndImportBelow("asset");
+			$importer->parseAndImportBelow("asset", 100);
 		}		
 		if ($importer->hasErrors()) {
 		// something happened so tell the end user

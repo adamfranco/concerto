@@ -81,6 +81,9 @@ class deleteAction
 		$repositoryId =& $idManager->getId(RequestContext::value('collection_id'));
 		$repository =& $repositoryManager->getRepository($repositoryId);
 		
+		$repositoryManager->deleteRepository(
+			$idManager->getId(RequestContext::value('collection_id')));
+
 		// Log the success or failure
 		if (Services::serviceAvailable("Logging")) {
 			$loggingManager =& Services::getService("Logging");
@@ -95,9 +98,6 @@ class deleteAction
 			
 			$log->appendLogWithTypes($item,	$formatType, $priorityType);
 		}
-		
-		$repositoryManager->deleteRepository(
-			$idManager->getId(RequestContext::value('collection_id')));
 		
 		RequestContext::locationHeader(
 			$harmoni->request->quickURL("collections", "namebrowse"));
