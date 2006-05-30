@@ -117,7 +117,7 @@ class AssetEditingAction
 		$idManager =& Services::getService("Id");
 		
 		// Log the success or failure
-		if (Services::serviceAvailable("Logging")) {
+		if (Services::serviceRunning("Logging")) {
 			$loggingManager =& Services::getService("Logging");
 			$log =& $loggingManager->getLogForWriting("Concerto");			
 			$item =& new AgentNodeEntryItem("Modify Node", "Asset[s] modified");

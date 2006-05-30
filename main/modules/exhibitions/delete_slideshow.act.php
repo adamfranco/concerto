@@ -90,7 +90,7 @@ class delete_slideshowAction
 			$idManager->getId(RequestContext::value('slideshow_id')));
 		
 		// Log the action
-		if (Services::serviceAvailable("Logging")) {
+		if (Services::serviceRunning("Logging")) {
 			$loggingManager =& Services::getService("Logging");
 			$log =& $loggingManager->getLogForWriting("Concerto");
 			$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",

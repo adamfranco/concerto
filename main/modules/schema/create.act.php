@@ -319,7 +319,7 @@ class createAction
 			}
 			
 			// Log the success or failure
-			if (Services::serviceAvailable("Logging")) {
+			if (Services::serviceRunning("Logging")) {
 				$loggingManager =& Services::getService("Logging");
 				$log =& $loggingManager->getLogForWriting("Concerto");
 				$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
