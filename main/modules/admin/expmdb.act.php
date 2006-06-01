@@ -150,7 +150,7 @@ exit();
 			$this->createVRA($fileHandle);
 		else {
 			fwrite($fileHandle,
-"\t\t<recordstructure id=\"MDBRS-".$id."\" xml:id=\"MDBRS-".$id."\" isGlobal=\"TRUE\">\n".
+"\t\t<recordstructure id=\"MDBRS-".$id."\" xml:id=\"MDBRS-".$id."\" isGlobal=\"FALSE\">\n".
 "\t\t\t<name>Mediaset-".$id."</name>\n".
 "\t\t\t<description><![CDATA[This is the Concerto 1.0 (MediaDB) RecordStructure for mediaset ".$id."]]></description>\n".
 "\t\t\t<format>format</format>\n");
