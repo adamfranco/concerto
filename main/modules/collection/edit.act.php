@@ -188,7 +188,7 @@ class editAction
 			$orderFieldName = $fieldname."_position";
 			$property =& $selectStep->addComponent($orderFieldName, new WSelectList());
 			if ($set->isInSet($recordStructureId))
-				$property->setValue($set->getPosition($recordStructureId)+1);
+				$property->setValue(strval($set->getPosition($recordStructureId)+1));
 			else
 				$property->setValue(0);
 			
