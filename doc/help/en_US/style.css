@@ -1,0 +1,21 @@
+/*********************************************************
+ * General styles
+ *********************************************************/
+
+.code {
+	border: 1px dotted #000;
+	margin-left: 30px;
+	margin-right: 30px;
+	padding: 5px;
+	background-color: #FFF;
+	font-family: monospace;
+	white-space: pre;
+}
+
+dt {
+	font-weight: bold;
+}
+
+dd {
+	margin-bottom: 10px;
+}

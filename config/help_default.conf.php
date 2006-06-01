@@ -13,4 +13,4 @@
  * @version $Id$
  */
 
-	browse_helpAction::addHelpDirectory(MYDIR."/doc/help");
+	browse_helpAction::addHelpDirectory(MYDIR."/doc/help", MYPATH."/doc/help");
