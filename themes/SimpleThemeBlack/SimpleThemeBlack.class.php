@@ -16,6 +16,7 @@ require_once(HARMONI."GUIManager/StyleProperties/BorderLeftSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/MarginSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/MarginLeftSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/PaddingSP.class.php");
+require_once(HARMONI."GUIManager/StyleProperties/PaddingLeftSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/FontSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/FontFamilySP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/FontSizeSP.class.php");
@@ -168,14 +169,53 @@ class SimpleThemeBlack extends Theme {
 		$collection->setBorderUrl("BottomRight", MYPATH."/themes/SimpleThemeBlack/images/corner_BR.gif");
 		
 		
-		$collection->addSP(new BackgroundColorSP("#ddd"));
+		$collection->addSP(new BackgroundColorSP("#999"));
+// 		$collection->addSP(new BorderSP("1px", "solid", "#000"));
+		$collection->addSP(new PaddingSP("10px"));
+		$collection->addSP(new MarginSP("1px"));
+		$collection->addSP(new TextAlignSP("left"));		
+		$collection->addSP(new ColorSP("#fff"));
+		$collection->addSP(new FontSizeSP("150%"));
+		$collection->addSP(new PaddingLeftSP("20px"));
+		$this->addStyleForComponentType($collection, HEADING, 2);
+		
+		// =====================================================================
+		// Heading 3 style
+		$collection =& new CornersStyleCollection("*.heading3", "heading3", "Heading 3", "A 3rd level heading.");
+		$collection->setBorderUrl("TopLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_TL.gif");
+		$collection->setBorderUrl("TopRight", MYPATH."/themes/SimpleThemeBlack/images/corner_TR.gif");
+		$collection->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_BL.gif");
+		$collection->setBorderUrl("BottomRight", MYPATH."/themes/SimpleThemeBlack/images/corner_BR.gif");
+		
+		
+		$collection->addSP(new BackgroundColorSP("#aaa"));
 // 		$collection->addSP(new BorderSP("1px", "solid", "#000"));
 		$collection->addSP(new PaddingSP("10px"));
 		$collection->addSP(new MarginSP("1px"));
 		$collection->addSP(new TextAlignSP("left"));		
 		$collection->addSP(new ColorSP("#fff"));
 		$collection->addSP(new FontSizeSP("125%"));
-		$this->addStyleForComponentType($collection, HEADING, 2);
+		$collection->addSP(new PaddingLeftSP("30px"));
+		$this->addStyleForComponentType($collection, HEADING, 3);
+		
+		// =====================================================================
+		// Heading 4 style
+		$collection =& new CornersStyleCollection("*.heading4", "heading4", "Heading 4", "A 4th level heading.");
+		$collection->setBorderUrl("TopLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_TL.gif");
+		$collection->setBorderUrl("TopRight", MYPATH."/themes/SimpleThemeBlack/images/corner_TR.gif");
+		$collection->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_BL.gif");
+		$collection->setBorderUrl("BottomRight", MYPATH."/themes/SimpleThemeBlack/images/corner_BR.gif");
+		
+		
+		$collection->addSP(new BackgroundColorSP("#aaa"));
+// 		$collection->addSP(new BorderSP("1px", "solid", "#000"));
+		$collection->addSP(new PaddingSP("10px"));
+		$collection->addSP(new MarginSP("1px"));
+		$collection->addSP(new TextAlignSP("left"));		
+		$collection->addSP(new ColorSP("#fff"));
+		$collection->addSP(new FontSizeSP("100%"));
+		$collection->addSP(new PaddingLeftSP("40px"));
+		$this->addStyleForComponentType($collection, HEADING, 4);
 
 
 		// =====================================================================
@@ -360,6 +400,30 @@ class SimpleThemeBlack extends Theme {
 		$collection->addSP(new PaddingSP("5px"));
 		$collection->addSP(new MarginLeftSP("40px"));
 		$this->addStyleForComponentType($collection, MENU_ITEM_LINK_SELECTED, 5);
+		
+		// =====================================================================
+		// Menu Unselected Link 6 style
+		$collection =& new StyleCollection("*.menuLink6_unselected a", "menuLink6_unselected", "Unselected Menu Link ", "A 6nd level unselected menu link.");
+		$collection->addSP(new DisplaySP("block"));
+		$collection->addSP(new BackgroundColorSP("#eeeeee"));
+ 		$collection->addSP(new ColorSP("#000"));
+		$collection->addSP(new PaddingSP("5px"));
+		$collection->addSP(new MarginLeftSP("50px"));
+		$this->addStyleForComponentType($collection, MENU_ITEM_LINK_UNSELECTED, 6);
+		
+		$collection =& new StyleCollection("*.menuLink6_hover a:hover", "menuLink6_hover", "Menu Link 6 Hover", "A 6nd level menu link hover behavior.");
+		$collection->addSP(new BackgroundColorSP("#ccc"));
+		$this->addStyleForComponentType($collection, MENU_ITEM_LINK_UNSELECTED, 6);
+		
+		// =====================================================================
+		// Menu Selected Link 6 style
+		$collection =& new StyleCollection("*.menuLink6_selected a", "menuLink6_selected", "Selected Menu Link 6", "A 6nd level selected menu link.");
+		$collection->addSP(new DisplaySP("block"));
+		$collection->addSP(new BackgroundColorSP("#ccc"));
+ 		$collection->addSP(new ColorSP("#000"));
+		$collection->addSP(new PaddingSP("5px"));
+		$collection->addSP(new MarginLeftSP("50px"));
+		$this->addStyleForComponentType($collection, MENU_ITEM_LINK_SELECTED, 6);
 	}
 
 
