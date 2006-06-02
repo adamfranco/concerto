@@ -69,8 +69,12 @@ class AssetEditingAction
 		$harmoni =& Harmoni::instance();
 		$harmoni->request->passthrough("collection_id", "asset_id", "assets");
 		$centerPane =& $this->getActionRows();
-				
+		
 		$this->addTableStyles();
+		
+		// Thumbnails
+		$wizard =& $this->getWizard($this->_cacheName);
+		$centerPane->add(new Block($wizard->assetThumbnails, EMPHASIZED_BLOCK), null, null, null, null);
 		
 		$this->runWizard ( $this->_cacheName, $centerPane );
 		
@@ -227,6 +231,53 @@ class AssetEditingAction
 	
 		// Instantiate the wizard, then add our steps.
 		$wizard =& SimpleStepWizard::withDefaultLayout();
+		
+		
+	/*********************************************************
+	 * Asset thumbnails: Generate a text string and attach to
+	 * the wizard for later retrieval.
+	 *********************************************************/
+	 	ob_start();
+	 	$assetIds = array();
+	 	for ($i = 0; $i < count($this->_assets); $i++) {
+			$asset =& $this->_assets[$i];
+			$assetId =& $asset->getId();
+			$assetIds[] = $assetId->getIdString();
+		}
+		$params = array();
+		$params["assetIds"] = implode(",", $assetIds);
+		for ($i = 0; $i < count($this->_assets) && $i < 10; $i++) {
+			$asset =& $this->_assets[$i];
+			$assetId =& $asset->getId();
+			$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($asset);
+			if ($thumbnailURL !== FALSE) {				
+				$thumbSize ="100px";
+				
+				print "\n<div style='height: $thumbSize; width: $thumbSize; margin: auto; float: left; text-align: center;'>";
+				
+				print "\n\t\t<img src='$thumbnailURL' class='thumbnail' alt='Thumbnail Image' border='0'";
+				
+				print " onclick='Javascript:window.open(";
+				print '"'.VIEWER_URL."?&amp;source=";
+				print urlencode($harmoni->request->quickURL('asset', "viewAssetsXml", $params));
+				print '&amp;start='.$i.'", ';
+				print '"_blank", ';
+				print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
+				print ")'";
+				print " style='max-height: $thumbSize; max-width: $thumbSize; vertical-align: middle; cursor: pointer;'";
+				print " />";
+				print "\n</div>";
+			}
+		}
+		
+		if ($i < count($this->_assets)) {
+			print "\n<div style='height: $thumbSize; width: $thumbSize; margin: auto; float: left; text-align: center; vertical-align: middle;'>";
+			
+			print _(" (and ").(count($this->_assets) - $i)._(" more) ");
+			print "\n</div>";
+		}
+		
+		$wizard->assetThumbnails = ob_get_clean();
 		
 	/*********************************************************
 	 * :: Asset Properties ::

@@ -11,6 +11,10 @@
 
 <changelog name="Concerto ChangeLog">
 	<version number="2.0.1" date="the future">
+		<new author='adam'>
+			AssetEditing: Thumbnails of currently edited assets are now displayed 
+			in asset editing interfaces.
+		</new>
 		<fix author='adam'>
 			Collection.Delete: Now selects the display name BEFORE deleting the 
 			repository.
