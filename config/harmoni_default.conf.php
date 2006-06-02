@@ -17,7 +17,7 @@
 	$harmoni->config->set("defaultModule","home");
 	$harmoni->config->set("defaultAction","welcome");
 	$harmoni->config->set("programTitle","Concerto");
-	$harmoni->config->set("sessionName","PHPSESSID");
+	$harmoni->config->set("sessionName","CONCERTO_SESSID");
 	$harmoni->config->set("sessionUseCookies",true);
 	$harmoni->config->set("sessionCookiePath","/");
 	$harmoni->config->set("sessionCookieDomain","middlebury.edu");

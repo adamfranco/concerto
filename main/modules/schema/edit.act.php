@@ -147,11 +147,11 @@ class editAction
 		
 	// :: Elements ::
 		$elementStep =& $wizard->addStep("elementstep",new WizardStep());
-		$elementStep->setDisplayName(_("Elements"));
+		$elementStep->setDisplayName(_("Fields"));
 		ob_start();
-		print "<h2>"._("Elements")."</h2>";
-		print "\n<p>"._("Here you can modify the properties of elements and add new elements to the schema.")."</p>";
-		print "\n<p>"._("<strong>Important:</strong> Elements marked with an asterisk (<span style='color: red'>*</span>) can not be changed after the element is created.")."</p>";
+		print "<h2>"._("Fields")."</h2>";
+		print "\n<p>"._("Here you can modify the properties of fields and add new fields to the schema.")."</p>";
+		print "\n<p>"._("<strong>Important:</strong> Properties marked with an asterisk (<span style='color: red'>*</span>) can not be changed after the field is created.")."</p>";
 		print "[[elements]]";
 		$elementStep->setContent(ob_get_contents());
 		ob_end_clean();
@@ -284,7 +284,7 @@ class editAction
 			print "\n<tr><td>";
 				print _("Allow User Addition of Authoritative Values: ");
 				print "\n\t<br/><span style='font-style: italic; font-size: small'>";
-				print _("If checked, the Asset editing interface will be allow new authoritative values to be added to this element. If not checked, new values can only be added here.");
+				print _("If checked, the Asset editing interface will be allow new authoritative values to be added to this field. If not checked, new values can only be added here.");
 				print "</span>";
 			print "\n</td><td>";
 				print "[[allow_addition]]";

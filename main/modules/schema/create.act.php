@@ -138,7 +138,7 @@ class createAction
 		
 		// :: Add Elements ::
 		$elementStep =& $wizard->addStep("elementstep",new WizardStep());
-		$elementStep->setDisplayName(_("Add Elements"));
+		$elementStep->setDisplayName(_("Fields"));
 		
 		$multField =& new WRepeatableComponentCollection();
 		$elementStep->addComponent("elements", $multField);
@@ -194,11 +194,22 @@ class createAction
 		$property =& $multField->addComponent(
 			"repeatable", 
 			new WCheckBox());
-		$property->setChecked(false);
+// 		$property->setChecked(false);
 		$property->setLabel(_("yes"));
 		
+// 		$property =& $multField->addComponent(
+// 			"populatedbydr", 
+// 			new WCheckBox());
+// 		$property->setChecked(false);
+// 		$property->setLabel(_("yes"));
+		
+		
 		$property =& $multField->addComponent(
-			"populatedbydr", 
+			"authoritative_values", 
+			WTextArea::withRowsAndColumns(10, 40));
+			
+		$property =& $multField->addComponent(
+			"allow_addition", 
 			new WCheckBox());
 		$property->setChecked(false);
 		$property->setLabel(_("yes"));
@@ -221,9 +232,9 @@ class createAction
 				print "[[description]]";
 			print "\n</td></tr>";
 			
-			print "\n<tr><td>";
-				print _("Select a Type")."... ";
-			print "\n</td><td>";
+			print "\n<tr><td style='color: red;'>";
+				print _("Type")."... ";
+			print "\n *</td><td>";
 				print "[[type]]";
 			print "\n</td></tr>";
 	
@@ -233,16 +244,31 @@ class createAction
 				print "[[mandatory]]";
 			print "\n</td></tr>";
 			
-			print "\n<tr><td>";
+			print "\n<tr><td style='color: red;'>";
 				print _("isRepeatable? ");
-			print "\n</td><td>";
+			print "\n *</td><td>";
 				print "[[repeatable]]";
 			print "\n</td></tr>";
 			
+// 			print "\n<tr><td>";
+// 				print _("isPopulatedByRepository? ");
+// 			print "\n</td><td>";
+// 				print "[[populatedbydr]]";
+// 			print "\n</td></tr>";
+
 			print "\n<tr><td>";
-				print _("isPopulatedByRepository? ");
+				print _("Authoritative Values: ");
 			print "\n</td><td>";
-				print "[[populatedbydr]]";
+				print "[[authoritative_values]]";
+			print "\n</td></tr>";
+			
+			print "\n<tr><td>";
+				print _("Allow User Addition of Authoritative Values: ");
+				print "\n\t<br/><span style='font-style: italic; font-size: small'>";
+				print _("If checked, the Asset editing interface will be allow new authoritative values to be added to this field. If not checked, new values can only be added here.");
+				print "</span>";
+			print "\n</td><td>";
+				print "[[allow_addition]]";
 			print "\n</td></tr>";
 			
 			print "</table>";
@@ -253,8 +279,9 @@ class createAction
 		ob_end_clean();
 		
 		ob_start();
-		print "<h2>"._("Add New Elements")."</h2>";
-		print "\n<p>"._("If none of the schemata listed below fit your needs, please click the button below to save your changes and create a new schema.")."</p>";
+		print "<h2>"._("Fields")."</h2>";
+		print "\n<p>"._("Here you can modify the properties of fields and add new fields to the schema.")."</p>";
+		print "\n<p>"._("<strong>Important:</strong> Properties marked with an asterisk (<span style='color: red'>*</span>) can not be changed after the field is created.")."</p>";
 		print "[[elements]]";
 		$elementStep->setContent(ob_get_contents());
 		ob_end_clean();		
@@ -277,9 +304,9 @@ class createAction
 		// If all properties validate then go through the steps nessisary to
 		// save the data.
 		if ($wizard->validate()) {
-			$properties =& $wizard->getAllValues();
+			$properties = $wizard->getAllValues();
 			
-			$repository =& $this->getRepository();
+			$repository = $this->getRepository();
 			
 			// Create the info Structure
 			$recordStructure =& $repository->createRecordStructure($properties['namedesc']['display_name'], 
@@ -309,8 +336,31 @@ class createAction
 								$type,
 								(($partStructureProperties[$index]['mandatory'])?TRUE:FALSE),
 								(($partStructureProperties[$index]['repeatable'])?TRUE:FALSE),
-								(($partStructureProperties[$index]['populatedbydr'])?TRUE:FALSE)
+								FALSE
 								);
+				
+				// Authoritative values
+				$valuesString = trim($partStructureProperties[$index]['authoritative_values']);
+				if ($valuesString) {
+					$authoritativeStrings = explode("\n", $valuesString);
+					array_walk($authoritativeStrings, "removeExcessWhitespace");
+					
+					// Remove and missing values
+					$authoritativeValues =& $partStructure->getAuthoritativeValues();
+					while ($authoritativeValues->hasNext()) {
+						$value =& $authoritativeValues->next();
+						if (!in_array($value->asString(), $authoritativeStrings))
+							$partStructure->removeAuthoritativeValue($value);
+					}
+					
+					// Add new values
+					foreach ($authoritativeStrings as $valueString) {
+						if ($valueString)
+							$partStructure->addAuthoritativeValueAsString($valueString);
+					}
+				}
+				$partStructure->setUserAdditionAllowed(
+					(($partStructureProperties[$index]['allow_addition'])?TRUE:FALSE));
 				
 				$partStructureId =& $partStructure->getId();
 				// Add the PartStructureId to the set

@@ -99,7 +99,7 @@ class viewAction
 		print "'>"._("Modify")."</a>";
 		
 		// Print out the PartStructures
-		print "<h4>"._("Elements").":</h4>";
+		print "<h4>"._("Fields").":</h4>";
 		print "\n<table border='1'>";
 		print "\n<th style='text-align: center'>"._("Order")."</th>";
 		print "\n<th style='text-align: center'>"._("DisplayName")."</th>";

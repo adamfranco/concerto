@@ -12,6 +12,12 @@
 <changelog name="Concerto ChangeLog">
 	<version number="2.0.1" date="the future">
 		<fix author='adam'>
+			Schemas: Changed the term 'Schema Element' to 'Schema Field'.
+		</fix>
+		<fix author='adam'>
+			Schemas: Updated the Schema creation wizard to support Authoratiative Lists.
+		</fix>
+		<fix author='adam'>
 			Logging: Ensured that logging is now ready for use before attempting
 			to log errors.
 		</fix>
