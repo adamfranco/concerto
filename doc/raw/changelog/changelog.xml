@@ -12,6 +12,10 @@
 <changelog name="Concerto ChangeLog">
 	<version number="2.0.1" date="the future">
 		<fix author='adam'>
+			Collection.Delete: Now selects the display name BEFORE deleting the 
+			repository.
+		</fix>
+		<fix author='adam'>
 			AssetEditing: The FILE record structure [schema] now respects the
 			order in the Asset Editing interface.
 		</fix>

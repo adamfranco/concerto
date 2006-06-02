@@ -81,6 +81,8 @@ class deleteAction
 		$repositoryId =& $idManager->getId(RequestContext::value('collection_id'));
 		$repository =& $repositoryManager->getRepository($repositoryId);
 		
+		$displayName = $repository->getDisplayName();
+		
 		$repositoryManager->deleteRepository(
 			$idManager->getId(RequestContext::value('collection_id')));
 
@@ -93,7 +95,7 @@ class deleteAction
 			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
 							"Normal events.");
 			
-			$item =& new AgentNodeEntryItem("Delete Node", "Repository deleted:\n<br/>&nbsp; &nbsp; &nbsp;".$repository->getDisplayName());
+			$item =& new AgentNodeEntryItem("Delete Node", "Repository deleted:\n<br/>&nbsp; &nbsp; &nbsp;".$displayName);
 			$item->addNodeId($repositoryId);
 			
 			$log->appendLogWithTypes($item,	$formatType, $priorityType);
