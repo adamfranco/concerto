@@ -10,6 +10,21 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
+	<version number="2.0.1" date="the future">
+		<fix author='adam'>
+			Logging: Ensured that logging is now ready for use before attempting
+			to log errors.
+		</fix>
+		<fix author='adam'>
+			Theme: improved the look of headings, added more heading/menu levels.
+		</fix>
+		<fix author='adam'>
+			Collection.Edit: Fixed extra space that was messing up the select lists.
+		</fix>
+		<new author='adam'>
+			Added user documentation.
+		</new>
+	</version>
 	<version number="2.0.0" date="2006-05-26">
 		<fix author='adam'>
 			Now can remove empty part values.
