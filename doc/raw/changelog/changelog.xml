@@ -12,6 +12,13 @@
 <changelog name="Concerto ChangeLog">
 	<version number="2.0.1" date="the future">
 		<fix author='adam'>
+			AssetEditing: The FILE record structure [schema] now respects the
+			order in the Asset Editing interface.
+		</fix>
+		<fix author='adam'>
+			CollectionCreating: The FILE record structure is now added by default.
+		</fix>
+		<fix author='adam'>
 			Schemas: Changed the term 'Schema Element' to 'Schema Field'.
 		</fix>
 		<fix author='adam'>

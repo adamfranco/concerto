@@ -33,7 +33,7 @@ class editAction
 	function editAction () {
 		$this->_init();
 		
-		$this->_recStructsToIgnore[] = 'FILE';
+// 		$this->_recStructsToIgnore[] = 'FILE';
 		
 		$assetList = RequestContext::value("assets");
 		$this->_cacheName = 'edit_asset_wizard_'.preg_replace("/[^a-zA-Z0-9]/", "_", $assetList);

@@ -190,7 +190,7 @@ class createAction
 		// If all properties validate then go through the steps nessisary to
 		// save the data.
 		if ($wizard->validate()) {
-			$properties =& $wizard->getAllValues();
+			$properties = $wizard->getAllValues();
 			
 			// Create the repository and get its id.
 			$repositoryManager =& Services::getService("Repository");
@@ -203,6 +203,13 @@ class createAction
 								$properties['namedesc']['description'], $type);
 			
 			$this->repositoryId =& $repository->getId();
+			
+			// Add the File Record Structure Id as a default Schema
+			$setManager =& Services::getService("Sets");
+			$idManager =& Services::getService("Id");
+			$set =& $setManager->getPersistentSet($this->repositoryId);
+			$set->addItem($idManager->getId('FILE'));
+			
 			
 			// Log the success or failure
 			if (Services::serviceRunning("Logging")) {

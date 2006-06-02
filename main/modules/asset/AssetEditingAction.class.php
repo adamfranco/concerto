@@ -133,7 +133,8 @@ class AssetEditingAction
 				
 				$this->updateAssetProperties($results['assetproperties'], $asset);
 				$this->updateAssetContent($results['contentstep']['content'], $asset);
-				$this->updateFileRecords($results['filestep']['files'], $initialState, $asset);
+				if (isset($results['filestep']))
+					$this->updateFileRecords($results['filestep']['files'], $initialState, $asset);
 				
 				// First, lets go through the info structures listed in the set and print out
 				// the info records for those structures in order.
@@ -231,12 +232,6 @@ class AssetEditingAction
 	 * :: Asset Properties ::
 	 *********************************************************/
 		$wizard->addStep("assetproperties", $this->getAssetPropertiesStep());
-	
-	/*********************************************************
-	 * :: File Records ::
-	 *********************************************************/
-	 	if ($fileRecordStep =& $this->getFileRecordsStep())
-			$wizard->addStep("filestep", $fileRecordStep);
 		
 	/*********************************************************
 	 *  :: Record Structures ::
@@ -248,6 +243,10 @@ class AssetEditingAction
 		$setManager =& Services::getService("Sets");
 		$recStructSet =& $setManager->getPersistentSet($repositoryId);
 		
+		// File Record Id
+		$idManager =& Services::getService("Id");
+		$fileRecStructId =& $idManager->getId('FILE');
+		
 		// First, lets go through the info structures listed in the set and print out
 		// the info records for those structures in order.
 		while ($recStructSet->hasNext()) {
@@ -255,11 +254,16 @@ class AssetEditingAction
 			if (in_array($recStructId->getIdString(), $this->_recStructsToIgnore))
 				continue;
 			
-			$recStruct =& $repository->getRecordStructure($recStructId);
+			if ($recStructId->isEqual($fileRecStructId)) {
+				if ($fileRecordStep =& $this->getFileRecordsStep())
+					$wizard->addStep("filestep", $fileRecordStep);
+			} else {			
+				$recStruct =& $repository->getRecordStructure($recStructId);
 			
-			$wizard->addStep($recStructId->getIdString(), $this->getRecordStructureStep($recStruct));
-			
+				$wizard->addStep($recStructId->getIdString(), $this->getRecordStructureStep($recStruct));
+			}
 		}
+	 	
 		
 	/*********************************************************
 	 *  :: Content ::
