@@ -217,6 +217,8 @@ class editAction
 		$repeatableComponent =& $step->addComponent("files", 
 			new WRepeatableComponentCollection);
 		$repeatableComponent->setStartingNumber(0);
+		$repeatableComponent->setAddLabel(_("Add New Record"));
+		$repeatableComponent->setRemoveLabel(_("Remove Record"));
 		
 		
 		ob_start();
@@ -626,6 +628,8 @@ class editAction
 		
 		$allRecordsComponent =& $step->addComponent("records", new WRepeatableComponentCollection());
 		$allRecordsComponent->setStartingNumber(0);
+		$allRecordsComponent->setAddLabel(_("Add New Record"));
+		$allRecordsComponent->setRemoveLabel(_("Remove Record"));
 		$this->addPartStructureComponents($allRecordsComponent, $recStruct);
 		
 		$records =& $this->getRecordsForRecordStructure($recStruct);
@@ -708,6 +712,8 @@ class editAction
 	// Make a component for each of values
 		$repeatableProperty =& new WRepeatableComponentCollection();
 		$repeatableProperty->setStartingNumber(0);
+		$repeatableProperty->setAddLabel(_("Add New Value"));
+		$repeatableProperty->setRemoveLabel(_("Remove Value"));
 				
 		$property =& $repeatableProperty->addComponent('partvalue',
 				$this->getComponentForPartStruct($partStruct));

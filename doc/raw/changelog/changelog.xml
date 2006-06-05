@@ -11,6 +11,10 @@
 
 <changelog name="Concerto ChangeLog">
 	<version number="2.0.1" date="the future">
+		<change author='adam'>
+			AssetEditing: Add/Remove buttons for Records and repeatable Values 
+			are now better labeled.
+		</change>
 		<new author='adam'>
 			AssetEditing: Thumbnails of currently edited assets are now displayed 
 			in asset editing interfaces.

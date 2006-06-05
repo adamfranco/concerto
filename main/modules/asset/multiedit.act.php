@@ -378,6 +378,8 @@ class multieditAction
 	// Make a component for each of values
 		$repeatableProperty =& new WNewOnlyEditableRepeatableComponentCollection();
 		$repeatableProperty->setStartingNumber(0);
+		$repeatableProperty->setAddLabel(_("Add New Value"));
+		$repeatableProperty->setRemoveLabel(_("Remove Value"));
 				
 		$property =& $repeatableProperty->addComponent('partvalue',
 				new WVerifiedChangeInput);
