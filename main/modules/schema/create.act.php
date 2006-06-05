@@ -140,14 +140,16 @@ class createAction
 		$elementStep =& $wizard->addStep("elementstep",new WizardStep());
 		$elementStep->setDisplayName(_("Fields"));
 		
-		$multField =& new WRepeatableComponentCollection();
-		$elementStep->addComponent("elements", $multField);
+		$multField =& $elementStep->addComponent("elements", new WOrderedRepeatableComponentCollection());
+		$multField->setAddLabel(_("Add New Field"));
+		$multField->setRemoveLabel(_("Remove Field"));
+		
 		
 		$property =& $multField->addComponent(
 			"display_name", 
 			new WTextField());
 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
-		$property->setErrorText(_("A value for this field is required."));
+		$property->setErrorText(_("A value for this property is required."));
 		$property->setSize(20);
 		
 		$property =& $multField->addComponent(

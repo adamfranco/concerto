@@ -105,7 +105,7 @@ class editAction
 		$displayNameProp =& $stepOne->addComponent("display_name",
 			new WTextField());
 		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
-		$displayNameProp->setErrorText(_("A value for this field is required."));
+		$displayNameProp->setErrorText(_("A value for this property is required."));
 		$displayNameProp->setValue($recordStructure->getDisplayName());
 		
 		$descriptionProp =& $stepOne->addComponent("description",
@@ -116,7 +116,7 @@ class editAction
 			new WTextField());
 		$formatProp->setValue("Plain Text - UTF-8 encoding");
 		$formatProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
-		$formatProp->setErrorText(_("A value for this field is required."));
+		$formatProp->setErrorText(_("A value for this property is required."));
 		$formatProp->setSize(25);
 		$formatProp->setValue($recordStructure->getFormat());
 		
@@ -157,8 +157,9 @@ class editAction
 		ob_end_clean();
 		
 	// Existing Elements
-		$multField =& new WOrderedRepeatableComponentCollection();
-		$elementStep->addComponent("elements", $multField);
+		$multField =& $elementStep->addComponent("elements", new WOrderedRepeatableComponentCollection());
+		$multField->setAddLabel(_("Add New Field"));
+		$multField->setRemoveLabel(_("Remove Field"));
 		
 		$property =& $multField->addComponent(
 			"id", 
@@ -168,7 +169,7 @@ class editAction
 			"display_name", 
 			new WTextField());
 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
-		$property->setErrorText(_("A value for this field is required."));
+		$property->setErrorText(_("A value for this property is required."));
 		$property->setSize(40);
 		
 		$property =& $multField->addComponent(

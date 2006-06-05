@@ -143,9 +143,10 @@ class add_slideshowAction
 		$slideStep =& $wizard->addStep("slidestep",new WizardStep());
 		$slideStep->setDisplayName(_("Slides"));
 		
-		$multField =& new SlideOrderedRepeatableComponentCollection();
-		$slideStep->addComponent("slides", $multField);
+		$multField =& $slideStep->addComponent("slides", 
+						new SlideOrderedRepeatableComponentCollection());
 		$multField->setStartingNumber(0);
+		$multField->setRemoveLabel(_("Remove Slide"));
 		
 		$property =& $multField->addComponent(
 			"title", 
