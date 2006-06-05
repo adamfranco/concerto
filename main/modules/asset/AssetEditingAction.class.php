@@ -654,18 +654,14 @@ class AssetEditingAction
 		$partStructType =& $partStruct->getType();
 		$valueObjClass = $partStructType->getKeyword();
 		
-		if (is_array($partResults['value'])) {
-			if ($partResults['value']['new']->asString() && $partStruct->isUserAdditionAllowed()) {
-				$partStruct->addAuthoritativeValue($partResults['value']['new']);
-				$value =& $partResults['value']['new'];
-				$initialValue = ($partInitialState['value']['selected'] || $partInitialState['value']['new']);
-			} else {
-				$value =& $partResults['value']['selected'];
-				$initialValue = $partInitialState['value']['selected'];
-			}
-		} else {
-			$value =& $partResults['value'];
-			$initialValue = $partInitialState['value'];
+		
+		$value =& $partResults['value'];
+		$initialValue = $partInitialState['value'];
+		$valueStr = $value->asString();
+		
+		if ($partStruct->isUserAdditionAllowed() && !$partStruct->isAuthoritativeValue($value)) {
+			$partStruct->addAuthoritativeValue($value);
+			printpre("\tAdding AuthoritativeValue: ".$valueStr);
 		}
 		
 		if ($partResults['checked'] == '1'
@@ -710,9 +706,7 @@ class AssetEditingAction
 			
 			// Check for existance in the results.
 			// if the value is not in the results, remove the part and continue.
-			if (!$this->inWizArray($partVal, 'value', $partResults)
-				&& !$this->inWizArray($partVal, 'selected', $partResults)
-				&& !$this->inWizArray($partVal, 'new', $partResults)) 
+			if (!$this->inWizArray($partVal, 'value', $partResults)) 
 			{
 				$record->deletePart($part->getId());
 				$partValsHandled[] = $partStrVal;
@@ -737,21 +731,15 @@ class AssetEditingAction
 		// been handled and need to be, add them.
 		foreach ($partResults as $key => $valueArray) {
 			$checked = ($valueArray['partvalue']['checked'] == '1')?true:false;
-
-			if (is_array($valueArray['partvalue']['value'])) {
-				if ($valueArray['partvalue']['value']['new']->asString() 
-					&& $partStruct->isUserAdditionAllowed()) 
-				{
-					$partStruct->addAuthoritativeValue(
-						$valueArray['partvalue']['value']['new']);
-					$value =& $valueArray['partvalue']['value']['new'];
-				} else {
-					$value =& $valueArray['partvalue']['value']['selected'];
-				}
-			} else {
-				$value =& $valueArray['partvalue']['value'];
-			}
+			
+			$value =& $valueArray['partvalue']['value'];
 			$valueStr = $value->asString();
+			
+			if ($partStruct->isUserAdditionAllowed() && !$partStruct->isAuthoritativeValue($value)) {
+				$partStruct->addAuthoritativeValue($value);
+				printpre("\tAdding AuthoritativeValue: ".$valueStr);
+			}
+		
 			
 			if ($checked && !in_array($valueStr, $partValsHandled)) {
 				$part =& $record->createPart($partStructId, $value);

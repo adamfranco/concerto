@@ -106,6 +106,7 @@ class multieditAction
 		}
 		if ($multipleExist) {
 			$property->setStartingDisplayText($this->_multExistString);
+			$vProperty->setChecked(false);
 		} else {
 	 		$property->setValue($value);
 	 		$vProperty->setChecked(true);
@@ -127,6 +128,7 @@ class multieditAction
 		}
 		if ($multipleExist) {
 			$property->setStartingDisplayText($this->_multExistString);
+			$vProperty->setChecked(false);
 		} else {
 	 		$property->setValue($value);
 	 		$vProperty->setChecked(true);
@@ -153,6 +155,7 @@ class multieditAction
 		}
 		if ($multipleExist) {
 			$property->setStartingDisplayText($this->_multExistString);
+			$vProperty->setChecked(false);
 		} else if ($date) {
 	 		$date =& $date->asDate();
 			$property->setValue($date->yyyymmddString());
@@ -181,6 +184,7 @@ class multieditAction
 		}
 		if ($multipleExist) {
 			$property->setStartingDisplayText($this->_multExistString);
+			$vProperty->setChecked(false);
 		} else if ($date) {
 	 		$date =& $date->asDate();
 			$property->setValue($date->yyyymmddString());
@@ -261,9 +265,10 @@ class multieditAction
 		}
 		if ($multipleExist) {
 			$property->setStartingDisplayText($this->_multExistString);
+			$vProperty->setChecked(false);
 		} else {
+			$property->setValue($content->asString());
 			$vProperty->setChecked(true);
-	 		$property->setValue($content->asString());
 	 	}
 		
 		// Create the step text
@@ -327,9 +332,10 @@ class multieditAction
 				$partInfo =& $this->getSingleValuedInfoForPartsFromRecords($partStruct, $records);
 				if ($partInfo['multiple-exist']) {
 					$partComponent->setStartingDisplayText($this->_multExistString);
+					$partComponent->setChecked(false);
 				} else if ($partInfo['value']) {
-					$partComponent->setChecked(true);
 					$partComponent->setValue($partInfo['value']);
+					$partComponent->setChecked(true);
 				} else {
 					$partComponent->setChecked(true);
 				}

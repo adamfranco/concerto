@@ -242,7 +242,7 @@ class editAction
 		$dimensionComponent->setStyle("text-align: right");
 		$dimensionComponent->setErrorRule(new WECOptionalRegex("^([0-9]+px)?$"));
 		$dimensionComponent->setErrorText(_("Must be a positive integer followed by 'px'."));
-		$dimensionComponent->setOnChange("validateWizard(this.form);");
+		$dimensionComponent->addOnChange("validateWizard(this.form);");
 		
 		$vComponent =& $repeatableComponent->addComponent("height", new WVerifiedChangeInput());
 		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
@@ -847,19 +847,15 @@ class editAction
 		$partStructType =& $partStruct->getType();
 		$valueObjClass = $partStructType->getKeyword();
 		
-		if (is_array($partResults)) {
-			if ($partResults['new']->asString() && $partStruct->isUserAdditionAllowed()) {
-				$partStruct->addAuthoritativeValue($partResults['new']);
-				$value =& $partResults['new'];
-			} else {
-				$value =& $partResults['selected'];
-			}
-		} else {
-			$value =& $partResults;
+		$value =& $partResults;
+		$valueStr = $value->asString();
+		
+		if ($partStruct->isUserAdditionAllowed() && !$partStruct->isAuthoritativeValue($value)) {
+			$partStruct->addAuthoritativeValue($value);
+			printpre("\tAdding AuthoritativeValue: ".$valueStr);
 		}
 		
-		if ($value->isNotEqualTo($partInitialState))
-		{
+		if ($value->isNotEqualTo($partInitialState)) {
 			$parts =& $record->getPartsByPartStructure($partStructId);
 			if ($parts->hasNext()) {
 				$part =& $parts->next();
@@ -903,9 +899,7 @@ class editAction
 			// Check for existance in the results.
 			// if the value is not in the results, remove the part and continue.
 			if (!$partStrVal
-				|| (!$this->inWizArray($partVal, 'partvalue', $partResults)
-					&& !$this->inWizArray($partVal, 'selected', $partResults)
-					&& !$this->inWizArray($partVal, 'new', $partResults)))
+				|| (!$this->inWizArray($partVal, 'partvalue', $partResults)))
 			{
 				$record->deletePart($part->getId());
 				$partValsHandled[] = $partStrVal;
@@ -928,17 +922,13 @@ class editAction
 		// Go through all of the Wizard result values. If any of them haven't
 		// been handled and need to be, add them.
 		foreach ($partResults as $key => $valueArray) {
-			if (is_array($valueArray['partvalue'])) {
-				if ($valueArray['partvalue']['new']->asString() && $partStruct->isUserAdditionAllowed()) {
-					$partStruct->addAuthoritativeValue($valueArray['partvalue']['new']);
-					$value =& $valueArray['partvalue']['new'];
-				} else {
-					$value =& $valueArray['partvalue']['selected'];
-				}
-			} else {
-				$value =& $valueArray['partvalue'];
-			}
+			$value =& $valueArray['partvalue'];
 			$valueStr = $value->asString();
+			
+			if ($partStruct->isUserAdditionAllowed() && !$partStruct->isAuthoritativeValue($value)) {
+				$partStruct->addAuthoritativeValue($value);
+				printpre("\tAdding AuthoritativeValue:".$valueStr);
+			}
 			
 			if (!in_array($valueStr, $partValsHandled)) {
 				$part =& $record->createPart($partStructId, $value);
