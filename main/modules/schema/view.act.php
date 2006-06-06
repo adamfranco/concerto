@@ -79,27 +79,38 @@ class viewAction
 		ob_start();
 		
 		// Prepare the return URL so that we can get back to where we were.
-		print "<a href='";
+		print "\n<a href='";
 		$repositoryId =& $this->getRepositoryId();
 		print $harmoni->history->getReturnURL(
 			"concerto/collection/edit/".$repositoryId->getIdString());
 		print "'><-- "._("Return")."</a>";
 		
+		$harmoni->history->markReturnURL(
+				"concerto/schema/edit-return/".$recordStructureId->getIdString());
 		
-		print "<h3>".$recordStructure->getDisplayName()."</h3>";
+		$authZManager =& Services::getService("AuthZ");
+		$idManager =& Services::getService("Id");
+		if (preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
+			|| $authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.modify"), 
+						$idManager->getId("edu.middlebury.authorization.root"))) 
+		{
+			print "\n | <a href='";
+			print $harmoni->request->quickURL(
+				"schema", "edit", array(
+					"collection_id" => $repositoryId->getIdString(),
+					"recordstructure_id" => $recordStructureId->getIdString()));
+			print "'>"._("Edit")."</a>";
+		}
 		
-		print "<em>".$recordStructure->getDescription()."</em>";
-		print "<br /><strong>"._("Format").":</strong> ".$recordStructure->getFormat()."";
 		
-		print "<br/><a href='";
-		print $harmoni->request->quickURL(
-			"schema", "edit", array(
-				"collection_id" => $repositoryId->getIdString(),
-				"recordstructure_id" => $recordStructureId->getIdString()));
-		print "'>"._("Modify")."</a>";
+		print "\n<h3>".$recordStructure->getDisplayName()."</h3>";
+		
+		print "\n<em>".$recordStructure->getDescription()."</em>";
+		print "\n<br /><strong>"._("Format").":</strong> ".$recordStructure->getFormat()."";
 		
 		// Print out the PartStructures
-		print "<h4>"._("Fields").":</h4>";
+		print "\n<h4>"._("Fields").":</h4>";
 		print "\n<table border='1'>";
 		print "\n<th style='text-align: center'>"._("Order")."</th>";
 		print "\n<th style='text-align: center'>"._("DisplayName")."</th>";

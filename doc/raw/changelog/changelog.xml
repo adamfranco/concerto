@@ -20,16 +20,23 @@
 			in asset editing interfaces.
 		</new>
 		<fix author='adam'>
-			Collection.Delete: Now selects the display name BEFORE deleting the 
-			repository.
-		</fix>
-		<fix author='adam'>
 			AssetEditing: The FILE record structure [schema] now respects the
 			order in the Asset Editing interface.
 		</fix>
 		<fix author='adam'>
+			Collection.Delete: Now selects the display name BEFORE deleting the 
+			repository.
+		</fix>
+		<fix author='adam'>
 			CollectionCreating: The FILE record structure is now added by default.
 		</fix>
+		<fix author='adam'>
+			Collection.Edit: Fixed extra space that was messing up the select lists.
+		</fix>
+		<change author='adam'>
+			Schemas: Schema Editing can now be accessed from the Collection.Edit 
+			wizard and from the Collection links.
+		</change>
 		<fix author='adam'>
 			Schemas: Changed the term 'Schema Element' to 'Schema Field'.
 		</fix>
@@ -42,9 +49,6 @@
 		</fix>
 		<fix author='adam'>
 			Theme: improved the look of headings, added more heading/menu levels.
-		</fix>
-		<fix author='adam'>
-			Collection.Edit: Fixed extra space that was messing up the select lists.
 		</fix>
 		<new author='adam'>
 			Added user documentation.

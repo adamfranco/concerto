@@ -126,6 +126,67 @@ class RepositoryPrinter {
 			$url->setModuleAction("collection", "edit");
 			$links[] = "<a href='".$url->write()."'>";
 			$links[count($links) - 1] .= _("Edit")."</a>";
+			
+			// Schema Editing
+			ob_start();
+			print "\n<select";
+			print " onchange=\"var url = '";
+			print $harmoni->request->quickURL(
+				"schema", "edit", array(
+					"collection_id" => $repositoryId->getIdString(),
+					"recordstructure_id" => "XXXXXXXX"));
+			print "'; ";
+			print "url = url.replace(/XXXXXXXX/, this.value); ";
+			print "url = url.replace(/&amp;/, '&'); ";
+			print "window.location = url; ";
+			print "\">";
+			print "\n\t<option value=''>"._("Edit Schema...")."</option>";
+			
+			$localStructures = '';
+			$globalStructures = '';
+			
+			$setManager =& Services::getService("Sets");
+			$set =& $setManager->getPersistentSet($repositoryId);
+			$set->reset();
+			while ($set->hasNext()) {
+				ob_start();
+				$recStructId =& $set->next();				
+				$recStruct =& $repository->getRecordStructure($recStructId);
+				if (preg_match("/^Repository::.+$/i", $recStructId->getIdString())) {
+					$harmoni->history->markReturnURL(
+							"concerto/schema/edit-return/".$recStructId->getIdString());
+					
+					print "\n\t\t<option value='".$recStructId->getIdString()."'>";
+					print $recStruct->getDisplayName();
+					print "</option>";				
+					$localStructures .= ob_get_clean();
+				} else {
+					print "\n\t\t<option value='".$recStructId->getIdString()."'";
+					if ($authZ->isUserAuthorized(
+							$idManager->getId("edu.middlebury.authorization.modify"), 
+							$idManager->getId("edu.middlebury.authorization.root"))) 
+					{
+						$harmoni->history->markReturnURL(
+							"concerto/schema/edit-return/".$recStructId->getIdString());
+					} else {
+						print " disabled='disabled'";
+					}
+					print ">";
+					print $recStruct->getDisplayName();
+					print "</option>";
+					$globalStructures .= ob_get_clean();
+				}
+			}
+			print "\n\t<optgroup label='"._("Local Schemas")."'>";
+			print $localStructures;
+			print "\n\t</optgroup>";
+			print "\n\t<optgroup label='"._("Global Schemas")."'>";
+			print $globalStructures;
+			print "\n\t</optgroup>";
+			print "\n</select>";
+			
+			
+			$links[] = ob_get_clean();
 		}
 	//===== Delete Link =====//
 		if ($authZ->iSUserAuthorized(

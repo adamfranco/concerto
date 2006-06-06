@@ -140,9 +140,9 @@ class editAction
 		$fieldname = RequestContext::name('create_schema');
 		$selectStep->addComponent("_create_schema", WSaveButton::withLabel(_("Save Changes and Create a New Schema")));
 		
-		print "<h2>"._("Select Cataloging Schemata")."</h2>";
-		print "\n<p>"._("Select which cataloging schemata you wish to appear during <em>Asset</em> creation and editing. <em>Assets</em> can hold data in any of the schemata, but only the ones selected here will be availible when adding new data.")."</p>";
-		print "\n<p>"._("If none of the schemata listed below fit your needs, please click the button below to save your changes and create a new schema.")."</p>";
+		print "<h2>"._("Select Cataloging Schemas")."</h2>";
+		print "\n<p>"._("Select which cataloging schemas you wish to appear during <em>Asset</em> creation and editing. <em>Assets</em> can hold data in any of the schemas, but only the ones selected here will be availible when adding new data.")."</p>";
+		print "\n<p>"._("If none of the schemas listed below fit your needs, please click the button below to save your changes and create a new schema.")."</p>";
 		print "\n[[_create_schema]]";
 	
 		
@@ -162,6 +162,7 @@ class editAction
 		}
 		
 		$idManager =& Services::getService("Id");
+		$authZManager =& Services::getService("AuthZ");
 		$assetContentStructureId =& $idManager->getId("edu.middlebury.harmoni.repository.asset_content");
 		$recordStructures =& $repository->getRecordStructures();
 		while ($recordStructures->hasNext()) {
@@ -198,14 +199,41 @@ class editAction
 			$description =& HtmlString::withValue($recordStructure->getDescription());
 			$description->trim(100);	// trim to 100 words
 			print "\n</td><td valign='top'>\n\t<div style='font-style: italic'>".$description->asString()."</div>";
+			
 			$harmoni->history->markReturnURL(
 				"concerto/collection/edit/".$repositoryId->getIdString());
+			$links = array();
+			
+			// Schema Details
+			ob_start();
 			print " <a href='";
 			print $harmoni->request->quickURL("schema", "view", array(
 						"collection_id" => $repositoryId->getIdString(),
 						"recordstructure_id" => $recordStructureId->getIdString(),
 						"__skip_to_step" => 2));
-			print "'>more...</a>";
+			print "'>"._("Details")."</a>";
+			$links[] = ob_get_clean();
+			
+			// Schema Edit
+			if (preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
+				|| $authZManager->isUserAuthorized(
+							$idManager->getId("edu.middlebury.authorization.modify"), 
+							$idManager->getId("edu.middlebury.authorization.root"))) 
+			{
+				$harmoni->history->markReturnURL(
+					"concerto/schema/edit-return/".$recordStructureId->getIdString());
+				
+				ob_start();
+				print "<a href='";
+				print $harmoni->request->quickURL(
+					"schema", "edit", array(
+						"collection_id" => $repositoryId->getIdString(),
+						"recordstructure_id" => $recordStructureId->getIdString()));
+				print "'>"._("Edit")."</a>";
+				$links[] = ob_get_clean();
+			}
+			
+			print implode(" | ", $links);
 			print "\n</td><td valign='top'>";
 			
 			print "\n\t[[$orderFieldName]]";
@@ -218,8 +246,7 @@ class editAction
 		}
 		print "\n</table>";
 		
-		$selectStep->setContent(ob_get_contents());
-		ob_end_clean();
+		$selectStep->setContent(ob_get_clean());
 		
 		return $wizard;
 	}

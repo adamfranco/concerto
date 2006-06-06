@@ -500,12 +500,10 @@ class editAction
 	 */
 	function getReturnUrl () {
 		$harmoni =& Harmoni::instance();
-		$repositoryId =& $this->getRepositoryId();
 		$recordStructureId =& $this->getRecordStructureId();
 		
-		return $harmoni->request->quickURL("schema", "view",
-			array("collection_id" => $repositoryId->getIdString(),
-				"recordstructure_id" => $recordStructureId->getIdString()));
+		return $harmoni->history->getReturnURL(
+				"concerto/schema/edit-return/".$recordStructureId->getIdString());
 	}
 }
 
