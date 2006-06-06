@@ -41,6 +41,9 @@
 			Schemas: Changed the term 'Schema Element' to 'Schema Field'.
 		</fix>
 		<fix author='adam'>
+			Schemas: Repeatable flag can now only be changed from false to true.
+		</fix>
+		<fix author='adam'>
 			Schemas: Updated the Schema creation wizard to support Authoratiative Lists.
 		</fix>
 		<fix author='adam'>

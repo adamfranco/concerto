@@ -358,7 +358,10 @@ class editAction
 		$newCollection =& $multField->addValueCollection($collection, false);
 		
 		$newCollection['type']->setEnabled(false, true);
-// 		$newCollection['repeatable']->setEnabled(false, true);
+		// If a part structure is not repeatable, it can be made repeatable, but
+		// not unmade repeatable.
+		if ($partStructure->isRepeatable())
+			$newCollection['repeatable']->setEnabled(false, true);
 // 		$newCollection['populatedbydr']->setEnabled(false, true);
 	}
 		
