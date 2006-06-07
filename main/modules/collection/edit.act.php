@@ -138,7 +138,8 @@ class editAction
 		
 		ob_start();
 		$fieldname = RequestContext::name('create_schema');
-		$selectStep->addComponent("_create_schema", WSaveButton::withLabel(_("Save Changes and Create a New Schema")));
+		$button =& $selectStep->addComponent("_create_schema", 
+			WSaveButton::withLabel(_("Save Changes and Create a New Schema")));
 		
 		print "<h2>"._("Select Cataloging Schemas")."</h2>";
 		print "\n<p>"._("Select which cataloging schemas you wish to appear during <em>Asset</em> creation and editing. <em>Assets</em> can hold data in any of the schemas, but only the ones selected here will be availible when adding new data.")."</p>";
@@ -231,6 +232,25 @@ class editAction
 						"recordstructure_id" => $recordStructureId->getIdString()));
 				print "'>"._("Edit")."</a>";
 				$links[] = ob_get_clean();
+			}
+			
+			// Schema Delete
+			$authZManager =& Services::getService("AuthZ");
+			$idManager =& Services::getService("Id");
+			if ($authZManager->isUserAuthorized(
+							$idManager->getId("edu.middlebury.authorization.modify"), 
+							$idManager->getId("edu.middlebury.authorization.root"))) 
+			{
+			
+				$button =& $selectStep->addComponent(
+					"_delete_schema__".$recordStructureId->getIdString(), 
+					WSaveButton::withLabel(_("Delete")));
+				$button->addConfirm(_("Are you sure that you wish to delete this Schema?"));
+				$button->addConfirm(_("This Schema can only be deleted if there are no Records\\nin any Asset that use it.\\n\\nAre you sure that there are no Records that use this Schema?\\n\\nContinue to delete?"));
+				$harmoni->history->markReturnURL(
+					"concerto/schema/delete-return/".$recordStructureId->getIdString());
+					
+				$links[] = "[[_delete_schema__".$recordStructureId->getIdString()."]]";
 			}
 			
 			print implode(" | ", $links);
@@ -364,6 +384,22 @@ class editAction
 				RequestContext::locationHeader($harmoni->request->quickURL("schema", "create", array(
 						"collection_id" => $id->getIdString())));
 				exit(0);
+			}
+			
+			// Move to Schema deletion if that button is pressed.
+			$recordStructures =& $repository->getRecordStructures();
+			while ($recordStructures->hasNext()) {
+				$recordStructure =& $recordStructures->next();
+				$recordStructureId =& $recordStructure->getId();
+				if ($properties['schema']['_delete_schema__'.$recordStructureId->getIdString()]) {
+					$this->closeWizard($cacheName);
+					$harmoni =& Harmoni::instance();
+					RequestContext::locationHeader($harmoni->request->quickURL(
+							"schema", "delete", array(
+							"collection_id" => $id->getIdString(),
+							"recordstructure_id" => $recordStructureId->getIdString())));
+					exit(0);
+				}
 			}
 			
 			return TRUE;

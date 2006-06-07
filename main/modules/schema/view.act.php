@@ -47,7 +47,7 @@ class viewAction
 	 * @since 4/26/05
 	 */
 	function getUnauthorizedMessage () {
-		return _("You are not authorized to view this <em>Collection</em>.");
+		return _("You are not authorized to view this <em>Schema</em>.");
 	}
 	
 	/**
@@ -101,8 +101,7 @@ class viewAction
 					"collection_id" => $repositoryId->getIdString(),
 					"recordstructure_id" => $recordStructureId->getIdString()));
 			print "'>"._("Edit")."</a>";
-		}
-		
+		}		
 		
 		print "\n<h3>".$recordStructure->getDisplayName()."</h3>";
 		

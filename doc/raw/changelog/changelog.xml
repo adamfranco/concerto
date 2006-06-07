@@ -38,6 +38,9 @@
 			Collection.Edit: Fixed extra space that was messing up the select lists.
 		</fix>
 		<change author='adam'>
+			Schemas: Adding support for Schema/RecordStructure deleting.
+		</change>
+		<change author='adam'>
 			Schemas: Schema Editing can now be accessed from the Collection.Edit 
 			wizard and from the Collection links.
 		</change>
