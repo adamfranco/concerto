@@ -216,10 +216,11 @@ class editAction
 			$links[] = ob_get_clean();
 			
 			// Schema Edit
-			if (preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
-				|| $authZManager->isUserAuthorized(
+			if (method_exists($recordStructure, 'createPartStructure')
+				&& (preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
+					|| $authZManager->isUserAuthorized(
 							$idManager->getId("edu.middlebury.authorization.modify"), 
-							$idManager->getId("edu.middlebury.authorization.root"))) 
+							$idManager->getId("edu.middlebury.authorization.root")))) 
 			{
 				$harmoni->history->markReturnURL(
 					"concerto/schema/edit-return/".$recordStructureId->getIdString());
@@ -237,9 +238,10 @@ class editAction
 			// Schema Copy
 			$authZManager =& Services::getService("AuthZ");
 			$idManager =& Services::getService("Id");
-			if ($authZManager->isUserAuthorized(
+			if (method_exists($recordStructure, 'createPartStructure')
+				&& ($authZManager->isUserAuthorized(
 							$idManager->getId("edu.middlebury.authorization.modify"), 
-							$idManager->getId("edu.middlebury.authorization.root"))) 
+							$idManager->getId("edu.middlebury.authorization.root"))))
 			{
 			
 				$button =& $selectStep->addComponent(
@@ -259,9 +261,10 @@ class editAction
 			// Schema Delete
 			$authZManager =& Services::getService("AuthZ");
 			$idManager =& Services::getService("Id");
-			if ($authZManager->isUserAuthorized(
+			if (method_exists($recordStructure, 'createPartStructure')
+				&& ($authZManager->isUserAuthorized(
 							$idManager->getId("edu.middlebury.authorization.modify"), 
-							$idManager->getId("edu.middlebury.authorization.root"))) 
+							$idManager->getId("edu.middlebury.authorization.root")))) 
 			{
 			
 				$button =& $selectStep->addComponent(
