@@ -234,6 +234,28 @@ class editAction
 				$links[] = ob_get_clean();
 			}
 			
+			// Schema Copy
+			$authZManager =& Services::getService("AuthZ");
+			$idManager =& Services::getService("Id");
+			if ($authZManager->isUserAuthorized(
+							$idManager->getId("edu.middlebury.authorization.modify"), 
+							$idManager->getId("edu.middlebury.authorization.root"))) 
+			{
+			
+				$button =& $selectStep->addComponent(
+					"duplicate_schema__".$recordStructureId->getIdString(), 
+					WSaveButton::withLabel(_("Duplicate Schema Only")));
+				$button->addConfirm(_("Are you sure that you wish to duplicate this Schema?"));
+				$button =& $selectStep->addComponent(
+					"duplicate_copy_records__".$recordStructureId->getIdString(), 
+					WSaveButton::withLabel(_("Duplicate Schema and Records")));
+				$button->addConfirm(_("Are you sure that you wish to duplicate this Schema\\nand all Records that use it?"));
+				$harmoni->history->markReturnURL(
+					"concerto/schema/duplicate-return/".$recordStructureId->getIdString());
+					
+				$links[] = "[[duplicate_schema__".$recordStructureId->getIdString()."]][[duplicate_copy_records__".$recordStructureId->getIdString()."]]";
+			}
+			
 			// Schema Delete
 			$authZManager =& Services::getService("AuthZ");
 			$idManager =& Services::getService("Id");
@@ -245,8 +267,8 @@ class editAction
 				$button =& $selectStep->addComponent(
 					"_delete_schema__".$recordStructureId->getIdString(), 
 					WSaveButton::withLabel(_("Delete")));
-				$button->addConfirm(_("Are you sure that you wish to delete this Schema?"));
-				$button->addConfirm(_("This Schema can only be deleted if there are no Records\\nin any Asset that use it.\\n\\nAre you sure that there are no Records that use this Schema?\\n\\nContinue to delete?"));
+				$button->addConfirm(_("Are you sure that you wish to delete this Schema\\nand Records in all Assets in this Collection that use it?"));
+				$button->addConfirm(_("This Schema can only be deleted if there are no Records\\nin any other Collection that use it.\\n\\nAre you sure that there are no Records that use this Schema?\\n\\nContinue to delete?"));
 				$harmoni->history->markReturnURL(
 					"concerto/schema/delete-return/".$recordStructureId->getIdString());
 					
@@ -398,6 +420,26 @@ class editAction
 							"schema", "delete", array(
 							"collection_id" => $id->getIdString(),
 							"recordstructure_id" => $recordStructureId->getIdString())));
+					exit(0);
+				}
+				if ($properties['schema']['duplicate_schema__'.$recordStructureId->getIdString()]) {
+					$this->closeWizard($cacheName);
+					$harmoni =& Harmoni::instance();
+					RequestContext::locationHeader($harmoni->request->quickURL(
+							"schema", "duplicate", array(
+							"collection_id" => $id->getIdString(),
+							"recordstructure_id" => $recordStructureId->getIdString(),
+							"copy_records" => 'false')));
+					exit(0);
+				}
+				if ($properties['schema']['duplicate_copy_records__'.$recordStructureId->getIdString()]) {
+					$this->closeWizard($cacheName);
+					$harmoni =& Harmoni::instance();
+					RequestContext::locationHeader($harmoni->request->quickURL(
+							"schema", "duplicate", array(
+							"collection_id" => $id->getIdString(),
+							"recordstructure_id" => $recordStructureId->getIdString(),
+							"copy_records" => 'true')));
 					exit(0);
 				}
 			}
