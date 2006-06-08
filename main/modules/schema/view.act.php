@@ -90,11 +90,21 @@ class viewAction
 		
 		$authZManager =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
+		// Schema Edit
 		if (method_exists($recordStructure, 'createPartStructure')
-				&& (preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
+			&& 	(preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
+					&& ($authZManager->isUserAuthorized(
+							$idManager->getId("edu.middlebury.authorization.modify_rec_struct"), 
+							$repositoryId)
+						|| $authZManager->isUserAuthorized(
+							$idManager->getId("edu.middlebury.authorization.modify_authority_list"), 
+							$repositoryId)))
+				|| ($authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.modify_rec_struct"), 
+						$idManager->getId("edu.middlebury.authorization.root"))
 					|| $authZManager->isUserAuthorized(
-						$idManager->getId("edu.middlebury.authorization.modify"), 
-						$idManager->getId("edu.middlebury.authorization.root"))))
+							$idManager->getId("edu.middlebury.authorization.modify_authority_list"), 
+							$idManager->getId("edu.middlebury.authorization.root"))))
 		{
 			print "\n | <a href='";
 			print $harmoni->request->quickURL(

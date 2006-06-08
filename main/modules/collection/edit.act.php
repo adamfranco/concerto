@@ -92,6 +92,9 @@ class editAction
 		$repositoryId =& $this->getRepositoryId();
 		$harmoni =& Harmoni::instance();
 		
+		$idManager =& Services::getService("Id");
+		$authZManager =& Services::getService("AuthZ");
+		
 		$harmoni->history->markReturnURL(
 			$harmoni->request->quickURL("collection", "edit", array(
 					"collection_id" => $repositoryId->getIdString())));
@@ -137,15 +140,19 @@ class editAction
 		$set =& $setManager->getPersistentSet($repositoryId);
 		
 		ob_start();
-		$fieldname = RequestContext::name('create_schema');
-		$button =& $selectStep->addComponent("_create_schema", 
-			WSaveButton::withLabel(_("Save Changes and Create a New Schema")));
-		
 		print "<h2>"._("Select Cataloging Schemas")."</h2>";
 		print "\n<p>"._("Select which cataloging schemas you wish to appear during <em>Asset</em> creation and editing. <em>Assets</em> can hold data in any of the schemas, but only the ones selected here will be availible when adding new data.")."</p>";
-		print "\n<p>"._("If none of the schemas listed below fit your needs, please click the button below to save your changes and create a new schema.")."</p>";
-		print "\n[[_create_schema]]";
-	
+		
+		if ($authZManager->isUserAuthorized(
+			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"), 
+			$repositoryId))
+		{
+			$fieldname = RequestContext::name('create_schema');
+			$button =& $selectStep->addComponent("_create_schema", 
+				WSaveButton::withLabel(_("Save Changes and Create a New Schema")));
+			print "\n<p>"._("If none of the schemas listed below fit your needs, please click the button below to save your changes and create a new schema.")."</p>";
+			print "\n[[_create_schema]]";
+		}	
 		
 		
 		print "\n<br /><table border='1'>";
@@ -162,8 +169,6 @@ class editAction
 			$numRecordStructures++;
 		}
 		
-		$idManager =& Services::getService("Id");
-		$authZManager =& Services::getService("AuthZ");
 		$assetContentStructureId =& $idManager->getId("edu.middlebury.harmoni.repository.asset_content");
 		$recordStructures =& $repository->getRecordStructures();
 		while ($recordStructures->hasNext()) {
@@ -217,10 +222,19 @@ class editAction
 			
 			// Schema Edit
 			if (method_exists($recordStructure, 'createPartStructure')
-				&& (preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
-					|| $authZManager->isUserAuthorized(
-							$idManager->getId("edu.middlebury.authorization.modify"), 
-							$idManager->getId("edu.middlebury.authorization.root")))) 
+				&& 	(preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
+						&& ($authZManager->isUserAuthorized(
+								$idManager->getId("edu.middlebury.authorization.modify_rec_struct"), 
+								$repositoryId)
+							|| $authZManager->isUserAuthorized(
+								$idManager->getId("edu.middlebury.authorization.modify_authority_list"), 
+								$repositoryId)))
+					|| ($authZManager->isUserAuthorized(
+							$idManager->getId("edu.middlebury.authorization.modify_rec_struct"), 
+							$idManager->getId("edu.middlebury.authorization.root"))
+						|| $authZManager->isUserAuthorized(
+								$idManager->getId("edu.middlebury.authorization.modify_authority_list"), 
+								$idManager->getId("edu.middlebury.authorization.root"))))
 			{
 				$harmoni->history->markReturnURL(
 					"concerto/schema/edit-return/".$recordStructureId->getIdString());
@@ -239,19 +253,33 @@ class editAction
 			$authZManager =& Services::getService("AuthZ");
 			$idManager =& Services::getService("Id");
 			if (method_exists($recordStructure, 'createPartStructure')
-				&& ($authZManager->isUserAuthorized(
-							$idManager->getId("edu.middlebury.authorization.modify"), 
-							$idManager->getId("edu.middlebury.authorization.root"))))
+				&& 	(preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
+						&& $authZManager->isUserAuthorized(
+							$idManager->getId("edu.middlebury.authorization.convert_rec_struct"), 
+							$repositoryId))
+					|| $authZManager->isUserAuthorized(
+							$idManager->getId("edu.middlebury.authorization.convert_rec_struct"), 
+							$idManager->getId("edu.middlebury.authorization.root")))
 			{
 			
 				$button =& $selectStep->addComponent(
 					"duplicate_schema__".$recordStructureId->getIdString(), 
 					WSaveButton::withLabel(_("Duplicate Schema Only")));
 				$button->addConfirm(_("Are you sure that you wish to duplicate this Schema?"));
-				$button =& $selectStep->addComponent(
-					"duplicate_copy_records__".$recordStructureId->getIdString(), 
-					WSaveButton::withLabel(_("Duplicate Schema and Records")));
-				$button->addConfirm(_("Are you sure that you wish to duplicate this Schema\\nand all Records that use it?"));
+				
+				if (preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
+						&& $authZManager->isUserAuthorized(
+							$idManager->getId("edu.middlebury.authorization.modify"), 
+							$repositoryId)
+					|| $authZManager->isUserAuthorized(
+							$idManager->getId("edu.middlebury.authorization.modify"), 
+							$idManager->getId("edu.middlebury.authorization.root")))
+				{
+					$button =& $selectStep->addComponent(
+						"duplicate_copy_records__".$recordStructureId->getIdString(), 
+						WSaveButton::withLabel(_("Duplicate Schema and Records")));
+					$button->addConfirm(_("Are you sure that you wish to duplicate this Schema\\nand all Records that use it?"));
+				}
 				$harmoni->history->markReturnURL(
 					"concerto/schema/duplicate-return/".$recordStructureId->getIdString());
 					
@@ -262,9 +290,13 @@ class editAction
 			$authZManager =& Services::getService("AuthZ");
 			$idManager =& Services::getService("Id");
 			if (method_exists($recordStructure, 'createPartStructure')
-				&& ($authZManager->isUserAuthorized(
-							$idManager->getId("edu.middlebury.authorization.modify"), 
-							$idManager->getId("edu.middlebury.authorization.root")))) 
+				&& 	(preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
+						&& $authZManager->isUserAuthorized(
+							$idManager->getId("edu.middlebury.authorization.delete_rec_struct"), 
+							$repositoryId))
+					|| $authZManager->isUserAuthorized(
+							$idManager->getId("edu.middlebury.authorization.delete_rec_struct"), 
+							$idManager->getId("edu.middlebury.authorization.root")))
 			{
 			
 				$button =& $selectStep->addComponent(
