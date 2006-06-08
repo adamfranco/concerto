@@ -127,6 +127,27 @@ class RepositoryPrinter {
 			$links[] = "<a href='".$url->write()."'>";
 			$links[count($links) - 1] .= _("Edit")."</a>";
 			
+		}
+		
+	//===== Edit Schemas =====//
+		// Check that the user can modify Schemas for this collection
+		$recStructFunctions =& $authZ->getFunctions(
+								new Type (	"Authorization", 
+											"edu.middlebury.harmoni", 
+											"RecordStructures"));
+		$canEditStructures = false;
+		while ($recStructFunctions->hasNext()) {
+			$function =& $recStructFunctions->next();
+			if ($authZ->isUserAuthorized($function->getId(), $repositoryId))
+				$canEditStructures = true;
+			if ($authZ->isUserAuthorized($function->getId(), 
+				$idManager->getId("edu.middlebury.authorization.root")))
+			{
+				$canEditStructures = true;
+			}
+		}
+		
+		if ($canEditStructures) {
 			// Schema Editing
 			ob_start();
 			print "\n<select";
@@ -144,37 +165,27 @@ class RepositoryPrinter {
 			
 			$localStructures = '';
 			$globalStructures = '';
+			$fileId = $idManager->getId("FILE");
 			
 			$setManager =& Services::getService("Sets");
 			$set =& $setManager->getPersistentSet($repositoryId);
 			$set->reset();
 			while ($set->hasNext()) {
-				ob_start();
-				$recStructId =& $set->next();				
-				$recStruct =& $repository->getRecordStructure($recStructId);
-				if (preg_match("/^Repository::.+$/i", $recStructId->getIdString())) {
-					$harmoni->history->markReturnURL(
-							"concerto/schema/edit-return/".$recStructId->getIdString());
-					
-					print "\n\t\t<option value='".$recStructId->getIdString()."'>";
-					print $recStruct->getDisplayName();
-					print "</option>";				
-					$localStructures .= ob_get_clean();
-				} else {
-					print "\n\t\t<option value='".$recStructId->getIdString()."'";
-					if ($authZ->isUserAuthorized(
-							$idManager->getId("edu.middlebury.authorization.modify"), 
-							$idManager->getId("edu.middlebury.authorization.root"))) 
-					{
+				$recStructId =& $set->next();
+				if (!$recStructId->isEqual($fileId)) {
+					ob_start();
+					$recStruct =& $repository->getRecordStructure($recStructId);
 						$harmoni->history->markReturnURL(
-							"concerto/schema/edit-return/".$recStructId->getIdString());
+								"concerto/schema/edit-return/".$recStructId->getIdString());
+						print "\n\t\t<option value='".$recStructId->getIdString()."'";
+						print ">";
+						print $recStruct->getDisplayName();
+						print "</option>";
+					if (preg_match("/^Repository::.+$/i", $recStructId->getIdString())) {
+						$localStructures .= ob_get_clean();
 					} else {
-						print " disabled='disabled'";
+						$globalStructures .= ob_get_clean();
 					}
-					print ">";
-					print $recStruct->getDisplayName();
-					print "</option>";
-					$globalStructures .= ob_get_clean();
 				}
 			}
 			print "\n\t<optgroup label='"._("Local Schemas")."'>";

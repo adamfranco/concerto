@@ -104,10 +104,38 @@ class editAction
 	 */
 	function &createWizard () {
 		$repository =& $this->getRepository();
+		$repositoryId =& $repository->getId();
 		$recordStructure =& $this->getRecordStructure();
+		$recordStructureId =& $recordStructure->getId();
 		
 		$authZManager =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
+		
+		$canModify = false;
+		$canModifyAuthorityList = false;
+		
+		if (preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())) {
+			if ($authZManager->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.modify_rec_struct"), 
+					$repositoryId))
+			{
+				$canModify = true;
+			}
+		} else {
+			if ($authZManager->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.modify_rec_struct"), 
+					$idManager->getId("edu.middlebury.authorization.root")))
+			{
+				$canModify = true;
+			}
+		}
+		if ($authZManager->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.modify_authority_list"), 
+				$repositoryId))
+		{
+			$canModifyAuthorityList = true;
+		}
+		
 		
 		// Instantiate the wizard, then add our steps.
 		$wizard =& SimpleStepWizard::withDefaultLayout();
@@ -123,23 +151,15 @@ class editAction
 		$displayNameProp->setErrorText(_("A value for this property is required."));
 		$displayNameProp->setValue($recordStructure->getDisplayName());
 		// Disable if unauthorized
-		if (!$authZManager->isUserAuthorized(
-			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"),
-			$repository->getId())) 
-		{
+		if (!$canModify)
 			$displayNameProp->setEnabled(false, true);
-		}
 		
 		$descriptionProp =& $stepOne->addComponent("description",
 			WTextArea::withRowsAndColumns(5, 30));
 		$descriptionProp->setValue($recordStructure->getDescription());
 		// Disable if unauthorized
-		if (!$authZManager->isUserAuthorized(
-			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"),
-			$repository->getId())) 
-		{
+		if (!$canModify)
 			$descriptionProp->setEnabled(false, true);
-		}
 		
 		$formatProp =& $stepOne->addComponent("format",
 			new WTextField());
@@ -149,12 +169,8 @@ class editAction
 		$formatProp->setSize(25);
 		$formatProp->setValue($recordStructure->getFormat());
 		// Disable if unauthorized
-		if (!$authZManager->isUserAuthorized(
-			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"),
-			$repository->getId())) 
-		{
+		if (!$canModify)
 			$formatProp->setEnabled(false, true);
-		}
 		
 		
 		
@@ -197,12 +213,8 @@ class editAction
 		$multField->setAddLabel(_("Add New Field"));
 		$multField->setRemoveLabel(_("Remove Field"));
 		// Disable if unauthorized
-		if (!$authZManager->isUserAuthorized(
-			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"),
-			$repository->getId())) 
-		{
+		if (!$canModify)
 			$multField->setEnabled(false, true);
-		}
 		
 		$property =& $multField->addComponent(
 			"id", 
@@ -214,24 +226,15 @@ class editAction
 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setErrorText(_("A value for this property is required."));
 		$property->setSize(40);
-		// Disable if unauthorized
-		if (!$authZManager->isUserAuthorized(
-			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"),
-			$repository->getId())) 
-		{
+		if (!$canModify)
 			$property->setEnabled(false, true);
-		}
 		
 		$property =& $multField->addComponent(
 			"description", 
 			WTextArea::withRowsAndColumns(2, 40));
 		// Disable if unauthorized
-		if (!$authZManager->isUserAuthorized(
-			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"),
-			$repository->getId())) 
-		{
+		if (!$canModify)
 			$property->setEnabled(false, true);
-		}
 		
 		
 		
@@ -269,12 +272,8 @@ class editAction
 		$property->setChecked(false);
 		$property->setLabel(_("yes"));
 		// Disable if unauthorized
-		if (!$authZManager->isUserAuthorized(
-			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"),
-			$repository->getId())) 
-		{
+		if (!$canModify)
 			$property->setEnabled(false, true);
-		}
 		
 		$property =& $multField->addComponent(
 			"repeatable", 
@@ -282,12 +281,8 @@ class editAction
 // 		$property->setChecked(false);
 		$property->setLabel(_("yes"));
 		// Disable if unauthorized
-		if (!$authZManager->isUserAuthorized(
-			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"),
-			$repository->getId())) 
-		{
+		if (!$canModify)
 			$property->setEnabled(false, true);
-		}
 		
 // 		$property =& $multField->addComponent(
 // 			"populatedbydr", 
@@ -300,14 +295,8 @@ class editAction
 			"authoritative_values", 
 			WTextArea::withRowsAndColumns(10, 40));
 		// Disable if unauthorized
-		if ($authZManager->isUserAuthorized(
-			$idManager->getId("edu.middlebury.authorization.modify_authority_list"),
-			$repository->getId())) 
-		{
-			$property->setEnabled(true, true);
-		} else {
+		if (!$canModifyAuthorityList)
 			$property->setEnabled(false, true);
-		}
 		
 		
 		ob_start();
