@@ -78,6 +78,25 @@ if (!isset($_SESSION['post_config_setup_complete'])) {
 
 	}
 	
+	$authZManager =& Services::getService("AuthZ");
+	$idManager =& Services::getService("Id");
+	$type =& new Type ("Authorization", "edu.middlebury.harmoni", "RecordStructures", "Functions for managing RecordStructures (a.k.a Schemas).");
+	$qualifierHierarchyId = $idManager->getId("edu.middlebury.authorization.hierarchy");
+	
+	$functions =& $authZManager->getFunctions($type);
+	if (!$functions->hasNext()) {
+		$id =& $idManager->getId("edu.middlebury.authorization.modify_rec_struct");
+		$function =& $authZManager->createFunction($id, "Modify RecordStructures", "Modify RecordStructures (a.k.a. Schemas) in a Repository (a.k.a. Collection).", $type, $qualifierHierarchyId);
+		
+		$id =& $idManager->getId("edu.middlebury.authorization.delete_rec_struct");
+		$function =& $authZManager->createFunction($id, "Delete RecordStructures", "Delete RecordStructures (a.k.a. Schemas) in a Repository (a.k.a. Collection).", $type, $qualifierHierarchyId);
+		
+		$id =& $idManager->getId("edu.middlebury.authorization.convert_rec_struct");
+		$function =& $authZManager->createFunction($id, "Convert RecordStructures", "Convert the data types/properties of RecordStructures (a.k.a. Schemas) in a Repository (a.k.a. Collection).", $type, $qualifierHierarchyId);
+		
+		$id =& $idManager->getId("edu.middlebury.authorization.modify_authority_list");
+		$function =& $authZManager->createFunction($id, "Modify Authority List", "Modify the values that appear in the Authority Lists of a Repository (a.k.a. Collection).", $type, $qualifierHierarchyId);
+	}
 	
 	$_SESSION['post_config_setup_complete'] = TRUE;
 }

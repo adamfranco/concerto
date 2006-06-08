@@ -209,12 +209,6 @@ class createAction
 		$property =& $multField->addComponent(
 			"authoritative_values", 
 			WTextArea::withRowsAndColumns(10, 40));
-			
-		$property =& $multField->addComponent(
-			"allow_addition", 
-			new WCheckBox());
-		$property->setChecked(false);
-		$property->setLabel(_("yes"));
 		
 		// We don't have any PartStructures yet, so we can't get them.
 		
@@ -262,15 +256,6 @@ class createAction
 				print _("Authoritative Values: ");
 			print "\n</td><td>";
 				print "[[authoritative_values]]";
-			print "\n</td></tr>";
-			
-			print "\n<tr><td>";
-				print _("Allow User Addition of Authoritative Values: ");
-				print "\n\t<br/><span style='font-style: italic; font-size: small'>";
-				print _("If checked, the Asset editing interface will be allow new authoritative values to be added to this field. If not checked, new values can only be added here.");
-				print "</span>";
-			print "\n</td><td>";
-				print "[[allow_addition]]";
 			print "\n</td></tr>";
 			
 			print "</table>";
@@ -361,8 +346,6 @@ class createAction
 							$partStructure->addAuthoritativeValueAsString($valueString);
 					}
 				}
-				$partStructure->setUserAdditionAllowed(
-					(($partStructureProperties[$index]['allow_addition'])?TRUE:FALSE));
 				
 				$partStructureId =& $partStructure->getId();
 				// Add the PartStructureId to the set

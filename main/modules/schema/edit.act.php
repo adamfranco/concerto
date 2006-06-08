@@ -35,9 +35,21 @@ class editAction
 		// Check that the user can access this collection
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
-		return $authZ->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.modify"), 
-					$this->getRepositoryId());
+		$recStructFunctions =& $authZ->getFunctions(
+								new Type (	"Authorization", 
+											"edu.middlebury.harmoni", 
+											"RecordStructures"));
+		while ($recStructFunctions->hasNext()) {
+			$function =& $recStructFunctions->next();
+			if ($authZ->isUserAuthorized(
+					$function->getId(), 
+					$this->getRepositoryId()))
+			{
+				return true;
+			}
+		}
+					
+		return false;
 	}
 	
 	/**
@@ -93,7 +105,10 @@ class editAction
 	function &createWizard () {
 		$repository =& $this->getRepository();
 		$recordStructure =& $this->getRecordStructure();
-	
+		
+		$authZManager =& Services::getService("AuthZ");
+		$idManager =& Services::getService("Id");
+		
 		// Instantiate the wizard, then add our steps.
 		$wizard =& SimpleStepWizard::withDefaultLayout();
 		
@@ -107,10 +122,24 @@ class editAction
 		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$displayNameProp->setErrorText(_("A value for this property is required."));
 		$displayNameProp->setValue($recordStructure->getDisplayName());
+		// Disable if unauthorized
+		if (!$authZManager->isUserAuthorized(
+			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"),
+			$repository->getId())) 
+		{
+			$displayNameProp->setEnabled(false, true);
+		}
 		
 		$descriptionProp =& $stepOne->addComponent("description",
 			WTextArea::withRowsAndColumns(5, 30));
 		$descriptionProp->setValue($recordStructure->getDescription());
+		// Disable if unauthorized
+		if (!$authZManager->isUserAuthorized(
+			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"),
+			$repository->getId())) 
+		{
+			$descriptionProp->setEnabled(false, true);
+		}
 		
 		$formatProp =& $stepOne->addComponent("format",
 			new WTextField());
@@ -119,6 +148,13 @@ class editAction
 		$formatProp->setErrorText(_("A value for this property is required."));
 		$formatProp->setSize(25);
 		$formatProp->setValue($recordStructure->getFormat());
+		// Disable if unauthorized
+		if (!$authZManager->isUserAuthorized(
+			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"),
+			$repository->getId())) 
+		{
+			$formatProp->setEnabled(false, true);
+		}
 		
 		
 		
@@ -160,6 +196,13 @@ class editAction
 		$multField =& $elementStep->addComponent("elements", new WOrderedRepeatableComponentCollection());
 		$multField->setAddLabel(_("Add New Field"));
 		$multField->setRemoveLabel(_("Remove Field"));
+		// Disable if unauthorized
+		if (!$authZManager->isUserAuthorized(
+			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"),
+			$repository->getId())) 
+		{
+			$multField->setEnabled(false, true);
+		}
 		
 		$property =& $multField->addComponent(
 			"id", 
@@ -171,10 +214,24 @@ class editAction
 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setErrorText(_("A value for this property is required."));
 		$property->setSize(40);
+		// Disable if unauthorized
+		if (!$authZManager->isUserAuthorized(
+			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"),
+			$repository->getId())) 
+		{
+			$property->setEnabled(false, true);
+		}
 		
 		$property =& $multField->addComponent(
 			"description", 
 			WTextArea::withRowsAndColumns(2, 40));
+		// Disable if unauthorized
+		if (!$authZManager->isUserAuthorized(
+			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"),
+			$repository->getId())) 
+		{
+			$property->setEnabled(false, true);
+		}
 		
 		
 		
@@ -211,12 +268,26 @@ class editAction
 			new WCheckBox());
 		$property->setChecked(false);
 		$property->setLabel(_("yes"));
+		// Disable if unauthorized
+		if (!$authZManager->isUserAuthorized(
+			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"),
+			$repository->getId())) 
+		{
+			$property->setEnabled(false, true);
+		}
 		
 		$property =& $multField->addComponent(
 			"repeatable", 
 			new WCheckBox());
 // 		$property->setChecked(false);
 		$property->setLabel(_("yes"));
+		// Disable if unauthorized
+		if (!$authZManager->isUserAuthorized(
+			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"),
+			$repository->getId())) 
+		{
+			$property->setEnabled(false, true);
+		}
 		
 // 		$property =& $multField->addComponent(
 // 			"populatedbydr", 
@@ -228,12 +299,15 @@ class editAction
 		$property =& $multField->addComponent(
 			"authoritative_values", 
 			WTextArea::withRowsAndColumns(10, 40));
-			
-		$property =& $multField->addComponent(
-			"allow_addition", 
-			new WCheckBox());
-		$property->setChecked(false);
-		$property->setLabel(_("yes"));
+		// Disable if unauthorized
+		if ($authZManager->isUserAuthorized(
+			$idManager->getId("edu.middlebury.authorization.modify_authority_list"),
+			$repository->getId())) 
+		{
+			$property->setEnabled(true, true);
+		} else {
+			$property->setEnabled(false, true);
+		}
 		
 		
 		ob_start();
@@ -280,15 +354,6 @@ class editAction
 				print _("Authoritative Values: ");
 			print "\n</td><td>";
 				print "[[authoritative_values]]";
-			print "\n</td></tr>";
-			
-			print "\n<tr><td>";
-				print _("Allow User Addition of Authoritative Values: ");
-				print "\n\t<br/><span style='font-style: italic; font-size: small'>";
-				print _("If checked, the Asset editing interface will be allow new authoritative values to be added to this field. If not checked, new values can only be added here.");
-				print "</span>";
-			print "\n</td><td>";
-				print "[[allow_addition]]";
 			print "\n</td></tr>";
 			
 			print "</table>";
@@ -351,8 +416,6 @@ class editAction
 				$value->asString());
 			$collection['authoritative_values'] .= "\n";
 		}
-		$collection['allow_addition'] = $partStructure->isUserAdditionAllowed();
-
 		
 		
 		$newCollection =& $multField->addValueCollection($collection, false);
@@ -440,10 +503,10 @@ class editAction
 				
 				// Authoritative values
 				$valuesString = trim($partStructProps['authoritative_values']);
-				if ($valuesString) {
+				//if ($valuesString) {
 					$authoritativeStrings = explode("\n", $valuesString);
 					array_walk($authoritativeStrings, "removeExcessWhitespace");
-					
+
 					// Remove and missing values
 					$authoritativeValues =& $partStruct->getAuthoritativeValues();
 					while ($authoritativeValues->hasNext()) {
@@ -457,9 +520,7 @@ class editAction
 						if ($valueString)
 							$partStruct->addAuthoritativeValueAsString($valueString);
 					}
-				}
-				$partStruct->setUserAdditionAllowed(
-					(($partStructProps['allow_addition'])?TRUE:FALSE));
+				//}
 				
 				// Order of part structures
 				if (!$set->isInSet($partStructId))

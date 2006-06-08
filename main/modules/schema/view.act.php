@@ -119,7 +119,6 @@ class viewAction
 		print "\n<th style='text-align: center'>"._("Repeatable?")."</th>";
 // 		print "\n<th style='text-align: center'>"._("IsPopulatedByRepository?")."</th>";
 		print "\n<th style='text-align: center'>"._("Authoritative Values")."</th>";
-		print "\n<th style='text-align: center'>"._("Allow User<br/>Addition of<br/>Authoritative<br/>Values?")."</th>";
 		print "\n</tr>";
 		$partStructures =& $recordStructure->getPartStructures();
 		$partStructureArray = array();
@@ -155,7 +154,6 @@ class viewAction
 				print "\n\t</ul>";
 			}
 			print "\n</td>";
-			print "\n<td style='vertical-align: top; text-align: center'>".(($partStructure->isUserAdditionAllowed())?"<strong>"._("Yes")."</strong>":_("No"))."</td>";
 			print "\n</tr>";
 		}
 		print "\n</table>";

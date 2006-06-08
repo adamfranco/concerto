@@ -856,7 +856,15 @@ class editAction
 		$value =& $partResults;
 		$valueStr = $value->asString();
 		
-		if ($partStruct->isUserAdditionAllowed() && !$partStruct->isAuthoritativeValue($value)) {
+		$authZManager =& Services::getService("AuthZ");
+		$idManager =& Services::getService("Id");
+		$authoritativeValues =& $partStruct->getAuthoritativeValues();
+			if ($authZManager->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.modify_authority_list"),
+					$this->getRepositoryId())
+				&& !$partStruct->isAuthoritativeValue($value)
+				&& $authoritativeValues->hasNext()) 
+			{
 			$partStruct->addAuthoritativeValue($value);
 			printpre("\tAdding AuthoritativeValue: ".$valueStr);
 		}
@@ -931,7 +939,15 @@ class editAction
 			$value =& $valueArray['partvalue'];
 			$valueStr = $value->asString();
 			
-			if ($partStruct->isUserAdditionAllowed() && !$partStruct->isAuthoritativeValue($value)) {
+			$authZManager =& Services::getService("AuthZ");
+			$idManager =& Services::getService("Id");
+			$authoritativeValues =& $partStruct->getAuthoritativeValues();
+			if ($authZManager->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.modify_authority_list"),
+					$this->getRepositoryId())
+				&& !$partStruct->isAuthoritativeValue($value)
+				&& $authoritativeValues->hasNext()) 
+			{
 				$partStruct->addAuthoritativeValue($value);
 				printpre("\tAdding AuthoritativeValue:".$valueStr);
 			}
