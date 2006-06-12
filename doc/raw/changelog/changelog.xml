@@ -11,6 +11,9 @@
 
 <changelog name="Concerto ChangeLog">
 	<version number="2.0.1" date="the future">
+		<new author='adam'>
+			AssetDetails: Now prints Modification/Creation dates.
+		</new>
 		<fix author='adam'>
 			URLs specifying parameters now continue through first access attempt
 			where install is checked.

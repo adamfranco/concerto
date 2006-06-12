@@ -98,6 +98,17 @@ class viewAction
 			print  "\n\t<div>".$description->asString()."</div>";
 			print  "\n\t<br /><strong>"._("ID#").":</strong> ".$assetId->getIdString();
 			print  "\n\t<br /><strong>"._("Type").":</strong> ".Type::typeToString($asset->getAssetType());
+			
+			
+			$date =& $asset->getModificationDate();
+			print  "\n\t<table><tr><td>\n\t\t<strong>";
+			print _("Modification Date");
+			print ":</strong>\n\t</td><td>\n\t\t<em>".$date->asString()."</em>\n\t</tr>";
+			$date =& $asset->getCreationDate();
+			print  "\n\t<tr><td>\n\t\t<strong>";
+			print _("Creation Date");
+			print ":</strong>\n\t</td><td>\n\t\t<em>".$date->asString()."</em>\n\t</tr>";
+			print "\n\t</table>";
 		
 			if(is_object($asset->getEffectiveDate())) {
 				$effectDate =& $asset->getEffectiveDate();
