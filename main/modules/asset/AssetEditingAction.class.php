@@ -464,7 +464,15 @@ class AssetEditingAction
 			print "\n\t<tr>";
 			print "\n\t\t<th>";
 			print "\n\t\t\t".$partStruct->getDisplayName();
-	// 		print "\n"._("The Name for this <em>Asset</em>: ");
+			if ($partStruct->getDescription()) {
+				print "\n\t\t\t&nbsp;&nbsp;<a onclick='";
+				print 'var descStyle = this.nextSibling.nextSibling.style; if (descStyle.display == "block") { descStyle.display="none"; } else { descStyle.display="block"; }';
+				print "'>"._("?")."</a>";
+				print "\n\t\t\t<div style='font-size: small; font-weight: normal; margin: 5px; display: none;'>";
+				print $partStruct->getDescription();
+				print "</div>";
+				
+			}
 			print "\n\t\t</th>";
 			print "\n\t\t<td>";
 			print "\n\t\t\t[[".preg_replace("/[^a-zA-Z0-9:_\-]/", "_", $partStructId->getIdString())."]]";

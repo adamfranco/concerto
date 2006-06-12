@@ -15,6 +15,10 @@
 			URLs specifying parameters now continue through first access attempt
 			where install is checked.
 		</fix>
+		<new author='adam'>
+			AssetEditing: SchemaField descriptions are now available in the 
+			asset editing interface.
+		</new>
 		<change author='adam'>
 			AssetEditing: Add/Remove buttons for Records and repeatable Values 
 			are now better labeled.
