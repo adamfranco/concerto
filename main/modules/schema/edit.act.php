@@ -266,6 +266,8 @@ class editAction
 			}
 		}
 		
+		$property =& $multField->addComponent("orig_type", new WHiddenField());
+		
 		$property =& $multField->addComponent(
 			"mandatory", 
 			new WCheckBox());
@@ -283,12 +285,6 @@ class editAction
 		// Disable if unauthorized
 		if (!$canModify)
 			$property->setEnabled(false, true);
-		
-// 		$property =& $multField->addComponent(
-// 			"populatedbydr", 
-// 			new WCheckBox());
-// 		$property->setChecked(false);
-// 		$property->setLabel(_("yes"));
 		
 		
 		$property =& $multField->addComponent(
@@ -319,6 +315,7 @@ class editAction
 				print _("Type")."... ";
 			print "\n *</td><td>";
 				print "[[type]]";
+				print "[[orig_type]]";
 			print "\n</td></tr>";
 	
 			print "\n<tr><td>";
@@ -393,6 +390,7 @@ class editAction
 		$collection['description'] = $partStructure->getDescription();
 		$type =& $partStructure->getType();
 		$collection['type'] = urlencode(HarmoniType::typeToString($type, " :: "));
+		$collection['orig_type'] = urlencode(HarmoniType::typeToString($type, " :: "));
 		$collection['mandatory'] = $partStructure->isMandatory();
 		$collection['repeatable'] = $partStructure->isRepeatable();
 // 		$collection['populatedbydr'] = $partStructure->isPopulatedByRepository();
@@ -409,12 +407,35 @@ class editAction
 		
 		$newCollection =& $multField->addValueCollection($collection, false);
 		
-		$newCollection['type']->setEnabled(false, true);
+		// Allow conversion of the type if the user is authorized to convert_rec_structs
+		$authZManager =& Services::getService("AuthZ");
+		$idManager =& Services::getService("Id");
+		if (preg_match("/^Repository::.+$/i", $partStructureId->getIdString()) 
+					&& $authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.convert_rec_struct"), 
+						$partStructure->getRepositoryId())
+					&& $authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.modify"), 
+						$partStructure->getRepositoryId())
+				|| ($authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.convert_rec_struct"), 
+						$idManager->getId("edu.middlebury.authorization.root"))
+					&& $authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.modify"), 
+						$idManager->getId("edu.middlebury.authorization.root"))))
+		{			
+			// Allow conversion of type
+			$newCollection['type']->addConfirm(_("Are you sure that you want to change the type of this field?\\n\\nConverting ShortStrings to Strings is usually safe, but other conversion may cause data truncation or data loss if there are records for this collection that contain values that cannot be mapped directly to the new data type. Please consult the following guide.\\n\\n-- Safe Conversions --\\nShortString => String \\nShortString => Blob\\nString => Blob  \\nDateTime => ShortString \\nDateTime => String \\nInteger => ShortString \\nInteger => String  \\nFloat => ShortString \\nFloat => String  \\nOKI Type => ShortString \\nOKI Type => String \\n\\n\\n-- Conversions that may be truncated --\\nString => ShortString \\n\\n\\n-- Conversions that may or may not work --\\nShortString => DateTime \\nShortString => Integer \\nShortString => Float \\nShortString => OKI Type \\nString => DateTime \\nString => Integer \\nString => Float \\nString => OKI Type \\nBlob => ShortString \\nBlob => String"));
+			if (!preg_match("/^Repository::.+$/i", $partStructureId->getIdString()))
+				$newCollection['type']->addConfirm(_("This is a global Schema, changing the type will modify all Collections. Continue?"));
+		} else {
+			$newCollection['type']->setEnabled(false, true);
+		}
+		
 		// If a part structure is not repeatable, it can be made repeatable, but
 		// not unmade repeatable.
 		if ($partStructure->isRepeatable())
 			$newCollection['repeatable']->setEnabled(false, true);
-// 		$newCollection['populatedbydr']->setEnabled(false, true);
 	}
 		
 	/**
@@ -428,7 +449,6 @@ class editAction
 	 * @since 4/28/05
 	 */
 	function saveWizard ( $cacheName ) {
-// 		Debug::level(100);
 		$wizard =& $this->getWizard($cacheName);
 		// If all properties validate then go through the steps nessisary to
 		// save the data.
@@ -448,6 +468,7 @@ class editAction
 
 			$recordStructureId =& $recordStructure->getId();
 			$idManager =& Services::getService("Id");
+			$authZManager =& Services::getService("AuthZ");
 			
 			// Create a set for the RecordStructure
 			$setManager =& Services::getService("Sets");
@@ -460,6 +481,7 @@ class editAction
 				
 				print "\n<hr/>";
 				printpre($partStructProps['id']);
+				printpre($partStructProps['display_name']);
 				
 				if ($partStructProps['id']) {
 					$partStructId =& $idManager->getId($partStructProps['id']);				
@@ -473,8 +495,36 @@ class editAction
 						$partStruct->updateIsMandatory($partStructProps['mandatory']);
 					if ($partStructProps['repeatable'] != $partStruct->isRepeatable())
 						$partStruct->updateIsRepeatable(($partStructProps['repeatable']?TRUE:FALSE));
-	// 				if ($partStructProps['populatedbydr'] != $partStruct->isPopulatedByRepository())
-	// 					$partStruct->updateIsPopulatedByRepository($partStructProps['populatedbydr']);
+					
+					
+					// Data Type conversion
+					$type =& HarmoniType::fromString(urldecode(
+						$partStructProps['type']), " :: ");
+					if (!$type->isEqual($partStruct->getType())
+						&& (preg_match("/^Repository::.+$/i", $partStructId->getIdString()) 
+							&& $authZManager->isUserAuthorized(
+								$idManager->getId("edu.middlebury.authorization.convert_rec_struct"), 
+								$partStruct->getRepositoryId())
+							&& $authZManager->isUserAuthorized(
+								$idManager->getId("edu.middlebury.authorization.modify"), 
+								$partStruct->getRepositoryId())
+						|| ($authZManager->isUserAuthorized(
+								$idManager->getId("edu.middlebury.authorization.convert_rec_struct"), 
+								$idManager->getId("edu.middlebury.authorization.root"))
+							&& $authZManager->isUserAuthorized(
+								$idManager->getId("edu.middlebury.authorization.modify"), 
+								$idManager->getId("edu.middlebury.authorization.root")))))
+					{
+						printpre("Converting data type.");
+						$partStruct =& $recordStructure->convertPartStructureToType($partStructId, $type);
+						// Remove the old value from the set
+						if ($set->isInSet($partStructId))
+							$set->removeItem($partStructId);
+						
+						// Update the id to reflect the id of the new part
+						$partStructId =& $partStruct->getId();
+					}
+					
 				} else {
 					$type =& HarmoniType::fromString(urldecode(
 						$partStructProps['type']), " :: ");
@@ -535,7 +585,7 @@ class editAction
 			}
 			
 			
-// 			Debug::printAll(new PlainTextDebugHandlerPrinter);
+	//		Debug::printAll(new PlainTextDebugHandlerPrinter);
 // 			exit;
 			return TRUE;
 			

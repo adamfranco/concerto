@@ -222,7 +222,7 @@ class editAction
 			
 			// Schema Edit
 			if (method_exists($recordStructure, 'createPartStructure')
-				&& 	(preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
+				&& 	((preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
 						&& ($authZManager->isUserAuthorized(
 								$idManager->getId("edu.middlebury.authorization.modify_rec_struct"), 
 								$repositoryId)
@@ -234,7 +234,7 @@ class editAction
 							$idManager->getId("edu.middlebury.authorization.root"))
 						|| $authZManager->isUserAuthorized(
 								$idManager->getId("edu.middlebury.authorization.modify_authority_list"), 
-								$idManager->getId("edu.middlebury.authorization.root"))))
+								$repositoryId))))
 			{
 				$harmoni->history->markReturnURL(
 					"concerto/schema/edit-return/".$recordStructureId->getIdString());
@@ -253,50 +253,48 @@ class editAction
 			$authZManager =& Services::getService("AuthZ");
 			$idManager =& Services::getService("Id");
 			if (method_exists($recordStructure, 'createPartStructure')
-				&& 	(preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
+				&& 	((preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
 						&& $authZManager->isUserAuthorized(
 							$idManager->getId("edu.middlebury.authorization.convert_rec_struct"), 
 							$repositoryId))
 					|| $authZManager->isUserAuthorized(
 							$idManager->getId("edu.middlebury.authorization.convert_rec_struct"), 
-							$idManager->getId("edu.middlebury.authorization.root")))
+							$idManager->getId("edu.middlebury.authorization.root"))))
 			{
 			
 				$button =& $selectStep->addComponent(
 					"duplicate_schema__".$recordStructureId->getIdString(), 
 					WSaveButton::withLabel(_("Duplicate Schema Only")));
 				$button->addConfirm(_("Are you sure that you wish to duplicate this Schema?"));
+				$links[] = "[[duplicate_schema__".$recordStructureId->getIdString()."]]";
 				
-				if (preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
-						&& $authZManager->isUserAuthorized(
+				if ($authZManager->isUserAuthorized(
 							$idManager->getId("edu.middlebury.authorization.modify"), 
-							$repositoryId)
-					|| $authZManager->isUserAuthorized(
-							$idManager->getId("edu.middlebury.authorization.modify"), 
-							$idManager->getId("edu.middlebury.authorization.root")))
+							$repositoryId))
 				{
 					$button =& $selectStep->addComponent(
 						"duplicate_copy_records__".$recordStructureId->getIdString(), 
 						WSaveButton::withLabel(_("Duplicate Schema and Records")));
 					$button->addConfirm(_("Are you sure that you wish to duplicate this Schema\\nand all Records that use it?"));
+					
+					$links[] = "[[duplicate_copy_records__".$recordStructureId->getIdString()."]]";
 				}
 				$harmoni->history->markReturnURL(
 					"concerto/schema/duplicate-return/".$recordStructureId->getIdString());
 					
-				$links[] = "[[duplicate_schema__".$recordStructureId->getIdString()."]][[duplicate_copy_records__".$recordStructureId->getIdString()."]]";
 			}
 			
 			// Schema Delete
 			$authZManager =& Services::getService("AuthZ");
 			$idManager =& Services::getService("Id");
 			if (method_exists($recordStructure, 'createPartStructure')
-				&& 	(preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
+				&& 	((preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
 						&& $authZManager->isUserAuthorized(
 							$idManager->getId("edu.middlebury.authorization.delete_rec_struct"), 
 							$repositoryId))
 					|| $authZManager->isUserAuthorized(
 							$idManager->getId("edu.middlebury.authorization.delete_rec_struct"), 
-							$idManager->getId("edu.middlebury.authorization.root")))
+							$idManager->getId("edu.middlebury.authorization.root"))))
 			{
 			
 				$button =& $selectStep->addComponent(

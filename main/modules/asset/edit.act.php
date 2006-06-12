@@ -662,8 +662,14 @@ class editAction
 		ob_start();
 		print "\n<table class='edit_table' cellspacing='0'>";
 		
+		$partStructText = array();
+		$unorderedPartStructText = array();
+		$setManager =& Services::getService("Sets");
+		$set =& $setManager->getPersistentSet($recStruct->getId());
+		
 		$partStructs =& $recStruct->getPartStructures();
 		while ($partStructs->hasNext()) {
+			ob_start();
 			$partStruct =& $partStructs->next();
 			$partStructId =& $partStruct->getId();
 		
@@ -688,8 +694,15 @@ class editAction
 			print "\n\t\t\t[[".preg_replace("/[^a-zA-Z0-9:_\-]/", "_",  $partStructId->getIdString())."]]";
 			print "\n\t\t</td>";
 			print "\n\t</tr>";
+			
+			if ($set->isInSet($partStructId))
+				$partStructText[$set->getPosition($partStructId)] = ob_get_clean();
+			else
+				$unorderedPartStructText[] = ob_get_clean();
 		}
-	
+		ksort($partStructText);
+		print implode('', $partStructText);
+		print implode('', $unorderedPartStructText);
 		print "\n</table>";
 		print "\n[[record_id]]";
 	

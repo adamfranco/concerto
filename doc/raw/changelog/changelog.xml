@@ -41,6 +41,9 @@
 			Schemas: AuthoritativeValues addition is now an AuthorizationFunction.
 		</change>
 		<new author='adam'>
+			Schemas: Added support for SchemaField/PartStucture/Part data-type conversion.
+		</new>
+		<new author='adam'>
 			Schemas: Added support for Schema/RecordStructure/Record duplication.
 		</new>
 		<new author='adam'>
