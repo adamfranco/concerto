@@ -306,8 +306,12 @@ class AssetPrinter {
 		$deleteMultiURL = str_replace("&amp;", "&", 
 			$harmoni->request->quickURL("asset", "multdelete"));
 		
-		$pleaseSelectString = _("Please select some Assets.");
+		$pleaseSelectStringEdit = _("Please check some Assets to edit.");
+		$pleaseSelectStringDelete = _("Please check some Assets to delete.");
+		$pleaseSelectStringBasket = _("Please check some Assets to add to the selection.");
 		$confirmDeleteString = _("Are you sure that you wish to permenantly delete these assets?");
+		$unauthorizedStringEdit = _("You are not authorized to modify XXXXXX of the Assets you have checked, they have been unchecked.");
+		$unauthorizedStringDelete = _("You are not authorized to delete XXXXXX of the Assets you have checked, they have been unchecked.");
 		print<<<END
 
 <script type='text/javascript'>
@@ -334,14 +338,29 @@ class AssetPrinter {
 		var assetList = '&assets=';
 		var assetElements = document.getElementsByName('$checkboxName');
 		var numChecked = 0;
+		var numUnauthorized = 0;
 		
 		for (var i = 0; i < assetElements.length; i++) {
-			if (!assetElements[i].disabled && assetElements[i].checked == true) {
+			if (!assetElements[i].disabled && assetElements[i].checked == true) 
+			{
+				var authFields = document.getElementsByName(assetElements[i].name + '_can_modify_' + assetElements[i].value);
+				if (authFields[0].value != 'true')
+				{
+					assetElements[i].checked = false;
+					numUnauthorized++;
+					continue;
+				}
+				
 				if (numChecked > 0)
 					assetList += ',';
 				assetList += assetElements[i].value;
 				numChecked++;
 			}
+		}
+		
+		if (numUnauthorized > 0) {
+			var message = "$unauthorizedStringEdit";
+			alert(message.replace(/XXXXXX/, numUnauthorized));
 		}
 		
 		if (numChecked > 1)
@@ -349,7 +368,7 @@ class AssetPrinter {
 		else if (numChecked == 1)
 			window.location = editSingleURL + assetList;
 		else
-			alert('$pleaseSelectString');
+			alert('$pleaseSelectStringEdit');
 	}
 	
 	function deleteCheckedAssets() {
@@ -357,9 +376,19 @@ class AssetPrinter {
 		var assetList = '&assets=';
 		var assetElements = document.getElementsByName('$checkboxName');
 		var numChecked = 0;
+		var numUnauthorized = 0;
 		
 		for (var i = 0; i < assetElements.length; i++) {
 			if (!assetElements[i].disabled && assetElements[i].checked == true) {
+				
+				var authFields = document.getElementsByName(assetElements[i].name + '_can_delete_' + assetElements[i].value);
+				if (authFields[0].value != 'true')
+				{
+					assetElements[i].checked = false;
+					numUnauthorized++;
+					continue;
+				}
+				
 				if (numChecked > 0)
 					assetList += ',';
 				assetList += assetElements[i].value;
@@ -367,10 +396,16 @@ class AssetPrinter {
 			}
 		}
 		
-		if (numChecked >= 1 && confirm('$confirmDeleteString'))
+		if (numUnauthorized > 0) {
+			var message = "$unauthorizedStringDelete";
+			alert(message.replace(/XXXXXX/, numUnauthorized));
+		}
+		
+		if (numChecked < 1)
+			alert('$pleaseSelectStringDelete');
+		
+		else if (confirm('$confirmDeleteString'))
 			window.location = deleteMultiURL + assetList;
-		else
-			alert('$pleaseSelectString');
 	}
 
 	/**
@@ -396,7 +431,7 @@ class AssetPrinter {
 		if (assetList.length >= 1)
 			Basket.addAssets(assetList);
 		else
-			alert('$pleaseSelectString');
+			alert('$pleaseSelectStringBasket');
 	}
 		
 		

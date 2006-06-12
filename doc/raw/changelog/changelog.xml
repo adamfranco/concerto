@@ -12,6 +12,11 @@
 <changelog name="Concerto ChangeLog">
 	<version number="2.0.1" date="the future">
 		<new author='adam'>
+			AssetBrowsing: Checkbox now enabled even if the user doesn't have
+			authorization to modify the asset, allowing it to be checked for
+			addition to the selection.
+		</new>
+		<new author='adam'>
 			AssetDetails: Now prints Modification/Creation dates.
 		</new>
 		<fix author='adam'>

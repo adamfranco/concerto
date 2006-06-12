@@ -641,7 +641,7 @@ END;
 		}
 		
 		// more display options
-		$onChange = " onchange='this.form.action += \"&".$resultPrinter->startingNumberParam()."=".$resultPrinter->getStartingNumber()."\"; this.form.submit();'";
+		$onChange = " onchange='this.form.action += \"&amp;".$resultPrinter->startingNumberParam()."=".$resultPrinter->getStartingNumber()."\"; this.form.action.urlDecodeAmpersands(); this.form.submit();'";
 		print "\n\t<span";
 		print " style='font-weight: bold; text-decoration: underline; cursor: pointer'";
 		print " onclick='";
@@ -666,7 +666,7 @@ END;
 			print "\n\t\t\t<option value='$size'";
 			if ($_SESSION["thumbnail_size"] == $size)
 				print " selected='selected'";
-			print "'>".$size."px</option>";
+			print ">".$size."px</option>";
 		}
 		print "\n\t\t</select> &nbsp;&nbsp;";
 		
@@ -811,7 +811,7 @@ function printAssetShort(& $asset, $params, $num) {
 	
 	
 	ob_start();
-	print "<div style='margin-top: 5px; font-size: small;'>";
+	print "\n<div style='margin-top: 5px; font-size: small;'>";
 	if ($_SESSION["show_controls"] == 'true') {
 		AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num, false);
 		print " | ";
@@ -819,12 +819,27 @@ function printAssetShort(& $asset, $params, $num) {
 	$authZ =& Services::getService("AuthZ");
 	$idManager =& Services::getService("Id");
 	$harmoni->request->startNamespace("AssetMultiEdit");
-	print "<input type='checkbox'";
+	print "\n<input type='checkbox'";
 	print " name='".RequestContext::name("asset")."'";
 	print " value='".$assetId->getIdString()."'";
-	if (!$authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $assetId))
-		print " disabled='disabled'";
 	print "/>";
+	
+	print "\n<input type='hidden'";
+	print " name='".RequestContext::name("asset_can_modify_".$assetId->getIdString())."'";
+	if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $assetId))
+		print " value='true'";
+	else
+		print " value='false'";
+	print "/>";	
+	
+	print "\n<input type='hidden'";
+	print " name='".RequestContext::name("asset_can_delete_".$assetId->getIdString())."'";
+	if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.delete"), $assetId))
+		print " value='true'";
+	else
+		print " value='false'";
+	print "/>";	
+	
 	$harmoni->request->endNamespace();
 	print "</div>";
 	
