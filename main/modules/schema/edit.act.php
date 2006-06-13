@@ -10,6 +10,8 @@
 
 require_once(MYDIR."/main/library/abstractActions/RecordStructureAction.class.php");
 require_once(HARMONI."debugHandler/PlainTextDebugHandlerPrinter.class.php");
+require_once(POLYPHONY."/main/library/Importer/StatusStars.class.php");
+
 
 /**
  * 
@@ -348,6 +350,7 @@ class editAction
 	
 		$multField->setElementLayout(ob_get_contents());
 		ob_end_clean();
+		$multField->setStartingNumber(0);
 		
 		// Add the existing Elements/PartStructures
 		// First load the ordered PartStructures, then the rest
@@ -369,7 +372,6 @@ class editAction
 				$i++;
 			}
 		}
-		$multField->setStartingNumber(0);
 		
 		return $wizard;
 	}
@@ -405,8 +407,7 @@ class editAction
 		}
 		
 		
-		$newCollection =& $multField->addValueCollection($collection, false);
-		
+			
 		// Allow conversion of the type if the user is authorized to convert_rec_structs
 		$authZManager =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
@@ -423,12 +424,16 @@ class editAction
 					&& $authZManager->isUserAuthorized(
 						$idManager->getId("edu.middlebury.authorization.modify"), 
 						$idManager->getId("edu.middlebury.authorization.root"))))
-		{			
+		{
+			$newCollection =& $multField->addValueCollection($collection, true);
+			
 			// Allow conversion of type
 			$newCollection['type']->addConfirm(_("Are you sure that you want to change the type of this field?\\n\\nConverting ShortStrings to Strings is usually safe, but other conversion may cause data truncation or data loss if there are records for this collection that contain values that cannot be mapped directly to the new data type. Please consult the following guide.\\n\\n-- Safe Conversions --\\nShortString => String \\nShortString => Blob\\nString => Blob  \\nDateTime => ShortString \\nDateTime => String \\nInteger => ShortString \\nInteger => String  \\nFloat => ShortString \\nFloat => String  \\nOKI Type => ShortString \\nOKI Type => String \\n\\n\\n-- Conversions that may be truncated --\\nString => ShortString \\n\\n\\n-- Conversions that may or may not work --\\nShortString => DateTime \\nShortString => Integer \\nShortString => Float \\nShortString => OKI Type \\nString => DateTime \\nString => Integer \\nString => Float \\nString => OKI Type \\nBlob => ShortString \\nBlob => String"));
 			if (!preg_match("/^Repository::.+$/i", $partStructureId->getIdString()))
 				$newCollection['type']->addConfirm(_("This is a global Schema, changing the type will modify all Collections. Continue?"));
 		} else {
+			$newCollection =& $multField->addValueCollection($collection, false);
+			
 			$newCollection['type']->setEnabled(false, true);
 		}
 		
@@ -455,6 +460,7 @@ class editAction
 		if ($wizard->validate()) {
 			$properties = $wizard->getAllValues();
 // 			printpre($properties);
+// 			exit;
 			
 			$repository =& $this->getRepository();
 			$recordStructure =& $this->getRecordStructure();
@@ -476,12 +482,9 @@ class editAction
 
 			// Update the existing part structures
 			$i = 0;
+			$existingPartStructureIds = array();
 			foreach (array_keys($properties['elementstep']['elements']) as $index) {
 				$partStructProps =& $properties['elementstep']['elements'][$index];
-				
-				print "\n<hr/>";
-				printpre($partStructProps['id']);
-				printpre($partStructProps['display_name']);
 				
 				if ($partStructProps['id']) {
 					$partStructId =& $idManager->getId($partStructProps['id']);				
@@ -515,8 +518,9 @@ class editAction
 								$idManager->getId("edu.middlebury.authorization.modify"), 
 								$idManager->getId("edu.middlebury.authorization.root")))))
 					{
-						printpre("Converting data type.");
-						$partStruct =& $recordStructure->convertPartStructureToType($partStructId, $type);
+						$partStruct =& $recordStructure->convertPartStructureToType(
+							$partStructId, $type, 
+							new StatusStars("Converting data type for PartStructure: ".$partStruct->getDisplayName()));
 						// Remove the old value from the set
 						if ($set->isInSet($partStructId))
 							$set->removeItem($partStructId);
@@ -566,7 +570,38 @@ class editAction
 					$set->addItem($partStructId);
 				$set->moveToPosition($partStructId, $i);
 				
+				$existingPartStructureIds[$partStructId->getIdString()] = $partStructId;
+				
 				$i++;
+			}
+			
+			// Delete any removed partStructures
+			if ((preg_match("/^Repository::.+$/i", $recordStructureId->getIdString()) 
+					&& $authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.convert_rec_struct"), 
+						$partStruct->getRepositoryId())
+					&& $authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.modify"), 
+						$partStruct->getRepositoryId())
+				|| ($authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.convert_rec_struct"), 
+						$idManager->getId("edu.middlebury.authorization.root"))
+					&& $authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.modify"), 
+						$idManager->getId("edu.middlebury.authorization.root")))))
+			{
+				$partStructs =& $recordStructure->getPartStructures();
+				while ($partStructs->hasNext()) {
+					$partStruct =& $partStructs->next();
+					$partStructId =& $partStruct->getId();
+					if (!array_key_exists($partStructId->getIdString(), $existingPartStructureIds)) {
+						printpre("Deleting PartStructure: ".$partStruct->getDisplayName()." Id: ".$partStructId->getIdString());
+						$recordStructure->deletePartStructure($partStructId);
+						// Remove the old value from the set
+						if ($set->isInSet($partStructId))
+							$set->removeItem($partStructId);
+					}
+				}
 			}
 			
 			// Log the success or failure
@@ -584,11 +619,22 @@ class editAction
 				$log->appendLogWithTypes($item,	$formatType, $priorityType);
 			}
 			
-			
-	//		Debug::printAll(new PlainTextDebugHandlerPrinter);
-// 			exit;
-			return TRUE;
-			
+			$url = $this->getReturnUrl();
+			$unescapedurl = preg_replace("/&amp;/", "&", $url);
+			$label = _("Return");
+			$this->closeWizard($cacheName);
+			print <<< END
+	<script type='text/javascript'>
+	/* <![CDATA[ */
+		
+		window.location = '$unescapedurl';
+		
+	/* ]]> */
+	</script>
+	<a href='$url'>$label</a>
+	
+END;
+			exit();
 		} else {
 			return FALSE;
 		}

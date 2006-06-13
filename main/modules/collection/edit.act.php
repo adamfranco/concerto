@@ -95,9 +95,9 @@ class editAction
 		$idManager =& Services::getService("Id");
 		$authZManager =& Services::getService("AuthZ");
 		
-		$harmoni->history->markReturnURL(
-			$harmoni->request->quickURL("collection", "edit", array(
-					"collection_id" => $repositoryId->getIdString())));
+		$returnUrl =& $harmoni->request->mkURLWithPassthrough();
+		$returnUrl->setValue("wizardSkipToStep", "schema");
+
 	
 		// Instantiate the wizard, then add our steps.
 		$wizard =& SimpleStepWizard::withDefaultLayout();
@@ -207,7 +207,8 @@ class editAction
 			print "\n</td><td valign='top'>\n\t<div style='font-style: italic'>".$description->asString()."</div>";
 			
 			$harmoni->history->markReturnURL(
-				"concerto/collection/edit/".$repositoryId->getIdString());
+				"concerto/collection/edit/".$repositoryId->getIdString(),
+				$returnUrl);
 			$links = array();
 			
 			// Schema Details
@@ -237,7 +238,8 @@ class editAction
 								$repositoryId))))
 			{
 				$harmoni->history->markReturnURL(
-					"concerto/schema/edit-return/".$recordStructureId->getIdString());
+					"concerto/schema/edit-return/".$recordStructureId->getIdString(),
+					$returnUrl);
 				
 				ob_start();
 				print "<a href='";
@@ -280,7 +282,8 @@ class editAction
 					$links[] = "[[duplicate_copy_records__".$recordStructureId->getIdString()."]]";
 				}
 				$harmoni->history->markReturnURL(
-					"concerto/schema/duplicate-return/".$recordStructureId->getIdString());
+					"concerto/schema/duplicate-return/".$recordStructureId->getIdString(),
+					$returnUrl);
 					
 			}
 			
@@ -303,7 +306,8 @@ class editAction
 				$button->addConfirm(_("Are you sure that you wish to delete this Schema\\nand Records in all Assets in this Collection that use it?"));
 				$button->addConfirm(_("This Schema can only be deleted if there are no Records\\nin any other Collection that use it.\\n\\nAre you sure that there are no Records that use this Schema?\\n\\nContinue to delete?"));
 				$harmoni->history->markReturnURL(
-					"concerto/schema/delete-return/".$recordStructureId->getIdString());
+					"concerto/schema/delete-return/".$recordStructureId->getIdString(),
+					$returnUrl);
 					
 				$links[] = "[[_delete_schema__".$recordStructureId->getIdString()."]]";
 			}

@@ -8,6 +8,8 @@
  * @version $Id$
  */
 require_once(MYDIR."/main/library/abstractActions/RecordStructureAction.class.php");
+require_once(POLYPHONY."/main/library/Importer/StatusStars.class.php");
+
 
 /**
  * 
@@ -109,7 +111,10 @@ class duplicateAction
 		
 		$newRecordStructure =& $repository->duplicateRecordStructure(
 			$recordStructureId,
-			((RequestContext::value('copy_records') == 'true')?true:false));
+			((RequestContext::value('copy_records') == 'true')?true:false),
+			null,
+			false,
+			new StatusStars(_("Duplicating Schema and associated Records")));
 		
 		// Log the action
 		if (Services::serviceRunning("Logging")) {
@@ -131,7 +136,24 @@ class duplicateAction
 		if ($set->isInSet($recordStructureId))
 			$set->addItem($newRecordStructure->getId());
 		
-		$harmoni->history->goBack(
+		
+		
+		$url = $harmoni->history->getReturnUrl(
 			"concerto/schema/duplicate-return/".$recordStructureIdString);
+		$unescapedurl = preg_replace("/&amp;/", "&", $url);
+		$label = _("Return");
+		print <<< END
+<script type='text/javascript'>
+/* <![CDATA[ */
+	
+	window.location = '$unescapedurl';
+	
+/* ]]> */
+</script>
+<a href='$url'>$label</a>
+
+END;
+		exit();
+
 	}
 }

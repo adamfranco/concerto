@@ -12,20 +12,30 @@
 <changelog name="Concerto ChangeLog">
 	<version number="2.1.0" date="2006-06-13">
 		<important author='adam'>
-			The following 6 queries need to be run on a Concerto 2.0.0 database
+			The following 9 queries need to be run on a Concerto 2.0.0 database
 			to upgrade it to support the needs of Concerto 2.1.0:
 			
-			ALTER TABLE `dm_schema` ADD `active` TINYINT( 1 ) UNSIGNED DEFAULT '1' NOT NULL AFTER `revision` ;
+			ALTER TABLE `dm_schema` 
+			ADD `active` TINYINT( 1 ) UNSIGNED DEFAULT '1' NOT NULL AFTER `revision` ;
 			
-			ALTER TABLE `dr_authoritative_values` ADD `fk_repository` VARCHAR( 100 ) NOT NULL AFTER `fk_partstructure` ;
+			ALTER TABLE `dr_authoritative_values` 
+			ADD `fk_repository` VARCHAR( 100 ) NOT NULL AFTER `fk_partstructure` ;
 			
 			ALTER TABLE `dr_authoritative_values` DROP PRIMARY KEY;
 			
-			ALTER TABLE `dr_authoritative_values` DROP INDEX `fk_partstructure` , ADD INDEX `fk_partstructure` ( `fk_partstructure` , `fk_repository` ) ;
+			ALTER TABLE `dr_authoritative_values` DROP INDEX `fk_partstructure` , 
+			ADD INDEX `fk_partstructure` ( `fk_partstructure` , `fk_repository` ) ;
 			
-			ALTER TABLE `dr_authoritative_values` CHANGE `value` `value` VARCHAR( 240 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
+			ALTER TABLE `dr_authoritative_values` 
+			CHANGE `value` `value` VARCHAR( 240 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
 			
 			DROP TABLE `dr_authority_options` ;
+			
+			ALTER TABLE `log_agent` ADD PRIMARY KEY ( `fk_entry` , `fk_agent` ) ;
+			
+			ALTER TABLE `log_entry` ADD INDEX ( `log_name` );
+			
+			ALTER TABLE `log_node` ADD PRIMARY KEY ( `fk_entry` , `fk_node` ) ;
 		</important>
 		<new author='adam'>
 			AssetBrowsing: Checkbox now enabled even if the user doesn't have
@@ -65,6 +75,9 @@
 		<fix author='adam'>
 			Collection.Edit: Fixed extra space that was messing up the select lists.
 		</fix>
+		<change author='adam'>
+			Schemas: Now return to the schema step of collection editing if needed.
+		</change>
 		<change author='adam'>
 			Schemas: AuthoritativeValues addition is now an AuthorizationFunction.
 		</change>
