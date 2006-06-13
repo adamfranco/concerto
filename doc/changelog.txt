@@ -3,6 +3,53 @@
 Name: Concerto ChangeLog
 
 
+v. 2.1.0 (2006-06-13)
+----------------------------------------------------
+		
+	**** IMPORTANT *** Change: The following 4 queries need to be run on a Concerto 2.0.0 database to upgrade it to support the needs of Concerto 2.1.0: ALTER TABLE `dm_schema` ADD `active` TINYINT( 1 ) UNSIGNED DEFAULT '1' NOT NULL AFTER `revision` ; ALTER TABLE `dr_authoritative_values` DROP INDEX `fk_partstructure` , ADD INDEX `fk_partstructure` ( `fk_partstructure` , `fk_repository` ) ; ALTER TABLE `dr_authoritative_values` CHANGE `value` `value` VARCHAR( 240 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ; DROP TABLE `dr_authority_options` ; (Adam Franco)
+		
+	* New feature: AssetBrowsing: Checkbox now enabled even if the user doesn't have authorization to modify the asset, allowing it to be checked for addition to the selection. (Adam Franco)
+		
+	* New feature: AssetDetails: Now prints Modification/Creation dates. (Adam Franco)
+		
+	* Bug Fix: URLs specifying parameters now continue through first access attempt where install is checked. (Adam Franco)
+		
+	* New feature: AssetEditing: SchemaField descriptions are now available in the asset editing interface. (Adam Franco)
+		
+	* Change: AssetEditing: Add/Remove buttons for Records and repeatable Values are now better labeled. (Adam Franco)
+		
+	* New feature: AssetEditing: Thumbnails of currently edited assets are now displayed in asset editing interfaces. (Adam Franco)
+		
+	* Bug Fix: AssetEditing: The FILE record structure [schema] now respects the order in the Asset Editing interface. (Adam Franco)
+		
+	* Bug Fix: Collection.Delete: Now selects the display name BEFORE deleting the repository. (Adam Franco)
+		
+	* Bug Fix: CollectionCreating: The FILE record structure is now added by default. (Adam Franco)
+		
+	* Bug Fix: Collection.Edit: Fixed extra space that was messing up the select lists. (Adam Franco)
+		
+	* Change: Schemas: AuthoritativeValues addition is now an AuthorizationFunction. (Adam Franco)
+		
+	* New feature: Schemas: Added support for SchemaField/PartStucture/Part data-type conversion. (Adam Franco)
+		
+	* New feature: Schemas: Added support for Schema/RecordStructure/Record duplication. (Adam Franco)
+		
+	* New feature: Schemas: Adding support for Schema/RecordStructure deleting. (Adam Franco)
+		
+	* New feature: Schemas: Schema Editing can now be accessed from the Collection.Edit wizard and from the Collection links. (Adam Franco)
+		
+	* Bug Fix: Schemas: Changed the term 'Schema Element' to 'Schema Field'. (Adam Franco)
+		
+	* Bug Fix: Schemas: Repeatable flag can now only be changed from false to true. (Adam Franco)
+		
+	* Bug Fix: Schemas: Updated the Schema creation wizard to support Authoratiative Lists. (Adam Franco)
+		
+	* Bug Fix: Logging: Ensured that logging is now ready for use before attempting to log errors. (Adam Franco)
+		
+	* Bug Fix: Theme: improved the look of headings, added more heading/menu levels. (Adam Franco)
+		
+	* New feature: Added user documentation. (Adam Franco)
+	
 v. 2.0.0 (2006-05-26)
 ----------------------------------------------------
 		

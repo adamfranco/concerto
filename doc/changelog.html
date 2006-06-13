@@ -3,7 +3,103 @@
 	h1, h2 {color: #005;}
 	h1 {font-size: 18pt;}
 	li {padding-bottom: 3px;}
-	</style><div style="font-family: Verdana; font-size: 12px;"><h1>Concerto ChangeLog</h1><h2>Version 2.0.0</h2><h3>2006-05-26</h3><ul>
+	</style><div style="font-family: Verdana; font-size: 12px;"><h1>Concerto ChangeLog</h1><h2>Version 2.1.0</h2><h3>2006-06-13</h3><ul>
+		<li/><span style="color: red">*** IMPORTANT ***</span> Change:  
+			The following 4 queries need to be run on a Concerto 2.0.0 database
+			to upgrade it to support the needs of Concerto 2.1.0:
+			
+			ALTER TABLE `dm_schema` ADD `active` TINYINT( 1 ) UNSIGNED DEFAULT '1' NOT NULL AFTER `revision` ;
+			
+			ALTER TABLE `dr_authoritative_values` DROP INDEX `fk_partstructure` , ADD INDEX `fk_partstructure` ( `fk_partstructure` , `fk_repository` ) ;
+			
+			ALTER TABLE `dr_authoritative_values` CHANGE `value` `value` VARCHAR( 240 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
+			
+			DROP TABLE `dr_authority_options` ;
+		 (<i>Adam Franco</i>)
+		<li/> New feature:  
+			AssetBrowsing: Checkbox now enabled even if the user doesn't have
+			authorization to modify the asset, allowing it to be checked for
+			addition to the selection.
+		 (<i>Adam Franco</i>)
+		<li/> New feature:  
+			AssetDetails: Now prints Modification/Creation dates.
+		 (<i>Adam Franco</i>)
+		<li/> Bug Fix:
+	 
+			URLs specifying parameters now continue through first access attempt
+			where install is checked.
+		 (<i>Adam Franco</i>)
+		<li/> New feature:  
+			AssetEditing: SchemaField descriptions are now available in the 
+			asset editing interface.
+		 (<i>Adam Franco</i>)
+		<li/> Change:  
+			AssetEditing: Add/Remove buttons for Records and repeatable Values 
+			are now better labeled.
+		 (<i>Adam Franco</i>)
+		<li/> New feature:  
+			AssetEditing: Thumbnails of currently edited assets are now displayed 
+			in asset editing interfaces.
+		 (<i>Adam Franco</i>)
+		<li/> Bug Fix:
+	 
+			AssetEditing: The FILE record structure [schema] now respects the
+			order in the Asset Editing interface.
+		 (<i>Adam Franco</i>)
+		<li/> Bug Fix:
+	 
+			Collection.Delete: Now selects the display name BEFORE deleting the 
+			repository.
+		 (<i>Adam Franco</i>)
+		<li/> Bug Fix:
+	 
+			CollectionCreating: The FILE record structure is now added by default.
+		 (<i>Adam Franco</i>)
+		<li/> Bug Fix:
+	 
+			Collection.Edit: Fixed extra space that was messing up the select lists.
+		 (<i>Adam Franco</i>)
+		<li/> Change:  
+			Schemas: AuthoritativeValues addition is now an AuthorizationFunction.
+		 (<i>Adam Franco</i>)
+		<li/> New feature:  
+			Schemas: Added support for SchemaField/PartStucture/Part data-type conversion.
+		 (<i>Adam Franco</i>)
+		<li/> New feature:  
+			Schemas: Added support for Schema/RecordStructure/Record duplication.
+		 (<i>Adam Franco</i>)
+		<li/> New feature:  
+			Schemas: Adding support for Schema/RecordStructure deleting.
+		 (<i>Adam Franco</i>)
+		<li/> New feature:  
+			Schemas: Schema Editing can now be accessed from the Collection.Edit 
+			wizard and from the Collection links.
+		 (<i>Adam Franco</i>)
+		<li/> Bug Fix:
+	 
+			Schemas: Changed the term 'Schema Element' to 'Schema Field'.
+		 (<i>Adam Franco</i>)
+		<li/> Bug Fix:
+	 
+			Schemas: Repeatable flag can now only be changed from false to true.
+		 (<i>Adam Franco</i>)
+		<li/> Bug Fix:
+	 
+			Schemas: Updated the Schema creation wizard to support Authoratiative Lists.
+		 (<i>Adam Franco</i>)
+		<li/> Bug Fix:
+	 
+			Logging: Ensured that logging is now ready for use before attempting
+			to log errors.
+		 (<i>Adam Franco</i>)
+		<li/> Bug Fix:
+	 
+			Theme: improved the look of headings, added more heading/menu levels.
+		 (<i>Adam Franco</i>)
+		<li/> New feature:  
+			Added user documentation.
+		 (<i>Adam Franco</i>)
+	</ul><br/><h2>Version 2.0.0</h2><h3>2006-05-26</h3><ul>
 		<li/> Bug Fix:
 	 
 			Now can remove empty part values.
