@@ -6,7 +6,7 @@ Name: Concerto ChangeLog
 v. 2.1.0 (2006-06-13)
 ----------------------------------------------------
 		
-	**** IMPORTANT *** Change: The following 4 queries need to be run on a Concerto 2.0.0 database to upgrade it to support the needs of Concerto 2.1.0: ALTER TABLE `dm_schema` ADD `active` TINYINT( 1 ) UNSIGNED DEFAULT '1' NOT NULL AFTER `revision` ; ALTER TABLE `dr_authoritative_values` DROP INDEX `fk_partstructure` , ADD INDEX `fk_partstructure` ( `fk_partstructure` , `fk_repository` ) ; ALTER TABLE `dr_authoritative_values` CHANGE `value` `value` VARCHAR( 240 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ; DROP TABLE `dr_authority_options` ; (Adam Franco)
+	**** IMPORTANT *** Change: The following 6 queries need to be run on a Concerto 2.0.0 database to upgrade it to support the needs of Concerto 2.1.0: ALTER TABLE `dm_schema` ADD `active` TINYINT( 1 ) UNSIGNED DEFAULT '1' NOT NULL AFTER `revision` ; ALTER TABLE `dr_authoritative_values` ADD `fk_repository` VARCHAR( 100 ) NOT NULL AFTER `fk_partstructure` ; ALTER TABLE `dr_authoritative_values` DROP PRIMARY KEY; ALTER TABLE `dr_authoritative_values` DROP INDEX `fk_partstructure` , ADD INDEX `fk_partstructure` ( `fk_partstructure` , `fk_repository` ) ; ALTER TABLE `dr_authoritative_values` CHANGE `value` `value` VARCHAR( 240 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ; DROP TABLE `dr_authority_options` ; (Adam Franco)
 		
 	* New feature: AssetBrowsing: Checkbox now enabled even if the user doesn't have authorization to modify the asset, allowing it to be checked for addition to the selection. (Adam Franco)
 		
