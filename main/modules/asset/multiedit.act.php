@@ -92,8 +92,8 @@ class multieditAction
 	// Display Name
 		$vProperty =& $step->addComponent("display_name", new WVerifiedChangeInput);
 		$property =& $vProperty->setInputComponent(new WTextField);
-		$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
-		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
+// 		$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
+// 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setSize(40);
 
 		$value = $this->_assets[0]->getDisplayName();

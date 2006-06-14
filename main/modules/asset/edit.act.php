@@ -84,8 +84,8 @@ class editAction
 		
 	// Display Name
 		$property =& $step->addComponent("display_name", new WTextField);
-		$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
-		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
+// 		$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
+// 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setSize(40);
 
 		$property->setValue($this->_assets[0]->getDisplayName());

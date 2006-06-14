@@ -102,8 +102,8 @@ class addAction
 		
 		// Create the properties.
 		$displayNameProp =& $step->addComponent("display_name", new WTextField());
-		$displayNameProp->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
-		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
+// 		$displayNameProp->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
+// 		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 	// 	$displayNameProp->setDefaultValue(_("Default Asset Name"));
 //		$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
 		

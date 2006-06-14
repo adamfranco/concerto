@@ -37,6 +37,9 @@
 			
 			ALTER TABLE `log_node` ADD PRIMARY KEY ( `fk_entry` , `fk_node` ) ;
 		</important>
+		<fix author='adam'>
+			Normalized case in edit/delete links.
+		</fix>
 		<new author='adam'>
 			AssetBrowsing: Checkbox now enabled even if the user doesn't have
 			authorization to modify the asset, allowing it to be checked for
@@ -49,6 +52,9 @@
 			URLs specifying parameters now continue through first access attempt
 			where install is checked.
 		</fix>
+		<change author='adam'>
+			AssetEditing: DisplayNames are now NOT required for Assets.
+		</change>
 		<new author='adam'>
 			AssetEditing: SchemaField descriptions are now available in the 
 			asset editing interface.
