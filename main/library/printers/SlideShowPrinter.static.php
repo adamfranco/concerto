@@ -93,7 +93,7 @@ class SlideShowPrinter {
 					"exhibitions", "modify_slideshow",
 					array("slideshow_id" => $assetId->getIdString())).
 					"'>";
-				$links[count($links) - 1] .= _("modify_slideshow")."</a>";
+				$links[count($links) - 1] .= _("Edit")."</a>";
 			} else {
 				$links[] = _("Edit");
 			}
@@ -106,7 +106,7 @@ class SlideShowPrinter {
 				ob_start();
 				print "<a href='Javascript:deleteSlideShow(\"".$assetId->getIdString()."\", \"".$harmoni->request->quickURL("exhibitions", "delete_slideshow", array("exhibition_id" => RequestContext::value('exhibition_id'), "slideshow_id" => $assetId->getIdString()))."\");'";
 				print ">";
-				print _("delete")."</a>";
+				print _("Delete")."</a>";
 				
 				$links[] = ob_get_contents();
 				ob_end_clean();

@@ -178,7 +178,7 @@ class AssetPrinter {
 						"assets" => $assetId->getIdString()))."'>";
 					$links[count($links) - 1] .= _("Edit")."</a>";
 				} else
-					$links[] = _("edit");
+					$links[] = _("Edit");
 			}
 		//===== Delete Link =====//
 			if ($authZ->isUserAuthorized(

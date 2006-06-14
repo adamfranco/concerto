@@ -76,7 +76,7 @@ class ExhibitionPrinter {
 				.$harmoni->request->quickURL("exhibitions", "modify_exhibition", 
 				array("exhibition_id" => $assetId->getIdString()))
 				."'>";
-			$links[count($links) - 1] .= _("Modify")."</a>";
+			$links[count($links) - 1] .= _("Edit")."</a>";
 			$harmoni->request->endNamespace();
 		} else
 			$links[] = _("Edit");
