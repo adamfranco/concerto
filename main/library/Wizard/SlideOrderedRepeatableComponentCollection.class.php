@@ -114,15 +114,7 @@ class SlideOrderedRepeatableComponentCollection
 			
 			print $this->_collections[$key]["_remove"]->getMarkup(
 				$fieldName."_".$key."__remove");
-			if ($this->_orderedSet->getPosition($collectionId) > 0)
-				print "\n<br/>".
-					$this->_collections[$key]["_moveup"]->getMarkup(
-					$fieldName."_".$key."__moveup");
 			
-			if ($this->_orderedSet->hasNext())
-				print "\n<br/>".
-					$this->_collections[$key]["_movedown"]->getMarkup(
-					$fieldName."_".$key."__movedown");
 			
 			print "\n<br/>".$this->_collections[$key]["_moveToPosition"]->getMarkup($fieldName."_".$key."__moveToPosition");
 			print $this->_collections[$key]["_moveToPositionChoice"]->getMarkup($fieldName."_".$key."__moveToPositionChoice");
