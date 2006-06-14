@@ -193,12 +193,12 @@ class modify_slideshowAction
 			new WSelectList());
 		$property->setValue("right");
 		
-		$property->addOption("right", _("right"));
-		$property->addOption("left", _("left"));
-		$property->addOption("bottom", _("bottom"));
-		$property->addOption("top", _("top"));
-		$property->addOption("center", _("center/no-media"));
-		$property->addOption("none", _("none/media-only"));
+		$property->addOption("right", _("text on right"));
+		$property->addOption("left", _("text on left"));
+		$property->addOption("bottom", _("text on bottom"));
+		$property->addOption("top", _("text on top"));
+		$property->addOption("center", _("text centered (no-media)"));
+		$property->addOption("none", _("no text (media-only)"));
 		
 		
 		$property =& $multField->addComponent(
