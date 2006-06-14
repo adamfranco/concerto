@@ -223,23 +223,8 @@ class importAction extends MainWindowAction {
 		}
 		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();
-		$url = $this->getReturnUrl();
-		$unescapedurl = preg_replace("/&amp;/", "&", $url);
-		$label = _("Return To Admin Tools");
-		$this->closeWizard($cacheName);
-		print <<< END
-<script type='text/javascript'>
-/* <![CDATA[ */
-	
-	window.location = '$unescapedurl';
-	
-/* ]]> */
-</script>
-<a href='$url'>$label</a>
-
-END;
-		exit();
 		
+		return true;		
 	}
 		
 	/**

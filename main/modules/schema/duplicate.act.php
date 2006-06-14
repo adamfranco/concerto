@@ -8,7 +8,7 @@
  * @version $Id$
  */
 require_once(MYDIR."/main/library/abstractActions/RecordStructureAction.class.php");
-require_once(POLYPHONY."/main/library/Importer/StatusStars.class.php");
+require_once(HARMONI."/utilities/StatusStars.class.php");
 
 
 /**
@@ -138,22 +138,7 @@ class duplicateAction
 		
 		
 		
-		$url = $harmoni->history->getReturnUrl(
-			"concerto/schema/duplicate-return/".$recordStructureIdString);
-		$unescapedurl = preg_replace("/&amp;/", "&", $url);
-		$label = _("Return");
-		print <<< END
-<script type='text/javascript'>
-/* <![CDATA[ */
-	
-	window.location = '$unescapedurl';
-	
-/* ]]> */
-</script>
-<a href='$url'>$label</a>
-
-END;
-		exit();
-
+		RequestContext::sendTo($harmoni->history->getReturnUrl(
+			"concerto/schema/duplicate-return/".$recordStructureIdString));
 	}
 }
