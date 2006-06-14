@@ -431,18 +431,25 @@ class editAction
 			$newCollection['type']->addConfirm(_("Are you sure that you want to change the type of this field?\\n\\nConverting ShortStrings to Strings is usually safe, but other conversion may cause data truncation or data loss if there are records for this collection that contain values that cannot be mapped directly to the new data type. Please consult the following guide.\\n\\n-- Safe Conversions --\\nShortString => String \\nShortString => Blob\\nString => Blob  \\nDateTime => ShortString \\nDateTime => String \\nInteger => ShortString \\nInteger => String  \\nFloat => ShortString \\nFloat => String  \\nOKI Type => ShortString \\nOKI Type => String \\n\\n\\n-- Conversions that may be truncated --\\nString => ShortString \\n\\n\\n-- Conversions that may or may not work --\\nShortString => DateTime \\nShortString => Integer \\nShortString => Float \\nShortString => OKI Type \\nString => DateTime \\nString => Integer \\nString => Float \\nString => OKI Type \\nBlob => ShortString \\nBlob => String"));
 			if (!preg_match("/^Repository::.+$/i", $partStructureId->getIdString()))
 				$newCollection['type']->addConfirm(_("This is a global Schema, changing the type will modify all Collections. Continue?"));
+			
+			// If a part structure is not repeatable, it can be made repeatable, but
+			// not unmade repeatable without proper authorization.
+			if ($partStructure->isRepeatable())
+				$newCollection['repeatable']->addConfirm(_('Removing the the \\\'isRepeatable\\\' flag for this field may cause any existing repeatable values to become inaccessable or corrupted. Only remove this flag if you are absolutely sure that there are NO Assets that have multiple values for this field.\n\nAre you sure that you want to continue?'));
 		} else {
 			$newCollection =& $multField->addValueCollection($collection, false);
 			
 			$newCollection['type']->setEnabled(false, true);
+			
+			// If a part structure is not repeatable, it can be made repeatable, but
+			// not unmade repeatable.
+			if ($partStructure->isRepeatable())
+				$newCollection['repeatable']->setEnabled(false, true);
 		}
 		
-		// If a part structure is not repeatable, it can be made repeatable, but
-		// not unmade repeatable.
-		if ($partStructure->isRepeatable())
-			$newCollection['repeatable']->setEnabled(false, true);
 		
-		$newCollection['_remove']->addConfirm(_("Removing this Field will delete all Record values (in all Assets) that use this Field. Are you sure that you want to continue?"));
+		
+		$newCollection['_remove']->addConfirm(_("Removing this Field will delete all Record values (in all Assets) that use this Field.\\n\\nAre you sure that you want to continue?"));
 	}
 		
 	/**
