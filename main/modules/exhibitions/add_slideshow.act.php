@@ -9,6 +9,7 @@
  */ 
 
 require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
+require_once(HARMONI."/utilities/StatusStars.class.php");
 
 /**
  * 
@@ -273,6 +274,9 @@ class add_slideshowAction
 		
 		$properties = $wizard->getAllValues();
 		
+		$status =& new StatusStars(_("Saving Slideshow"));
+		$status->initializeStatistics(count($properties['slidestep']['slides']) + 2);
+		
 		// First, verify that we chose a parent that we can add children to.
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.add_children"), 
@@ -320,7 +324,7 @@ class add_slideshowAction
 				
 			$setManager =& Services::getService("Sets");
 			$slideOrder =& $setManager->getPersistentSet($slideshowAssetId);
-			
+			$status->updateStatistics();
 			
 			foreach ($properties['slidestep']['slides'] as $slideProperties) {
 				
@@ -366,6 +370,7 @@ class add_slideshowAction
 				$slideRecord->createPart($displayMetadataPartStructId, $displayMetadata);
 				$slideRecord->createPart($targetIdPartStructId, $targetId);
 				
+				$status->updateStatistics();
 			}
 			
 			// Log the success or failure
@@ -383,6 +388,8 @@ class add_slideshowAction
 				
 				$log->appendLogWithTypes($item,	$formatType, $priorityType);
 			}
+			
+			$status->updateStatistics();
 						
 			return TRUE;
 		} 

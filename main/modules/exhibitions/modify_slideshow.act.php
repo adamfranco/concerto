@@ -9,6 +9,7 @@
  */ 
 
 require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
+require_once(HARMONI."/utilities/StatusStars.class.php");
 
 /**
  * 
@@ -361,6 +362,9 @@ class modify_slideshowAction
 		
 		$properties =& $wizard->getAllValues();
 		
+		$status =& new StatusStars(_("Saving Slideshow"));
+		$status->initializeStatistics(count($properties['slidestep']['slides']) + 2);
+		
 		// First, verify that we chose a parent that we can add children to.
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.modify"), 
@@ -416,6 +420,8 @@ class modify_slideshowAction
 			}
 
 			$pSlideOrder->removeAllItems();
+			
+			$status->updateStatistics();
 
 			foreach ($properties['slidestep']['slides'] as $slideProperties) {
 // 				print get_class($slideProperties['slideId']).": ".$slideProperties['title'];
@@ -497,6 +503,8 @@ class modify_slideshowAction
 						$slideRecordStructId);
 					$slideRecord =& $records->next();
 				}
+				
+				$status->updateStatistics();
 			}
 			// ==== Remove slide assets no longer in slideshow ----
 			foreach($existingSlides as $older) {
@@ -506,6 +514,8 @@ class modify_slideshowAction
 					$repository->deleteAsset($old);
 				}
 			}
+			
+			$status->updateStatistics();
 			
 			// Log the success or failure
 			if (Services::serviceRunning("Logging")) {
