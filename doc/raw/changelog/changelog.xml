@@ -76,6 +76,9 @@
 			Collection.Edit: Fixed extra space that was messing up the select lists.
 		</fix>
 		<change author='adam'>
+			Schemas: Now uses StatusStars for conversion operations.
+		</change>
+		<change author='adam'>
 			Schemas: Now return to the schema step of collection editing if needed.
 		</change>
 		<change author='adam'>

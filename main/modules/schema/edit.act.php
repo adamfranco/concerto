@@ -441,6 +441,8 @@ class editAction
 		// not unmade repeatable.
 		if ($partStructure->isRepeatable())
 			$newCollection['repeatable']->setEnabled(false, true);
+		
+		$newCollection['_remove']->addConfirm(_("Removing this Field will delete all Record values (in all Assets) that use this Field. Are you sure that you want to continue?"));
 	}
 		
 	/**
