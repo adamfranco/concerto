@@ -10,6 +10,7 @@
  */ 
 
 require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
+require_once(HARMONI."/utilities/StatusStars.class.php");
 
 /**
  * This is an abstract class which contains methods for editing assets.
@@ -98,10 +99,10 @@ class AssetEditingAction
 		$results = $wizard->getAllValues();
 		$initialState =& $wizard->initialState;
 		
-		print "<hr><div style='background-color: #afa;'>";
-		printpre($results);
-		printpre($initialState);
-		print "</div>";
+// 		print "<hr><div style='background-color: #afa;'>";
+// 		printpre($results);
+// 		printpre($initialState);
+// 		print "</div>";
 				
 		// Go through all of the assets and update all of the values if they have
 		// changed.
@@ -126,14 +127,16 @@ class AssetEditingAction
 			$log =& $loggingManager->getLogForWriting("Concerto");			
 			$item =& new AgentNodeEntryItem("Modify Node", "Asset[s] modified");
 		}
-	 		 	
+	 	
+	 	$status =& new StatusStars(_("Saving Assets"));
+	 	$status->initializeStatistics(count($this->_assets));
 	 	foreach (array_keys($this->_assets) as $key) {
 	 		$asset =& $this->_assets[$key];
 			if ($authZMan->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.modify"), 
 					$asset->getId()))
 			{
-				printpre("<hr>".$asset->getDisplayName());
+// 				printpre("<hr>".$asset->getDisplayName());
 				
 				$this->updateAssetProperties($results['assetproperties'], $asset);
 				$this->updateAssetContent($results['contentstep']['content'], $asset);
@@ -167,6 +170,8 @@ class AssetEditingAction
 				} else
 					$this->updateAssetParent($results['parentstep']['parent'], $asset);
 			}
+			
+			$status->updateStatistics();
 	 	}
 	 	
 	 	if (isset($log) && isset($item)) {
