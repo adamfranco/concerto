@@ -63,7 +63,7 @@ class SlideShowPrinter {
 			print '"'.$asset->getDisplayName().'", ';
 			print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
 			print ")'>";
-			print _("view")."</a>";
+			print _("View")."</a>";
 			
 			$links[] = ob_get_contents();
 			ob_end_clean();
@@ -95,7 +95,7 @@ class SlideShowPrinter {
 					"'>";
 				$links[count($links) - 1] .= _("modify_slideshow")."</a>";
 			} else {
-				$links[] = _("modify_slideshow");
+				$links[] = _("Edit");
 			}
 			$harmoni->request->endNamespace();
 		}
@@ -119,7 +119,7 @@ class SlideShowPrinter {
 				print "\n	}";
 				print "\n//]]>\n</script>\n";
 			} else {
-				$links[] = _("delete");
+				$links[] = _("Delete");
 			}
 		}
 		print  implode("\n\t | ", $links);

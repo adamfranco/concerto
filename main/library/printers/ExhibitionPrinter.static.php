@@ -64,7 +64,7 @@ class ExhibitionPrinter {
 					array("exhibition_id" => $assetId->getIdString()))."'>";
 				$links[count($links) - 1] .= _("Browse")."</a>";
 			} else {
-					$links[] = _("browse");
+					$links[] = _("Browse");
 				}
 		}
 	//===== Modify Link =====//
@@ -79,7 +79,7 @@ class ExhibitionPrinter {
 			$links[count($links) - 1] .= _("Modify")."</a>";
 			$harmoni->request->endNamespace();
 		} else
-			$links[] = _("modify");
+			$links[] = _("Edit");
 	//===== Delete Link =====//
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.delete"),
