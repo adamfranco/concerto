@@ -192,9 +192,6 @@ END;
 	function printAssetXML( &$asset) {
 		
 		$assetId =& $asset->getId();
-		$repository =& $asset->getRepository();
-		$repositoryId =& $repository->getId();
-		$idManager =& Services::getService("Id");
 		$harmoni =& Harmoni::instance();
 		
 		

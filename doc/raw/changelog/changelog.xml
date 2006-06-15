@@ -115,6 +115,10 @@
 		<fix author='adam'>
 			Schemas: Updated the Schema creation wizard to support Authoratiative Lists.
 		</fix>
+		<change author='adam'>
+			Slideshows are now using the outline-xml/slide-xml ajax loading 
+			paradigm rather than putting all slide info in one giant slideshow-xml file.
+		</change>
 		<fix author='adam'>
 			Logging: Ensured that logging is now ready for use before attempting
 			to log errors.

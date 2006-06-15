@@ -57,7 +57,7 @@ class SlideShowPrinter {
 			ob_start();
 			print "<a href='#' onclick='Javascript:window.open(";
 			print '"'.VIEWER_URL."?&source=";
-			print urlencode($harmoni->request->quickURL("exhibitions", "slideshowxml", 
+			print urlencode($harmoni->request->quickURL("exhibitions", "slideshowOutlineXml", 
 						array("slideshow_id" => $assetId->getIdString())));
 			print '", ';
 			print '"'.$asset->getDisplayName().'", ';

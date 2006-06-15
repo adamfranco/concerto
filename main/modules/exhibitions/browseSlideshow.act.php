@@ -177,7 +177,7 @@ function printSlideShort(&$asset, $params, $slideshowIdString, $num) {
 	print "\n\t<a style='cursor: pointer;'";
 	print " onclick='Javascript:window.open(";
 	print '"'.VIEWER_URL."?&amp;source=";
-	print urlencode($harmoni->request->quickURL('exhibitions', "slideshowxml", 
+	print urlencode($harmoni->request->quickURL('exhibitions', "slideshowOutlineXml", 
 		array('slideshow_id' => $slideshowIdString)));
 	print '&amp;start='.($num - 1).'", ';
 	print '"_blank", ';

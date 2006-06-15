@@ -20,7 +20,7 @@ require_once(MYDIR."/main/modules/collection/browse_slide_xml.act.php");
  *
  * @version $Id$
  */
-class slideshowxmlAction 
+class slideshowOutlineXmlAction 
 	extends browse_slide_xmlAction
 {
 	/**
@@ -133,10 +133,6 @@ END;
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		require_once(HARMONI."/utilities/Timer.class.php");
-		$execTimer =& new Timer;
-		$execTimer->start();
-
 		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
 	
@@ -155,6 +151,13 @@ END;
 
 END;
 		print "\t<title>".$slideshowAsset->getDisplayName()."</title>\n";
+		
+		print "\t<media-sizes>\n";
+		print "\t\t\t\t<size>small</size>\n";
+		print "\t\t\t\t<size>medium</size>\n";
+		print "\t\t\t\t<size>large</size>\n";
+		print "\t\t\t\t<size>original</size>\n";
+		print "\t</media-sizes>\n";
 		
 		print "\t<default_size>medium</default_size>\n";
 		
@@ -180,14 +183,6 @@ END;
 		foreach(array_keys($slides) as $key) {
 			$this->printSlide($slides[$key]);
 		}
-		
-		$execTimer->end();
-		print "\n\n<ExecutionTime>";
-		printf("%1.6f", $execTimer->printTime());
-		print "</ExecutionTime>\n";
-		
-		$dbhandler =& Services::getService("DBHandler");
-		print "<NumQueries>".$dbhandler->getTotalNumberOfQueries()."</NumQueries>\n";
 
 		print "</slideshow>\n";		
 		exit;
@@ -202,9 +197,9 @@ END;
 	 * @since 9/28/05
 	 */
 	function printSlide ( &$slideAsset ) {
+		$assetId =& $slideAsset->getId();
+		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$authZ =& Services::getService("AuthZ");
 		
 		// Get our record and its data
 		$slideRecords =& $slideAsset->getRecordsByRecordStructure(
@@ -234,44 +229,12 @@ END;
 		}
 		
 		// ------------------------------------------
-		print "\t<slide>\n";
 		
-		// Title
-		print "\t\t<title><![CDATA[";
-		print htmlspecialchars($slideAsset->getDisplayName(), ENT_COMPAT, 'UTF-8');
-		print "]]></title>\n";
-		
-		// Caption
-		print "\t\t<caption><![CDATA[";
-		print $slideAsset->getDescription();
-		if (isset($displayMetadata) && $displayMetadata->isTrue()
-			&& isset($mediaId)
-			&& $authZ->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.view"),
-				$mediaId)) 
-		{
-			print "\t\t\t<hr/>\n";
-			$mediaAsset =& $repositoryManager->getAsset($mediaId);
-			$this->printAsset($mediaAsset);
-		}
-		
-		// Unauthorized to view Media Message
-		if (isset($mediaId) && !$authZ->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.view"),
-				$mediaId))
-		{
-			print "\t\t\t<div style='font-size: large; font-weight: bold; border: 2px dotted; padding: 5px;'>";
-			$harmoni =& Harmoni::instance();
-			print "\n\t\t\t\t<p>";
-			print _("You are not authorized to view the media for this slide.");
-			print "</p>\n\t\t\t\t<p>";
-			print _("If you have not done so, please go to ");
-			print "<a href='".$harmoni->request->quickURL("home", "welcome");
-			print "'>Concerto</a>";
-			print _(" and log in.");
-			print "\t\t\t\t</p>\n\t\t\t</div>\n";
-		}
-		print"]]></caption>\n";
+		print "\t<slide ";
+		print "source='";
+		print $harmoni->request->quickURL('exhibitions', 'slide_xml', 
+			array('asset_id' => $assetId->getIdString()));
+		print "'>\n";
 		
 		// Text-Position
 		print "\t\t<text-position>";
@@ -279,27 +242,8 @@ END;
 			print $textPosition->asString();
 		else if (!isset($mediaId))
 			print "center";
-		print "</text-position>\n";
+		print "</text-position>\n";		
 		
-		/*********************************************************
-		 * Media
-		 *********************************************************/	
-		if (isset($mediaId)
-			&& $authZ->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.view"),
-				$mediaId))		
-		{		
-			$mediaAsset =& $repositoryManager->getAsset($mediaId);
-			$mediaAssetRepository =& $mediaAsset->getRepository();
-			$mediaAssetRepositoryId =& $mediaAssetRepository->getId();
-			
-			$fileRecords =& $mediaAsset->getRecordsByRecordStructure(
-				$idManager->getId("FILE"));
-							
-			while ($fileRecords->hasNext())
-				$this->printFileRecord($fileRecords->next(), $mediaAssetRepositoryId, $mediaId);
-		}
-				
 		print "\t</slide>\n";
 	}
 }
