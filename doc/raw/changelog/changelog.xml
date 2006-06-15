@@ -81,6 +81,9 @@
 		<fix author='adam'>
 			Collection.Edit: Fixed extra space that was messing up the select lists.
 		</fix>
+		<new author='adam'>
+			Schemas: Known SchemaField data types are now ordered and have descriptions.
+		</new>
 		<change author='adam'>
 			Schemas: Now uses StatusStars for conversion operations.
 		</change>

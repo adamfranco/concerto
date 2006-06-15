@@ -243,7 +243,7 @@ class editAction
 		$property =& $multField->addComponent(
 			"type", 
 			new WSelectList());
-		$defaultType =& new Type ("Repository", "edu.middlebury.harmoni", "string");
+		$defaultType =& new Type ("Repository", "edu.middlebury.harmoni", "shortstring");
 		$property->setValue(urlencode(HarmoniType::typeToString($defaultType, " :: ")));
 		
 		// We are going to assume that all RecordStructures have the same PartStructureTypes
@@ -254,6 +254,25 @@ class editAction
 			throwError(new Error("No RecordStructures availible.", "Concerto"));
 		
 		$dmpType =& new Type("RecordStructures", "edu.middlebury.harmoni", "DataManagerPrimatives", "RecordStructures stored in the Harmoni DataManager.");
+		$orderedTypes = array(
+			"Repository :: edu.middlebury.harmoni :: shortstring"	
+				=> _("Short String ----- text with max-length of 256 characters"),
+			"Repository :: edu.middlebury.harmoni :: string" 
+				=> _("String  ---------- text with unlimited length"),
+			"Repository :: edu.middlebury.harmoni :: datetime" 
+				=> _("Date [and Time] -- a date or more precise point in time"),
+			"Repository :: edu.middlebury.harmoni :: integer" 
+				=> _("Integer --------- a whole number: 1, 2, 3, etc"),
+			"Repository :: edu.middlebury.harmoni :: float" 
+				=> _("Float ----------- a decimal/scientific-notation number"),
+			"Repository :: edu.middlebury.harmoni :: boolean" 
+				=> _("Boolean --------- true or false (yes/no)"),
+			"Repository :: edu.middlebury.harmoni :: blob" 
+				=> _("BLOB ----------- Binary Large OBject, for binary data"),
+			"Repository :: edu.middlebury.harmoni :: okitype" 
+				=> _("O.K.I. Type ------ 'domain :: authority :: keyword' triplet"),
+		);
+		$unorderedTypes = array();
 		while ($recordStructures->hasNext()) {
 			// we want just the datamanager structure types, so just 
 			// get the first structure that has Format "DataManagerPrimatives"
@@ -262,10 +281,18 @@ class editAction
 				$types =& $tmpRecordStructure->getPartStructureTypes();
 				while ($types->hasNext()) {
 					$type =& $types->next();
-					$property->addOption(urlencode(HarmoniType::typeToString($type, " :: ")),HarmoniType::typeToString($type, " :: "));
+					$typeString = Type::typeToString($type, " :: ");
+					if (!array_key_exists($typeString, $orderedTypes))
+						$unorderedTypes[$typeString] = $typeString;
 				}
 				break;
 			}
+		}
+		foreach ($orderedTypes as $typeString => $desc) {
+			$property->addOption(urlencode($typeString), $desc);
+		}
+		foreach ($unorderedTypes as $typeString => $desc) {
+			$property->addOption(urlencode($typeString), $desc);
 		}
 		
 		$property =& $multField->addComponent("orig_type", new WHiddenField());
