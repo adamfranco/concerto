@@ -631,7 +631,7 @@ class editAction
 					$partStruct =& $partStructs->next();
 					$partStructId =& $partStruct->getId();
 					if (!array_key_exists($partStructId->getIdString(), $existingPartStructureIds)) {
-						printpre("Deleting PartStructure: ".$partStruct->getDisplayName()." Id: ".$partStructId->getIdString());
+// 						printpre("Deleting PartStructure: ".$partStruct->getDisplayName()." Id: ".$partStructId->getIdString());
 						$recordStructure->deletePartStructure($partStructId);
 						// Remove the old value from the set
 						if ($set->isInSet($partStructId))
