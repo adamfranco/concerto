@@ -13,7 +13,7 @@
 		<recordstructure xml:id="dc" isGlobal="TRUE">
 			<name>Dublin Core</name>
 			<description><![CDATA[
-<h2>Dublin Core Metadata Element Set, Version 1.1: Reference Description</h2>
+<h2>Dublin Core Metadata Element Set, Version 1.1</h2>
 <a name="introduction" id="introduction"></a> 
 <h3>Introduction</h3>
 <p>The Dublin Core metadata element set is a standard for cross-domain
@@ -64,41 +64,33 @@ terms maintained by the Dublin Core Metadata Initiative please see:: <a href="ht
 </td></tr></tbody></table>
 			]]></description>
 			<format>text/plain</format>
-			<partstructure xml:id="dc-title" isRepeatable="TRUE">
+			<partstructure xml:id="dc-title" isRepeatable="FALSE">
 				<name>Title</name>
 				<description><![CDATA[
-<table><tr>
-<th valign='top'>Label:</td>
-<td valign='top'>Title</td></tr>
-<tr>
-<th valign='top'>Definition:</td>
-<td valign='top'>A name given to the resource.</td></tr>
-<tr>
-<th valign='top'>Comment:</td>
-<td valign='top'>Typically, Title will be a name by which the resource is formally known.</td>
-</tr></table>
+<dl>
+<dt>Definition:</dt>
+<dd>A name given to the resource.</dd>
+<dt>Comment:</dt>
+<dd>Typically, Title will be a name by which the resource is formally known.</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
 					<authority>edu.middlebury.concerto</authority>
-					<keyword>string</keyword>
+					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
 			<partstructure xml:id="dc-creator" isRepeatable="TRUE">
 				<name>Creator</name>
 				<description><![CDATA[
-<table><tr>
-<th valign='top'>Label:</td>
-<td valign='top'>Creator</td></tr>
-<tr>
-<th valign='top'>Definition:</td>
-<td valign='top'>An entity primarily responsible for making the content of the resource.</td></tr>
-<tr>
-<th valign='top'>Comment:</td>
-<td valign='top'>Examples of Creator include a person, an organization, or a
+<dl>
+<dt>Definition:</dt>
+<dd>An entity primarily responsible for making the content of the resource.</dd>
+<dt>Comment:</dt>
+<dd>Examples of Creator include a person, an organization, or a
 service. Typically, the name of a Creator should be used to indicate
-the entity.</td>
-</tr></table>
+the entity.</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -109,19 +101,15 @@ the entity.</td>
 			<partstructure xml:id="dc-subject" isRepeatable="TRUE">
 				<name>Subject</name>
 				<description><![CDATA[
-<table><tr>
-<th valign='top'>Label:</td>
-<td valign='top'>Subject and Keywords</td></tr>
-<tr>
-<th valign='top'>Definition:</td>
-<td valign='top'>A topic of the content of the resource.</td></tr>
-<tr>
-<th valign='top'>Comment:</td>
-<td valign='top'>Typically, Subject will be expressed as keywords, key phrases or
+<dl>
+<dt>Definition:</dt>
+<dd>A topic of the content of the resource.</dd>
+<dt>Comment:</dt>
+<dd>Typically, Subject will be expressed as keywords, key phrases or
 classification codes that describe a topic of the resource. Recommended
 best practice is to select a value from a controlled vocabulary or
-formal classification scheme.</td>
-</tr></table>
+formal classification scheme.</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -129,21 +117,17 @@ formal classification scheme.</td>
 					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-description" isRepeatable="TRUE">
+			<partstructure xml:id="dc-description" isRepeatable="FALSE">
 				<name>Description</name>
 				<description><![CDATA[
-<table><tr>
-<th valign='top'>Label:</td>
-<td valign='top'>Description</td></tr>
-<tr>
-<th valign='top'>Definition:</td>
-<td valign='top'>An account of the content of the resource.</td></tr>
-<tr>
-<th valign='top'>Comment:</td>
-<td valign='top'>Examples of Description include, but is not limited to: an
+<dl>
+<dt>Definition:</dt>
+<dd>An account of the content of the resource.</dd>
+<dt>Comment:</dt>
+<dd>Examples of Description include, but is not limited to: an
 abstract, table of contents, reference to a graphical representation of
-content or a free-text account of the content.</td>
-</tr></table>
+content or a free-text account of the content.</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -151,21 +135,17 @@ content or a free-text account of the content.</td>
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-publisher" isRepeatable="TRUE">
+			<partstructure xml:id="dc-publisher" isRepeatable="FALSE">
 				<name>Publisher</name>
 				<description><![CDATA[
-<table><tr>
-<th valign='top'>Label:</td>
-<td valign='top'>Publisher</td></tr>
-<tr>
-<th valign='top'>Definition:</td>
-<td valign='top'>An entity responsible for making the resource available</td></tr>
-<tr>
-<th valign='top'>Comment:</td>
-<td valign='top'>Examples of Publisher include a person, an organization, or a
+<dl>
+<dt>Definition:</dt>
+<dd>An entity responsible for making the resource available</dd>
+<dt>Comment:</dt>
+<dd>Examples of Publisher include a person, an organization, or a
 service. Typically, the name of a Publisher should be used to indicate
-the entity.</td>
-</tr></table>
+the entity.</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -176,18 +156,14 @@ the entity.</td>
 			<partstructure xml:id="dc-contributor" isRepeatable="TRUE">
 				<name>Contributor</name>
 				<description><![CDATA[
-<table><tr>
-<th valign='top'>Label:</td>
-<td valign='top'>Contributor</td></tr>
-<tr>
-<th valign='top'>Definition:</td>
-<td valign='top'>An entity responsible for making contributions to the content of the resource.</td></tr>
-<tr>
-<th valign='top'>Comment:</td>
-<td valign='top'>Examples of Contributor include a person, an organization, or a
+<dl>
+<dt>Definition:</dt>
+<dd>An entity responsible for making contributions to the content of the resource.</dd>
+<dt>Comment:</dt>
+<dd>Examples of Contributor include a person, an organization, or a
 service. Typically, the name of a Contributor should be used to
-indicate the entity.</td>
-</tr></table>
+indicate the entity.</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -195,21 +171,17 @@ indicate the entity.</td>
 					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-date" isRepeatable="TRUE">
+			<partstructure xml:id="dc-date" isRepeatable="FALSE">
 				<name>Date</name>
 				<description><![CDATA[
-<table><tr>
-<th valign='top'>Label:</td>
-<td valign='top'>Date</td></tr>
-<tr>
-<th valign='top'>Definition:</td>
-<td valign='top'>A date of an event in the lifecycle of the resource.</td></tr>
-<tr>
-<th valign='top'>Comment:</td>
-<td valign='top'>Typically, Date will be associated with the creation or
+<dl>
+<dt>Definition:</dt>
+<dd>A date of an event in the lifecycle of the resource.</dd>
+<dt>Comment:</dt>
+<dd>Typically, Date will be associated with the creation or
 availability of the resource. Recommended best practice for encoding
-the date value is defined in a profile of ISO 8601 [<a href="#w3cdtf">W3CDTF</a>] and includes (among others) dates of the form YYYY-MM-DD.</td>
-</tr></table>
+the date value is defined in a profile of ISO 8601 [<a href="#w3cdtf">W3CDTF</a>] and includes (among others) dates of the form YYYY-MM-DD.</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -220,19 +192,15 @@ the date value is defined in a profile of ISO 8601 [<a href="#w3cdtf">W3CDTF</a>
 			<partstructure xml:id="dc-type" isRepeatable="TRUE">
 				<name>Type</name>
 				<description><![CDATA[
-<table><tr>
-<th valign='top'>Label:</td>
-<td valign='top'>Resource Type</td></tr>
-<tr>
-<th valign='top'>Definition:</td>
-<td valign='top'>The nature or genre of the content of the resource.</td></tr>
-<tr>
-<th valign='top'>Comment:</td>
-<td valign='top'>Type includes terms describing general categories, functions,
+<dl>
+<dt>Definition:</dt>
+<dd>The nature or genre of the content of the resource.</dd>
+<dt>Comment:</dt>
+<dd>Type includes terms describing general categories, functions,
 genres, or aggregation levels for content. Recommended best practice is
 to select a value from a controlled vocabulary (for example, the DCMI
-Type Vocabulary [<a href="#dct1">DCT1</a>]). To describe the physical or digital manifestation of the resource, use the FORMAT element.</td>
-</tr></table>
+Type Vocabulary [<a href="#dct1">DCT1</a>]). To describe the physical or digital manifestation of the resource, use the FORMAT element.</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -243,21 +211,17 @@ Type Vocabulary [<a href="#dct1">DCT1</a>]). To describe the physical or digital
 			<partstructure xml:id="dc-format" isRepeatable="TRUE">
 				<name>Format</name>
 				<description><![CDATA[
-<table><tr>
-<th valign='top'>Label:</td>
-<td valign='top'>Format</td></tr>
-<tr>
-<th valign='top'>Definition:</td>
-<td valign='top'>The physical or digital manifestation of the resource.</td></tr>
-<tr>
-<th valign='top'>Comment:</td>
-<td valign='top'>Typically, Format may include the media-type or dimensions of the
+<dl>
+<dt>Definition:</dt>
+<dd>The physical or digital manifestation of the resource.</dd>
+<dt>Comment:</dt>
+<dd>Typically, Format may include the media-type or dimensions of the
 resource. Format may be used to identify the software, hardware, or
 other equipment needed to display or operate the resource. Examples of
 dimensions include size and duration. Recommended best practice is to
 select a value from a controlled vocabulary (for example, the list of
-Internet Media Types [<a href="#mime">MIME</a>] defining computer media formats).</td>
-</tr></table>
+Internet Media Types [<a href="#mime">MIME</a>] defining computer media formats).</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -268,44 +232,36 @@ Internet Media Types [<a href="#mime">MIME</a>] defining computer media formats)
 			<partstructure xml:id="dc-identifier" isRepeatable="TRUE">
 				<name>Identifier</name>
 				<description><![CDATA[
-<table><tr>
-<th valign='top'>Label:</td>
-<td valign='top'>Resource Identifier</td></tr>
-<tr>
-<th valign='top'>Definition:</td>
-<td valign='top'>An unambiguous reference to the resource within a given context.</td></tr>
-<tr>
-<th valign='top'>Comment:</td>
-<td valign='top'>Recommended best practice is to identify the resource by means of a
+<dl>
+<dt>Definition:</dt>
+<dd>An unambiguous reference to the resource within a given context.</dd>
+<dt>Comment:</dt>
+<dd>Recommended best practice is to identify the resource by means of a
 string or number conforming to a formal identification system. Formal
 identification systems include but are not limited to the Uniform
 Resource Identifier (URI) (including the Uniform Resource Locator
 (URL)), the Digital Object Identifier (DOI) and the International
-Standard Book Number (ISBN).</td>
-</tr></table>
+Standard Book Number (ISBN).</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
 					<authority>edu.middlebury.concerto</authority>
-					<keyword>string</keyword>
+					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
 			<partstructure xml:id="dc-source" isRepeatable="TRUE">
 				<name>Source</name>
 				<description><![CDATA[
-<table><tr>
-<th valign='top'>Label:</td>
-<td valign='top'>Source</td></tr>
-<tr>
-<th valign='top'>Definition:</td>
-<td valign='top'>A Reference to a resource from which the present resource is derived.</td></tr>
-<tr>
-<th valign='top'>Comment:</td>
-<td valign='top'>The present resource may be derived from the Source resource in
+<dl>
+<dt>Definition:</dt>
+<dd>A Reference to a resource from which the present resource is derived.</dd>
+<dt>Comment:</dt>
+<dd>The present resource may be derived from the Source resource in
 whole or in part. Recommended best practice is to identify the
 referenced resource by means of a string or number conforming to a
-formal identification system.</td>
-</tr></table>
+formal identification system.</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -316,19 +272,15 @@ formal identification system.</td>
 			<partstructure xml:id="dc-language" isRepeatable="TRUE">
 				<name>Language</name>
 				<description><![CDATA[
-<table><tr>
-<th valign='top'>Label:</td>
-<td valign='top'>Language</td></tr>
-<tr>
-<th valign='top'>Definition:</td>
-<td valign='top'>A language of the intellectual content of the resource.</td></tr>
-<tr>
-<th valign='top'>Comment:</td>
-<td valign='top'>Recommended best practice is to use RFC 3066 [<a href="#rfc3066">RFC3066</a>] which, in conjunction with ISO639 [<a href="#iso639">ISO639</a>]),
+<dl>
+<dt>Definition:</dt>
+<dd>A language of the intellectual content of the resource.</dd>
+<dt>Comment:</dt>
+<dd>Recommended best practice is to use RFC 3066 [<a href="#rfc3066">RFC3066</a>] which, in conjunction with ISO639 [<a href="#iso639">ISO639</a>]),
 defines two- and three-letter primary language tags with optional
 subtags. Examples include "en" or "eng" for English, "akk" for
-Akkadian", and "en-GB" for English used in the United Kingdom.</td>
-</tr></table>
+Akkadian", and "en-GB" for English used in the United Kingdom.</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -339,71 +291,57 @@ Akkadian", and "en-GB" for English used in the United Kingdom.</td>
 			<partstructure xml:id="dc-relation" isRepeatable="TRUE">
 				<name>Relation</name>
 				<description><![CDATA[
-<table><tr>
-</tr>
-<tr>
-<th valign='top'>Label:</td>
-<td valign='top'>Relation</td></tr>
-<tr>
-<th valign='top'>Definition:</td>
-<td valign='top'>A reference to a related resource.</td></tr>
-<tr>
-<th valign='top'>Comment:</td>
-<td valign='top'>Recommended best practice is to identify the referenced resource by
+<dl>
+<dt>Definition:</dt>
+<dd>A reference to a related resource.</dd>
+<dt>Comment:</dt>
+<dd>Recommended best practice is to identify the referenced resource by
 means of a string or number conforming to a formal identification
-system.</td>
-</tr></table>
+system.</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
 					<authority>edu.middlebury.concerto</authority>
-					<keyword>string</keyword>
+					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
 			<partstructure xml:id="dc-coverage" isRepeatable="TRUE">
 				<name>Coverage</name>
 				<description><![CDATA[
-<table><tr>
-<th valign='top'>Label:</td>
-<td valign='top'>Coverage</td></tr>
-<tr>
-<th valign='top'>Definition:</td>
-<td valign='top'>The extent or scope of the content of the resource.</td></tr>
-<tr>
-<th valign='top'>Comment:</td>
-<td valign='top'>Typically, Coverage will include spatial location (a place name or
+<dl>
+<dt>Definition:</dt>
+<dd>The extent or scope of the content of the resource.</dd>
+<dt>Comment:</dt>
+<dd>Typically, Coverage will include spatial location (a place name or
 geographic coordinates), temporal period (a period label, date, or date
 range) or jurisdiction (such as a named administrative entity).
 Recommended best practice is to select a value from a controlled
 vocabulary (for example, the Thesaurus of Geographic Names [TGN]) and
 to use, where appropriate, named places or time periods in preference
-to numeric identifiers such as sets of coordinates or date ranges.</td>
-</tr></table>
+to numeric identifiers such as sets of coordinates or date ranges.</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
 					<authority>edu.middlebury.concerto</authority>
-					<keyword>string</keyword>
+					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
 			<partstructure xml:id="dc-rights" isRepeatable="TRUE">
 				<name>Rights</name>
 				<description><![CDATA[
-<table><tr>
-<th valign='top'>Label:</td>
-<td valign='top'>Rights Management</td></tr>
-<tr>
-<th valign='top'>Definition:</td>
-<td valign='top'>Information about rights held in and over the resource.</td></tr>
-<tr>
-<th valign='top'>Comment:</td>
-<td valign='top'>Typically, Rights will contain a rights management statement for
+<dl>
+<dt>Definition:</dt>
+<dd>Information about rights held in and over the resource.</dd>
+<dt>Comment:</dt>
+<dd>Typically, Rights will contain a rights management statement for
 the resource, or reference a service providing such information. Rights
 information often encompasses Intellectual Property Rights (IPR),
 Copyright, and various Property Rights. If the Rights element is
 absent, no assumptions may be made about any rights held in or over the
-resource.</td>
-</tr></table>
+resource.</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -416,15 +354,15 @@ resource.</td>
 			<name>VRA Core</name>
 			<description><![CDATA[
 <div align="left">
-  <table border="0" width="100%">
-    <tbody><tr> 
-      <td><a href="http://www.vraweb.org/index.html"><img src="http://www.vraweb.org/images3/logosmall.gif" border="0" height="93" width="91"></a></td>
-      <td><a name="top"></a><h2>VRA Core Categories, Version 3.0</h2>
-        <br><b>a project of the</b>
-        <br><a href="http://www.vraweb.org/datastandard2.html"><b>Visual 
-        Resources Association Data Standards Committee</b></a> </td>
-    </tr>
-  </tbody></table>
+<table border="0" width="100%">
+<tbody><tr> 
+  <td><a href="http://www.vraweb.org/index.html"><img src="http://www.vraweb.org/images3/logosmall.gif" border="0" height="93" width="91"></a></td>
+  <td><a name="top"></a><h2>VRA Core Categories, Version 3.0</h2>
+	<br><b>a project of the</b>
+	<br><a href="http://www.vraweb.org/datastandard2.html"><b>Visual 
+	Resources Association Data Standards Committee</b></a> </td>
+</tr>
+</tbody></table>
 </div>
 <p><b><i>This document last modified on 2/20/2002 </i></b></p>
 
@@ -478,16 +416,25 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-title" isRepeatable="TRUE">
 				<name>Title</name>
 				<description><![CDATA[
-<b>Qualifiers:</b>
-<br/>&nbsp;&nbsp;&nbsp; Title.Variant
-<br/>&nbsp;&nbsp;&nbsp; Title.Translation
-<br/>&nbsp;&nbsp;&nbsp; Title.Series
-<br/>&nbsp;&nbsp;&nbsp; Title.Larger Entity
-<br/><b>Definition: </b>Thetitle or identifying phrase given to a Work or an Image. For complex works orseries the title may refer to a discrete unit within the larger entity (a printfrom a series, a panel from a fresco cycle, a building within a temple complex)or may identify only the larger entity itself. A record for a part of a largerunit should include both the title for the part and the title for the larger entity.For an Image record this category describes the specific view of the depictedWork.
-<br/><b>Data Values: </b>formulated according to datacontent rules for titles of works of art
-<br/><b>VRA Core 2.0:&nbsp;</b> W2 Title; V7 Visual DocumentView Description
-<br/><b>CDWA: </b>Titles or Names-Text; Related VisualDocumentation-View; Related Visual Documentation-View- Indexing Terms
-<br/><b>Dublin Core:&nbsp; </b>TITLE
+<dl>
+<dt>Description:</dt>
+<dd>The title or identifying phrase given to a Work or an Image. For complex works orseries the title may refer to a discrete unit within the larger entity (a printfrom a series, a panel from a fresco cycle, a building within a temple complex)or may identify only the larger entity itself. A record for a part of a largerunit should include both the title for the part and the title for the larger entity.For an Image record this category describes the specific view of the depictedWork.</dd>
+<dt>Data Values:</dt>
+<dd>formulated according to datacontent rules for titles of works of art</dd>
+<dt>Qualifiers:</dt>
+<dd>
+<br/>Title.Variant
+<br/>Title.Translation
+<br/>Title.Series
+<br/>Title.Larger Entity
+</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>W2 Title; V7 Visual DocumentView Description</dd>
+<dt>CDWA:</dt>
+<dd>Titles or Names-Text; Related VisualDocumentation-View; Related Visual Documentation-View- Indexing Terms</dd>
+<dt>Dublin Core:</dt>
+<dd>TITLE</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -498,17 +445,25 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-creator" isRepeatable="TRUE">
 				<name>Creator</name>
 				<description><![CDATA[
-<b>Qualifiers</b>
-<br/>&nbsp;&nbsp;&nbsp; Creator.Role
-<br/>&nbsp;&nbsp;&nbsp; Creator.Attribution
-<br/>&nbsp;&nbsp;&nbsp; Creator.Personal name
-<br/>&nbsp;&nbsp;&nbsp; Creator.Corporate name
-<br/><b>Description: </b>The names, appellations, or other identifiers assigned to an individual, group, corporate body, or other entity that has contributed to the design, creation, production, manufacture, or alteration of the work or image.
-<br/><b>Data Values (controlled): </b>recommend ULAN and AAAF (LC authority files).
-<br/><b>Comment:</b> Controlled list for role (e.g., artist, engraver, architect, etc.) and attribution (e.g., school of, workshop of, circle of, style of, follower of, attributed to, etc.) in development.
-<br/><b>VRA Core 2.0:</b> W6 Creator; W7 Role
-<br/><b>CDWA: </b>Creation-Creator-Identity-Names, Creation-Creator-Identity-Qualifier, Creation-Creator-Identity-Roles
-<br/><b>Dublin Core: </b>CREATOR, CONTRIBUTOR
+<dl>
+<dt>Description:</dt>
+<dd>The names, appellations, or other identifiers assigned to an individual, group, corporate body, or other entity that has contributed to the design, creation, production, manufacture, or alteration of the work or image.</dd>
+<dt>Data Values (controlled):</dt>
+<dd>recommend ULAN and AAAF (LC authority files).</dd>
+<dt>Comment:</dt>
+<dd>Controlled list for role (e.g., artist, engraver, architect, etc.) and attribution (e.g., school of, workshop of, circle of, style of, follower of, attributed to, etc.) in development.</dd>
+<dt>Qualifiers:</dt>
+<dd>Creator.Role</dd>
+<dd>Creator.Attribution</dd>
+<dd>Creator.Personal name</dd>
+<dd>Creator.Corporate name</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>W6 Creator; W7 Rol</dd>
+<dt>CDWA:</dt>
+<dd>Creation-Creator-Identity-Names, Creation-Creator-Identity-Qualifier, Creation-Creator-Identity-Roles</dd>
+<dt>Dublin Core:</dt>
+<dd>CREATOR, CONTRIBUTOR</dd>
+</dl>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -519,12 +474,19 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-description" isRepeatable="TRUE">
 				<name>Description</name>
 				<description><![CDATA[
-<b>Qualifiers: </b>None
-<br/><b>Description:</b> A free-text note about the Work or Image, including comments, description, or interpretation, that gives additional information not recorded in other categories.
-<br/><b>Data Values:</b>
-<br/><b>VRA Core 2.0:</b>&nbsp; W19 Notes
-<br/><b>CDWA: </b>the "Remarks" section for various categories;&nbsp; Physical Description
-<br/><b>Dublin Core:</b> DESCRIPTION
+<dl>
+<dt>Description:</dt>
+<dd>A free-text note about the Work or Image, including comments, description, or interpretation, that gives additional information not recorded in other categories.</dd>
+<dt>Data Values:</dt>
+<dd></dd>
+<dt>Qualifiers:</dt>
+<dd>None</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>W19 Notes</dd>
+<dt>CDWA:</dt>
+<dd>the "Remarks" section for various categories;&nbsp; Physical Description</dd>
+<dt>Dublin Core:</dt>
+<dd>DESCRIPTION</dd>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -535,12 +497,19 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-subject" isRepeatable="TRUE">
 				<name>Subject</name>
 				<description><![CDATA[
-<b>Qualifiers: </b>None
-<br/><b>Description: </b>Terms or phrases that describe, identify, or interpret the Work or Image and what it depicts or expresses.&nbsp; These may include proper names (e.g., people or events), geographic designations (places), generic terms describing the material world, or topics (e.g., iconography, concepts, themes, or issues).
-<br/><b>Data Values: </b>recommend AAT, TGM, ICONCLASS, Sears Subject Headings
-<br/><b>VRA Core 2.0 </b>W16 Subject; V8 Visual Document Subject
-<br/><b>CDWA: </b>Subject Matter-Description-Indexing Terms; Subject Matter-Identification-Indexing Terms; Subject Matter-Interpretation-Indexing Terms, Related Visual Documentation-View-Indexing Terms
-<br/><b>Dublin Core:</b> SUBJECT
+<dl>
+<dt>Description:</dt>
+<dd>Terms or phrases that describe, identify, or interpret the Work or Image and what it depicts or expresses.&nbsp; These may include proper names (e.g., people or events), geographic designations (places), generic terms describing the material world, or topics (e.g., iconography, concepts, themes, or issues).</dd>
+<dt>Data Values:</dt>
+<dd>recommend AAT, TGM, ICONCLASS, Sears Subject Headings</dd>
+<dt>Qualifiers:</dt>
+<dd>None</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>W16 Subject; V8 Visual Document Subject</dd>
+<dt>CDWA:</dt>
+<dd>Subject Matter-Description-Indexing Terms; Subject Matter-Identification-Indexing Terms; Subject Matter-Interpretation-Indexing Terms, Related Visual Documentation-View-Indexing Terms</dd>
+<dt>Dublin Core:</dt>
+<dd>SUBJECT</dd>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -551,12 +520,19 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-record_type" isRepeatable="TRUE">
 				<name>Record Type</name>
 				<description><![CDATA[
-<b>Qualifiers</b>: None
-<br/><b>Definition:</b> Identifies the record as being either a WORK record, for the physical or created object, or an IMAGE record, for the visual surrogates of such objects.
-<br/><b>Data Values (controlled)</b>:&nbsp; work, image
-<br/><b>VRA Core 2.0:</b> None
-<br/><b>CDWA: </b>None
-<br/><b>Dublin Core:&nbsp;</b> TYPE
+<dl>
+<dt>Description:</dt>
+<dd>Identifies the record as being either a WORK record, for the physical or created object, or an IMAGE record, for the visual surrogates of such objects.</dd>
+<dt>Data Values (controlled):</dt>
+<dd>work, image</dd>
+<dt>Qualifiers:</dt>
+<dd>None</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>None</dd>
+<dt>CDWA:</dt>
+<dd>None</dd>
+<dt>Dublin Core:</dt>
+<dd>TYPE</dd>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -567,13 +543,20 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-type" isRepeatable="TRUE">
 				<name>Type</name>
 				<description><![CDATA[
-<b>Qualifiers: </b>None
-<br/><b>Definition: </b>Identifies the specific type of Work or Image being described in the record.
-<br/><b>Data Values (controlled): </b>recommend AAT
-<br/><b>VRA Core 2.0:&nbsp;</b> W1 Work Type; V1 Visual Document Type
-<br/><b>CDWA: </b>Object/Work - Type; Related Visual Documentation-Image Type
+<dl>
+<dt>Description:</dt>
+<dd>Identifies the specific type of Work or Image being described in the record.</dd>
+<dt>Data Values (controlled):</dt>
+<dd>recommend AAT</dd>
+<dt>Qualifiers:</dt>
+<dd>None</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>W1 Work Type; V1 Visual Document Type</dd>
+<dt>CDWA:</dt>
+<dd>Object/Work - Type; Related Visual Documentation-Image Type</dd>
 <br/>
-<b>Dublin Core:&nbsp; </b>TYPE
+<dt>Dublin Core:</dt>
+<dd>TYPE</dd>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -584,15 +567,21 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-measurements" isRepeatable="TRUE">
 				<name>Measurements</name>
 				<description><![CDATA[
-<b>Qualifiers:</b>
-<br/>&nbsp;&nbsp;&nbsp; Measurements.Dimensions
-<br/>&nbsp;&nbsp;&nbsp; Measurements.Format
-<br/>&nbsp;&nbsp;&nbsp; Measurements.Resolution
-<br/><b>Description:</b>&nbsp; The size, shape, scale, dimensions, format, or storage configuration of the Work or Image. Dimensions may include such measurements as volume, weight, area or running time. The unit used in the measurement must be specified.
-<br/><b>Data Values: </b>formulated according to standards for data content (e.g., AACR, etc.)
-<br/><b>VRA Core 2.0:&nbsp;</b> W3 Measurements; V2 Visual Document Format; V3 Visual Document Measurements
-<br/><b>CDWA: </b>Measurements-Dimensions; Measurements-Shape; Measurements-Format; Related Visual Documentation-Image Measurements
-<br/><b>Dublin Core:&nbsp;</b> FORMAT
+<dl>
+<dt>Description:</dt>
+<dd>The size, shape, scale, dimensions, format, or storage configuration of the Work or Image. Dimensions may include such measurements as volume, weight, area or running time. The unit used in the measurement must be specified.</dd>
+<dt>Data Values:</dt>
+<dd>formulated according to standards for data content (e.g., AACR, etc.)</dd>
+<dt>Qualifiers:</dt>
+<dd>Measurements.Dimensions</dd>
+<dd>Measurements.Format</dd>
+<dd>Measurements.Resolution</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>W3 Measurements; V2 Visual Document Format; V3 Visual Document Measurements</dd>
+<dt>CDWA:</dt>
+<dd>Measurements-Dimensions; Measurements-Shape; Measurements-Format; Related Visual Documentation-Image Measurements</dd>
+<dt>Dublin Core:</dt>
+<dd>FORMAT</dd>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -603,14 +592,20 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-material" isRepeatable="TRUE">
 				<name>Material</name>
 				<description><![CDATA[
-<b>Qualifiers:</b>
-<br/><b>&nbsp; </b>Material.Medium
-<br/>&nbsp; Material.Support
-<br/><b>Description: </b>.The substance of which a work or an image is composed.
-<br/><b>Data Values (controlled): </b>AAT
-<br/><b>VRA Core 2.0: </b>W4 Material
-<br/><b>CDWA: </b>Materials and Techniques-Materials-Name,Materials and Techniques-Materials-Role
-<br/><b>Dublin Core:&nbsp; </b>FORMAT
+<dl>
+<dt>Description:</dt>
+<dd>.The substance of which a work or an image is composed.</dd>
+<dt>Data Values (controlled):</dt>
+<dd>AAT</dd>
+<dt>Qualifiers:</dt>
+<dd>Material.Medium</dd>
+<dd>Material.Support</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>W4 Material</dd>
+<dt>CDWA:</dt>
+<dd>Materials and Techniques-Materials-Name,Materials and Techniques-Materials-Role</dd>
+<dt>Dublin Core:</dt>
+<dd>FORMAT</dd>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -621,12 +616,19 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-technique" isRepeatable="TRUE">
 				<name>Technique</name>
 				<description><![CDATA[
-<b>Qualifiers: </b>None
-<br/><b>Description</b>: The production or manufacturing processes, techniques, and methods incorporated in the fabrication or alteration of the work or image.
-<br/><b>Data Values (controlled)</b>: AAT
-<br/><b>VRA Core 2.0:</b> W5 Technique
-<br/><b>CDWA: </b>Materials and Techniques-Processes or Techniques- Name
-<br/><b>Dublin Core:&nbsp; </b>FORMAT
+<dl>
+<dt>Description:</dt>
+<dd>The production or manufacturing processes, techniques, and methods incorporated in the fabrication or alteration of the work or image.</dd>
+<dt>Data Values (controlled):</dt>
+<dd>AAT</dd>
+<dt>Qualifiers:</dt>
+<dd>None</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>W5 Technique</dd>
+<dt>CDWA:</dt>
+<dd>Materials and Techniques-Processes or Techniques- Name</dd>
+<dt>Dublin Core:</dt>
+<dd>FORMAT</dd>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -637,18 +639,24 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-date" isRepeatable="TRUE">
 				<name>Date</name>
 				<description><![CDATA[
-<b>Qualifiers:</b>
-<br/>&nbsp;&nbsp;&nbsp; Date.Creation
-<br/>&nbsp;&nbsp;&nbsp; Date.Design
-<br/>&nbsp;&nbsp;&nbsp; Date.Beginning
-<br/>&nbsp;&nbsp;&nbsp; Date.Completion
-<br/>&nbsp;&nbsp;&nbsp; Date.Alteration
-<br/>&nbsp;&nbsp;&nbsp; Date.Restoration
-<br/><b>Description:&nbsp; </b>Date or range of dates associated with the creation, design, production, presentation, performance, construction, or alteration, etc. of the work or image.&nbsp; Dates may be expressed as free text or numerical.
-<br/><b>Data Values:&nbsp; </b>formulated according to standards for data content (e.g., AACR, DC dates, etc.)
-<br/><b>VRA Core 2.0&nbsp;</b> W8 Date; V4 Visual Document Date
-<br/><b>CDWA: </b>Creation-Date
-<br/><b>Dublin Core:&nbsp; </b>DATE, COVERAGE
+<dl>
+<dt>Description:</dt>
+<dd>Date or range of dates associated with the creation, design, production, presentation, performance, construction, or alteration, etc. of the work or image.&nbsp; Dates may be expressed as free text or numerical.</dd>
+<dt>Data Values:</dt>
+<dd>formulated according to standards for data content (e.g., AACR, DC dates, etc.)</dd>
+<dt>Qualifiers:</dt>
+<dd>Date.Creation</dd>
+<dd>Date.Design</dd>
+<dd>Date.Beginning</dd>
+<dd>Date.Completion</dd>
+<dd>Date.Alteration</dd>
+<dd>Date.Restoration</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>W8 Date; V4 Visual Document Date</dd>
+<dt>CDWA:</dt>
+<dd>Creation-Date</dd>
+<dt>Dublin Core:</dt>
+<dd>DATE, COVERAGE</dd>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -659,18 +667,24 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-location" isRepeatable="TRUE">
 				<name>Location</name>
 				<description><![CDATA[
-<b>Qualifiers:</b>
-<br/>&nbsp;&nbsp;&nbsp; Location.Current Site
-<br/>&nbsp;&nbsp;&nbsp; Location.Former Site
-<br/>&nbsp;&nbsp;&nbsp; Location.Creation Site
-<br/>&nbsp;&nbsp;&nbsp; Location.Discovery Site
-<br/>&nbsp;&nbsp;&nbsp; Location.Current Repository
-<br/>&nbsp;&nbsp;&nbsp; Location.Former Repository
-<br/><b>Description: </b>The geographic location and/or name of the repository, building, or site-specific work or other entity whose boundaries include the Work or Image.
-<br/><b>Data Values (controlled): </b>BHA index, AAAF (LC), <i>Grove's Dictionary of Art </i>Location Appendix
-<br/><b>VRA Core 2.0</b> W9 Repository Name; W10 Repository Place;&nbsp; V5 Visual Document Owner
-<br/><b>CDWA: </b>Current Location-Repository Name, Current Location-Geographic Location, Context-Architectural-Building/Site, Context-Architectural-Building/Site-Place, Context-Archaeological-Excavation Place; Related Visual Documentation-Image Ownership-Owner's Name
-<br/><b>Dublin Core:&nbsp; </b>CONTRIBUTOR, COVERAGE
+<dl>
+<dt>Description:</dt>
+<dd>The geographic location and/or name of the repository, building, or site-specific work or other entity whose boundaries include the Work or Image.</dd>
+<dt>Data Values (controlled):</dt>
+<dd>BHA index, AAAF (LC), <i>Grove's Dictionary of Art </i>Location Appendix</dd>
+<dt>Qualifiers:</dt>
+<dd>Location.Current Site</dd>
+<dd>Location.Former Site</dd>
+<dd>Location.Creation Site</dd>
+<dd>Location.Discovery Site</dd>
+<dd>Location.Current Repository</dd>
+<dd>Location.Former Repository</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>W9 Repository Name; W10 Repository Place;&nbsp; V5 Visual Document Owner</dd>
+<dt>CDWA:</dt>
+<dd>Current Location-Repository Name, Current Location-Geographic Location, Context-Architectural-Building/Site, Context-Architectural-Building/Site-Place, Context-Archaeological-Excavation Place; Related Visual Documentation-Image Ownership-Owner's Name</dd>
+<dt>Dublin Core:</dt>
+<dd>CONTRIBUTOR, COVERAGE</dd>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -681,16 +695,22 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-id_number" isRepeatable="TRUE">
 				<name>ID Number</name>
 				<description><![CDATA[
-<b>Qualifiers</b>:
-<br/>&nbsp;&nbsp;&nbsp; ID Number.Current Repository
-<br/>&nbsp;&nbsp;&nbsp; ID Number.Former Repository
-<br/>&nbsp;&nbsp;&nbsp; ID Number.Current Accession
-<br/>&nbsp;&nbsp;&nbsp; ID Number.Former Accession
-<br/><b>Description:&nbsp; </b>The unique identifiers assigned to a Work or an Image.
-<br/><b>Data Values:</b>
-<br/><b>VRA Core 2.0</b> W11 Repository Number; V6 Visual Document Owner Number
-<br/><b>CDWA: </b>Current Location-Repository Numbers; Related Visual Documentation-Image Ownership-Owner's Number
-<br/><b>Dublin Core:&nbsp; </b>IDENTIFIER
+<dl>
+<dt>Description:</dt>
+<dd>The unique identifiers assigned to a Work or an Image.</dd>
+<dt>Data Values:</dt>
+<dd></dd>
+<dt>Qualifiers:</dt>
+<dd>ID Number.Current Repository</dd>
+<dd>ID Number.Former Repository</dd>
+<dd>ID Number.Current Accession</dd>
+<dd>ID Number.Former Accession</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>W11 Repository Number; V6 Visual Document Owner Number</dd>
+<dt>CDWA:</dt>
+<dd>Current Location-Repository Numbers; Related Visual Documentation-Image Ownership-Owner's Number</dd>
+<dt>Dublin Core:</dt>
+<dd>IDENTIFIER</dd>
 <br/><hr>
 				]]></description>
 				<type>
@@ -702,18 +722,24 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-style_period" isRepeatable="TRUE">
 				<name>Style/Period</name>
 				<description><![CDATA[
-<b>Qualifiers:</b>
-<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Style/Period.Style
-<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Style/Period.Period
-<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Style/Period.Group
-<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Style/Period.School
-<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Style/Period.Dynasty
-<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Style/Period.Movement
-<br/><b>Description:&nbsp;</b> A defined style, historical period, group, school, dynasty, movement, etc. whose characteristics are represented in the Work or Image.
-<br/><b>Data Values (controlled):&nbsp;</b> recommend AAT
-<br/><b>VRA Core 2.0:&nbsp;</b> W14 Style/Period/Group/Movement
-<br/><b>CDWA: </b>Styles/Periods/Groups/Movements-Indexing Terms
-<br/><b>Dublin Core:&nbsp; </b>COVERAGE, SUBJECT
+<dl>
+<dt>Description:</dt>
+<dd>A defined style, historical period, group, school, dynasty, movement, etc. whose characteristics are represented in the Work or Image.</dd>
+<dt>Data Values (controlled):</dt>
+<dd>recommend AAT</dd>
+<dt>Qualifiers:</dt>
+<dd>Style/Period.Style</dd>
+<dd>Style/Period.Period</dd>
+<dd>Style/Period.Group</dd>
+<dd>Style/Period.School</dd>
+<dd>Style/Period.Dynasty</dd>
+<dd>Style/Period.Movement</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>W14 Style/Period/Group/Movement</dd>
+<dt>CDWA:</dt>
+<dd>Styles/Periods/Groups/Movements-Indexing Terms</dd>
+<dt>Dublin Core:</dt>
+<dd>COVERAGE, SUBJECT</dd>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -724,12 +750,18 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-culture" isRepeatable="TRUE">
 				<name>Culture</name>
 				<description><![CDATA[
-<b>Qualifiers: </b>None
-<br/><b>Description: </b>The name of the culture, people (ethnonym), or adjectival form of a country name from which a Work or Image originates or with which the Work or Image has been associated.
-<br/><b>Data Values</b>:&nbsp; recommend AAT, LCSH
-<br/><b>VRA Core 2.0:&nbsp;</b> W15 Nationality/Culture
-<br/><b>CDWA: </b>Creation-Creator-Identity-Nationality/Culture/Race-Citizenship; Creation-Creator-Identity-Nationality/Culture/Race-Culture
-<br/><b>Dublin Core:&nbsp; </b>COVERAGE
+<dt>Description:</dt>
+<dd>The name of the culture, people (ethnonym), or adjectival form of a country name from which a Work or Image originates or with which the Work or Image has been associated.</dd>
+<dt>Data Values:</dt>
+<dd>recommend AAT, LCSH</dd>
+<dt>Qualifiers:</dt>
+<dd>None</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>W15 Nationality/Culture</dd>
+<dt>CDWA:</dt>
+<dd>Creation-Creator-Identity-Nationality/Culture/Race-Citizenship; Creation-Creator-Identity-Nationality/Culture/Race-Culture</dd>
+<dt>Dublin Core:</dt>
+<dd>COVERAGE</dd>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -740,14 +772,20 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-relation" isRepeatable="TRUE">
 				<name>Relation</name>
 				<description><![CDATA[
-<b>Qualifiers:</b>
-<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Relation.Identity
-<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Relation.Type
-<br/><b>Description:</b>&nbsp; Terms or phrases describing the identity of the related work and the relationship between the Work being cataloged and the related work. Note: If the relationship is <i>essential</i> (i.e. when the described work includes the referenced works, either physically or logically within a larger or smaller context), use the <b>Title.Larger Entity</b> element.
-<br/><b>Data Values:</b>
-<br/><b>VRA Core 2.0: </b>W17 Related Work; W18 Relationship Type
-<br/><b>CDWA: </b>Related Works-Relationship Type; Related Works-Identification
-<br/><b>Dublin Core: </b>RELATION
+<dl>
+<dt>Description:</dt>
+<dd>Terms or phrases describing the identity of the related work and the relationship between the Work being cataloged and the related work. Note: If the relationship is <i>essential</i> (i.e. when the described work includes the referenced works, either physically or logically within a larger or smaller context), use the <b>Title.Larger Entity</b> element.</dd>
+<dt>Data Values:</dt>
+<dd></dd>
+<dt>Qualifiers:</dt>
+<dd>Relation.Identity</dd>
+<dd>Relation.Type</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>W17 Related Work; W18 Relationship Type</dd>
+<dt>CDWA:</dt>
+<dd>Related Works-Relationship Type; Related Works-Identification</dd>
+<dt>Dublin Core:</dt>
+<dd>RELATION</dd>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -758,12 +796,19 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-source" isRepeatable="TRUE">
 				<name>Source</name>
 				<description><![CDATA[
-<b>Qualifiers: </b>None
-<br/><b>Description:</b> A reference to the source of the information recorded about the work or the image.&nbsp; For a work record, this may be a citation to the authority for the information provided. For an image, it can be used to provide information about the supplying Agency, Vendor or Individual; or,in the case of copy photography, a bibliographic citation or other description of the image source. In both cases, names, locations, and source identification numbers can be included.
-<br/><b>Data Values:</b>
-<br/><b>VRA Core 2.0:&nbsp;</b> V9 Source
-<br/><b>CDWA: </b>Related Visual Documentation-Image-Source-Name; Related Visual Documentation-Image-Source
-<br/><b>Dublin Core:&nbsp; </b>SOURCE
+<dl>
+<dt>Description:</dt>
+<dd>A reference to the source of the information recorded about the work or the image.&nbsp; For a work record, this may be a citation to the authority for the information provided. For an image, it can be used to provide information about the supplying Agency, Vendor or Individual; or,in the case of copy photography, a bibliographic citation or other description of the image source. In both cases, names, locations, and source identification numbers can be included.</dd>
+<dt>Data Values:</dt>
+<dd></dd>
+<dt>Qualifiers:</dt>
+<dd>None</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>V9 Source</dd>
+<dt>CDWA:</dt>
+<dd>Related Visual Documentation-Image-Source-Name; Related Visual Documentation-Image-Source</dd>
+<dt>Dublin Core:</dt>
+<dd>SOURCE</dd>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -774,12 +819,19 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 			<partstructure xml:id="vra_core-rights" isRepeatable="TRUE">
 				<name>Rights</name>
 				<description><![CDATA[
-<b>Qualifiers: </b>None
-<br/><b>Description: </b>Information about rights management; may include copyright and other intellectual property statements required for use.
-<br/><b>Data Values:</b>
-<br/><b>VRA Core 2.0:</b>&nbsp; None
-<br/><b>CDWA: </b>Related Visual Documentation-Copyright Restrictions
-<br/><b>Dublin Core:</b> RIGHTS
+<dl>
+<dt>Description:</dt>
+<dd>Information about rights management; may include copyright and other intellectual property statements required for use.</dd>
+<dt>Data Values:</dt>
+<dd></dd>
+<dt>Qualifiers:</dt>
+<dd>None</dd>
+<dt>VRA Core 2.0:</dt>
+<dd>None</dd>
+<dt>CDWA:</dt>
+<dd>Related Visual Documentation-Copyright Restrictions</dd>
+<dt>Dublin Core:</dt>
+<dd>RIGHTS</dd>
 				]]></description>
 				<type>
 					<domain>Repository</domain>
@@ -805,7 +857,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 				<part xml:id="dc-subject">Trillium Grandiflorum</part>
 				<part xml:id="dc-subject">Snake Mountain</part>
 				<part xml:id="dc-description">Large-flowered Trillium (Trillium Grandiflorum). Trilliums along the trail at Snake Mountain.</part>
-				<part xml:id="dc-publisher">Adam Franco</part>
+				<part xml:id="dc-publisher">Adam Franco (http://www.adamfranco.com)</part>
 				<part xml:id="dc-date">2005-05-21</part>
 				<part xml:id="dc-type">Image</part>
 				<part xml:id="dc-type">StillImage</part>
@@ -848,7 +900,7 @@ Copyright &copy; 2005 Adam Franco
 				<part xml:id="dc-subject">wall</part>
 				<part xml:id="dc-subject">still-life</part>
 				<part xml:id="dc-description">Balcony at the Empress Zoe Hotel.</part>
-				<part xml:id="dc-publisher">Adam Franco</part>
+				<part xml:id="dc-publisher">Adam Franco (http://www.adamfranco.com)</part>
 				<part xml:id="dc-date">2005-06-14</part>
 				<part xml:id="dc-type">Image</part>
 				<part xml:id="dc-type">StillImage</part>
@@ -890,7 +942,7 @@ Copyright &copy; 2005 Adam Franco
 				<part xml:id="dc-subject">fungus</part>
 				<part xml:id="dc-subject">moss</part>
 				<part xml:id="dc-description">Mushrooms growing out of the moss on the side of a tree, about one mile south of the Lincoln-Warren road on the Long Trail.</part>
-				<part xml:id="dc-publisher">Adam Franco</part>
+				<part xml:id="dc-publisher">Adam Franco (http://www.adamfranco.com)</part>
 				<part xml:id="dc-date">2005-09-17</part>
 				<part xml:id="dc-type">Image</part>
 				<part xml:id="dc-type">StillImage</part>
@@ -935,7 +987,7 @@ Copyright &copy; 2005 Adam Franco
 				<part xml:id="dc-subject">minerets</part>
 				<part xml:id="dc-subject">tiles</part>
 				<part xml:id="dc-description">Exterior and interior viewes of the Blue Mosque.</part>
-				<part xml:id="dc-publisher">Adam Franco</part>
+				<part xml:id="dc-publisher">Adam Franco (http://www.adamfranco.com)</part>
 				<part xml:id="dc-date">2005-06-14</part>
 				<part xml:id="dc-type">Image</part>
 				<part xml:id="dc-type">StillImage</part>
@@ -1035,7 +1087,7 @@ Copyright &copy; 2003 Allan Vilhan
 					<part xml:id="dc-subject">wakeboarding</part>
 					<part xml:id="dc-subject">lake</part>
 					<part xml:id="dc-description">Josh spinning through the air on a wakeboard.</part>
-					<part xml:id="dc-publisher">Adam Franco</part>
+					<part xml:id="dc-publisher">Adam Franco (http://www.adamfranco.com)</part>
 					<part xml:id="dc-date">2005-08-27</part>
 					<part xml:id="dc-type">Image</part>
 					<part xml:id="dc-type">StillImage</part>
@@ -1076,8 +1128,7 @@ Copyright &copy; 2005 Adam Franco
 					<part xml:id="dc-subject">waterfall</part>
 					<part xml:id="dc-subject">Moose River</part>
 					<part xml:id="dc-description">A short clip from Adam Franco's video of kayaking on the Moose River during the Moose River Festival, 2002.</part>
-					<part xml:id="dc-publisher">Adam Franco</part>
-					<part xml:id="dc-publisher">http://www.adamfranco.com</part>
+					<part xml:id="dc-publisher">Adam Franco (http://www.adamfranco.com)</part>
 					<part xml:id="dc-date">2002-10-31</part>
 					<part xml:id="dc-type">MovingImage</part>
 					<part xml:id="dc-format">video/quicktime</part>

@@ -12,6 +12,8 @@
  * @version $Id$
  */
 
+require_once(POLYPHONY."/main/library/Importer/XMLImporters/XMLImporter.class.php");
+
 if (!isset($_SESSION['post_config_setup_complete'])) {
 
 	// Exhibition Repository
@@ -76,6 +78,37 @@ if (!isset($_SESSION['post_config_setup_complete'])) {
 							$idManager->getId("edu.middlebury.concerto.slide_record_structure.display_metadata"));
 
 
+	}
+	
+	$repositories =& $repositoryManager->getRepositories();
+	$dcOrVraExist = FALSE;
+	while ($repositories->hasNext() && !$dcOrVraExist) {
+		$repository =& $repositories->next();
+		$recordStructures =& $repository->getRecordStructures();
+		while ($recordStructures->hasNext() && !$dcOrVraExist) {
+			$recordStructure =& $recordStructures->next();
+			if (preg_match('/(Dublin)|(VRA)/i', $recordStructure->getDisplayName()))
+				$dcOrVraExist = TRUE;
+		}
+	}
+	if (!$dcOrVraExist) {
+		$array = array();
+		$importer =& XMLImporter::withFile($array, MYDIR."/sampledata/SchemaInstallCollection.xml", "insert");
+		$importer->parseAndImport("repository");
+		if ($importer->hasErrors()) {
+			$importer->printErrorMessages();
+			exit;
+		}
+		
+		$repositories =& $repositoryManager->getRepositories();
+		while ($repositories->hasNext()) {
+			$repository =& $repositories->next();
+			if ($repository->getDisplayName() == "Schema Install Collection") {
+				$repositoryId =& $repository->getId();
+				$repositoryManager->deleteRepository($repositoryId);
+				break;
+			}
+		}
 	}
 	
 	$authZManager =& Services::getService("AuthZ");

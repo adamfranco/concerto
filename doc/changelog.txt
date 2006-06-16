@@ -54,6 +54,8 @@ v. 2.1.0 (2006-06-16)
 		
 	* Bug Fix: Schemas: Updated the Schema creation wizard to support Authoratiative Lists. (Adam Franco)
 		
+	* New feature: Schemas: New installs now have Dublin Core and VRA Core defined by default. (Adam Franco)
+		
 	* Change: Slideshows are now using the outline-xml/slide-xml ajax loading paradigm rather than putting all slide info in one giant slideshow-xml file. (Adam Franco)
 		
 	* Bug Fix: Logging: Ensured that logging is now ready for use before attempting to log errors. (Adam Franco)

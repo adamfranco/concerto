@@ -257,6 +257,25 @@ if (!isset($_SESSION['table_setup_complete'])) {
 			$function =& $authZManager->createFunction($id, "Remove Children", "Remove children from this qualifier.", $type, $qualifierHierarchyId);
 			$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 			
+		// Schema Editing Functions
+			$type =& new Type ("Authorization", "edu.middlebury.harmoni", "RecordStructures", "Functions for managing RecordStructures (a.k.a Schemas).");
+		
+			$id =& $idManager->getId("edu.middlebury.authorization.modify_rec_struct");
+			$function =& $authZManager->createFunction($id, "Modify RecordStructures", "Modify RecordStructures (a.k.a. Schemas) in a Repository (a.k.a. Collection).", $type, $qualifierHierarchyId);
+			$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
+			
+			$id =& $idManager->getId("edu.middlebury.authorization.delete_rec_struct");
+			$function =& $authZManager->createFunction($id, "Delete RecordStructures", "Delete RecordStructures (a.k.a. Schemas) in a Repository (a.k.a. Collection).", $type, $qualifierHierarchyId);
+			$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
+			
+			$id =& $idManager->getId("edu.middlebury.authorization.convert_rec_struct");
+			$function =& $authZManager->createFunction($id, "Convert RecordStructures", "Convert the data types/properties of RecordStructures (a.k.a. Schemas) in a Repository (a.k.a. Collection).", $type, $qualifierHierarchyId);
+			$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
+			
+			$id =& $idManager->getId("edu.middlebury.authorization.modify_authority_list");
+			$function =& $authZManager->createFunction($id, "Modify Authority List", "Modify the values that appear in the Authority Lists of a Repository (a.k.a. Collection).", $type, $qualifierHierarchyId);
+			$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
+			
 			
 		// Administration Functions
 			$type =& new Type ("Authorization", "edu.middlebury.harmoni", "Administration", "Functions for administering.");

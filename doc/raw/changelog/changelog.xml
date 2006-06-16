@@ -115,6 +115,9 @@
 		<fix author='adam'>
 			Schemas: Updated the Schema creation wizard to support Authoratiative Lists.
 		</fix>
+		<new author='adam'>
+			Schemas: New installs now have Dublin Core and VRA Core defined by default.
+		</new>
 		<change author='adam'>
 			Slideshows are now using the outline-xml/slide-xml ajax loading 
 			paradigm rather than putting all slide info in one giant slideshow-xml file.
