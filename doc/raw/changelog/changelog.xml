@@ -10,7 +10,7 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="2.1.0" date="2006-06-13">
+	<version number="2.1.0" date="2006-06-16">
 		<important author='adam'>
 			The following 9 queries need to be run on a Concerto 2.0.0 database
 			to upgrade it to support the needs of Concerto 2.1.0:
@@ -129,6 +129,10 @@
 		<new author='adam'>
 			Added user documentation.
 		</new>
+		<change author='adam'>
+			Display: The version and copyright year are now dynamically pulled 
+			from the changelog.
+		</change>
 	</version>
 	<version number="2.0.0" date="2006-05-26">
 		<fix author='adam'>

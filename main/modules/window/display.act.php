@@ -10,6 +10,7 @@
 
 require_once(POLYPHONY."/main/library/AbstractActions/Action.class.php");
 require_once(POLYPHONY."/main/library/Basket/Basket.class.php");
+require_once(DOMIT);
 
 /**
  * build the frame of the window
@@ -209,8 +210,25 @@ class displayAction
 		$helpText .= "'>"._("Help")."</a>";
 		$footer->add(new UnstyledBlock($helpText), "50%", null, LEFT, BOTTOM);
 		
-		$footerText = "<a href='doc/changelog.html'>Concerto v.2.0.0</a> ";
-		$footerText .= "&copy;2006 Middlebury College: <a href='http://concerto.sourceforge.net'>";
+		if (!isset($_SESSION['ConcertoVersion'])) {
+			$document =& new DOMIT_Document();
+			// attempt to load (parse) the xml file
+			if ($document->loadXML(MYDIR."/doc/raw/changelog/changelog.xml")) {
+				$versionElems =& $document->getElementsByTagName("version");
+				$latest =& $versionElems->item(0);
+				$_SESSION['ConcertoVersion'] = $latest->getAttribute('number');
+				if (preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $latest->getAttribute('date'), $matches))
+					$_SESSION['ConcertoCopyrightYear'] = $matches[1];
+				else
+					$_SESSION['ConcertoCopyrightYear'] = $latest->getAttribute('date');
+			} else {
+				$_SESSION['ConcertoVersion'] = "2.x.x";
+				$_SESSION['ConcertoCopyrightYear'] = "2006";
+			}
+		}
+		
+		$footerText = "<a href='doc/changelog.html'>Concerto v.".$_SESSION['ConcertoVersion']."</a> &nbsp; &nbsp; &nbsp; ";
+		$footerText .= "&copy;".$_SESSION['ConcertoCopyrightYear']." Middlebury College  &nbsp; &nbsp; &nbsp; <a href='http://concerto.sourceforge.net'>";
 		$footerText .= _("about");
 		$footerText .= "</a>";
 		$footer->add(new UnstyledBlock($footerText), "50%", null, RIGHT, BOTTOM);
