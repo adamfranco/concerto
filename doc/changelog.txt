@@ -3,16 +3,20 @@
 Name: Concerto ChangeLog
 
 
-v. 2.1.0 (2006-06-13)
+v. 2.1.0 (2006-06-16)
 ----------------------------------------------------
 		
-	**** IMPORTANT *** Change: The following 6 queries need to be run on a Concerto 2.0.0 database to upgrade it to support the needs of Concerto 2.1.0: ALTER TABLE `dm_schema` ADD `active` TINYINT( 1 ) UNSIGNED DEFAULT '1' NOT NULL AFTER `revision` ; ALTER TABLE `dr_authoritative_values` ADD `fk_repository` VARCHAR( 100 ) NOT NULL AFTER `fk_partstructure` ; ALTER TABLE `dr_authoritative_values` DROP PRIMARY KEY; ALTER TABLE `dr_authoritative_values` DROP INDEX `fk_partstructure` , ADD INDEX `fk_partstructure` ( `fk_partstructure` , `fk_repository` ) ; ALTER TABLE `dr_authoritative_values` CHANGE `value` `value` VARCHAR( 240 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ; DROP TABLE `dr_authority_options` ; (Adam Franco)
+	**** IMPORTANT *** Change: The following 9 queries need to be run on a Concerto 2.0.0 database to upgrade it to support the needs of Concerto 2.1.0: ALTER TABLE `dm_schema` ADD `active` TINYINT( 1 ) UNSIGNED DEFAULT '1' NOT NULL AFTER `revision` ; ALTER TABLE `dr_authoritative_values` ADD `fk_repository` VARCHAR( 100 ) NOT NULL AFTER `fk_partstructure` ; ALTER TABLE `dr_authoritative_values` DROP PRIMARY KEY; ALTER TABLE `dr_authoritative_values` DROP INDEX `fk_partstructure` , ADD INDEX `fk_partstructure` ( `fk_partstructure` , `fk_repository` ) ; ALTER TABLE `dr_authoritative_values` CHANGE `value` `value` VARCHAR( 240 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ; DROP TABLE `dr_authority_options` ; ALTER TABLE `log_agent` ADD PRIMARY KEY ( `fk_entry` , `fk_agent` ) ; ALTER TABLE `log_entry` ADD INDEX ( `log_name` ); ALTER TABLE `log_node` ADD PRIMARY KEY ( `fk_entry` , `fk_node` ) ; (Adam Franco)
+		
+	* Bug Fix: Normalized case in edit/delete links. (Adam Franco)
 		
 	* New feature: AssetBrowsing: Checkbox now enabled even if the user doesn't have authorization to modify the asset, allowing it to be checked for addition to the selection. (Adam Franco)
 		
 	* New feature: AssetDetails: Now prints Modification/Creation dates. (Adam Franco)
 		
 	* Bug Fix: URLs specifying parameters now continue through first access attempt where install is checked. (Adam Franco)
+		
+	* Change: AssetEditing: DisplayNames are now NOT required for Assets. (Adam Franco)
 		
 	* New feature: AssetEditing: SchemaField descriptions are now available in the asset editing interface. (Adam Franco)
 		
@@ -27,6 +31,12 @@ v. 2.1.0 (2006-06-13)
 	* Bug Fix: CollectionCreating: The FILE record structure is now added by default. (Adam Franco)
 		
 	* Bug Fix: Collection.Edit: Fixed extra space that was messing up the select lists. (Adam Franco)
+		
+	* New feature: Schemas: Known SchemaField data types are now ordered and have descriptions. (Adam Franco)
+		
+	* Change: Schemas: Now uses StatusStars for conversion operations. (Adam Franco)
+		
+	* Change: Schemas: Now return to the schema step of collection editing if needed. (Adam Franco)
 		
 	* Change: Schemas: AuthoritativeValues addition is now an AuthorizationFunction. (Adam Franco)
 		
@@ -44,11 +54,15 @@ v. 2.1.0 (2006-06-13)
 		
 	* Bug Fix: Schemas: Updated the Schema creation wizard to support Authoratiative Lists. (Adam Franco)
 		
+	* Change: Slideshows are now using the outline-xml/slide-xml ajax loading paradigm rather than putting all slide info in one giant slideshow-xml file. (Adam Franco)
+		
 	* Bug Fix: Logging: Ensured that logging is now ready for use before attempting to log errors. (Adam Franco)
 		
 	* Bug Fix: Theme: improved the look of headings, added more heading/menu levels. (Adam Franco)
 		
 	* New feature: Added user documentation. (Adam Franco)
+		
+	* Change: Display: The version and copyright year are now dynamically pulled from the changelog. (Adam Franco)
 	
 v. 2.0.0 (2006-05-26)
 ----------------------------------------------------
