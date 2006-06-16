@@ -179,7 +179,9 @@ END;
 			print "'; ";
 			print "url = url.replace(/XXXXXXXX/, this.value); ";
 			print "url = url.urlDecodeAmpersands(); ";
-			print "window.location = url; ";
+			print "if (this.value) { ";
+			print 		"window.location = url; ";
+			print "} ";
 			print "\">";
 			print "\n\t<option value=''>"._("Edit Schema...")."</option>";
 			
