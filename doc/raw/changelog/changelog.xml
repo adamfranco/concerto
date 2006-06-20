@@ -10,7 +10,7 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="2.1.0" date="2006-06-16">
+	<version number="2.1.1" date="The Nebulous Future">
 		<fix author='adam'>
 			Schemas: Fixed a missing variable that was preventing
 			duplication of local schemas.
