@@ -3,6 +3,11 @@
 Name: Concerto ChangeLog
 
 
+v. 2.1.1 (2006-06-20)
+----------------------------------------------------
+		
+	* Bug Fix: Schemas: Fixed a missing variable that was preventing duplication of local schemas. (Adam Franco)
+	
 v. 2.1.0 (2006-06-16)
 ----------------------------------------------------
 		
