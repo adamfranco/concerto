@@ -11,6 +11,12 @@
 
 <changelog name="Concerto ChangeLog">
 	<version number="2.1.0" date="2006-06-16">
+		<fix author='adam'>
+			Schemas: Fixed a missing variable that was preventing
+			duplication of local schemas.
+		</fix>
+	</version>
+	<version number="2.1.0" date="2006-06-16">
 		<important author='adam'>
 			The following 9 queries need to be run on a Concerto 2.0.0 database
 			to upgrade it to support the needs of Concerto 2.1.0:

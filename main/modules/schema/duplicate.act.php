@@ -45,7 +45,7 @@ class duplicateAction
 			&& 	((preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
 					&& $authZManager->isUserAuthorized(
 						$idManager->getId("edu.middlebury.authorization.convert_rec_struct"), 
-						$repositoryId))
+						$this->getRepositoryId()))
 				|| $authZManager->isUserAuthorized(
 						$idManager->getId("edu.middlebury.authorization.convert_rec_struct"), 
 						$idManager->getId("edu.middlebury.authorization.root"))))
