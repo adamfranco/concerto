@@ -77,6 +77,7 @@ $configs = array(
 					'authorization',
 					'datamanager',
 					'repository',
+					'coursemanagement',
 					'post_config_setup',
 					'viewer'
 				);
