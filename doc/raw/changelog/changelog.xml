@@ -10,7 +10,7 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="2.1.2" date="2006-06-??">
+	<version number="2.1.2" date="2006-06-26">
 		<fix author='adam'>
 			AssetEditing: Fixed issue where selecting too many assets to edit (~50)
 			overflowed the allowed length of the session array key, preventing the
