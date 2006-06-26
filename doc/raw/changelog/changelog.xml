@@ -12,6 +12,12 @@
 <changelog name="Concerto ChangeLog">
 	<version number="2.1.2" date="2006-06-26">
 		<fix author='adam'>
+			CollectionEditing: Now has a larger box for description.
+		</fix>
+		<fix author='adam'>
+			CollectionBrowsing: Now allows a longer description.
+		</fix>
+		<fix author='adam'>
 			AssetEditing: Fixed issue where selecting too many assets to edit (~50)
 			overflowed the allowed length of the session array key, preventing the
 			editing of many assets at once.

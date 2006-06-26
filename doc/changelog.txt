@@ -6,6 +6,10 @@ Name: Concerto ChangeLog
 v. 2.1.2 (2006-06-26)
 ----------------------------------------------------
 		
+	* Bug Fix: CollectionEditing: Now has a larger box for description. (Adam Franco)
+		
+	* Bug Fix: CollectionBrowsing: Now allows a longer description. (Adam Franco)
+		
 	* Bug Fix: AssetEditing: Fixed issue where selecting too many assets to edit (~50) overflowed the allowed length of the session array key, preventing the editing of many assets at once. (Adam Franco)
 		
 	* Bug Fix: AssetEditing: Fixed issue where single-valued parts were not able to be added properly in the multi-edit wizard, causing a fatal error. (Adam Franco)

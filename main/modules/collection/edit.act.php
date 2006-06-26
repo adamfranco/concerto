@@ -120,7 +120,7 @@ class editAction
 		
 		
 		$fieldname = RequestContext::name('description');
-		$descriptionProp =& $stepOne->addComponent("description", WTextArea::withRowsAndColumns(3,50));
+		$descriptionProp =& $stepOne->addComponent("description", WTextArea::withRowsAndColumns(10,80));
 		$descriptionProp->setValue($repository->getDescription());
 		print "\n<h2>"._("Description")."</h2>";
 		print "\n"._("The Description for this <em>Collection</em>: ");
