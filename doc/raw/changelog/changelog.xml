@@ -10,6 +10,17 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
+	<version number="2.1.2" date="2006-06-??">
+		<fix author='adam'>
+			AssetEditing: Fixed issue where selecting too many assets to edit (~50)
+			overflowed the allowed length of the session array key, preventing the
+			editing of many assets at once.
+		</fix>
+		<fix author='adam'>
+			AssetEditing: Fixed issue where single-valued parts were not able
+			to be added properly in the multi-edit wizard, causing a fatal error.
+		</fix>
+	</version>
 	<version number="2.1.1" date="2006-06-20">
 		<fix author='adam'>
 			Schemas: Fixed a missing variable that was preventing

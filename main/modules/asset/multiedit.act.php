@@ -37,8 +37,8 @@ class multieditAction
 		$this->_recStructsToIgnore[] = 'FILE';
 		
 		$assetList = RequestContext::value("assets");
-		$this->_cacheName = 'edit_asset_wizard_'.preg_replace("/[^a-zA-Z0-9]/", "_", $assetList);
-		$this->_loadAssets(explode(",", RequestContext::value("assets")));
+		$this->_cacheName = 'edit_asset_wizard_'.md5($assetList);
+		$this->_loadAssets(explode(",", $assetList));
 	}
 	
 	/**

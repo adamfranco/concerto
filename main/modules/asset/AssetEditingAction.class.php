@@ -32,7 +32,7 @@ class AssetEditingAction
 	 * Initialize an instance of the object
 	 * 
 	 * @return void
-	 * @access public
+	 * @access private
 	 * @since 10/26/05
 	 */
 	function _init () {
@@ -45,7 +45,7 @@ class AssetEditingAction
 	 * 
 	 * @param array $assetIdStrings
 	 * @return void
-	 * @access public
+	 * @access private
 	 * @since 10/26/05
 	 */
 	function _loadAssets ($assetIdStrings) {
@@ -59,7 +59,7 @@ class AssetEditingAction
 	 	}
 	}
 	
-		/**
+	/**
 	 * Build the content for this action
 	 * 
 	 * @return boolean
@@ -683,19 +683,19 @@ class AssetEditingAction
 		
 		$value =& $partResults['value'];
 		$initialValue = $partInitialState['value'];
-		$valueStr = $value->asString();
 		
 		$authZManager =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
 		$authoritativeValues =& $partStruct->getAuthoritativeValues();
-		if ($authZManager->isUserAuthorized(
+		if ($value 
+			&& $authZManager->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.modify_authority_list"),
 				$this->getRepositoryId())
 			&& !$partStruct->isAuthoritativeValue($value)
 			&& $authoritativeValues->hasNext()) 
 		{
 			$partStruct->addAuthoritativeValue($value);
-			printpre("\tAdding AuthoritativeValue: ".$valueStr);
+			printpre("\tAdding AuthoritativeValue: ".$value->asString());
 		}
 		
 		if ($partResults['checked'] == '1'
@@ -703,11 +703,18 @@ class AssetEditingAction
 				|| $value != $initialValue))
 		{
 			$parts =& $record->getPartsByPartStructure($partStructId);
-			$part =& $parts->next();
-			if (is_object($value))
-				$part->updateValue($value);
-			else
-				$part->updateValue(String::withvalue($value));
+			if ($parts->hasNext()) {
+				$part =& $parts->next();
+				if (is_object($value))
+					$part->updateValue($value);
+				else
+					$part->updateValue(String::withvalue($value));
+			} else {
+				if (is_object($value))
+					$record->createPart($partStructId, $value);
+				else
+					$record->createPart($partStructId, String::withvalue($value));
+			}
 		}
 	}
 	
