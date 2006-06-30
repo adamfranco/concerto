@@ -18,11 +18,13 @@ $configuration =& new ConfigurationProperties;
 $configuration->addProperty('database_index', $dbID);
 
 $courseManagamentHierarchyId = "edu.middlebury.authorization.hierarchy";
+$courseManagamentRootId = "edu.middlebury.authorization.root";
 $courseManagementId ="edu.middlebury.coursemanagement";
 $canonicalCoursesId="edu.middlebury.coursemanagement.canonicalcourses";
 $courseGroupsId ="edu.middlebury.coursemanagement.coursegroups";
 
 $configuration->addProperty('hierarchy_id', $courseManagamentHierarchyId);
+$configuration->addProperty('root_id', $courseManagamentHierarchyId);
 $configuration->addProperty('course_management_id', $courseManagementId);
 $configuration->addProperty('canonical_courses_id', $canonicalCoursesId);
 $configuration->addProperty('course_groups_id', $courseGroupsId);
