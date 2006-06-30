@@ -3,6 +3,11 @@
 Name: Concerto ChangeLog
 
 
+v. 2.1.3 (2006-06-30)
+----------------------------------------------------
+		
+	* Bug Fix: Importing: Fixed cacheName problem when authenticated via LDAP. (Adam Franco)
+	
 v. 2.1.2 (2006-06-26)
 ----------------------------------------------------
 		

@@ -82,7 +82,7 @@ class exportAction
 			$uniqueString .= "_".$authN->getUserId($authType);
 		}
 		
-		$cacheName = 'export_concerto_wizard'.$uniqueString;
+		$cacheName = str_replace('.', '_', 'export_concerto_wizard'.$uniqueString);
 		
 		$this->runWizard ( $cacheName, $centerPane );
 	}

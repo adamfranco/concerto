@@ -10,6 +10,11 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
+	<version number="2.1.3" date="2006-06-30">
+		<fix author='adam'>
+			Importing: Fixed cacheName problem when authenticated via LDAP.
+		</fix>
+	</version>
 	<version number="2.1.2" date="2006-06-26">
 		<fix author='adam'>
 			CollectionEditing: Now has a larger box for description.
