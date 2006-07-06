@@ -24,7 +24,7 @@ $canonicalCoursesId="edu.middlebury.coursemanagement.canonicalcourses";
 $courseGroupsId ="edu.middlebury.coursemanagement.coursegroups";
 
 $configuration->addProperty('hierarchy_id', $courseManagamentHierarchyId);
-$configuration->addProperty('root_id', $courseManagamentHierarchyId);
+$configuration->addProperty('root_id', $courseManagamentRootId);
 $configuration->addProperty('course_management_id', $courseManagementId);
 $configuration->addProperty('canonical_courses_id', $canonicalCoursesId);
 $configuration->addProperty('course_groups_id', $courseGroupsId);
