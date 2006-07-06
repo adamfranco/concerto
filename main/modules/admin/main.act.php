@@ -107,6 +107,8 @@ class mainAction
 		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","browsecanonicalcourses")."'>";
 		print _("Browse Canonical Courses");
 		print "</a></li>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","createcourseoffering")."'>";
+		print _("Create Course Offering");
 		print "\n</ul>";
 		
 		$introText =& new Block(ob_get_contents(),2);
