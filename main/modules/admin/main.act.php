@@ -118,6 +118,9 @@ class mainAction
 		print "</a></li>";
 		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","browsecoursesection")."'>";
 		print _("Browse Course Sections");
+		print "</a></li>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","createnewtype")."'>";
+		print _("Add New Type");
 		print "\n</ul>";
 		
 		$introText =& new Block(ob_get_contents(),2);
