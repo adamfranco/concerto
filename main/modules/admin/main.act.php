@@ -110,8 +110,14 @@ class mainAction
 		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","createcourseoffering")."'>";
 		print _("Create Course Offering");
 		print "</a></li>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","browsecourseoffering")."'>";
+		print _("Browse Course Offerings");
+		print "</a></li>";
 		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","createcoursesection")."'>";
 		print _("Create Course Section");
+		print "</a></li>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","browsecoursesection")."'>";
+		print _("Browse Course Sections");
 		print "\n</ul>";
 		
 		$introText =& new Block(ob_get_contents(),2);
