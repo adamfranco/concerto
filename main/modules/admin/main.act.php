@@ -104,8 +104,11 @@ class mainAction
 		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","createcanonicalcourse")."'>";
 		print _("Create Canonical Course");
 		print "</a></li>";
-		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","browsecanonicalcourses")."'>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","browsecanonicalcourse")."'>";
 		print _("Browse Canonical Courses");
+		print "</a></li>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","searchcanonicalcourse")."'>";
+		print _("Search Canonical Courses");
 		print "</a></li>";
 		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","createcourseoffering")."'>";
 		print _("Create Course Offering");
