@@ -133,6 +133,13 @@ class mainAction
 		print "</a></li>";
 		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","createnewterm")."'>";
 		print _("Add New Term");
+		print "</a></li>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","suck_it_up")."'>";
+		print _("Suck It Up by Term");
+		print "</a></li>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","suck_by_agent")."'>";
+		print _("Suck It Up by Agent");
+		print "</a></li>";
 		print "\n</ul>";
 		
 		$introText =& new Block(ob_get_contents(),2);
