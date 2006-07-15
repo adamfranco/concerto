@@ -51,41 +51,43 @@
 	$configuration->addProperty($dbAuthType, $dbAuthNMethod);
 	
 	$GLOBALS["NewUserAuthNType"] =& $dbAuthType;
-		
+
+	/*
 		// set up LDAPAuthentication Method
-// 		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/LDAPAuthNMethod.class.php");
-// 		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/LDAPAuthNTokens.class.php");	
-// 		$ldapAuthType =& new Type ("Authentication", "edu.middlebury.harmoni", "Middlebury LDAP");
-// 		$ldapConfiguration =& new ConfigurationProperties;
-// 		$ldapConfiguration->addProperty('tokens_class', $arg0 = 'LDAPAuthNTokens');
-// 		$ldapConfiguration->addProperty("LDAPHost", $arg1 = "ad.middlebury.edu");
-// 		$ldapConfiguration->addProperty("UserBaseDN", $arg2 = "cn=users,dc=middlebury,dc=edu");
-// 		$ldapConfiguration->addProperty("GroupBaseDN", $arg3 = "ou=groups,dc=middlebury,dc=edu");
-// 		$ldapConfiguration->addProperty("bindDN", $arg4 = "juser");
-// 		$ldapConfiguration->addProperty("bindDNPassword", $arg5 = "password");
-// 		$propertiesFields = array (
-// 			'username' => 'samaccountname',
-// 			'name' =>  'displayname',
-// 			'first name' =>  'givenname',
-// 			'last name' =>  'sn',
-// 			'department' =>  'department',
-// 			'email' =>  'mail',
-// 		);
-// 		$ldapConfiguration->addProperty('properties_fields', $propertiesFields);
-// 		$loginFields = array (
-// 			'samaccountname', 
-// 			'mail',
-// 			'cn',
-// 		);
-// 		$ldapConfiguration->addProperty('login_fields', $loginFields);
-// 		$ldapConfiguration->addProperty("display_name_property", $arg6 = "name");
-// 
-// 		$ldapAuthNMethod =& new LDAPAuthNMethod;
-// 		$ldapAuthNMethod->assignConfiguration($ldapConfiguration);
-// 		unset($arg0, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $propertiesFields, $loginFields, $ldapConfiguration);
-// 		
-// 	$configuration->addProperty($ldapAuthType, $ldapAuthNMethod);
-	
+ 		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/LDAPAuthNMethod.class.php");
+ 		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/LDAPAuthNTokens.class.php");	
+ 		$ldapAuthType =& new Type ("Authentication", "edu.middlebury.harmoni", "Middlebury LDAP");
+ 		$ldapConfiguration =& new ConfigurationProperties;
+ 		$ldapConfiguration->addProperty('tokens_class', $arg0 = 'LDAPAuthNTokens');
+ 		$ldapConfiguration->addProperty("LDAPHost", $arg1 = "ad.middlebury.edu");
+ 		$ldapConfiguration->addProperty("UserBaseDN", $arg2 = "cn=users,dc=middlebury,dc=edu");
+ 		$ldapConfiguration->addProperty("GroupBaseDN", $arg3 = "ou=groups,dc=middlebury,dc=edu");
+ 		$ldapConfiguration->addProperty("bindDN", $arg4 = "juser");
+ 		$ldapConfiguration->addProperty("bindDNPassword", $arg5 = "password");
+ 		$propertiesFields = array (
+ 			'username' => 'samaccountname',
+ 			'name' =>  'displayname',
+ 			'first name' =>  'givenname',
+ 			'last name' =>  'sn',
+ 			'department' =>  'department',
+ 			'email' =>  'mail',
+ 		);
+ 		$ldapConfiguration->addProperty('properties_fields', $propertiesFields);
+ 		$loginFields = array (
+ 			'samaccountname', 
+ 			'mail',
+ 			'cn',
+ 		);
+ 		$ldapConfiguration->addProperty('login_fields', $loginFields);
+ 		$ldapConfiguration->addProperty("display_name_property", $arg6 = "name");
+ 
+ 		$ldapAuthNMethod =& new LDAPAuthNMethod;
+ 		$ldapAuthNMethod->assignConfiguration($ldapConfiguration);
+ 		unset($arg0, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $propertiesFields, $loginFields, $ldapConfiguration);
+ 		
+ 	$configuration->addProperty($ldapAuthType, $ldapAuthNMethod);
+	*/	
+
 	Services::startManagerAsService("AuthNMethodManager", $context, $configuration);
 	
 	
