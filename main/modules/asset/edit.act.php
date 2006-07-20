@@ -228,6 +228,7 @@ class editAction
 		$component =& $repeatableComponent->addComponent("file_upload", new WFileUploadField());		
 		
 		$vComponent =& $repeatableComponent->addComponent("file_name", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
 		$component =& $vComponent->setInputComponent(new WTextField);
 		
 		$component =& $repeatableComponent->addComponent("file_size", new WTextField());
@@ -235,6 +236,7 @@ class editAction
 		
 		
 		$vComponent =& $repeatableComponent->addComponent("mime_type", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
 		$component =& $vComponent->setInputComponent(new WTextField);
 		
 		
@@ -247,9 +249,11 @@ class editAction
 		$dimensionComponent->addOnChange("validateWizard(this.form);");
 		
 		$vComponent =& $repeatableComponent->addComponent("height", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
 		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
 		$vComponent =& $repeatableComponent->addComponent("width", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
 		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
 		
@@ -257,13 +261,16 @@ class editAction
 		$component =& $repeatableComponent->addComponent("thumbnail_upload", new WFileUploadField());
 		
 		$vComponent =& $repeatableComponent->addComponent("thumbnail_mime_type", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
 		$component =& $vComponent->setInputComponent(new WTextField);
 		
 		// Thumbnail dimensions
 		$vComponent =& $repeatableComponent->addComponent("thumbnail_height", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
 		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
 		$vComponent =& $repeatableComponent->addComponent("thumbnail_width", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
 		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
 		print "\n<p>"._("Upload a new file and/or change the properties below.")."</p>";
