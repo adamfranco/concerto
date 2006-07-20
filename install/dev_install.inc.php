@@ -53,6 +53,7 @@ if (!isset($_SESSION['table_setup_complete'])) {
 		HARMONI_BASE."/SQL/shared/MySQL_shared.sql",
 		HARMONI_BASE."/SQL/Scheduling/MySQL_Scheduling.sql",
 		HARMONI_BASE."/SQL/CourseManagement/MySQL_CourseManagement.sql",
+		HARMONI_BASE."/SQL/Grading/MySQL_Grading.sql",
 	);
 	
 	foreach ($sqlFiles as $file) {
