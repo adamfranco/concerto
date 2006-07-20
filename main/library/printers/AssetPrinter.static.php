@@ -253,6 +253,10 @@ class AssetPrinter {
 	 */
 	function getMultiEditOptionsBlock () {
 		$harmoni =& Harmoni::instance();
+		
+		$harmoni->history->markReturnURL("concerto/asset/delete-return");
+		$harmoni->history->markReturnURL("concerto/asset/edit-return");
+		
 		$harmoni->request->startNamespace("AssetMultiEdit");
 		
 		ob_start();
