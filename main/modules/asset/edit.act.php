@@ -217,8 +217,8 @@ class editAction
 		$repeatableComponent =& $step->addComponent("files", 
 			new WRepeatableComponentCollection);
 		$repeatableComponent->setStartingNumber(0);
-		$repeatableComponent->setAddLabel(_("Add New Record"));
-		$repeatableComponent->setRemoveLabel(_("Remove Record"));
+		$repeatableComponent->setAddLabel(_("Add New File"));
+		$repeatableComponent->setRemoveLabel(_("Remove File"));
 		
 		
 		ob_start();
@@ -550,10 +550,11 @@ class editAction
 			
 			// If our image format is supported by the image processor,
 			// generate a thumbnail.
-			if ($imageProcessor->isFormatSupported($mimeType)) {				
-				$parts['THUMBNAIL_DATA']->updateValue(
-					$imageProcessor->generateThumbnailData($mimeType, 
-											file_get_contents($tmpName)));
+			if ($imageProcessor->isFormatSupported($mimeType)
+				&& $thumbnailData = $imageProcessor->generateThumbnailData($mimeType, 
+											file_get_contents($tmpName)))
+			{				
+				$parts['THUMBNAIL_DATA']->updateValue($thumbnailData);
 				$parts['THUMBNAIL_MIME_TYPE']->updateValue($imageProcessor->getThumbnailFormat());
 			} 
 			// just make our thumbnail results empty. Default icons will display
