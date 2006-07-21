@@ -127,7 +127,7 @@ class importAction extends MainWindowAction {
 // 			"\">"._("here")."</a>".
 // 			_(" to customize your schema (Suggested)")."</td></tr>".
 			"\n<tr><td>"._("Is this file an archive? ")."</td>".
-			"\n<td>[[is_archived]] (Tab-Delimited and Exif must be Archived)</td></tr>".
+			"\n<td>[[is_archived]] (Files-Only, Tab-Delimited and Exif must be Archived)</td></tr>".
 			"\n<tr><td><h3>"._("Import type:")."</h3></td></tr>".
 			"\n<tr><td>"._("The type of import to execute: ")."</td>".
 			"\n<td>[[import_type]]</td></tr>".
@@ -147,7 +147,7 @@ class importAction extends MainWindowAction {
 		$select->addOption("Tab-Delimited", "Tab-Delimited");
 		$select->addOption("Exif", "Exif");
 		$select->addOption("FilesOnly", "Files Only (no metadata)");
-		$select->setValue("XML");
+		$select->setValue("FilesOnly");
 
 		$archive =& $wizard->addComponent("is_archived", 
 			WCheckBox::withLabel("is Archived"));
