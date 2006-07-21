@@ -79,6 +79,7 @@ $configs = array(
 					'repository',
 					'scheduling',
 					'coursemanagement',
+					'grading',
 					'post_config_setup',
 					'viewer'
 				);
