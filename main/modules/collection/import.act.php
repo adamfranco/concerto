@@ -11,6 +11,7 @@
 
 require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
 require_once(POLYPHONY."/main/library/Importer/XMLImporters/XMLRepositoryImporter.class.php");
+require_once(POLYPHONY."/main/library/RepositoryImporter/FilesOnlyRepositoryImporter.class.php");
 
 /**
  * Imports assets into a collection in concerto
@@ -145,10 +146,12 @@ class importAction extends MainWindowAction {
 		$select->addOption("XML", "XML");
 		$select->addOption("Tab-Delimited", "Tab-Delimited");
 		$select->addOption("Exif", "Exif");
+		$select->addOption("FilesOnly", "Files Only (no metadata)");
 		$select->setValue("XML");
 
 		$archive =& $wizard->addComponent("is_archived", 
 			WCheckBox::withLabel("is Archived"));
+		$archive->setChecked(true);
 
 		$type =& $wizard->addComponent("import_type", new WSelectList());
 //		$type->addOption("update", "update");  
@@ -199,7 +202,7 @@ class importAction extends MainWindowAction {
 		$idManager =& Services::getService("Id");
 		$repositoryManager =& Services::getService("Repository");
 		$wizard =& $this->getWizard($cacheName);
-		$properties =& $wizard->getAllValues();
+		$properties = $wizard->getAllValues();
 
 		$centerPane =& $this->getActionRows();
 		ob_start();
@@ -220,11 +223,17 @@ class importAction extends MainWindowAction {
 		"edu.middlebury.harmoni.repository.asset_content", 
 		"edu.middlebury.harmoni.repository.asset_content.Content");
 		
+		
+		$repository =& $repositoryManager->getRepository(
+					$idManager->getId($harmoni->request->get('collection_id')));
+		
 //===== Exif and Tab-Delim Importers are special =====//
 		if ($properties['file_type'] == "Tab-Delimited") 
-			$importer =& new TabRepositoryImporter($newName, $dr->getId(), false);
+			$importer =& new TabRepositoryImporter($newName, $repository->getId(), false);
 		else if ($properties['file_type'] == "Exif") 
-			$importer =& new ExifRepositoryImporter($newName, $dr->getId(), false);
+			$importer =& new ExifRepositoryImporter($newName, $repository->getId(), false);
+		else if ($properties['file_type'] == "FilesOnly") 
+			$importer =& new FilesOnlyRepositoryImporter($newName, $repository->getId(), false);
 		if (isset($importer))
 			$importer->import();						
 //===== Done with special "RepositoryImporters" =====//
@@ -237,8 +246,7 @@ class importAction extends MainWindowAction {
 				unset($importer);
 				$importer =& XMLRepositoryImporter::withObject(
 					$array,
-					$repositoryManager->getRepository(
-					$idManager->getId($harmoni->request->get('collection_id'))),
+					$repository,
 					$directory."/metadata.xml",
 					$properties['import_type']);
 			}
