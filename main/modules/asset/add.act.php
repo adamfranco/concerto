@@ -128,36 +128,54 @@ class addAction
 		$step =& $wizard->addStep("typestep", new WizardStep());
 		$step->setDisplayName(_("Type"));
 		// Create the properties.
-		$property =& $step->addComponent("option_type", new WSelectList());
-		$property->addOption("NONE", "Use Fields Below...");
+		$selectProperty =& $step->addComponent("type", new WSelectOrNew());
+		
+		// Default Types
+		$defaultTypes = array();
+		$defaultTypes[] =& new Type("Asset Types", "edu.middlebury", "Generic Asset", 
+						"This is an <em>Asset</em> of unspecified type.");
+		$defaultTypes[] =& new Type("Asset Types", "edu.middlebury", "Image", 
+						"Assets of this type represent an image.");
+		$defaultTypes[] =& new Type("Asset Types", "edu.middlebury", "Document", 
+						"Assets of this type represent an non-image document.");
+		$defaultTypes[] =& new Type("Asset Types", "edu.middlebury", "Audio", 
+						"Assets of this type represent an audio recording.");
+		$defaultTypes[] =& new Type("Asset Types", "edu.middlebury", "Video", 
+						"Assets of this type represent an video recording.");
+		$defaultTypes[] =& new Type("Asset Types", "edu.middlebury", "Container", 
+						"Assets of this type primarily serve as containers to hold other Assets, possibly for organizational purposes. Similar to a 'folder' or 'directory' on a filesystem.");
+						
+		foreach ($defaultTypes as $type) {
+			$typeString = Type::typeToString($type);
+			$typeKey = urlencode($typeString);
+			$selectProperty->addOption($typeKey, $typeString);
+		}
+		
+		// Types in the repository
 		$assetTypes =& $repository->getAssetTypes();
 		while ($assetTypes->hasNext()) {
 			$assetType =& $assetTypes->next();
-			$typeKey = urlencode(HarmoniType::typeToString($assetType));
-			$property->addOption($typeKey, HarmoniType::typeToString($assetType));
+			$typeKey = urlencode(Type::typeToString($assetType));
+			$selectProperty->addOption($typeKey, Type::typeToString($assetType));
 		}
-		$property->setValue("NONE");
 		
-		$property =& $step->addComponent("type_domain", new WTextField());
+		$selectProperty->setValue(urlencode(Type::typeToString($defaultTypes[0])));
+		
+		$newTypeProperty =& $selectProperty->setNewComponent(new WComponentCollection);
+		$property =& $newTypeProperty->addComponent("type_domain", new WTextField());
 		$property->setStartingDisplayText(_("e.g. Asset Types"));
 		
-		$property =& $step->addComponent("type_authority", new WTextField());
+		$property =& $newTypeProperty->addComponent("type_authority", new WTextField());
 		$property->setStartingDisplayText(_("e.g. Concerto"));
 		
-		$property =& $step->addComponent("type_keyword", new WTextField());
+		$property =& $newTypeProperty->addComponent("type_keyword", new WTextField());
 		$property->setStartingDisplayText(_("e.g. Generic Asset"));
 		
-		$property =& $step->addComponent("type_description", WTextArea::withRowsAndColumns(5,30));
+		$property =& $newTypeProperty->addComponent("type_description", WTextArea::withRowsAndColumns(5,30));
 		$property->setStartingDisplayText(_("e.g. This is an <em>Asset</em> of unspecified type."));
 		
-		// create the text
+		// create the text for the new type property.
 		ob_start();
-		print "<h2>"._("Type")."</h2>";
-		print "\n"._("All <em>Assets</em> have an immutable type. This type can be used to catagorize <em>Assets</em>, but is not necessary.");
-		print "\n<br />Select a type here or use the fields below to create a new one:";
-		print "\n[[option_type]]";
-		print "\n<br />";
-		print "\n<br />";
 		print "\n<table>";
 		print "\n\t<tr>\n\t\t<td>";
 		print "<strong>"._("Domain").": </strong>";
@@ -184,6 +202,15 @@ class addAction
 		print "\n[[type_description]]";
 		print "\n\t\t</td>\n\t</tr>";
 		print "\n</table>";
+		$newTypeProperty->setContent(ob_get_contents());
+		ob_end_clean();
+		
+		// create the text for the step
+		ob_start();
+		print "<h2>"._("Type")."</h2>";
+		print "\n"._("All <em>Assets</em> have an immutable type. This type can be used to catagorize <em>Assets</em>, but is not necessary.");
+		print "\n<br />"._("Select a type here or select <em>* New Value *</em> create a new one:");
+		print "\n[[type]]";
 		$step->setContent(ob_get_contents());
 		ob_end_clean();
 		
@@ -302,24 +329,33 @@ class addAction
 		{
 			
 			// Get the type from the select if one is specified
-			if ($properties['typestep']['option_type'] != 'NONE') {
-				$typeString = urldecode($properties['typestep']['option_type']);
-				$assetType = HarmoniType::fromString($typeString);
+			if (is_string($properties['typestep']['type'])) {
+				$typeString = urldecode($properties['typestep']['type']);
+				$assetType = Type::fromString($typeString);
 			} 
 			// Otherwise, Generate the type from the specified fields
-			else {
-				$domain = $properties['typestep']['type_domain'];
-				$authority = $properties['typestep']['type_authority'];
-				$keyword = $properties['typestep']['type_keyword'];
-				$description = $properties['typestep']['type_description'];
+			else if (is_array($properties['typestep']['type'])
+				&& $properties['typestep']['type']['type_domain']
+				&& $properties['typestep']['type']['type_authority']
+				&& $properties['typestep']['type']['type_keyword'])
+			{
+				$domain = $properties['typestep']['type']['type_domain'];
+				$authority = $properties['typestep']['type']['type_authority'];
+				$keyword = $properties['typestep']['type']['type_keyword'];
+				$description = $properties['typestep']['type']['type_description'];
 				if (!($domain && $authority && $keyword)) {
 					$wizard->setStep("typestep");
 					return false;
 				}
-				$assetType = new HarmoniType($domain, 
+				$assetType = new Type($domain, 
 											$authority, 
 											$keyword, 
 											$description);
+			}
+			// Lastly, if we don't have a valid type, use the generic one
+			else {
+				$assetType = new Type("Asset Types", "edu.middlebury", "Generic Asset", 
+						"This is an <em>Asset</em> of unspecified type.");
 			}
 			
 			$asset =& $repository->createAsset($properties['namedescstep']['display_name'], 
