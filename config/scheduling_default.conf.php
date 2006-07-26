@@ -16,6 +16,9 @@
 // :: Set up the SchedulingManager ::
 $configuration =& new ConfigurationProperties;
 $configuration->addProperty('database_index', $dbID);
+
+$defaultAuthority = "edu.middlebury.authorization.hierarchy";
+$configuration->addProperty('default_authority', $defaultAuthority);
 /*
 $courseManagamentHierarchyId = "edu.middlebury.authorization.hierarchy";
 $courseManagamentRootId = "edu.middlebury.authorization.root";
