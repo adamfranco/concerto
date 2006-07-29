@@ -99,8 +99,34 @@ class mainAction
 		
 		$actionRows->add(new Heading(_("CourseManagement"), 2));
 		
+		
+		
+		
 		ob_start();
 		print "\n<ul>";
+		$authN =& Services::getService("AuthN");
+		$authNTypesIterator =& $authN->getAuthenticationTypes();
+		if($authNTypesIterator->hasNextType()){
+			$authNType1 =& $authNTypesIterator->nextType();
+			//hopefully the first one is the right one to choose.
+			$id =& $authN->getUserId($authNType1);
+			print "\n\t<li><a href='".$harmoni->request->quickURL("agents","edit_agent_details", array("agentId"=>$id->getIdString()))."'>";
+			print _("My Profile");
+			print "</a></li>";		
+		}
+
+		print "\n\t<li><a href='".$harmoni->request->quickURL("agents","agent_search")."'>";
+		print _("Search Agents");
+		print "</a></li>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","course_search")."'>";
+		print _("Search Courses");
+		print "</a></li>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","createcanonicalcourse")."'>";
+		print _("New Course");
+		print "</a></li>";
+		/*print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","searchcoursesection")."'>";
+		print _("Search Course Sections");
+		print "</a></li>";
 		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","createcanonicalcourse")."'>";
 		print _("Create Canonical Course");
 		print "</a></li>";
@@ -140,7 +166,7 @@ class mainAction
 		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","suck_by_agent")."'>";
 		print _("Suck It Up by Agent");
 		print "</a></li>";
-		print "\n</ul>";
+		print "\n</ul>";*/
 		
 		$introText =& new Block(ob_get_contents(),2);
 		$actionRows->add($introText, "100%", null, CENTER, CENTER);
