@@ -121,7 +121,7 @@ class mainAction
 		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","course_search")."'>";
 		print _("Search Courses");
 		print "</a></li>";
-		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","createcanonicalcourse")."'>";
+		print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","createcourse")."'>";
 		print _("New Course");
 		print "</a></li>";
 		/*print "\n\t<li><a href='".$harmoni->request->quickURL("coursemanagement","searchcoursesection")."'>";
