@@ -197,15 +197,15 @@ class modify_slideshowAction
 		$property->addOption("left", _("text on left"));
 		$property->addOption("bottom", _("text on bottom"));
 		$property->addOption("top", _("text on top"));
-		$property->addOption("center", _("text centered (no-media)"));
 		$property->addOption("none", _("no text (media-only)"));
+		$property->addOption("center", _("text centered (no-media)"));
 		
 		
 		$property =& $multField->addComponent(
 			"show_target_metadata", 
 			new WCheckBox());
 		$property->setChecked(false);
- 		$property->setLabel(_("Display Media Info?"));
+ 		$property->setLabel(_("Display metadata from media?"));
 		ob_start();
 		print "\n<table border=\"0\">";
 			

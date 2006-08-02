@@ -10,7 +10,10 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="2.1.5" date="The Future">
+	<version number="2.1.5" date="2006-08-02">
+		<fix author='adam'>
+			Slideshows: Clarifying metadata option.
+		</fix>
 		<fix author='adam'>
 			Deleting: Now prompts twice to confirm delete of Collections and
 			Exhibitions.
@@ -19,6 +22,10 @@
 			AssetDeleting: Now doesn't crash when deleting Assets from withing 
 			the Asset details screen. It was trying to return to the details for
 			the newly non-existant asset.
+		</fix>
+		<fix author='adam'>
+			Fixes in Harmoni, Polyphony, and the Viewer. See their changelogs for
+			more details.
 		</fix>
 	</version>
 	<version number="2.1.4" date="2006-07-21">

@@ -3,6 +3,17 @@
 Name: Concerto ChangeLog
 
 
+v. 2.1.5 (2006-08-02)
+----------------------------------------------------
+		
+	* Bug Fix: Slideshows: Clarifying metadata option. (Adam Franco)
+		
+	* Bug Fix: Deleting: Now prompts twice to confirm delete of Collections and Exhibitions. (Adam Franco)
+		
+	* Bug Fix: AssetDeleting: Now doesn't crash when deleting Assets from withing the Asset details screen. It was trying to return to the details for the newly non-existant asset. (Adam Franco)
+		
+	* Bug Fix: Fixes in Harmoni, Polyphony, and the Viewer. See their changelogs for more details. (Adam Franco)
+	
 v. 2.1.4 (2006-07-21)
 ----------------------------------------------------
 		
