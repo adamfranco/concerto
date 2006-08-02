@@ -238,7 +238,7 @@ END;
 			
 			print "\n<script type='text/javascript'>\n//<![CDATA[";
 			print "\n	function deleteRepository(repositoryId, url) {";
-			print "\n		if (confirm(\""._("Are you sure you want to delete this Collection?")."\")) {";
+			print "\n		if (confirm(\""._("Are you sure you want to delete this Collection and all of its Assets?")."\") && confirm(\""._("Clicking OK will permenantly delete this Collection and all of the Assets in it.\\nAre you REALLY sure you want to delete this Collection and all of its Assets?")."\")) {";
 			print "\n			window.location = url;";
 			print "\n		}";
 			print "\n	}";

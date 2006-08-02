@@ -96,7 +96,7 @@ class ExhibitionPrinter {
 			ob_end_clean();			
 			print "\n<script type='text/javascript'>\n//<![CDATA[";
 			print "\n	function deleteExhibition(assetId, url) {";
-			print "\n		if (confirm(\""._("Are you sure you want to delete this Exhibition and all of its Slide-Shows?")."\")) {";
+			print "\n		if (confirm(\""._("Are you sure you want to delete this Exhibition and all of its Slide-Shows?")."\") && confirm(\""._("Clicking OK will permenantly delete this Exhibition and all of the Slide-Shows in it.\\nAre you REALLY sure you want to delete this Exhibition and all of its Slide-Shows?")."\")) {";
 			print "\n			window.location = url;";
 			print "\n		}";
 			print "\n	}";
