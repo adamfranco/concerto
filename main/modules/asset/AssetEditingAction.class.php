@@ -677,9 +677,6 @@ class AssetEditingAction
 	{
 		$partStructId = $partStruct->getId();
 		
-		$partStructType =& $partStruct->getType();
-		$valueObjClass = $partStructType->getKeyword();
-		
 		
 		$value =& $partResults['value'];
 		$initialValue = $partInitialState['value'];
@@ -699,21 +696,26 @@ class AssetEditingAction
 		}
 		
 		if ($partResults['checked'] == '1'
+			&& is_object($value)
 			&& ($partInitialState['checked'] =='0'
 				|| $value != $initialValue))
 		{
 			$parts =& $record->getPartsByPartStructure($partStructId);
 			if ($parts->hasNext()) {
 				$part =& $parts->next();
-				if (is_object($value))
-					$part->updateValue($value);
-				else
-					$part->updateValue(String::withvalue($value));
+				$part->updateValue($value);
 			} else {
-				if (is_object($value))
-					$record->createPart($partStructId, $value);
-				else
-					$record->createPart($partStructId, String::withvalue($value));
+				$record->createPart($partStructId, $value);
+			}
+		} 
+		// If we aren't passed a value, then the user didn't enter a value
+		// or deleted the one that was there.
+		// Remove any existing parts.
+		else if ($partResults['checked'] == '1' && !is_object($value)) {
+			$parts =& $record->getPartsByPartStructure($partStructId);
+			while ($parts->hasNext()) {
+				$part =& $parts->next();
+				$record->deletePart($part->getId());
 			}
 		}
 	}
@@ -774,27 +776,29 @@ class AssetEditingAction
 			$checked = ($valueArray['partvalue']['checked'] == '1')?true:false;
 			
 			$value =& $valueArray['partvalue']['value'];
-			$valueStr = $value->asString();
-			
-			$authZManager =& Services::getService("AuthZ");
-			$idManager =& Services::getService("Id");
-			$authoritativeValues =& $partStruct->getAuthoritativeValues();
-			if ($authZManager->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.modify_authority_list"),
-					$this->getRepositoryId())
-				&& !$partStruct->isAuthoritativeValue($value)
-				&& $authoritativeValues->hasNext()) 
-			{
-				$partStruct->addAuthoritativeValue($value);
-				printpre("\tAdding AuthoritativeValue: ".$valueStr);
-			}
-		
-			
-			if ($checked && !in_array($valueStr, $partValsHandled)) {
-				$part =& $record->createPart($partStructId, $value);
+			if (is_object($value)) {
+				$valueStr = $value->asString();
 				
-				$partId =& $part->getId();
-				printpre("\tAdding Part: Id: ".$partId->getIdString()." Value: ".$valueStr);
+				$authZManager =& Services::getService("AuthZ");
+				$idManager =& Services::getService("Id");
+				$authoritativeValues =& $partStruct->getAuthoritativeValues();
+				if ($authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.modify_authority_list"),
+						$this->getRepositoryId())
+					&& !$partStruct->isAuthoritativeValue($value)
+					&& $authoritativeValues->hasNext()) 
+				{
+					$partStruct->addAuthoritativeValue($value);
+					printpre("\tAdding AuthoritativeValue: ".$valueStr);
+				}
+			
+				
+				if ($checked && !in_array($valueStr, $partValsHandled)) {
+					$part =& $record->createPart($partStructId, $value);
+					
+					$partId =& $part->getId();
+					printpre("\tAdding Part: Id: ".$partId->getIdString()." Value: ".$valueStr);
+				}
 			}
 		}
 	}
