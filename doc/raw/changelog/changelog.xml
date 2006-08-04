@@ -10,7 +10,7 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="2.1.6" date="2006-08-03">
+	<version number="2.1.6" date="2006-08-04">
 		<fix author='adam'>
 			Selection: Can now view selection contents in viewer.
 		</fix>

@@ -3,6 +3,17 @@
 Name: Concerto ChangeLog
 
 
+v. 2.1.6 (2006-08-04)
+----------------------------------------------------
+		
+	* Bug Fix: Selection: Can now view selection contents in viewer. (Adam Franco)
+		
+	* Bug Fix: Menus: Now provides a link back to the current collection/asset when viewing the selection. (Adam Franco)
+		
+	* Bug Fix: AssetDeleting: Now doesn't crash when deleting Assets from withing the child Asset browsing screen. (Adam Franco)
+		
+	* Bug Fix: AssetEditing: Now can handle unentered values (specifically dates) that return null rather than a valid primitive object. (Adam Franco)
+	
 v. 2.1.5 (2006-08-02)
 ----------------------------------------------------
 		
