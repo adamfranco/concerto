@@ -12,6 +12,13 @@
 <changelog name="Concerto ChangeLog">
 	<version number="2.1.6" date="2006-08-03">
 		<fix author='adam'>
+			Selection: Can now view selection contents in viewer.
+		</fix>
+		<fix author='adam'>
+			Menus: Now provides a link back to the current collection/asset when
+			viewing the selection.
+		</fix>
+		<fix author='adam'>
 			AssetDeleting: Now doesn't crash when deleting Assets from withing 
 			the child Asset browsing screen.
 		</fix>

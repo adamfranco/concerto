@@ -59,9 +59,9 @@ class ConcertoMenuGenerator
 		
 		// Collection browse links.
 		// Just show if we are not in a particular collection.
-		if (ereg("collection(s)?|asset", $module)) {			
+		if (ereg("collection(s)?|asset|basket", $module)) {			
 			// Collection root
-			if (ereg("^(collection|asset)$", $module)) {
+			if (ereg("^(collection|asset|basket)$", $module)) {
 				// Repository Link
 				$repository =& $this->getRepository();
 				if ($repository)
