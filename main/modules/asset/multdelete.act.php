@@ -101,9 +101,18 @@ class multdeleteAction
 		
 		$idManager =& Services::getService("Id");
 		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
-				$idManager->getId(
-					RequestContext::value('collection_id')));
+		if (RequestContext::value('collection_id')) {
+			$collectionId =& $idManager->getId(RequestContext::value('collection_id'));
+			$repository =& $repositoryManager->getRepository($collectionId);
+		} else if (RequestContext::value('asset_id')) {
+			$parentAssetId =& $idManager->getId(RequestContext::value('asset_id'));
+			$parentAsset =& $repositoryManager->getAsset($parentAssetId);
+			$repository =& $parentAsset->getRepository();
+		} else if (count($this->getAssetIds())) {
+			$assetIds = $this->getAssetIds();
+			$firstAsset =& $repositoryManager->getAsset(current($assetIds));
+			$repository =& $firstAsset->getRepository();
+		}
 		
 		// Log the action
 		if (Services::serviceRunning("Logging")) {

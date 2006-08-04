@@ -12,6 +12,10 @@
 <changelog name="Concerto ChangeLog">
 	<version number="2.1.6" date="2006-08-03">
 		<fix author='adam'>
+			AssetDeleting: Now doesn't crash when deleting Assets from withing 
+			the child Asset browsing screen.
+		</fix>
+		<fix author='adam'>
 			AssetEditing: Now can handle unentered values (specifically dates) 
 			that return null rather than a valid primitive object.
 		</fix>
