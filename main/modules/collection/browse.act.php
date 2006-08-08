@@ -630,7 +630,7 @@ END;
 			$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'DisplayName', _('Title'));
 			$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'Id', _('Id'));
 			$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'ModificationDate', _('Modification Date'));
-			$this->printSelectOption("asset_order", $_SESSION["asset_order"], _('Creation Date'));
+			$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'CreationDate', _('Creation Date'));
 			print "\n\t</select>";
 			
 			print "\n\t<select name='".RequestContext::name("asset_order_direction")."'";
