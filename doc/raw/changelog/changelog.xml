@@ -10,6 +10,12 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
+	<version number="2.1.7" date="The Future">
+		<fix author='adam'>
+			Now doesn't force a redirect after checking for tables, allowing 
+			HTTP authentication to work on the first pageload.
+		</fix>
+	</version>
 	<version number="2.1.6" date="2006-08-04">
 		<fix author='adam'>
 			Selection: Can now view selection contents in viewer.
