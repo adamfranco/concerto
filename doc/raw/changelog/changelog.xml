@@ -15,6 +15,9 @@
 			Now doesn't force a redirect after checking for tables, allowing 
 			HTTP authentication to work on the first pageload.
 		</fix>
+		<fix author='adam'>
+			Fixes in Harmoni and Polyphony. See their changelogs for more details.
+		</fix>
 	</version>
 	<version number="2.1.6" date="2006-08-04">
 		<fix author='adam'>
