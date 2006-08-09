@@ -189,13 +189,39 @@ class displayAction
 		}
 		
 		// use the result from previous actions
-		$contentDestination->add($harmoni->result, null, null, CENTER, TOP); 
+		if (is_object($harmoni->result))
+			$contentDestination->add($harmoni->result, null, null, CENTER, TOP);
+		else if (is_string($harmoni->result))
+			$contentDestination->add(new Block($harmoni->result, STANDARD_BLOCK), null, null, CENTER, TOP);
 		
 		// Menu Column
 		$menuColumn =& $centerPane->add(new Container($yLayout, OTHER, 1), "140px", null, LEFT, TOP);
 		// Main menu
 		$menuGenerator =& new ConcertoMenuGenerator;
 		$menuColumn->add($menuGenerator->generateMainMenu(), "140px", null, LEFT, TOP);
+		// RSS Links
+		if (ereg("^(collection|asset)\.browse(Asset)?$", $harmoni->getCurrentAction()) 	
+			&& RequestContext::value('collection_id'))
+		{
+			ob_start();
+			print "\n\t\t<a href='";
+			print $harmoni->request->quickURL('collection', 'rss_latest', 
+				array('collection_id' => RequestContext::value('collection_id')));
+			print "' style='white-space: nowrap;' title='"._("RSS feed of the most recently added Assets")."'>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t"._("RSS: newest");
+			print "\n\t\t</a>";
+			
+			print "\n\t\t<a href='";
+			print $harmoni->request->quickURL('collection', 'rss_latest', 
+				array('collection_id' => RequestContext::value('collection_id'),
+					'order' => 'modification'));
+			print "' style='white-space: nowrap;' title='"._("RSS feed of the most recently changed Assets")."'>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t"._("RSS: latest changes");
+			print "\n\t\t</a>";
+			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
+		}
 		// Basket
 		$basket =& Basket::instance();
 		if (ereg("^(collection|asset)\.browse(Asset)?$", $harmoni->getCurrentAction()))

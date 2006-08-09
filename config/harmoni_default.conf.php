@@ -19,6 +19,10 @@
 	$harmoni->config->set("programTitle","Concerto");
 	$harmoni->config->set("sessionName","CONCERTO_SESSID");
 	$harmoni->config->set("sessionUseCookies",true);
+	// In order to prevent User's from including their SESSION IDs in urls that they
+	// copy/paste for others, we will force the usage of cookies. This will prevent
+	// inadvertant session fixation problems.
+	$harmoni->config->set("sessionUseOnlyCookies",true);
 	$harmoni->config->set("sessionCookiePath","/");
 	$harmoni->config->set("sessionCookieDomain","middlebury.edu");
 	
