@@ -86,8 +86,8 @@ class rss_latestAction
 		
 		$assets =& $this->getAssets($repository);
 		$i = 0;
-		while ($assets->hasNext() && $i < 10) {
-			$this->addAsset($assets->next());
+		while ($assets->hasNext() && $i < 20) {
+			$this->addItem($this->getAssetItem($assets->next()));
 		}
 	}
 	
@@ -126,18 +126,18 @@ class rss_latestAction
 	 * Add an Asset to the feed
 	 * 
 	 * @param object Asset $asset
-	 * @return void
+	 * @return object RSSItem
 	 * @access public
 	 * @since 8/8/06
 	 */
-	function addAsset (&$asset) {
+	function &getAssetItem (&$asset) {
 		$harmoni =& Harmoni::instance();
 		$idManager =& Services::getService("IdManager");
 		$assetId =& $asset->getId();
 		$repository =& $asset->getRepository();
 		$repositoryId =& $repository->getId();
 		
-		$item =& $this->addItem(new RSSItem);
+		$item =& new RSSItem;
 		
 		$item->setTitle($asset->getDisplayName());
 		
@@ -253,6 +253,8 @@ class rss_latestAction
 		print "\n\t<div style='clear: both;'>";
 		print "</div>";
 		$item->setDescription(ob_get_clean());
+		
+		return $item;
 	}
 	
 	/**
