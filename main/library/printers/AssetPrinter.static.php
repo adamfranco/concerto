@@ -459,7 +459,7 @@ class AssetPrinter {
 </script>
 END;
 		
-		$block = new Block(ob_get_contents(), 4);
+		$block = new Block(ob_get_contents(), HIGHLIT_BLOCK);
 		ob_end_clean();
 		$harmoni->request->endNamespace();
 		return $block;

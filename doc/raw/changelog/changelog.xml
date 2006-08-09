@@ -12,6 +12,10 @@
 <changelog name="Concerto ChangeLog">
 	<version number="2.1.7" date="The Future">
 		<fix author='adam'>
+			Now forces cookie usage to prevent accidental or intentional 
+			session hijacking by the passing of session ids in the url.
+		</fix>
+		<fix author='adam'>
 			Now doesn't force a redirect after checking for tables, allowing 
 			HTTP authentication to work on the first pageload.
 		</fix>
