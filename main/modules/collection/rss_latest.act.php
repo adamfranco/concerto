@@ -75,7 +75,11 @@ class rss_latestAction
  		$repositoryId =& $idManager->getId(RequestContext::value('collection_id'));
  		$repository =& $repositoryManager->getRepository($repositoryId);
  		
- 		$this->setTitle($repository->getDisplayName()." - "._("Newest Assets"));
+ 		if (RequestContext::value('order') == 'modification')
+ 			$this->setTitle($repository->getDisplayName()." - "._("Recently Changed Assets"));
+ 		else
+	 		$this->setTitle($repository->getDisplayName()." - "._("Newest Assets"));
+	 	
  		$this->setDescription($repository->getDescription());
  		$this->setLink($harmoni->request->quickURL('collection', 'browse', 
  			array('collection_id' => $repositoryId->getIdString())));
