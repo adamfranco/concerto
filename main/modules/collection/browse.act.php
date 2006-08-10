@@ -811,7 +811,7 @@ function printAssetShort(& $asset, $params, $num) {
 	
 	
 	ob_start();
-	print "\n<div style='margin-top: 5px; font-size: small;'>";
+	print "\n<div style='margin-top: 5px; font-size: small; white-space: nowrap;'>";
 	if ($_SESSION["show_controls"] == 'true') {
 		AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num, false);
 		print " | ";
