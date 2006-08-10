@@ -88,6 +88,7 @@ class rss_latestAction
 		$i = 0;
 		while ($assets->hasNext() && $i < 20) {
 			$this->addItem($this->getAssetItem($assets->next()));
+			$i++;
 		}
 	}
 	

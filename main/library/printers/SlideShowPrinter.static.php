@@ -55,7 +55,7 @@ class SlideShowPrinter {
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId())) {
 			$viewertheme = 'black';
 			ob_start();
-			print "<a href='#' onclick='Javascript:window.open(";
+			print "<a onclick='Javascript:window.open(";
 			print '"'.VIEWER_URL."?&source=";
 			print urlencode($harmoni->request->quickURL("exhibitions", "slideshowOutlineXml", 
 						array("slideshow_id" => $assetId->getIdString())));
