@@ -211,7 +211,7 @@ class displayAction
 			print "' style='white-space: nowrap;' title='"._("RSS feed of the most recently added Assets")."'>";
 			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: newest");
-			print "\n\t\t</a>";
+			print "\n\t\t</a><br/>";
 			
 			print "\n\t\t<a href='";
 			print $harmoni->request->quickURL('collection', 'rss_latest', 
@@ -232,7 +232,7 @@ class displayAction
 			print "' style='white-space: nowrap;' title='"._("RSS feed of the most recently added Assets across all Collections")."'>";
 			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: all newest");
-			print "\n\t\t</a>";
+			print "\n\t\t</a><br/>";
 			
 			print "\n\t\t<a href='";
 			print $harmoni->request->quickURL('collections', 'rss_all_latest', 
@@ -255,7 +255,7 @@ class displayAction
 			print "' style='white-space: nowrap;' title='"._("RSS feed of the most recently added Slideshows in this Exhibition")."'>";
 			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: newest");
-			print "\n\t\t</a>";
+			print "\n\t\t</a><br/>";
 			
 			print "\n\t\t<a href='";
 			print $harmoni->request->quickURL('exhibitions', 'rss_latest_slideshows', 
@@ -276,7 +276,7 @@ class displayAction
 			print "' style='white-space: nowrap;' title='"._("RSS feed of the most recently added Slideshows across all Exhibitions")."'>";
 			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: all newest");
-			print "\n\t\t</a>";
+			print "\n\t\t</a><br/>";
 			
 			print "\n\t\t<a href='";
 			print $harmoni->request->quickURL('exhibitions', 'rss_latest_slideshows', 
