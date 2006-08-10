@@ -204,6 +204,7 @@ class displayAction
 			&& RequestContext::value('collection_id'))
 		{
 			ob_start();
+			print "<div style='font-size: small; padding-left: 5px;'>";
 			print "\n\t\t<a href='";
 			print $harmoni->request->quickURL('collection', 'rss_latest', 
 				array('collection_id' => RequestContext::value('collection_id')));
@@ -220,10 +221,12 @@ class displayAction
 			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: latest changes");
 			print "\n\t\t</a>";
+			print "\n</div>";
 			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
 		}
 		if (ereg("^collections\..+$", $harmoni->getCurrentAction())) {
 			ob_start();
+			print "<div style='font-size: small; padding-left: 5px;'>";
 			print "\n\t\t<a href='";
 			print $harmoni->request->quickURL('collections', 'rss_all_latest');
 			print "' style='white-space: nowrap;' title='"._("RSS feed of the most recently added Assets across all Collections")."'>";
@@ -238,12 +241,14 @@ class displayAction
 			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: all latest changes");
 			print "\n\t\t</a>";
+			print "\n</div>";
 			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
 		}
 		if (ereg("^exhibitions\.browse_exhibition$", $harmoni->getCurrentAction())
 			&& RequestContext::value('exhibition_id')) 
 		{
 			ob_start();
+			print "<div style='font-size: small; padding-left: 5px;'>";
 			print "\n\t\t<a href='";
 			print $harmoni->request->quickURL('exhibitions', 'rss_latest_slideshows',
 				array('exhibition_id' => RequestContext::value('exhibition_id')));
@@ -260,10 +265,12 @@ class displayAction
 			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: latest changes");
 			print "\n\t\t</a>";
+			print "\n</div>";
 			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
 		}
 		if (ereg("^exhibitions\.browse$", $harmoni->getCurrentAction())) {
 			ob_start();
+			print "<div style='font-size: small; padding-left: 5px;'>";
 			print "\n\t\t<a href='";
 			print $harmoni->request->quickURL('exhibitions', 'rss_latest_slideshows');
 			print "' style='white-space: nowrap;' title='"._("RSS feed of the most recently added Slideshows across all Exhibitions")."'>";
@@ -278,6 +285,7 @@ class displayAction
 			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: all latest changes");
 			print "\n\t\t</a>";
+			print "\n</div>";
 			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
 		}
 		

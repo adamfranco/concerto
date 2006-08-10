@@ -11,6 +11,15 @@
 
 <changelog name="Concerto ChangeLog">
 	<version number="2.1.7" date="The Future">
+		<new author='adam'>
+			Authenticated RSS feeds of most recently added/edited assets.
+		</new>
+		<new author='adam'>
+			Authenticated RSS feeds of most recently added/edited slideshows.
+		</new>
+		<new author='adam'>
+			Authenticated RSS feeds of logs.
+		</new>
 		<fix author='adam'>
 			Now forces cookie usage to prevent accidental or intentional 
 			session hijacking by the passing of session ids in the url.
