@@ -13,7 +13,7 @@
 	<version number="2.1.7" date="2006-08-10">
 		<fix author='adam'>
 			Now does't wrap the checkboxes in Collection browsing when the 
-			Asset->browse link is present.
+			asset-browse link is present.
 		</fix>
 		<new author='adam'>
 			Authenticated RSS feeds of most recently added/edited assets.

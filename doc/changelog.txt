@@ -6,7 +6,7 @@ Name: Concerto ChangeLog
 v. 2.1.7 (2006-08-10)
 ----------------------------------------------------
 		
-	* Bug Fix: Now does't wrap the checkboxes in Collection browsing when the Asset-&gt;browse link is present. (Adam Franco)
+	* Bug Fix: Now does't wrap the checkboxes in Collection browsing when the asset-browse link is present. (Adam Franco)
 		
 	* New feature: Authenticated RSS feeds of most recently added/edited assets. (Adam Franco)
 		
