@@ -189,7 +189,7 @@ function printAssetShort(& $asset, &$harmoni) {
 	
 	$assetId =& $asset->getId();
 	ob_start();
-	if (isset($firstMediaUrl)) {
+	if (isset($firstMediaUrl) && $firstMediaUrl) {
 		print "<a onclick='Javascript:window.open(";
 		print '"'.VIEWER_URL."?&source=";
 		print urlencode($harmoni->request->quickURL("exhibitions", "slideshowOutlineXml", 
