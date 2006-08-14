@@ -224,7 +224,7 @@ class displayAction
 			print "\n</div>";
 			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
 		}
-		if (ereg("^collections\..+$", $harmoni->getCurrentAction())) {
+/*		if (ereg("^collections\..+$", $harmoni->getCurrentAction())) {
 			ob_start();
 			print "<div style='font-size: small; padding-left: 5px;'>";
 			print "\n\t\t<a href='";
@@ -244,7 +244,7 @@ class displayAction
 			print "\n</div>";
 			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
 		}
-		if (ereg("^exhibitions\.browse_exhibition$", $harmoni->getCurrentAction())
+*/		if (ereg("^exhibitions\.browse_exhibition$", $harmoni->getCurrentAction())
 			&& RequestContext::value('exhibition_id')) 
 		{
 			ob_start();
@@ -268,7 +268,7 @@ class displayAction
 			print "\n</div>";
 			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
 		}
-		if (ereg("^exhibitions\.browse$", $harmoni->getCurrentAction())) {
+/*		if (ereg("^exhibitions\.browse$", $harmoni->getCurrentAction())) {
 			ob_start();
 			print "<div style='font-size: small; padding-left: 5px;'>";
 			print "\n\t\t<a href='";
@@ -288,7 +288,7 @@ class displayAction
 			print "\n</div>";
 			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
 		}
-		
+*/		
 		// Basket
 		$basket =& Basket::instance();
 		if (ereg("^(collection|asset)\.browse(Asset)?$", $harmoni->getCurrentAction()))
