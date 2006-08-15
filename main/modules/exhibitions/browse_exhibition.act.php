@@ -202,11 +202,9 @@ function printAssetShort(& $asset, &$harmoni) {
 		print "</a>";
 	}
 	
-	print "\n\t<table width='100%'>";
-	print  "\n\t<tr><td style='font-weight: bold' title='"._("ID#").": ".
-			$assetId->getIdString()."'>".$asset->getDisplayName()."</td>";
-	print "\n\t<td style='text-align: right; font-size: smaller;''>(".$count." "._("slides").")</td>";
-	print "</tr></table>";
+	print "\n\t<div style='font-weight: bold' title='"._("ID#").": ".
+			$assetId->getIdString()."'>".$asset->getDisplayName()."</div>";
+	print "\n\t<div style='font-size: smaller; margin-bottom: 10px; margin-left: 20px; margin-right: 20px; white-space: nowrap;'>(".$count." "._("slides").")</div>";
 	$description =& HtmlString::withValue($asset->getDescription());
 	$description->clean();
 	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";
