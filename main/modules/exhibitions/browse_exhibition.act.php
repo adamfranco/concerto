@@ -108,22 +108,33 @@ class browse_exhibitionAction
 		//***********************************
 		// Get the assets to display
 		//***********************************
-		$assets =& $asset->getAssets();
+		$setManager =& Services::getService("Sets");
+		$exhibitionSet =& $setManager->getPersistentSet($asset->getId());
+		$slideshowIterator =& $asset->getAssets();
+		$orderedSlideshows = array();
+		$unorderedSlideshows = array();
+		
+		while ($slideshowIterator->hasNext()) {
+			$slideshowAsset =& $slideshowIterator->next();
+			$slideshowAssetId =& $slideshowAsset->getId();
+			
+			if ($exhibitionSet->isInSet($slideshowAssetId))
+				$orderedSlideshows[$exhibitionSet->getPosition($slideshowAssetId)] =& $slideshowAsset;
+			else {
+				$exhibitionSet->addItem($slideshowAssetId);
+				$unorderedSlideshows[] =& $slideshowAsset;
+			}
+		}
+		ksort($orderedSlideshows);
+		$assets = array_merge($orderedSlideshows, $unorderedSlideshows);
+		unset($orderedSlideshows, $unorderedSlideshows);
 		
 		//***********************************
 		// print the results
 		//***********************************
-		$resultPrinter =& new IteratorResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
+		$resultPrinter =& new ArrayResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
 		$resultLayout =& $resultPrinter->getLayout($harmoni);
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
-		
-		ob_start();
-		print  "<p>";
-		print  _("Some <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
-		print  "</p>";
-		
-		$actionRows->add(new Block(ob_get_contents(), STANDARD_BLOCK), "100%", null, LEFT, CENTER);
-		ob_end_clean();
 	}
 	
 	/**
@@ -209,7 +220,7 @@ function printAssetShort(& $asset, &$harmoni) {
 	$description->clean();
 	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";
 	
-	print "\n<div style='clear: both;'>";
+	print "\n<div style='clear: both; white-space: nowrap;'>";
 	SlideShowPrinter::printFunctionLinks($asset);
 	print "</div>";
 	
