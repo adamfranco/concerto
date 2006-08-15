@@ -199,27 +199,39 @@ class displayAction
 		// Main menu
 		$menuGenerator =& new ConcertoMenuGenerator;
 		$menuColumn->add($menuGenerator->generateMainMenu(), "140px", null, LEFT, TOP);
+		
 		// RSS Links
+		$outputHandler =& $harmoni->getOutputHandler();
 		if (ereg("^(collection|asset)\.browse(Asset)?$", $harmoni->getCurrentAction()) 	
 			&& RequestContext::value('collection_id'))
 		{
 			ob_start();
 			print "<div style='font-size: small; padding-left: 5px;'>";
-			print "\n\t\t<a href='";
-			print $harmoni->request->quickURL('collection', 'rss_latest', 
+			
+			$url = $harmoni->request->quickURL('collection', 'rss_latest', 
 				array('collection_id' => RequestContext::value('collection_id')));
-			print "' style='white-space: nowrap;' title='"._("RSS feed of the most recently added Assets")."'>";
+			$title = _("RSS feed of the most recently added Assets");
+			
+			$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<link rel='alternate' type='application/rss+xml'"
+				." title='".$title."' href='".$url."'/>");
+			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
 			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: newest");
 			print "\n\t\t</a><br/>";
 			
-			print "\n\t\t<a href='";
-			print $harmoni->request->quickURL('collection', 'rss_latest', 
+			
+			$url = $harmoni->request->quickURL('collection', 'rss_latest', 
 				array('collection_id' => RequestContext::value('collection_id'),
 					'order' => 'modification'));
-			print "' style='white-space: nowrap;' title='"._("RSS feed of the most recently changed Assets")."'>";
+			$title = _("RSS feed of the most recently changed Assets");
+			
+			$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<link rel='alternate' type='application/rss+xml'"
+				." title='".$title."' href='".$url."'/>");
+			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
 			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
-			print "\n\t\t\t"._("RSS: latest changes");
+			print "\n\t\t\t"._("RSS: recently updated");
 			print "\n\t\t</a>";
 			print "\n</div>";
 			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
@@ -227,19 +239,29 @@ class displayAction
 /*		if (ereg("^collections\..+$", $harmoni->getCurrentAction())) {
 			ob_start();
 			print "<div style='font-size: small; padding-left: 5px;'>";
-			print "\n\t\t<a href='";
-			print $harmoni->request->quickURL('collections', 'rss_all_latest');
-			print "' style='white-space: nowrap;' title='"._("RSS feed of the most recently added Assets across all Collections")."'>";
+			
+			$url = $harmoni->request->quickURL('collection', 'rss_all_latest');
+			$title = _("RSS feed of the most recently added Assets across all Collections");
+			
+			$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<link rel='alternate' type='application/rss+xml'"
+				." title='".$title."' href='".$url."'/>");
+			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
 			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: all newest");
 			print "\n\t\t</a><br/>";
 			
-			print "\n\t\t<a href='";
-			print $harmoni->request->quickURL('collections', 'rss_all_latest', 
+			
+			$url = $harmoni->request->quickURL('collections', 'rss_all_latest', 
 				array('order' => 'modification'));
-			print "' style='white-space: nowrap;' title='"._("RSS feed of the most recently changed Assets across all Collections")."'>";
+			$title = _("RSS feed of the most recently changed Assets across all Collections");
+			
+			$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<link rel='alternate' type='application/rss+xml'"
+				." title='".$title."' href='".$url."'/>");
+			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
 			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
-			print "\n\t\t\t"._("RSS: all latest changes");
+			print "\n\t\t\t"._("RSS: all recently updated");
 			print "\n\t\t</a>";
 			print "\n</div>";
 			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
@@ -249,21 +271,30 @@ class displayAction
 		{
 			ob_start();
 			print "<div style='font-size: small; padding-left: 5px;'>";
-			print "\n\t\t<a href='";
-			print $harmoni->request->quickURL('exhibitions', 'rss_latest_slideshows',
+			
+			$url = $harmoni->request->quickURL('exhibitions', 'rss_latest_slideshows',
 				array('exhibition_id' => RequestContext::value('exhibition_id')));
-			print "' style='white-space: nowrap;' title='"._("RSS feed of the most recently added Slideshows in this Exhibition")."'>";
+			$title = _("RSS feed of the most recently added Slideshows in this Exhibition");
+			
+			$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<link rel='alternate' type='application/rss+xml'"
+				." title='".$title."' href='".$url."'/>");
+			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
 			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: newest");
 			print "\n\t\t</a><br/>";
 			
-			print "\n\t\t<a href='";
-			print $harmoni->request->quickURL('exhibitions', 'rss_latest_slideshows', 
+			$url = $harmoni->request->quickURL('exhibitions', 'rss_latest_slideshows', 
 				array('order' => 'modification', 
 					'exhibition_id' => RequestContext::value('exhibition_id')));
-			print "' style='white-space: nowrap;' title='"._("RSS feed of the most recently changed Slideshows in this Exhibition")."'>";
+			$title = _("RSS feed of the most recently changed Slideshows in this Exhibition");
+			
+			$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<link rel='alternate' type='application/rss+xml'"
+				." title='".$title."' href='".$url."'/>");
+			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
 			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
-			print "\n\t\t\t"._("RSS: latest changes");
+			print "\n\t\t\t"._("RSS: recently updated");
 			print "\n\t\t</a>";
 			print "\n</div>";
 			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
@@ -271,19 +302,28 @@ class displayAction
 /*		if (ereg("^exhibitions\.browse$", $harmoni->getCurrentAction())) {
 			ob_start();
 			print "<div style='font-size: small; padding-left: 5px;'>";
-			print "\n\t\t<a href='";
-			print $harmoni->request->quickURL('exhibitions', 'rss_latest_slideshows');
-			print "' style='white-space: nowrap;' title='"._("RSS feed of the most recently added Slideshows across all Exhibitions")."'>";
+			
+			$url = $harmoni->request->quickURL('exhibitions', 'rss_latest_slideshows');
+			$title = _("RSS feed of the most recently added Slideshows across all Exhibitions");
+			
+			$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<link rel='alternate' type='application/rss+xml'"
+				." title='".$title."' href='".$url."'/>");
+			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
 			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: all newest");
 			print "\n\t\t</a><br/>";
 			
-			print "\n\t\t<a href='";
-			print $harmoni->request->quickURL('exhibitions', 'rss_latest_slideshows', 
+			$url = $harmoni->request->quickURL('exhibitions', 'rss_latest_slideshows', 
 				array('order' => 'modification'));
-			print "' style='white-space: nowrap;' title='"._("RSS feed of the most recently changed Slideshows across all Exhibitions")."'>";
+			$title = _("RSS feed of the most recently changed Slideshows across all Exhibitions");
+			
+			$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<link rel='alternate' type='application/rss+xml'"
+				." title='".$title."' href='".$url."'/>");
+			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
 			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
-			print "\n\t\t\t"._("RSS: all latest changes");
+			print "\n\t\t\t"._("RSS: all recently updated");
 			print "\n\t\t</a>";
 			print "\n</div>";
 			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
