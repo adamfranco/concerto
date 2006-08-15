@@ -50,5 +50,7 @@ require_once(MYDIR."/main/library/Wizard/AssetComponent.class.php");
  * to starting the session so that they can be restored properly.
  ******************************************************************************/
 require_once(HARMONI."GUIManager/Themes/SimpleLinesTheme.class.php");
-
+require_once(HARMONI."GUIManager/Themes/GenericTheme.class.php");
+require_once(HARMONI."GUIManager/Themes/SimpleTheme.class.php");
+require_once(MYDIR."/themes/SimpleThemeBlack/SimpleThemeBlack.class.php");
 
