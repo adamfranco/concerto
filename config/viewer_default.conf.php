@@ -13,4 +13,4 @@
  * @version $Id$
  */
 
-define ("VIEWER_URL", dirname(MYURL)."/../viewer2/");
+define ("VIEWER_URL", dirname(MYURL)."/viewer/");

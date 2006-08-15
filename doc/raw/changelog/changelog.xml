@@ -11,6 +11,13 @@
 
 <changelog name="Concerto ChangeLog">
 	<version number="2.1.8" date="2006-08-15">
+		<change author='adam'>
+			Config: Harmoni, Polyphony, and Viewer locations are now specified
+			as the release-defaults, easing the release process. Harmoni/Polyphony
+			locations are now specified in a config.
+		</change>
+	</version>
+	<version number="2.1.8" date="2006-08-15">
 		<fix author='adam'>
 			RSS: Added publication dates for slideshow RSS items.
 		</fix>
