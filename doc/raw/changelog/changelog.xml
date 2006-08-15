@@ -10,7 +10,13 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="2.1.7" date="2006-08-10">
+	<version number="2.1.8" date="2006-08-14">
+		<fix author='adam'>
+			Slideshows: Now does't crash exhibition browsing if target media are
+			missing.
+		</fix>
+	</version>
+	<version number="2.1.7" date="2006-08-11">
 		<fix author='adam'>
 			Now does't wrap the checkboxes in Collection browsing when the 
 			asset-browse link is present.
