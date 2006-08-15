@@ -10,7 +10,17 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="2.1.8" date="2006-08-14">
+	<version number="2.1.8" date="2006-08-15">
+		<fix author='adam'>
+			RSS: Added publication dates for slideshow RSS items.
+		</fix>
+		<fix author='adam'>
+			Slideshows: Removed debugging line in slideshow browse mode.
+		</fix>
+		<fix author='adam'>
+			Slideshows: now displays an appropriate message if target media
+			have been deleted.
+		</fix>
 		<fix author='adam'>
 			Slideshows: Now does't crash exhibition browsing if target media are
 			missing.

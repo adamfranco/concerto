@@ -199,6 +199,7 @@ class rss_latest_slideshowsAction
 		
 		$item->setTitle($asset->getDisplayName());
 		$item->addCategory("Slideshow");
+		$item->setPubDate($asset->getModificationDate());
 		
 		$item->setLink(VIEWER_URL."?&amp;source=".
 			urlencode($harmoni->request->quickURL("exhibitions", "slideshowOutlineXml", 

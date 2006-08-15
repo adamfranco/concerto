@@ -3,7 +3,18 @@
 Name: Concerto ChangeLog
 
 
-v. 2.1.7 (2006-08-10)
+v. 2.1.8 (2006-08-15)
+----------------------------------------------------
+		
+	* Bug Fix: RSS: Added publication dates for slideshow RSS items. (Adam Franco)
+		
+	* Bug Fix: Slideshows: Removed debugging line in slideshow browse mode. (Adam Franco)
+		
+	* Bug Fix: Slideshows: now displays an appropriate message if target media have been deleted. (Adam Franco)
+		
+	* Bug Fix: Slideshows: Now does't crash exhibition browsing if target media are missing. (Adam Franco)
+	
+v. 2.1.7 (2006-08-11)
 ----------------------------------------------------
 		
 	* Bug Fix: Now does't wrap the checkboxes in Collection browsing when the asset-browse link is present. (Adam Franco)
