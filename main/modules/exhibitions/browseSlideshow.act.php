@@ -140,7 +140,6 @@ function printSlideShort(&$asset, $params, $slideshowIdString, $num) {
 	$centered =& new StyleCollection("*.centered", "centered", "Centered", "Centered Text");
 	$centered->addSP(new TextAlignSP("center"));	
 		
-	ob_start();
 	$idManager =& Services::getService("Id");
 	$repositoryManager =& Services::getService("Repository");
 	$authZ =& Services::getService("AuthZ");
