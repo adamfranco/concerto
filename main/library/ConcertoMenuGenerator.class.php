@@ -218,7 +218,6 @@ class ConcertoMenuGenerator
 			$currentAssetId =& $assets[$i]->getId();
 			if ($slideshowType->isEqual($assets[$i]->getAssetType()) || $altSlideshowType->isEqual($assets[$i]->getAssetType())) {
 				if ($viewMode) {
-					printpre($currentAssetId);
 					$mainMenu->add(
 						new MenuItemLink(
 							$assets[$i]->getDisplayName(),
