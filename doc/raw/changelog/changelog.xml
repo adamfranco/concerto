@@ -10,7 +10,10 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="2.1.9" date="2006-08-15">
+	<version number="2.1.9" date="2006-08-16">
+		<new author='adam'>
+			Exhibitions: Can now reorder slideshows in exhibitions.
+		</new>
 		<change author='adam'>
 			RSS: RSS links now in head of document to alert the browser (specifically
 			FireFox) of the availability of feeds.
