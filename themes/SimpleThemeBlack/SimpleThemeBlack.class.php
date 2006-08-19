@@ -26,6 +26,16 @@ require_once(HARMONI."GUIManager/StyleProperties/TextDecorationSP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/DisplaySP.class.php");
 require_once(HARMONI."GUIManager/StyleProperties/CursorSP.class.php");
 
+require_once(HARMONI."GUIManager/StyleProperties/LetterSpacingSP.class.php");
+require_once(HARMONI."GUIManager/StyleProperties/WordSpacingSP.class.php");
+require_once(HARMONI."GUIManager/StyleProperties/LineHeightSP.class.php");
+require_once(HARMONI."GUIManager/StyleProperties/MarginRightSP.class.php");
+require_once(HARMONI."GUIManager/StyleProperties/MarginTopSP.class.php");
+require_once(HARMONI."GUIManager/StyleProperties/MarginBottomSP.class.php");
+require_once(HARMONI."GUIManager/StyleProperties/PaddingRightSP.class.php");
+require_once(HARMONI."GUIManager/StyleProperties/PaddingTopSP.class.php");
+require_once(HARMONI."GUIManager/StyleProperties/PaddingBottomSP.class.php");
+
 /**
  * A simple theme with rounded boxes.
  *

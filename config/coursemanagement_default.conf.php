@@ -72,6 +72,7 @@ for($year=2004; $year<2008; $year++){
 }
 
 $configuration->addProperty('terms_to_add', $terms);
+$configuration->addProperty('authority', $authority="edu.middlebury");
 
 
 Services::startManagerAsService("CourseManagementManager", $context, $configuration);
