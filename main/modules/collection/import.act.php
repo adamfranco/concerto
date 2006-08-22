@@ -119,20 +119,21 @@ class importAction extends MainWindowAction {
 		$harmoni =& Harmoni::Instance();
 		$wizard =& SimpleWizard::withText(
 			"<table border='0' style='margin-top:20px' >\n" .
-			"\n<tr><td><h3>"._("File type:")."</h3></td></tr>".
-			"\n<tr><td>"._("The type of file to be imported: ")."</td>".
+			"\n<tr><td><h3>"._("Source data type:")."</h3></td>".
+			"\n<td style='font-size: small;'>".("* Please see the <strong>Help</strong> below for more information.")."</td></tr>".
+			"\n<tr><td>"._("The format of data to be imported: ")."</td>".
 			"\n<td>[[file_type]]</td></tr>".
 // 			"\n<tr><td colspan='2'>"._("If Exif click ")."<a href=\"".
 // 			$harmoni->request->quickURL("collection", "exifschema").
 // 			"\">"._("here")."</a>".
 // 			_(" to customize your schema (Suggested)")."</td></tr>".
-			"\n<tr><td>"._("Is this file an archive? ")."</td>".
-			"\n<td>[[is_archived]] (Files-Only, Tab-Delimited and Exif must be Archived)</td></tr>".
+			"\n<tr><td>"._("Is this file a Zip/GZip/BZip/Tar archive? ")."</td>".
+			"\n<td>[[is_archived]] <em>"._("(All except XML source data must be Archived)")."</em></td></tr>".
 			"\n<tr><td><h3>"._("Import type:")."</h3></td></tr>".
 			"\n<tr><td>"._("The type of import to execute: ")."</td>".
 			"\n<td>[[import_type]]</td></tr>".
 			"\n<tr><td><h3>"._("File:")."</h3></td></tr>".
-			"\n<tr><td>"._("The file to be imported: ")."</td>".
+			"\n<tr><td>"._("The Zip/GZip/BZip/Tar/XML file to be imported: ")."</td>".
 			"\n<td>[[filename]]</td>".
 			"<tr>\n" .
 			"<td align='left'>\n" .
