@@ -185,7 +185,7 @@ class mainAction
 		print _("Edit Themes");
 		print "</a> <font color='red'><i> * HOT!!! *</i></font></li>";
 		print "\n\t<li><a href='".$harmoni->request->quickURL("gui","colorwheel_test")."'>";
-		print _("This COlorwheel Does Nothing");
+		print _("This ColorWheel Does Nothing");
 		print "</a></li>";
 
 	
