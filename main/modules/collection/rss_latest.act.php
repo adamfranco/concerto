@@ -198,29 +198,36 @@ class rss_latestAction
 			print "\n\t\t<dd>".$description->asString()."</dd>";
 		}
 		
-		$date =& $asset->getModificationDate();
+		$date = $asset->getModificationDate();
 		print  "\n\t\t<dt style='font-weight: bold;'>";
-		print _("Modification Date: ");
-		print "</dt>";
-		print "\n\t\t<dd>".$date->asString()."</dd>";
-		$date =& $asset->getCreationDate();
+		print _("Modification Date");
+		print ":</dt>\n\t\t<dd >";
+		print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+		print "</dd>";
+		
+		$date = $asset->getCreationDate();
 		print  "\n\t\t<dt style='font-weight: bold;'>";
-		print _("Creation Date: ");
-		print "</dt>";
-		print "\n\t\t<dd>".$date->asString()."</dd>";
+		print _("Creation Date");
+		print ":</dt>\n\t\t<dd >";
+		print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+		print "</dd>";
+	
 		if(is_object($asset->getEffectiveDate())) {
-			$date =& $asset->getEffectiveDate();
+			$date = $asset->getEffectiveDate();
 			print  "\n\t\t<dt style='font-weight: bold;'>";
-			print _("Effective Date: ");
-			print "</dt>";
-			print "\n\t\t<dd>".$date->asString()."</dd>";
+			print _("Effective Date");
+			print ":</dt>\n\t\t<dd >";
+			print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+			print "</dd>";
 		}
+		
 		if(is_object($asset->getExpirationDate())) {
-			$date =& $asset->getExpirationDate();
+			$date = $asset->getExpirationDate();
 			print  "\n\t\t<dt style='font-weight: bold;'>";
-			print _("Expiration Date: ");
-			print "</dt>";
-			print "\n\t\t<dd>".$date->asString()."</dd>";
+			print _("Expiration Date");
+			print ":</dt>\n\t\t<dd >";
+			print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+			print "</dd>";
 		}
 		print "\n\t</dl>";
 		

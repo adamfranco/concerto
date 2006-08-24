@@ -335,26 +335,57 @@ function printTargetAsset ( &$asset ) {
 	 * Asset Info
 	 *********************************************************/
 	$assetId =& $asset->getId();
-	print "\n<div>\n";
-	print "\t<strong>"._("DisplayName").":</strong>\n";
-	print "\t".$asset->getDisplayName()."\n";
-	print "\t<br />\n";
-	print "\t<strong>"._("Description").":</strong>\n";
-	print "\t".$asset->getDescription()."\n";
-	print "\t<br />\n";
-	print "\t<strong>"._("ID#").":</strong>\n";
-	print "\t".$assetId->getIdString()."\n";
-
+	print "\n\t<dl>";		
+	if ($asset->getDisplayName()) {
+		print "\n\t\t<dt style='font-weight: bold;'>"._("Title:")."</dt>";
+		print "\n\t\t<dd>".$asset->getDisplayName()."</dd>";
+	}
 	
+	if ($asset->getDescription()) {
+		$description =& HtmlString::withValue($asset->getDescription());
+		$description->clean();
+		print "\n\t\t<dt style='font-weight: bold;'>"._("Description:")."</dt>";
+		print "\n\t\t<dd>".$description->asString()."</dd>";
+	}
+	
+	print  "\n\t\t<dt style='font-weight: bold;'>";
+	print _("ID#");
+	print ":</dt>\n\t\t<dd >";
+	print $assetId->getIdString();
+	print "</dd>";
+	
+	$date = $asset->getModificationDate();
+	print  "\n\t\t<dt style='font-weight: bold;'>";
+	print _("Modification Date");
+	print ":</dt>\n\t\t<dd >";
+	print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+	print "</dd>";
+	
+	$date = $asset->getCreationDate();
+	print  "\n\t\t<dt style='font-weight: bold;'>";
+	print _("Creation Date");
+	print ":</dt>\n\t\t<dd >";
+	print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+	print "</dd>";
+
 	if(is_object($asset->getEffectiveDate())) {
-		$effectDate =& $asset->getEffectiveDate();
-		print  "\t<br />\n\t<strong>"._("Effective Date").":</strong>\n\t<em>".$effectDate->asString()."</em>\n";
+		$date = $asset->getEffectiveDate();
+		print  "\n\t\t<dt style='font-weight: bold;'>";
+		print _("Effective Date");
+		print ":</dt>\n\t\t<dd >";
+		print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+		print "</dd>";
 	}
 	
 	if(is_object($asset->getExpirationDate())) {
-		$expirationDate =& $asset->getExpirationDate();
-		print  "\t<br />\n\t<strong>"._("Expiration Date").":</strong>\n\t<em>".$expirationDate->asString()."</em>\n";
+		$date = $asset->getExpirationDate();
+		print  "\n\t\t<dt style='font-weight: bold;'>";
+		print _("Expiration Date");
+		print ":</dt>\n\t\t<dd >";
+		print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+		print "</dd>";
 	}
+	print "\n\t</dl>";
 	
 	
 	/*********************************************************

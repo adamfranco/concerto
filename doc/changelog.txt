@@ -3,6 +3,15 @@
 Name: Concerto ChangeLog
 
 
+v. 2.1.10 (2006-08-24)
+----------------------------------------------------
+		
+	* Bug Fix: Dates: Prettier printing of dates. (Adam Franco)
+		
+	* Bug Fix: AssetImporting: Fixed up text to clarify that the user should import a Zip/GZip/Tar archive. (Adam Franco)
+		
+	* Bug Fix: Thumbnails: Now if Image Magick barfs on some multi-page PDFs and generates a single black pixel as a thumbnail, it won't be saved and the nice default icon will be used instead. (Adam Franco)
+	
 v. 2.1.9 (2006-08-16)
 ----------------------------------------------------
 		

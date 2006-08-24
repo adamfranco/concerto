@@ -10,7 +10,10 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="2.1.10" date="2006-08-22">
+	<version number="2.1.10" date="2006-08-24">
+		<fix author='adam'>
+			Dates: Prettier printing of dates.
+		</fix>
 		<fix author='adam'>
 			AssetImporting: Fixed up text to clarify that the user should import
 			a Zip/GZip/Tar archive.
