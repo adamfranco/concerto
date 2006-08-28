@@ -554,18 +554,7 @@ class editAction
 				$thumbnailData = $imageProcessor->generateThumbnailData($mimeType, 
 											file_get_contents($tmpName));
 			
-			// These invalid thumbnails arise durring ImageMagick conversions
-			// in which ImageMagick creates output, but not good output
-			$invalidThumbs = array(
-				// A single black pixel (I think...)
-"/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAALCADIAMgBAREA/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBAAA/AJ/4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/9k="
-			);
-			
-			// Check that we have thumbnail data and that the generated thumbnail
-			// is not one of our known corrupted images.
-			if ($thumbnailData && (strlen($thumbnailData) > 1024 
-				|| !in_array(base64_encode($thumbnailData), $invalidThumbs))) 
-			{
+			if ($thumbnailData) {
 				$parts['THUMBNAIL_DATA']->updateValue($thumbnailData);
 				$parts['THUMBNAIL_MIME_TYPE']->updateValue($imageProcessor->getThumbnailFormat());
 			}
