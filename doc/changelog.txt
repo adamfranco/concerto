@@ -3,7 +3,7 @@
 Name: Concerto ChangeLog
 
 
-v. 2.1.10 (2006-08-24)
+v. 2.1.10 (2006-08-28)
 ----------------------------------------------------
 		
 	* Bug Fix: Dates: Prettier printing of dates. (Adam Franco)

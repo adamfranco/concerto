@@ -10,7 +10,7 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="2.1.10" date="2006-08-24">
+	<version number="2.1.10" date="2006-08-28">
 		<fix author='adam'>
 			Dates: Prettier printing of dates.
 		</fix>
