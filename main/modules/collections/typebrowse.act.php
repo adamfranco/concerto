@@ -90,7 +90,7 @@ class typebrowseAction
 		
 		// print the Results
 		$resultPrinter =& new ArrayResultPrinter($typeArray, 2, 20, "printTypeShort");
-		$resultLayout =& $resultPrinter->getLayout($harmoni);
+		$resultLayout =& $resultPrinter->getLayout();
 		$actionRows->add($resultLayout, null, null, CENTER, CENTER);
 	}
 }

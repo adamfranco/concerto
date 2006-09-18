@@ -85,7 +85,7 @@ class browsetypeAction
 		
 		// print the Results
 		$resultPrinter =& new ArrayResultPrinter($repositoryArray, 2, 20, "printrepositoryShort", $harmoni);
-		$resultLayout =& $resultPrinter->getLayout($harmoni);
+		$resultLayout =& $resultPrinter->getLayout();
 		$actionRows->add($resultLayout, null, null, CENTER, CENTER);
 	}
 }

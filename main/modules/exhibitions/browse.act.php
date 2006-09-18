@@ -130,7 +130,7 @@ class browseAction
 		// print the results
 		//***********************************
 		$resultPrinter =& new IteratorResultPrinter($assets, 1, 20, "printAssetShort", $harmoni);
-		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
+		$resultLayout =& $resultPrinter->getLayout("canView");
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 	}
 }

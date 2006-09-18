@@ -99,7 +99,7 @@ class searchresultsAction
 		// print the results
 		//***********************************
 		$resultPrinter =& new ArrayResultPrinter($assetArray, 2, 6, "printAssetShort", $harmoni);
-		$resultLayout =& $resultPrinter->getLayout($harmoni);
+		$resultLayout =& $resultPrinter->getLayout();
 		$actionRows->add($resultLayout, null, null, CENTER, CENTER);
 
 	}

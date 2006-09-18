@@ -105,7 +105,7 @@ class browseSlideshowAction
 									"printSlideShort", $this->getParams(), $assetId->getIdString());
 		$resultPrinter->setStartingNumber($this->_state['startingNumber']);
 		
-		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
+		$resultLayout =& $resultPrinter->getLayout("canView");
 		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
 		$resultLayout->setPostHTML("</form>");
 		

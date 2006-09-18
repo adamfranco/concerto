@@ -133,7 +133,7 @@ class browse_exhibitionAction
 		// print the results
 		//***********************************
 		$resultPrinter =& new ArrayResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
-		$resultLayout =& $resultPrinter->getLayout($harmoni);
+		$resultLayout =& $resultPrinter->getLayout();
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 	}
 	
