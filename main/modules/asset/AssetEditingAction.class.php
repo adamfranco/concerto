@@ -55,7 +55,9 @@ class AssetEditingAction
 	 	$this->_assets = array();
 	 	
 	 	foreach ($assetIdStrings as $idString) {
-	 		$this->_assets[] =& $repository->getAsset($idManager->getId($idString));
+	 		// ignore whitepace or empty strings
+			if (ereg('\\S+', $idString))
+	 			$this->_assets[] =& $repository->getAsset($idManager->getId($idString));
 	 	}
 	}
 	

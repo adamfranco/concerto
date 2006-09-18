@@ -59,8 +59,11 @@ class multdeleteAction
 			$idManager =& Services::getService("Id");
 			$assetIdStrings = explode(",", RequestContext::value('assets'));
 			$this->_assetIds = array();
-			foreach ($assetIdStrings as $idString)
-				$this->_assetIds[] =& $idManager->getId($idString);
+			foreach ($assetIdStrings as $idString) {
+				// ignore whitepace or empty strings
+				if (ereg('\\S+', $idString))
+					$this->_assetIds[] =& $idManager->getId($idString);
+			}
 		}
 		
 		return $this->_assetIds;
