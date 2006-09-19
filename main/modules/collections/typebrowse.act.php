@@ -90,6 +90,7 @@ class typebrowseAction
 		
 		// print the Results
 		$resultPrinter =& new ArrayResultPrinter($typeArray, 2, 20, "printTypeShort");
+		$resultPrinter->addLinksStyleProperty(new MarginTopSP("10px"));
 		$resultLayout =& $resultPrinter->getLayout();
 		$actionRows->add($resultLayout, null, null, CENTER, CENTER);
 	}

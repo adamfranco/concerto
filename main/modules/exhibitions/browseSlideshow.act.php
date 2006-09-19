@@ -104,6 +104,7 @@ class browseSlideshowAction
 									$_SESSION["assets_per_page"], 
 									"printSlideShort", $this->getParams(), $assetId->getIdString());
 		$resultPrinter->setStartingNumber($this->_state['startingNumber']);
+		$resultPrinter->addLinksStyleProperty(new MarginTopSP("10px"));
 		
 		$resultLayout =& $resultPrinter->getLayout("canView");
 		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");

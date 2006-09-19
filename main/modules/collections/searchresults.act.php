@@ -99,6 +99,7 @@ class searchresultsAction
 		// print the results
 		//***********************************
 		$resultPrinter =& new ArrayResultPrinter($assetArray, 2, 6, "printAssetShort", $harmoni);
+		$resultPrinter->addLinksStyleProperty(new MarginTopSP("10px"));
 		$resultLayout =& $resultPrinter->getLayout();
 		$actionRows->add($resultLayout, null, null, CENTER, CENTER);
 

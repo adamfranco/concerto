@@ -133,6 +133,7 @@ class browse_exhibitionAction
 		// print the results
 		//***********************************
 		$resultPrinter =& new ArrayResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
+		$resultPrinter->addLinksStyleProperty(new MarginTopSP("10px"));
 		$resultLayout =& $resultPrinter->getLayout();
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 	}

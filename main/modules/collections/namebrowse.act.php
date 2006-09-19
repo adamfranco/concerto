@@ -97,6 +97,7 @@ class namebrowseAction
 		
 		// print the Results
 		$resultPrinter =& new ArrayResultPrinter($repositoryArray, 1, 20, "printRepositoryShort", $harmoni);
+		$resultPrinter->addLinksStyleProperty(new MarginTopSP("10px"));
 		$resultLayout =& $resultPrinter->getLayout();
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 	}
