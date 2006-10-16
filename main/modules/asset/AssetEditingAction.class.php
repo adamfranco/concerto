@@ -56,7 +56,7 @@ class AssetEditingAction
 	 	
 	 	foreach ($assetIdStrings as $idString) {
 	 		// ignore whitepace or empty strings
-			if (preg_match('/\S+/', $idString))
+			if (preg_match('/\\S+/', $idString))
 	 			$this->_assets[] =& $repository->getAsset($idManager->getId($idString));
 	 	}
 	}

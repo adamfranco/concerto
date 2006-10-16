@@ -61,7 +61,7 @@ class multdeleteAction
 			$this->_assetIds = array();
 			foreach ($assetIdStrings as $idString) {
 				// ignore whitepace or empty strings
-				if (ereg('\\S+', $idString))
+				if (preg_match('/\\S+/', $idString))
 					$this->_assetIds[] =& $idManager->getId($idString);
 			}
 		}

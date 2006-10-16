@@ -12,8 +12,8 @@
 <changelog name="Concerto ChangeLog">
 	<version number="2.1.11" date="The Future">
 		<fix author='adam'>
-			AssetEditing: Multiple ID parsing now properly differentiates between 
-			empty whitespace and valid id strings.
+			AssetEditing/AssetDeleting: Multiple ID parsing now properly differentiates
+			between empty whitespace and valid id strings.
 		</fix>
 	</version>
 	<version number="2.1.10" date="2006-08-28">
