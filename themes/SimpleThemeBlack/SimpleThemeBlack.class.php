@@ -43,7 +43,10 @@ class SimpleThemeBlack extends Theme {
 	 * here.
 	 * @access public
 	 **/
-	function SimpleThemeBlack() {
+	function SimpleThemeBlack($imagePath = null) {
+		if (is_null($imagePath))
+			$imagePath = MYPATH."/themes/SimpleThemeBlack/images/";
+		
 		$this->Theme("Simple Theme", "A simple theme with rounded boxes.");
 		
 		// =====================================================================
@@ -78,10 +81,10 @@ class SimpleThemeBlack extends Theme {
 		// =====================================================================
 		// Block 2 style
 		$collection =& new CornersStyleCollection("*.block2", "block2", "Block 2", "A 2nd level block. Used for standard content");
-		$collection->setBorderUrl("TopLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_TL.gif");
-		$collection->setBorderUrl("TopRight", MYPATH."/themes/SimpleThemeBlack/images/corner_TR.gif");
-		$collection->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_BL.gif");
-		$collection->setBorderUrl("BottomRight", MYPATH."/themes/SimpleThemeBlack/images/corner_BR.gif");
+		$collection->setBorderUrl("TopLeft", $imagePath."corner_TL.gif");
+		$collection->setBorderUrl("TopRight", $imagePath."corner_TR.gif");
+		$collection->setBorderUrl("BottomLeft", $imagePath."corner_BL.gif");
+		$collection->setBorderUrl("BottomRight", $imagePath."corner_BR.gif");
 		
 		
 		$collection->addSP(new BackgroundColorSP("#bbb"));
@@ -99,10 +102,10 @@ class SimpleThemeBlack extends Theme {
 		// =====================================================================
 		// Block 3 style
 		$collection =& new CornersStyleCollection("*.block3", "block3", "Block 3", "A 3rd level block. Used for emphasized content such as Wizards.");
-		$collection->setBorderUrl("TopLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_TL.gif");
-		$collection->setBorderUrl("TopRight", MYPATH."/themes/SimpleThemeBlack/images/corner_TR.gif");
-		$collection->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_BL.gif");
-		$collection->setBorderUrl("BottomRight", MYPATH."/themes/SimpleThemeBlack/images/corner_BR.gif");
+		$collection->setBorderUrl("TopLeft", $imagePath."corner_TL.gif");
+		$collection->setBorderUrl("TopRight", $imagePath."corner_TR.gif");
+		$collection->setBorderUrl("BottomLeft", $imagePath."corner_BL.gif");
+		$collection->setBorderUrl("BottomRight", $imagePath."corner_BR.gif");
 		
 		
 		$collection->addSP(new BackgroundColorSP("#333333"));
@@ -122,10 +125,10 @@ class SimpleThemeBlack extends Theme {
 		// =====================================================================
 		// Block 4 style
 		$collection =& new CornersStyleCollection("*.block4", "block4", "Block 4", "A 4th level block. Used for alerts and highlit dialog boxes.");
-		$collection->setBorderUrl("TopLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_TL.gif");
-		$collection->setBorderUrl("TopRight", MYPATH."/themes/SimpleThemeBlack/images/corner_TR.gif");
-		$collection->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_BL.gif");
-		$collection->setBorderUrl("BottomRight", MYPATH."/themes/SimpleThemeBlack/images/corner_BR.gif");
+		$collection->setBorderUrl("TopLeft", $imagePath."corner_TL.gif");
+		$collection->setBorderUrl("TopRight", $imagePath."corner_TR.gif");
+		$collection->setBorderUrl("BottomLeft", $imagePath."corner_BL.gif");
+		$collection->setBorderUrl("BottomRight", $imagePath."corner_BR.gif");
 		
 		
 		$collection->addSP(new BackgroundColorSP("#eeeeee"));
@@ -144,10 +147,10 @@ class SimpleThemeBlack extends Theme {
 		// =====================================================================
 		// Heading 1 style
 		$collection =& new CornersStyleCollection("*.heading1", "heading1", "Heading 1", "A 1st level heading.");
-		$collection->setBorderUrl("TopLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_TL.gif");
-		$collection->setBorderUrl("TopRight", MYPATH."/themes/SimpleThemeBlack/images/corner_TR.gif");
-		$collection->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_BL.gif");
-		$collection->setBorderUrl("BottomRight", MYPATH."/themes/SimpleThemeBlack/images/corner_BR.gif");
+		$collection->setBorderUrl("TopLeft", $imagePath."corner_TL.gif");
+		$collection->setBorderUrl("TopRight", $imagePath."corner_TR.gif");
+		$collection->setBorderUrl("BottomLeft", $imagePath."corner_BL.gif");
+		$collection->setBorderUrl("BottomRight", $imagePath."corner_BR.gif");
 		
 		
 		$collection->addSP(new BackgroundColorSP("#777"));
@@ -163,10 +166,10 @@ class SimpleThemeBlack extends Theme {
 		// =====================================================================
 		// Heading 2 style
 		$collection =& new CornersStyleCollection("*.heading2", "heading2", "Heading 2", "A 2nd level heading.");
-		$collection->setBorderUrl("TopLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_TL.gif");
-		$collection->setBorderUrl("TopRight", MYPATH."/themes/SimpleThemeBlack/images/corner_TR.gif");
-		$collection->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_BL.gif");
-		$collection->setBorderUrl("BottomRight", MYPATH."/themes/SimpleThemeBlack/images/corner_BR.gif");
+		$collection->setBorderUrl("TopLeft", $imagePath."corner_TL.gif");
+		$collection->setBorderUrl("TopRight", $imagePath."corner_TR.gif");
+		$collection->setBorderUrl("BottomLeft", $imagePath."corner_BL.gif");
+		$collection->setBorderUrl("BottomRight", $imagePath."corner_BR.gif");
 		
 		
 		$collection->addSP(new BackgroundColorSP("#999"));
@@ -182,10 +185,10 @@ class SimpleThemeBlack extends Theme {
 		// =====================================================================
 		// Heading 3 style
 		$collection =& new CornersStyleCollection("*.heading3", "heading3", "Heading 3", "A 3rd level heading.");
-		$collection->setBorderUrl("TopLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_TL.gif");
-		$collection->setBorderUrl("TopRight", MYPATH."/themes/SimpleThemeBlack/images/corner_TR.gif");
-		$collection->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_BL.gif");
-		$collection->setBorderUrl("BottomRight", MYPATH."/themes/SimpleThemeBlack/images/corner_BR.gif");
+		$collection->setBorderUrl("TopLeft", $imagePath."corner_TL.gif");
+		$collection->setBorderUrl("TopRight", $imagePath."corner_TR.gif");
+		$collection->setBorderUrl("BottomLeft", $imagePath."corner_BL.gif");
+		$collection->setBorderUrl("BottomRight", $imagePath."corner_BR.gif");
 		
 		
 		$collection->addSP(new BackgroundColorSP("#aaa"));
@@ -201,10 +204,10 @@ class SimpleThemeBlack extends Theme {
 		// =====================================================================
 		// Heading 4 style
 		$collection =& new CornersStyleCollection("*.heading4", "heading4", "Heading 4", "A 4th level heading.");
-		$collection->setBorderUrl("TopLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_TL.gif");
-		$collection->setBorderUrl("TopRight", MYPATH."/themes/SimpleThemeBlack/images/corner_TR.gif");
-		$collection->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_BL.gif");
-		$collection->setBorderUrl("BottomRight", MYPATH."/themes/SimpleThemeBlack/images/corner_BR.gif");
+		$collection->setBorderUrl("TopLeft", $imagePath."corner_TL.gif");
+		$collection->setBorderUrl("TopRight", $imagePath."corner_TR.gif");
+		$collection->setBorderUrl("BottomLeft", $imagePath."corner_BL.gif");
+		$collection->setBorderUrl("BottomRight", $imagePath."corner_BR.gif");
 		
 		
 		$collection->addSP(new BackgroundColorSP("#aaa"));
@@ -221,10 +224,10 @@ class SimpleThemeBlack extends Theme {
 		// =====================================================================
 		// Header 1 style
 		$collection =& new CornersStyleCollection("*.header1", "header1", "Header 1", "A 1st level header.");
-		$collection->setBorderUrl("TopLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_TL.gif");
-		$collection->setBorderUrl("TopRight", MYPATH."/themes/SimpleThemeBlack/images/corner_TR.gif");
-		$collection->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_BL.gif");
-		$collection->setBorderUrl("BottomRight", MYPATH."/themes/SimpleThemeBlack/images/corner_BR.gif");
+		$collection->setBorderUrl("TopLeft", $imagePath."corner_TL.gif");
+		$collection->setBorderUrl("TopRight", $imagePath."corner_TR.gif");
+		$collection->setBorderUrl("BottomLeft", $imagePath."corner_BL.gif");
+		$collection->setBorderUrl("BottomRight", $imagePath."corner_BR.gif");
 		
 		
 		$collection->addSP(new BackgroundColorSP("#777"));
@@ -240,10 +243,10 @@ class SimpleThemeBlack extends Theme {
 		// =====================================================================
 		// Footer 1 style
 		$collection =& new CornersStyleCollection("*.footer1", "footer1", "Footer 1", "A 1st level footer.");
-		$collection->setBorderUrl("TopLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_TL.gif");
-		$collection->setBorderUrl("TopRight", MYPATH."/themes/SimpleThemeBlack/images/corner_TR.gif");
-		$collection->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_BL.gif");
-		$collection->setBorderUrl("BottomRight", MYPATH."/themes/SimpleThemeBlack/images/corner_BR.gif");
+		$collection->setBorderUrl("TopLeft", $imagePath."corner_TL.gif");
+		$collection->setBorderUrl("TopRight", $imagePath."corner_TR.gif");
+		$collection->setBorderUrl("BottomLeft", $imagePath."corner_BL.gif");
+		$collection->setBorderUrl("BottomRight", $imagePath."corner_BR.gif");
 		
 		$collection->addSP(new BackgroundColorSP("#777"));
 // 		$collection->addSP(new BorderSP("1px", "solid", "#000"));
@@ -259,10 +262,10 @@ class SimpleThemeBlack extends Theme {
 		// =====================================================================
 		// Menu 1 style
 		$collection =& new CornersStyleCollection("*.menu1", "menu1", "Menu 1", "A 1st level menu.");
-		$collection->setBorderUrl("TopLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_TL.gif");
-		$collection->setBorderUrl("TopRight", MYPATH."/themes/SimpleThemeBlack/images/corner_TR.gif");
-		$collection->setBorderUrl("BottomLeft", MYPATH."/themes/SimpleThemeBlack/images/corner_BL.gif");
-		$collection->setBorderUrl("BottomRight", MYPATH."/themes/SimpleThemeBlack/images/corner_BR.gif");
+		$collection->setBorderUrl("TopLeft", $imagePath."corner_TL.gif");
+		$collection->setBorderUrl("TopRight", $imagePath."corner_TR.gif");
+		$collection->setBorderUrl("BottomLeft", $imagePath."corner_BL.gif");
+		$collection->setBorderUrl("BottomRight", $imagePath."corner_BR.gif");
 		
 		$collection->addSP(new BackgroundColorSP("#eeeeee"));
 		$collection->addSP(new ColorSP("#000"));

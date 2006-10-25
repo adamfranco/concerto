@@ -216,7 +216,7 @@ class displayAction
 				."\n\t\t<link rel='alternate' type='application/rss+xml'"
 				." title='".$title."' href='".$url."'/>");
 			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
-			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."icons/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: newest");
 			print "\n\t\t</a><br/>";
 			
@@ -230,7 +230,7 @@ class displayAction
 				."\n\t\t<link rel='alternate' type='application/rss+xml'"
 				." title='".$title."' href='".$url."'/>");
 			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
-			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."icons/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: recently updated");
 			print "\n\t\t</a>";
 			print "\n</div>";
@@ -247,7 +247,7 @@ class displayAction
 				."\n\t\t<link rel='alternate' type='application/rss+xml'"
 				." title='".$title."' href='".$url."'/>");
 			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
-			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."icons/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: all newest");
 			print "\n\t\t</a><br/>";
 			
@@ -260,7 +260,7 @@ class displayAction
 				."\n\t\t<link rel='alternate' type='application/rss+xml'"
 				." title='".$title."' href='".$url."'/>");
 			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
-			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."icons/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: all recently updated");
 			print "\n\t\t</a>";
 			print "\n</div>";
@@ -280,7 +280,7 @@ class displayAction
 				."\n\t\t<link rel='alternate' type='application/rss+xml'"
 				." title='".$title."' href='".$url."'/>");
 			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
-			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."icons/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: newest");
 			print "\n\t\t</a><br/>";
 			
@@ -293,7 +293,7 @@ class displayAction
 				."\n\t\t<link rel='alternate' type='application/rss+xml'"
 				." title='".$title."' href='".$url."'/>");
 			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
-			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."icons/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: recently updated");
 			print "\n\t\t</a>";
 			print "\n</div>";
@@ -310,7 +310,7 @@ class displayAction
 				."\n\t\t<link rel='alternate' type='application/rss+xml'"
 				." title='".$title."' href='".$url."'/>");
 			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
-			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."icons/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: all newest");
 			print "\n\t\t</a><br/>";
 			
@@ -322,7 +322,7 @@ class displayAction
 				."\n\t\t<link rel='alternate' type='application/rss+xml'"
 				." title='".$title."' href='".$url."'/>");
 			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
-			print "\n\t\t\t<img src='".POLYPHONY_PATH."main/library/AbstractActions/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."icons/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
 			print "\n\t\t\t"._("RSS: all recently updated");
 			print "\n\t\t</a>";
 			print "\n</div>";

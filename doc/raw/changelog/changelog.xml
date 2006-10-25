@@ -15,6 +15,10 @@
 			AssetEditing/AssetDeleting: Multiple ID parsing now properly differentiates
 			between empty whitespace and valid id strings.
 		</fix>
+		<change author='adam'>
+			Polyphony icons have now been moved to their own directory for easier 
+			access when keeping polyphony installed in a non-web-accessible directory.
+		</change>
 	</version>
 	<version number="2.1.10" date="2006-08-28">
 		<fix author='adam'>
