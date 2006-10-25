@@ -3,6 +3,15 @@
 Name: Concerto ChangeLog
 
 
+v. 2.1.11 (2006-10-25)
+----------------------------------------------------
+		
+	* Bug Fix: AssetEditing/AssetDeleting: Multiple ID parsing now properly differentiates between empty whitespace and valid id strings. (Adam Franco)
+		
+	* Change: Polyphony icons have now been moved to their own directory for easier access when keeping polyphony installed in a non-web-accessible directory. (Adam Franco)
+		
+	* Change: SimpleThemeBlack: The image path is now configurable to allow for Concerto installation outside of a web-accessible directory. (Adam Franco)
+	
 v. 2.1.10 (2006-08-28)
 ----------------------------------------------------
 		
