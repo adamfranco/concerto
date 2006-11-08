@@ -82,6 +82,7 @@ $configs = array(
 					'authorization',
 					'datamanager',
 					'repository',
+					'tagging',
 					'post_config_setup',
 					'viewer'
 				);

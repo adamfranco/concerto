@@ -46,6 +46,7 @@ if (!isset($_SESSION['table_setup_complete'])) {
 			HARMONI_BASE."/SQL/logging/MySQL_Logging.sql",
 			HARMONI_BASE."/SQL/sets/MySQL_sets.sql",
 			HARMONI_BASE."/SQL/shared/MySQL_shared.sql",
+			HARMONI_BASE."/SQL/Tagging/MySQL_Tagging.sql",
 		);
 		
 		foreach ($sqlFiles as $file) {
