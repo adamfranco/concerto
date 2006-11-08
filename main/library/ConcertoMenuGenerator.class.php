@@ -153,7 +153,25 @@ class ConcertoMenuGenerator
 				$this->addSlideshowHierarchy($mainMenu, $slideshowAssetId, false);
 			}
 		}
-	
+		
+		
+	// :: Tagging ::
+		$mainMenu_item1 =& new MenuItemLink(
+			_("Tags"), 
+			$harmoni->request->quickURL("tags", "all"), 
+			($module == "tags" && $action == "all")?TRUE:FALSE, 1);
+		$mainMenu->add($mainMenu_item1, "100%", null, LEFT, CENTER);
+		
+		$tagManager =& Services::getService("Tagging");
+		if ($currentUserIdString = $tagManager->getCurrentUserIdString()) {
+			$harmoni->request->startNamespace("polyphony-tags");
+			$mainMenu_item1 =& new MenuItemLink(
+				_("Your Tags"), 
+				$harmoni->request->quickURL("tags", "user", array('agent_id' => $currentUserIdString)), 
+				($module == "tags" && $action == "user" && RequestContext::value('agent_id') == $currentUserIdString)?TRUE:FALSE, 1);
+			$mainMenu->add($mainMenu_item1, "100%", null, LEFT, CENTER);
+			$harmoni->request->endNamespace();
+		}
 	
 		return $mainMenu;
 	}
