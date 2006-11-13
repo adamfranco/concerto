@@ -215,6 +215,12 @@ class browseAction
 		$harmoni =& Harmoni::instance();
 		$harmoni->request->passthrough("collection_id");
 		$harmoni->request->passthrough("asset_id");
+		
+		// Add the tagging manager script to the header
+		$outputHandler =& $harmoni->getOutputHandler();
+		$outputHandler->setHead($outputHandler->getHead()
+			."\n\t\t<script type='text/javascript' src='".POLYPHONY_PATH."javascript/Tagger.js'></script>"
+			."\n\t\t<link rel='stylesheet' type='text/css' href='".POLYPHONY_PATH."javascript/Tagger.css' />");
 	}
 	
 	/**
@@ -802,7 +808,23 @@ function printAssetShort(& $asset, $params, $num) {
 	if ($_SESSION["show_description"] == 'true') {
 		$description =& HtmlString::withValue($asset->getDescription());
 		$description->trim(25);
-		print  "\n\t<div style='font-size: smaller; height: 50px; overflow: auto;'>".$description->asString()."</div>";	
+		print  "\n\t<div style='font-size: smaller; height: 50px; overflow: auto;'>".$description->asString()."</div>";
+		
+		// Tags
+		$harmoni->request->startNamespace("polyphony-tags");
+		$tagManager =& Services::getService("Tagging");
+		$item =& TaggedItem::forId($assetId, 'concerto');
+		$tags =& $item->getTags();
+		print "\n\t<div style='font-size: smaller; height: 50px; overflow: auto;'>";
+// 		print "\n\t\t<strong>"._("Tags: ")."</strong>";
+		while ($tags->hasNext()) {
+			$tag =& $tags->next();
+			$url = $harmoni->request->quickUrl('tags', 'view', array('tag' => $tag->getValue()));
+			print "<a href='".$url."' title=\""._("View items tagged with ")."'".$tag->getValue()."'\">".$tag->getValue()."</a> ";
+		}
+		print "\n\t\t<strong><a onclick=\"Tagger.run('".$assetId->getIdString()."', 'concerto', this);\" title='"._("Add a Tag")."'>"._("+Tag")."</a></strong>";
+		print "\n\t</div>";
+		$harmoni->request->endNamespace();
 	}
 	
 	$component =& new UnstyledBlock(ob_get_contents());

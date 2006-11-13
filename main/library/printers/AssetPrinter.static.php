@@ -131,7 +131,7 @@ class AssetPrinter {
 					"asset_id" => $assetId->getIdString()))."'>";
 				$links[count($links) - 1] .= _("Details")."</a>";
 			} else
-				$links[] = _("details");
+				$links[] = _("Details");
 		//===== Export Link =====//
 // 			if (ereg("^asset\..*$", $actionString) && 
 // 					$harmoni->request->get("asset_id") == 
@@ -160,7 +160,7 @@ class AssetPrinter {
 						"asset_id" => $assetId->getIdString()))."'>";
 					$links[count($links) - 1] .= _("Browse")."</a>";
 				} else
-					$links[] = _("browse");
+					$links[] = _("Browse");
 			}
 		}
 	//===== Edit Link =====//	

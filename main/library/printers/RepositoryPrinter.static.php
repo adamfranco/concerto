@@ -150,26 +150,6 @@ class RepositoryPrinter {
 		if ($canEditStructures) {
 			// Schema Editing
 			ob_start();
-			print<<<END
-
-<script type='text/javascript'>
-/* <![CDATA[ */
-
-	/**
-	 * Replace '&amp;' in URLs with '&'
-	 * 
-	 * @return string
-	 * @access public
-	 * @since 6/12/06
-	 */
-	String.prototype.urlDecodeAmpersands = function () {
-		return this.replace(/&amp;/, '&');
-	}
-
-/* ]]> */
-</script>
-		
-END;
 			print "\n<select";
 			print " onchange=\"var url = '";
 			print $harmoni->request->quickURL(
