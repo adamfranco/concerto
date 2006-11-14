@@ -14,6 +14,7 @@ require_once(HARMONI."GUIManager/StyleProperties/MinHeightSP.class.php");
 require_once(HARMONI."/Primitives/Collections-Text/HtmlString.class.php");
 require_once(POLYPHONY."/main/library/RepositorySearchModules/RepositorySearchModuleManager.class.php");
 require_once(HARMONI."oki2/shared/MultiIteratorIterator.class.php");
+require_once(POLYPHONY."/main/modules/tags/TagAction.abstract.php");
 
 
 /**
@@ -811,20 +812,12 @@ function printAssetShort(& $asset, $params, $num) {
 		print  "\n\t<div style='font-size: smaller; height: 50px; overflow: auto;'>".$description->asString()."</div>";
 		
 		// Tags
-		$harmoni->request->startNamespace("polyphony-tags");
-		$tagManager =& Services::getService("Tagging");
-		$item =& TaggedItem::forId($assetId, 'concerto');
-		$tags =& $item->getTags();
 		print "\n\t<div style='font-size: smaller; height: 50px; overflow: auto;'>";
-// 		print "\n\t\t<strong>"._("Tags: ")."</strong>";
-		while ($tags->hasNext()) {
-			$tag =& $tags->next();
-			$url = $harmoni->request->quickUrl('tags', 'view', array('tag' => $tag->getValue()));
-			print "<a href='".$url."' title=\""._("View items tagged with ")."'".$tag->getValue()."'\">".$tag->getValue()."</a> ";
-		}
-		print "\n\t\t<strong><a onclick=\"Tagger.run('".$assetId->getIdString()."', 'concerto', this);\" title='"._("Add a Tag")."'>"._("+Tag")."</a></strong>";
+		print TagAction::getTagCloudForItem(TaggedItem::forId($assetId, 'concerto'), 'view',
+				array(	'font-size: 90%;',
+						'font-size: 100%;',
+				));
 		print "\n\t</div>";
-		$harmoni->request->endNamespace();
 	}
 	
 	$component =& new UnstyledBlock(ob_get_contents());
