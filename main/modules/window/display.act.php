@@ -335,6 +335,22 @@ class displayAction
 			$menuColumn->add(AssetPrinter::getMultiEditOptionsBlock(), "100%", null, LEFT, TOP);
 		$menuColumn->add($basket->getSmallBasketBlock(EMPHASIZED_BLOCK), "100%", null, LEFT, TOP);
 		
+		// Collection Tags
+		if (ereg("^(collection|asset|tags)\.", $harmoni->getCurrentAction())
+			&& $this->getCurrentRepository()) 
+		{
+			$harmoni->request->passthrough("collection_id");
+			$harmoni->request->passthrough("asset_id");
+			$menuColumn->add(
+				new Block(
+					"<strong>"._("Tags in this Collection: ")."</strong>"
+					.TagAction::getTagCloudForRepository($this->getCurrentRepository(), 'concerto'), 
+					EMPHASIZED_BLOCK),
+				"100%", null, LEFT, TOP);
+			$harmoni->request->forget("collection_id");
+			$harmoni->request->forget("asset_id");
+		}
+		
 	// :: Footer ::
 		$footer =& new Container (new XLayout, FOOTER, 1);
 		
@@ -369,7 +385,33 @@ class displayAction
 		$mainScreen->add($footer, "100%", null, RIGHT, BOTTOM);
 
 		return $mainScreen;
-	}	
+	}
+	
+	/**
+	 * Answer the current repositoryId
+	 * 
+	 * @return object Repository
+	 * @access public
+	 * @since 11/14/06
+	 */
+	function &getCurrentRepository () {
+		if (!isset($this->_currentRepository)) {
+			$idManager =& Services::getService('Id');
+			if (RequestContext::value('collection_id')) {
+				$id =& $idManager->getId(RequestContext::value('collection_id'));
+				$repositoryManager =& Services::getService('Repository');
+				$this->_currentRepository =& $repositoryManager->getRepository($id);
+			} else if (RequestContext::value('asset_id')) {
+				$repositoryManager =& Services::getService('Repository');
+				$asset =& $repositoryManager->getAsset(
+					$idManager->getId(RequestContext::value('asset_id')));
+				$this->_currentRepository =& $asset->getRepository();
+			} else {
+				$this->_currentRepository = null;
+			}
+		}
+		return $this->_currentRepository;	
+	}
 }
 
 ?>

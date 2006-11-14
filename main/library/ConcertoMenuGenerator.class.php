@@ -59,9 +59,12 @@ class ConcertoMenuGenerator
 		
 		// Collection browse links.
 		// Just show if we are not in a particular collection.
-		if (ereg("collection(s)?|asset|basket", $module)) {			
+		if (ereg("collection(s)?|asset|basket|tags", $module)) {			
 			// Collection root
-			if (ereg("^(collection|asset|basket)$", $module)) {
+			if (ereg("^(collection|asset|basket|tags)$", $module)
+				&& ($harmoni->request->get('collection_id') ||
+					$harmoni->request->get('asset_id'))) 
+			{
 				// Repository Link
 				$repository =& $this->getRepository();
 				if ($repository)
