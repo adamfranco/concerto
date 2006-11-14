@@ -32,7 +32,30 @@
 	$configuration->addProperty('Systems', $systems);
 	Services::startManagerAsService("TagManager", $context, $configuration);
 
+	define('POLYPHONY_TAGGEDITEM_PRINTING_CALLBACK', 'concertoPrintTaggedItem');
 
+
+/**
+ * Print out an Item
+ * 
+ * @param object $item
+ * @return object GuiComponent
+ * @access public
+ * @since 11/8/06
+ */
+function concertoPrintTaggedItem ( &$item, $viewAction) {
+	printTaggedItem($item, $viewAction);
+	
+	if ($item->getSystem() != ARBITRARY_URL) {
+		print "<p style='font-size: small;'>";
+		print "<a ";
+		print " style='cursor: pointer;'";
+		print " onclick='Basket.addAssets(new Array(\"".$item->getIdString()."\"));'";
+		print ">"._('+ Selection');
+		print "</a>";
+		print "</p>";
+	}
+}
 
 /**
  * Answer the url for a node of a give Id.
