@@ -812,7 +812,7 @@ function printAssetShort(& $asset, $params, $num) {
 		print  "\n\t<div style='font-size: smaller; height: 50px; overflow: auto;'>".$description->asString()."</div>";
 		
 		// Tags
-		print "\n\t<div style='font-size: smaller; height: 50px; overflow: auto;'>";
+		print "\n\t<div style='font-size: smaller; height: 50px; overflow: auto; text-align: justify;'>";
 		print TagAction::getTagCloudForItem(TaggedItem::forId($assetId, 'concerto'), 'view',
 				array(	'font-size: 90%;',
 						'font-size: 100%;',

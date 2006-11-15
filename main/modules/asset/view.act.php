@@ -10,6 +10,7 @@
 
 require_once(MYDIR."/main/library/abstractActions/AssetAction.class.php");
 require_once(HARMONI."/Primitives/Collections-Text/HtmlString.class.php");
+require_once(POLYPHONY."/main/modules/tags/TagAction.abstract.php");
 
 /**
  * 
@@ -146,11 +147,23 @@ class viewAction
 			print "</dd>";
 		}
 		print "\n\t</dl>";
-
-	
-		$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
-		ob_end_clean();
-		$contentCols->add($layout, "100%", null, LEFT, CENTER);
+		
+		$contentCols->add(new Block(ob_get_clean(), STANDARD_BLOCK), "60%", null, LEFT, TOP);
+		
+		
+		// Add the tagging manager script to the header
+		$outputHandler =& $harmoni->getOutputHandler();
+		$outputHandler->setHead($outputHandler->getHead()
+			."\n\t\t<script type='text/javascript' src='".POLYPHONY_PATH."javascript/Tagger.js'></script>"
+			."\n\t\t<link rel='stylesheet' type='text/css' href='".POLYPHONY_PATH."javascript/Tagger.css' />");
+		
+		// Tags
+		ob_start();
+		print "\n\t<div style='font-weight: bold; margin-bottom: 10px;'>"._("Tags given to this Asset: ")."</div>";
+		print "\n\t<div style=' text-align: justify;'>";
+		print TagAction::getTagCloudForItem(TaggedItem::forId($assetId, 'concerto'), 'view');
+		print "\n\t</div>";
+		$contentCols->add(new Block(ob_get_clean(), STANDARD_BLOCK), "40%", null, LEFT, TOP);
 		
 		
 		//***********************************
