@@ -11,6 +11,7 @@
 require_once(POLYPHONY."/main/library/AbstractActions/Action.class.php");
 require_once(POLYPHONY."/main/library/Basket/Basket.class.php");
 require_once(DOMIT);
+require_once(POLYPHONY."/main/modules/tags/TagAction.abstract.php");
 
 /**
  * build the frame of the window

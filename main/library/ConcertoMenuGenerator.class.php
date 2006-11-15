@@ -67,15 +67,20 @@ class ConcertoMenuGenerator
 			{
 				// Repository Link
 				$repository =& $this->getRepository();
-				if ($repository)
+				if ($repository) {
 					$linkTitle = $repository->getDisplayName();
-				else
+					$repositoryId =& $repository->getId();
+				} else {
 					$linkTitle = _("Collection");
+					$repositoryId = null;
+				}
+					
+				
 				$mainMenu->add(
 					new MenuItemLink(
 						$linkTitle,
 						$harmoni->request->quickURL("collection", "browse",
-							array('collection_id' => $harmoni->request->get('collection_id'))),
+							array('collection_id' => $repositoryId->getIdString())),
 						($module == "collection")?TRUE:FALSE, 2), 
 					"100%", null, LEFT, CENTER);
 					
@@ -93,7 +98,8 @@ class ConcertoMenuGenerator
 							new MenuItemLink(
 								$assets[$i]->getDisplayName(),
 								$harmoni->request->quickURL("asset", "browseAsset",
-									array('asset_id' => $assetId->getIdString())),
+									array('collection_id' => $repositoryId->getIdString(),
+										'asset_id' => $assetId->getIdString())),
 								($module == "asset")?TRUE:FALSE, $j+3), 
 							"100%", null, LEFT, CENTER);
 						$j++;
