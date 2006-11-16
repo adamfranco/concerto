@@ -176,9 +176,21 @@ class browseAssetAction
 		
 		
 		$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($assetId);
-	if ($thumbnailURL !== FALSE) {
+		if ($thumbnailURL !== FALSE) {
 			print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' align='right' />";
 		}
+		
+		// Add the tagging manager script to the header
+		$outputHandler =& $harmoni->getOutputHandler();
+		$outputHandler->setHead($outputHandler->getHead()
+			."\n\t\t<script type='text/javascript' src='".POLYPHONY_PATH."javascript/Tagger.js'></script>"
+			."\n\t\t<link rel='stylesheet' type='text/css' href='".POLYPHONY_PATH."javascript/Tagger.css' />");
+		
+		// Tags
+		print "\n\t<div style='font-weight: bold; margin-bottom: 10px; text-align: left;'>"._("Tags given to this Asset: ")."</div>";
+		print "\n\t<div style=' text-align: justify;'>";
+		print TagAction::getTagCloudForItem(TaggedItem::forId($assetId, 'concerto'), 'view');
+		print "\n\t</div>";
 		
 		print "\n</td></tr></table>";
 // 		print "\n\t<hr/>";
