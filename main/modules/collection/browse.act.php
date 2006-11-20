@@ -216,12 +216,6 @@ class browseAction
 		$harmoni =& Harmoni::instance();
 		$harmoni->request->passthrough("collection_id");
 		$harmoni->request->passthrough("asset_id");
-		
-		// Add the tagging manager script to the header
-		$outputHandler =& $harmoni->getOutputHandler();
-		$outputHandler->setHead($outputHandler->getHead()
-			."\n\t\t<script type='text/javascript' src='".POLYPHONY_PATH."javascript/Tagger.js'></script>"
-			."\n\t\t<link rel='stylesheet' type='text/css' href='".POLYPHONY_PATH."javascript/Tagger.css' />");
 	}
 	
 	/**
