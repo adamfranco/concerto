@@ -324,6 +324,12 @@ class editAction
 			$property->setEnabled(false, true);
 		
 		
+		$property =& $multField->addComponent(
+			"autoGenTags", 
+			new WCheckBox());
+// 		$property->setChecked(false);
+		$property->setLabel(_("yes"));
+		
 		ob_start();
 
 		print "\n<table border=\"0\">";
@@ -366,10 +372,18 @@ class editAction
 // 			print "\n</td></tr>";
 
 			print "\n<tr><td>";
+				print _("Auto-generate tags from values?");
+			print "\n</td><td>";
+				print "[[autoGenTags]]";
+			print "\n</td></tr>";
+
+			print "\n<tr><td>";
 				print _("Authoritative Values: ");
 			print "\n</td><td>";
 				print "[[authoritative_values]]";
 			print "\n</td></tr>";
+			
+			
 			
 			print "</table>";
 		
@@ -433,7 +447,9 @@ class editAction
 			$collection['authoritative_values'] .= "\n";
 		}
 		
-		
+		$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+		$collection['autoGenTags'] = $tagGenerator->shouldGenerateTagsForPartStructure(
+			$partStructure->getRepositoryId(), $partStructureId);
 			
 		// Allow conversion of the type if the user is authorized to convert_rec_structs
 		$authZManager =& Services::getService("AuthZ");
@@ -601,6 +617,14 @@ class editAction
 					}
 				//}
 				
+				// Auto-generation of tags
+				$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+				if ($partStructProps['autoGenTags']) {
+					$tagGenerator->addPartStructureIdForTagGeneration($partStruct->getRepositoryId(), $partStructId);
+				} else {
+					$tagGenerator->removePartStructureIdForTagGeneration($partStruct->getRepositoryId(), $partStructId);
+				}
+				
 				// Order of part structures
 				if (!$set->isInSet($partStructId))
 					$set->addItem($partStructId);
@@ -675,6 +699,7 @@ class editAction
 		return $harmoni->history->getReturnURL(
 				"concerto/schema/edit-return/".$recordStructureId->getIdString());
 	}
+	
 }
 
 /**

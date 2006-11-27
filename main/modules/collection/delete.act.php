@@ -83,6 +83,18 @@ class deleteAction
 		
 		$displayName = $repository->getDisplayName();
 		
+		
+		// Delete all of the tags for the assets in the repository
+		$itemsToDelete = array();
+		$assets =& $repository->getAssets();
+		while ($assets->hasNext()) {
+			$asset =& $assets->next();
+			$itemsToDelete[] =& TaggedItem::forId($asset->getId(), 'concerto');
+		}
+		$tagManager =& Services::getService('Tagging');
+		$tagManager->deleteItems($itemsToDelete, 'concerto');
+		
+		
 		$repositoryManager->deleteRepository(
 			$idManager->getId(RequestContext::value('collection_id')));
 

@@ -833,6 +833,10 @@ class editAction
 		$idManager =& Services::getService("Id");
 		$exisistingRecords = array();
 		
+		// Create an array of new tag values;
+		$assetId =& $asset->getId();
+		$this->_newStructuredTagValues[$assetId->getIdString()] = array();
+		
 		foreach (array_keys($results[$recStructIdString]['records']) as $i) {
 			$recordResults =& $results[$recStructIdString]['records'][$i];
 			if ($recordResults['record_id']) {
@@ -846,7 +850,7 @@ class editAction
 			$exisistingRecords[] = $recordId->getIdString();
 			
 			$this->updateRecord($recordResults, 
-				$initialState[$recStructIdString]['records'][$i], $record);
+				$initialState[$recStructIdString]['records'][$i], $record, $asset->getId());
 		}
 		
 		// Delete any records that were removed.
@@ -865,12 +869,13 @@ class editAction
 	 * @param array $results, the wizard results
 	 * @param array $initialState, the initial wizard results
 	 * @param object Record $record
+	 * @param object Id $assetId
 	 * @return void
 	 * @access public
 	 * @since 10/24/05
 	 */
 	function updateSingleValuedPart (&$partResults, &$partInitialState, 
-		&$partStruct, &$record) 
+		&$partStruct, &$record, $assetId) 
 	{	
 // 		print "<hr/>";
 // 		print "PartResults: ";
@@ -905,6 +910,14 @@ class editAction
 					$part =& $record->createPart($partStructId, $value);
 				}
 			}
+			
+			// Add this value to the Structured Tags list for this asset.
+			$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+			if ($tagGenerator->shouldGenerateTagsForPartStructure(
+					$partStruct->getRepositoryId(), $partStructId))
+			{
+				$this->_newStructuredTagValues[$assetId->getIdString()][] = $value->asString();
+			}
 		}
 		// If we aren't passed a value, then the user didn't enter a value
 		// or deleted the one that was there.
@@ -929,12 +942,13 @@ class editAction
 	 * @param array $results, the wizard results
 	 * @param array $initialState, the initial wizard results
 	 * @param object Record $record
+	 * @param object Id $assetId
 	 * @return void
 	 * @access public
 	 * @since 10/24/05
 	 */
 	function updateRepeatablePart (&$partResults, &$partInitialState, 
-		&$partStruct, &$record) 
+		&$partStruct, &$record, &$assetId) 
 	{
 		$partStructId = $partStruct->getId();
 		$partValsHandled = array();
@@ -968,6 +982,14 @@ class editAction
 			$partId =& $part->getId();
 			printpre("\tIgnoring Part: Id: ".$partId->getIdString()." Value: ".$partStrVal);
 			
+			// Add this value to the Structured Tags list for this asset.
+			$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+			if ($tagGenerator->shouldGenerateTagsForPartStructure(
+					$partStruct->getRepositoryId(), $partStructId))
+			{
+				$this->_newStructuredTagValues[$assetId->getIdString()][] = $partStrVal;
+			}
+			
 			continue;
 		}
 		
@@ -997,6 +1019,14 @@ class editAction
 					
 					$partId =& $part->getId();
 					printpre("\tAdding Part: Id: ".$partId->getIdString()." Value: ".$valueStr);
+					
+					// Add this value to the Structured Tags list for this asset.
+					$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+					if ($tagGenerator->shouldGenerateTagsForPartStructure(
+							$partStruct->getRepositoryId(), $partStructId))
+					{
+						$this->_newStructuredTagValues[$assetId->getIdString()][] = $valueStr;
+					}
 				}
 			}
 		}

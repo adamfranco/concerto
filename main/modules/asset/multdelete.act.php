@@ -126,8 +126,14 @@ class multdeleteAction
 			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
 							"Normal events.");
 		}
+		
+		$itemsToDelete = array();
 		foreach ($this->getAssetIds() as $id) {
 			$asset =& $repository->getAsset($id);
+			
+			// Record the Tagged item to delete.
+			$itemsToDelete[] =& TaggedItem::forId($id, 'concerto');
+			
 			if (isset($log)) {
 				$item =& new AgentNodeEntryItem("Delete Node", 
 					"Asset deleted:\n<br/>&nbsp; &nbsp; &nbsp;".$asset->getDisplayName());
@@ -137,6 +143,10 @@ class multdeleteAction
 			}
 			$repository->deleteAsset($id);
 		}
+		
+		// Remove this asset from the tagging manager
+		$tagManager =& Services::getService('Tagging');
+		$tagManager->deleteItems($itemsToDelete, 'concerto');
 		
 		$harmoni->history->goBack("concerto/asset/delete-return");
 	}

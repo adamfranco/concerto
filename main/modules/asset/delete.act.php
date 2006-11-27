@@ -87,6 +87,10 @@ class deleteAction
 					RequestContext::value('collection_id')));
 		$asset =& $repository->getAsset(
 			$idManager->getId(RequestContext::value('asset_id')));
+			
+		// Remove this asset from the tagging manager
+		$tagManager =& Services::getService('Tagging');
+		$tagManager->deleteItems(TaggedItem::forId($asset->getId(), 'concerto'));
 		
 		// Log the action
 		if (Services::serviceRunning("Logging")) {
