@@ -12,6 +12,8 @@
 require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
 require_once(POLYPHONY."/main/library/Importer/XMLImporters/XMLRepositoryImporter.class.php");
 require_once(POLYPHONY."/main/library/RepositoryImporter/FilesOnlyRepositoryImporter.class.php");
+require_once(POLYPHONY."/main/library/RepositoryImporter/ExifRepositoryImporter.class.php");
+
 
 /**
  * Imports assets into a collection in concerto
@@ -228,6 +230,8 @@ class importAction extends MainWindowAction {
 		$repository =& $repositoryManager->getRepository(
 					$idManager->getId($harmoni->request->get('collection_id')));
 		
+		$startTime =& DateAndTime::now();
+		
 //===== Exif and Tab-Delim Importers are special =====//
 		if ($properties['file_type'] == "Tab-Delimited") 
 			$importer =& new TabRepositoryImporter($newName, $repository->getId(), false);
@@ -257,7 +261,7 @@ class importAction extends MainWindowAction {
 					$harmoni->request->get('collection_id'))), $newName,
 					$properties['import_type']);
 			$importer->parseAndImportBelow("asset", 100);
-		}		
+		}
 		if ($importer->hasErrors()) {
 		// something happened so tell the end user
 			$importer->printErrorMessages();
@@ -266,6 +270,29 @@ class importAction extends MainWindowAction {
 			ob_end_clean();
 			return FALSE;
 		}
+		
+		// Update any newly modified assets' tags
+		$searchProperties =& new HarmoniProperties(
+					new Type("repository", "harmoni", "order"));
+		$searchProperties->addProperty("order", $order = "ModificationDate");
+		$searchProperties->addProperty("direction", $direction = "DESC");
+		$assets =& $repository->getAssetsBySearch(
+				$criteria = '*',
+				new Type("Repository", "edu.middlebury.harmoni", "DisplayName"),
+				$searchProperties);
+				
+		$systemAgentId =& $idManager->getId('system:concerto');
+		$tagGenerator =& StructuredMetaDataTagGenerator::instance();	
+		
+		while ($assets->hasNext()) {
+			$asset =& $assets->next();
+			if ($startTime->isGreaterThan($asset->getModificationDate()))
+				break;
+			
+			$tagGenerator->regenerateTagsForAsset($asset, $systemAgentId,
+			'concerto', $repository->getId());
+		}
+		
 		// clean and clear
 		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();
