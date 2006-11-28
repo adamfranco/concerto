@@ -534,6 +534,7 @@ class editAction
 
 			// Update the existing part structures
 			$i = 0;
+			$regenTags = false;
 			$existingPartStructureIds = array();
 			foreach (array_keys($properties['elementstep']['elements']) as $index) {
 				$partStructProps =& $properties['elementstep']['elements'][$index];
@@ -620,9 +621,15 @@ class editAction
 				// Auto-generation of tags
 				$tagGenerator =& StructuredMetaDataTagGenerator::instance();
 				if ($partStructProps['autoGenTags']) {
-					$tagGenerator->addPartStructureIdForTagGeneration($partStruct->getRepositoryId(), $partStructId);
+					if (!$tagGenerator->shouldGenerateTagsForPartStructure($partStruct->getRepositoryId(), $partStructId)) {
+						$tagGenerator->addPartStructureIdForTagGeneration($partStruct->getRepositoryId(), $partStructId);
+						$regenTags = true;
+					}
 				} else {
-					$tagGenerator->removePartStructureIdForTagGeneration($partStruct->getRepositoryId(), $partStructId);
+					if ($tagGenerator->shouldGenerateTagsForPartStructure($partStruct->getRepositoryId(), $partStructId)) {
+						$tagGenerator->removePartStructureIdForTagGeneration($partStruct->getRepositoryId(), $partStructId);
+						$regenTags = true;
+					}
 				}
 				
 				// Order of part structures
@@ -662,6 +669,13 @@ class editAction
 							$set->removeItem($partStructId);
 					}
 				}
+			}
+			
+			if ($regenTags) {
+				$systemAgentId =& $idManager->getId('system:concerto');
+				$tagGenerator =& StructuredMetaDataTagGenerator::instance();	
+				$tagGenerator->regenerateTagsForRepository($partStruct->getRepositoryId(), $systemAgentId,
+					'concerto');
 			}
 			
 			// Log the success or failure
