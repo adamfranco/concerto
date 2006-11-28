@@ -102,6 +102,6 @@ class regenStructuredTagsAction
 		}
 		
 		RequestContext::sendTo(
-			$harmoni->request->quickURL("collections", "namebrowse"));
+			$harmoni->request->quickURL("collection", "browse", array('collection_id' => RequestContext::value('collection_id'))));
 	}
 }
