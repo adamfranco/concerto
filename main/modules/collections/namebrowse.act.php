@@ -98,14 +98,15 @@ class namebrowseAction
 		// print the Results
 		$resultPrinter =& new ArrayResultPrinter($repositoryArray, 1, 20, "printRepositoryShort", $harmoni);
 		$resultPrinter->addLinksStyleProperty(new MarginTopSP("10px"));
-		$resultLayout =& $resultPrinter->getLayout();
+		$resultLayout =& $resultPrinter->getLayout('canView');
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 	}
 }
 
 
 // Callback function for printing Repositories
-function printRepositoryShort(& $repository, & $harmoni) {
+function printRepositoryShort(& $repository) {
+	$harmoni =& Harmoni::instance();
 	ob_start();
 	
 	$repositoryId =& $repository->getId();
@@ -122,6 +123,20 @@ function printRepositoryShort(& $repository, & $harmoni) {
 	$layout->add($layout2, null, null, CENTER, CENTER);
 	ob_end_clean();
 	return $layout;
+}
+
+// Callback function for checking authorizations
+function canView( &$item ) {
+	$authZ =& Services::getService("AuthZ");
+	$idManager =& Services::getService("Id");
+	
+	if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $item->getId())
+		|| $authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $item->getId()))
+	{
+		return TRUE;
+	} else {
+		return FALSE;
+	}
 }
 
 ?>
