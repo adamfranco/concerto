@@ -169,7 +169,7 @@ class createAction
 		// the RecordStructure is actually created.
 		$recordStructures =& $repository->getRecordStructures();
 		if (!$recordStructures->hasNext())
-			throwError(new Error("No RecordStructures availible.", "Concerto"));
+			throwError(new Error("No RecordStructures available.", "Concerto"));
 			
 		$dmpType =& new Type("RecordStructures", "edu.middlebury.harmoni", "DataManagerPrimatives", "RecordStructures stored in the Harmoni DataManager.");
 		$orderedTypes = array(
