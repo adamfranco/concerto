@@ -3,6 +3,17 @@
 Name: Concerto ChangeLog
 
 
+v. 2.1.12 (2006-11-28)
+----------------------------------------------------
+		
+	* New feature: Tagging: Added support for Tagging. (Adam Franco)
+		
+	* Bug Fix: Collections: Now checks authZ before showing collections in the list. (Adam Franco)
+		
+	* Bug Fix: Collections: The collection id was being dropped when viewing assets directly. (Adam Franco)
+		
+	* Bug Fix: Collections: Now checks authZ before showing collections in the list. (Adam Franco)
+	
 v. 2.1.11 (2006-10-25)
 ----------------------------------------------------
 		
