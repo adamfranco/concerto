@@ -26,6 +26,11 @@ if (!isset($_SESSION['table_setup_complete'])) {
 	$tables = $dbHandler->getTableList($dbID);
 
 	if (count ($tables)) {
+		// Additional tables that may have been added after the initial install
+		if (!in_array('tag', $tables))
+			SQLUtils::runSQLfile(HARMONI_BASE."/SQL/Tagging/MySQL_Tagging.sql", $dbID);
+		
+		
 		$_SESSION['table_setup_complete'] = TRUE;
 	} else {
 	
