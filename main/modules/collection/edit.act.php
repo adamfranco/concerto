@@ -120,7 +120,7 @@ class editAction
 		
 		
 		$fieldname = RequestContext::name('description');
-		$descriptionProp =& $stepOne->addComponent("description", WTextArea::withRowsAndColumns(3,50));
+		$descriptionProp =& $stepOne->addComponent("description", WTextArea::withRowsAndColumns(10,80));
 		$descriptionProp->setValue($repository->getDescription());
 		print "\n<h2>"._("Description")."</h2>";
 		print "\n"._("The Description for this <em>Collection</em>: ");
@@ -141,7 +141,7 @@ class editAction
 		
 		ob_start();
 		print "<h2>"._("Select Cataloging Schemas")."</h2>";
-		print "\n<p>"._("Select which cataloging schemas you wish to appear during <em>Asset</em> creation and editing. <em>Assets</em> can hold data in any of the schemas, but only the ones selected here will be availible when adding new data.")."</p>";
+		print "\n<p>"._("Select which cataloging schemas you wish to appear during <em>Asset</em> creation and editing. <em>Assets</em> can hold data in any of the schemas, but only the ones selected here will be available when adding new data.")."</p>";
 		
 		if ($authZManager->isUserAuthorized(
 			$idManager->getId("edu.middlebury.authorization.modify_rec_struct"), 
@@ -411,7 +411,7 @@ class editAction
 			}
 			
 			// Remove any RecordStructures from the set that may have been removed/
-			// made-not-availible by some other application.
+			// made-not-available by some other application.
 			if ($numStructures != $set->count()) {
 				$set->reset();
 				while($set->hasNext()) {

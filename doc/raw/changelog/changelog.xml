@@ -10,7 +10,187 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
+	<version number="2.1.13" date="2006-11-30">
+		<fix author='adam'>
+			Exhibitions: Now Slideshow order is properly maintained when deleting 
+			slideshows.
+		</fix>
+		<new author='adam'>
+			AuthZ: Added icon and popup display of Authorizations.
+		</new>
+		<fix author='adam'>
+			Tagging: Fixed IE javascript errors.
+		</fix>
+	</version>
+	<version number="2.1.12" date="2006-11-28">
+		<new author='adam'>
+			Tagging: Added support for Tagging.
+		</new>
+		<fix author='adam'>
+			Collections: Now checks authZ before showing collections in the list.
+		</fix>
+		<fix author='adam'>
+			Collections: The collection id was being dropped when viewing assets 
+			directly.
+		</fix>
+		<fix author='adam'>
+			Collections: Now checks authZ before showing collections in the list.
+		</fix>
+	</version>
+	<version number="2.1.11" date="2006-10-25">
+		<fix author='adam'>
+			AssetEditing/AssetDeleting: Multiple ID parsing now properly differentiates
+			between empty whitespace and valid id strings.
+		</fix>
+		<change author='adam'>
+			Polyphony icons have now been moved to their own directory for easier 
+			access when keeping polyphony installed in a non-web-accessible directory.
+		</change>
+		<change author='adam'>
+			SimpleThemeBlack: The image path is now configurable to allow for 
+			Concerto installation outside of a web-accessible directory.
+		</change>
+	</version>
+	<version number="2.1.10" date="2006-08-28">
+		<fix author='adam'>
+			Dates: Prettier printing of dates.
+		</fix>
+		<fix author='adam'>
+			AssetImporting: Fixed up text to clarify that the user should import
+			a Zip/GZip/Tar archive.
+		</fix>
+		<fix author='adam'>
+			Thumbnails: Now if Image Magick barfs on some multi-page PDFs and 
+			generates a single black pixel as a thumbnail, it won't be saved and 
+			the nice default icon will be used instead.
+		</fix>
+	</version>
+	<version number="2.1.9" date="2006-08-16">
+		<new author='adam'>
+			Exhibitions: Can now reorder slideshows in exhibitions.
+		</new>
+		<change author='adam'>
+			RSS: RSS links now in head of document to alert the browser (specifically
+			FireFox) of the availability of feeds.
+		</change>
+		<change author='adam'>
+			Slideshows: Number of slides now appears below title and doesn't wrap.
+		</change>
+		<change author='adam'>
+			Config: Harmoni, Polyphony, and Viewer locations are now specified
+			as the release-defaults, easing the release process. Harmoni/Polyphony
+			locations are now specified in a config.
+		</change>
+	</version>
+	<version number="2.1.8" date="2006-08-15">
+		<fix author='adam'>
+			RSS: Added publication dates for slideshow RSS items.
+		</fix>
+		<fix author='adam'>
+			Slideshows: Removed debugging line in slideshow browse mode.
+		</fix>
+		<fix author='adam'>
+			Slideshows: now displays an appropriate message if target media
+			have been deleted.
+		</fix>
+		<fix author='adam'>
+			Slideshows: Now does't crash exhibition browsing if target media are
+			missing.
+		</fix>
+	</version>
+	<version number="2.1.7" date="2006-08-11">
+		<fix author='adam'>
+			Now does't wrap the checkboxes in Collection browsing when the 
+			asset-browse link is present.
+		</fix>
+		<new author='adam'>
+			Authenticated RSS feeds of most recently added/edited assets.
+		</new>
+		<new author='adam'>
+			Authenticated RSS feeds of most recently added/edited slideshows.
+		</new>
+		<new author='adam'>
+			Authenticated RSS feeds of logs.
+		</new>
+		<fix author='adam'>
+			Now forces cookie usage to prevent accidental or intentional 
+			session hijacking by the passing of session ids in the url.
+		</fix>
+		<fix author='adam'>
+			Now doesn't force a redirect after checking for tables, allowing 
+			HTTP authentication to work on the first pageload.
+		</fix>
+		<fix author='adam'>
+			Fixes in Harmoni and Polyphony. See their changelogs for more details.
+		</fix>
+	</version>
+	<version number="2.1.6" date="2006-08-04">
+		<fix author='adam'>
+			Selection: Can now view selection contents in viewer.
+		</fix>
+		<fix author='adam'>
+			Menus: Now provides a link back to the current collection/asset when
+			viewing the selection.
+		</fix>
+		<fix author='adam'>
+			AssetDeleting: Now doesn't crash when deleting Assets from withing 
+			the child Asset browsing screen.
+		</fix>
+		<fix author='adam'>
+			AssetEditing: Now can handle unentered values (specifically dates) 
+			that return null rather than a valid primitive object.
+		</fix>
+	</version>
+	<version number="2.1.5" date="2006-08-02">
+		<fix author='adam'>
+			Slideshows: Clarifying metadata option.
+		</fix>
+		<fix author='adam'>
+			Deleting: Now prompts twice to confirm delete of Collections and
+			Exhibitions.
+		</fix>
+		<fix author='adam'>
+			AssetDeleting: Now doesn't crash when deleting Assets from withing 
+			the Asset details screen. It was trying to return to the details for
+			the newly non-existant asset.
+		</fix>
+		<fix author='adam'>
+			Fixes in Harmoni, Polyphony, and the Viewer. See their changelogs for
+			more details.
+		</fix>
+	</version>
+	<version number="2.1.4" date="2006-07-21">
+		<new author='adam'>
+			Importing: New 'Files-Only' importing method
+		</new>
+		<fix author='adam'>
+			AssetEditing-Files: Now doesn't create a thumbnail if conversion fails. 
+		</fix>
+		<fix author='adam'>
+			AssetEditing-Files: Renamed button label.
+		</fix>
+		<fix author='adam'>
+			AssetEditing-Files: Optional values are now (properly) unchecked. 
+		</fix>
+		<fix author='adam'>
+			AssetCreation: Now uses a SelectOrNew with some default types for the asset type.
+		</fix>
+		<fix author='adam'>
+			UI flow: Now returns to browsing when checked assets are delete/edited.
+		</fix>
+	</version>
+	<version number="2.1.3" date="2006-06-30">
+		<fix author='adam'>
+			Importing: Fixed cacheName problem when authenticated via LDAP.
+		</fix>
+	</version>
 	<version number="2.1.2" date="2006-06-26">
+		<fix author='adam'>
+			CollectionEditing: Now has a larger box for description.
+		</fix>
+		<fix author='adam'>
+			CollectionBrowsing: Now allows a longer description.
+		</fix>
 		<fix author='adam'>
 			AssetEditing: Fixed issue where selecting too many assets to edit (~50)
 			overflowed the allowed length of the session array key, preventing the

@@ -251,7 +251,7 @@ class editAction
 		// the RecordStructure is actually created.
 		$recordStructures =& $repository->getRecordStructures();
 		if (!$recordStructures->hasNext())
-			throwError(new Error("No RecordStructures availible.", "Concerto"));
+			throwError(new Error("No RecordStructures available.", "Concerto"));
 		
 		$dmpType =& new Type("RecordStructures", "edu.middlebury.harmoni", "DataManagerPrimatives", "RecordStructures stored in the Harmoni DataManager.");
 		$orderedTypes = array(
@@ -324,6 +324,12 @@ class editAction
 			$property->setEnabled(false, true);
 		
 		
+		$property =& $multField->addComponent(
+			"autoGenTags", 
+			new WCheckBox());
+// 		$property->setChecked(false);
+		$property->setLabel(_("yes"));
+		
 		ob_start();
 
 		print "\n<table border=\"0\">";
@@ -366,10 +372,18 @@ class editAction
 // 			print "\n</td></tr>";
 
 			print "\n<tr><td>";
+				print _("Auto-generate tags from values?");
+			print "\n</td><td>";
+				print "[[autoGenTags]]";
+			print "\n</td></tr>";
+
+			print "\n<tr><td>";
 				print _("Authoritative Values: ");
 			print "\n</td><td>";
 				print "[[authoritative_values]]";
 			print "\n</td></tr>";
+			
+			
 			
 			print "</table>";
 		
@@ -433,7 +447,9 @@ class editAction
 			$collection['authoritative_values'] .= "\n";
 		}
 		
-		
+		$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+		$collection['autoGenTags'] = $tagGenerator->shouldGenerateTagsForPartStructure(
+			$partStructure->getRepositoryId(), $partStructureId);
 			
 		// Allow conversion of the type if the user is authorized to convert_rec_structs
 		$authZManager =& Services::getService("AuthZ");
@@ -518,6 +534,7 @@ class editAction
 
 			// Update the existing part structures
 			$i = 0;
+			$regenTags = false;
 			$existingPartStructureIds = array();
 			foreach (array_keys($properties['elementstep']['elements']) as $index) {
 				$partStructProps =& $properties['elementstep']['elements'][$index];
@@ -601,6 +618,20 @@ class editAction
 					}
 				//}
 				
+				// Auto-generation of tags
+				$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+				if ($partStructProps['autoGenTags']) {
+					if (!$tagGenerator->shouldGenerateTagsForPartStructure($partStruct->getRepositoryId(), $partStructId)) {
+						$tagGenerator->addPartStructureIdForTagGeneration($partStruct->getRepositoryId(), $partStructId);
+						$regenTags = true;
+					}
+				} else {
+					if ($tagGenerator->shouldGenerateTagsForPartStructure($partStruct->getRepositoryId(), $partStructId)) {
+						$tagGenerator->removePartStructureIdForTagGeneration($partStruct->getRepositoryId(), $partStructId);
+						$regenTags = true;
+					}
+				}
+				
 				// Order of part structures
 				if (!$set->isInSet($partStructId))
 					$set->addItem($partStructId);
@@ -640,6 +671,13 @@ class editAction
 				}
 			}
 			
+			if ($regenTags) {
+				$systemAgentId =& $idManager->getId('system:concerto');
+				$tagGenerator =& StructuredMetaDataTagGenerator::instance();	
+				$tagGenerator->regenerateTagsForRepository($partStruct->getRepositoryId(), $systemAgentId,
+					'concerto');
+			}
+			
 			// Log the success or failure
 			if (Services::serviceRunning("Logging")) {
 				$loggingManager =& Services::getService("Logging");
@@ -675,6 +713,7 @@ class editAction
 		return $harmoni->history->getReturnURL(
 				"concerto/schema/edit-return/".$recordStructureId->getIdString());
 	}
+	
 }
 
 /**

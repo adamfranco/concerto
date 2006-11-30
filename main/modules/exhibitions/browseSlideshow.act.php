@@ -104,8 +104,9 @@ class browseSlideshowAction
 									$_SESSION["assets_per_page"], 
 									"printSlideShort", $this->getParams(), $assetId->getIdString());
 		$resultPrinter->setStartingNumber($this->_state['startingNumber']);
+		$resultPrinter->addLinksStyleProperty(new MarginTopSP("10px"));
 		
-		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
+		$resultLayout =& $resultPrinter->getLayout("canView");
 		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
 		$resultLayout->setPostHTML("</form>");
 		
@@ -140,7 +141,6 @@ function printSlideShort(&$asset, $params, $slideshowIdString, $num) {
 	$centered =& new StyleCollection("*.centered", "centered", "Centered", "Centered Text");
 	$centered->addSP(new TextAlignSP("center"));	
 		
-	ob_start();
 	$idManager =& Services::getService("Id");
 	$repositoryManager =& Services::getService("Repository");
 	$authZ =& Services::getService("AuthZ");
@@ -289,7 +289,11 @@ function printSlideShort(&$asset, $params, $slideshowIdString, $num) {
 	// Controls
 	ob_start();
 	
-	$container->add(new UnstyledBlock(ob_get_clean()), "100%", null, RIGHT, BOTTOM);
+	// Authorization Icons
+	print _("Slide: ").AuthZPrinter::getAZIcon($asset->getId());
+	if (isset($mediaId) && $mediaId)
+		print "<br/>"._("Media: ").AuthZPrinter::getAZIcon($mediaId);
+	$container->add(new UnstyledBlock(ob_get_clean()), "100%", null, LEFT, BOTTOM);
 		
 	return $container;
 }
@@ -336,26 +340,57 @@ function printTargetAsset ( &$asset ) {
 	 * Asset Info
 	 *********************************************************/
 	$assetId =& $asset->getId();
-	print "\n<div>\n";
-	print "\t<strong>"._("DisplayName").":</strong>\n";
-	print "\t".$asset->getDisplayName()."\n";
-	print "\t<br />\n";
-	print "\t<strong>"._("Description").":</strong>\n";
-	print "\t".$asset->getDescription()."\n";
-	print "\t<br />\n";
-	print "\t<strong>"._("ID#").":</strong>\n";
-	print "\t".$assetId->getIdString()."\n";
-
+	print "\n\t<dl>";		
+	if ($asset->getDisplayName()) {
+		print "\n\t\t<dt style='font-weight: bold;'>"._("Title:")."</dt>";
+		print "\n\t\t<dd>".$asset->getDisplayName()."</dd>";
+	}
 	
+	if ($asset->getDescription()) {
+		$description =& HtmlString::withValue($asset->getDescription());
+		$description->clean();
+		print "\n\t\t<dt style='font-weight: bold;'>"._("Description:")."</dt>";
+		print "\n\t\t<dd>".$description->asString()."</dd>";
+	}
+	
+	print  "\n\t\t<dt style='font-weight: bold;'>";
+	print _("ID#");
+	print ":</dt>\n\t\t<dd >";
+	print $assetId->getIdString();
+	print "</dd>";
+	
+	$date = $asset->getModificationDate();
+	print  "\n\t\t<dt style='font-weight: bold;'>";
+	print _("Modification Date");
+	print ":</dt>\n\t\t<dd >";
+	print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+	print "</dd>";
+	
+	$date = $asset->getCreationDate();
+	print  "\n\t\t<dt style='font-weight: bold;'>";
+	print _("Creation Date");
+	print ":</dt>\n\t\t<dd >";
+	print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+	print "</dd>";
+
 	if(is_object($asset->getEffectiveDate())) {
-		$effectDate =& $asset->getEffectiveDate();
-		print  "\t<br />\n\t<strong>"._("Effective Date").":</strong>\n\t<em>".$effectDate->asString()."</em>\n";
+		$date = $asset->getEffectiveDate();
+		print  "\n\t\t<dt style='font-weight: bold;'>";
+		print _("Effective Date");
+		print ":</dt>\n\t\t<dd >";
+		print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+		print "</dd>";
 	}
 	
 	if(is_object($asset->getExpirationDate())) {
-		$expirationDate =& $asset->getExpirationDate();
-		print  "\t<br />\n\t<strong>"._("Expiration Date").":</strong>\n\t<em>".$expirationDate->asString()."</em>\n";
+		$date = $asset->getExpirationDate();
+		print  "\n\t\t<dt style='font-weight: bold;'>";
+		print _("Expiration Date");
+		print ":</dt>\n\t\t<dd >";
+		print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+		print "</dd>";
 	}
+	print "\n\t</dl>";
 	
 	
 	/*********************************************************

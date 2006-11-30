@@ -99,7 +99,8 @@ class typebrowseAction
 		
 		// print the Results
 		$resultPrinter =& new ArrayResultPrinter($typeArray, 2, 20, "printTypeShort", $repository->getId());
-		$resultLayout =& $resultPrinter->getLayout($harmoni);
+		$resultPrinter->addLinksStyleProperty(new MarginTopSP("10px"));
+		$resultLayout =& $resultPrinter->getLayout();
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 	}
 }

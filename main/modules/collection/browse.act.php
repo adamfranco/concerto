@@ -14,6 +14,7 @@ require_once(HARMONI."GUIManager/StyleProperties/MinHeightSP.class.php");
 require_once(HARMONI."/Primitives/Collections-Text/HtmlString.class.php");
 require_once(POLYPHONY."/main/library/RepositorySearchModules/RepositorySearchModuleManager.class.php");
 require_once(HARMONI."oki2/shared/MultiIteratorIterator.class.php");
+require_once(POLYPHONY."/main/modules/tags/TagAction.abstract.php");
 
 
 /**
@@ -476,7 +477,7 @@ END;
 									
 		$resultPrinter->setStartingNumber($this->_state['startingNumber']);
 		
-		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
+		$resultLayout =& $resultPrinter->getLayout("canView");
 		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
 		$resultLayout->setPostHTML("</form>");
 		
@@ -630,7 +631,7 @@ END;
 			$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'DisplayName', _('Title'));
 			$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'Id', _('Id'));
 			$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'ModificationDate', _('Modification Date'));
-			$this->printSelectOption("asset_order", $_SESSION["asset_order"], _('Creation Date'));
+			$this->printSelectOption("asset_order", $_SESSION["asset_order"], 'CreationDate', _('Creation Date'));
 			print "\n\t</select>";
 			
 			print "\n\t<select name='".RequestContext::name("asset_order_direction")."'";
@@ -801,23 +802,47 @@ function printAssetShort(& $asset, $params, $num) {
 		print "\n\t<div>"._("ID#").": ".$assetId->getIdString()."</div>";
 	if ($_SESSION["show_description"] == 'true') {
 		$description =& HtmlString::withValue($asset->getDescription());
-		$description->trim(25);
-		print  "\n\t<div style='font-size: smaller; height: 50px; overflow: auto;'>".$description->asString()."</div>";	
+		$description->trim(16);
+		$descriptionShort = preg_replace('/\.\.\.$/', 
+			"<a onclick=\""
+				."var panel = Panel.run("
+					."'".addslashes(htmlspecialchars($asset->getDisplayName()))."', "
+					."100, 400, this.parentNode); "
+				."if (!panel.contentElement.innerHTML) "
+					."{panel.contentElement.innerHTML = this.parentNode.nextSibling.innerHTML;}"
+			."\">...</a>", $description->asString());
+		print  "\n\t<div style='font-size: smaller; height: 50px; overflow: auto;'>";
+		print $descriptionShort;
+		print "</div>";
+		if (preg_match('/\.\.\.$/', $description->asString())) {
+			print "<div style='display: none'>".$asset->getDescription()."</div>";
+		}
+		
+		// Tags
+		print "\n\t<div style='font-size: smaller; height: 50px; overflow: auto; text-align: justify; margin-top: 5px;'>";
+		print TagAction::getTagCloudForItem(TaggedItem::forId($assetId, 'concerto'), 'view',
+				array(	'font-size: 90%;',
+						'font-size: 100%;',
+				));
+		print "\n\t</div>";
 	}
 	
 	$component =& new UnstyledBlock(ob_get_contents());
 	ob_end_clean();
 	$container->add($component, "100%", null, LEFT, TOP);
 	
-	
+	// Bottom controls
+	$authZ =& Services::getService("AuthZ");
+	$idManager =& Services::getService("Id");
 	ob_start();
-	print "\n<div style='margin-top: 5px; font-size: small;'>";
+	print "\n<div style='margin-top: 5px; font-size: small; white-space: nowrap;'>";
+	
+	
 	if ($_SESSION["show_controls"] == 'true') {
 		AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num, false);
 		print " | ";
 	}
-	$authZ =& Services::getService("AuthZ");
-	$idManager =& Services::getService("Id");
+	
 	$harmoni->request->startNamespace("AssetMultiEdit");
 	print "\n<input type='checkbox'";
 	print " name='".RequestContext::name("asset")."'";
@@ -853,8 +878,7 @@ function canView( & $asset ) {
 	$authZ =& Services::getService("AuthZ");
 	$idManager =& Services::getService("Id");
 	
-	if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $asset->getId())
-		|| $authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
+	if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
 	{
 		return TRUE;
 	} else {

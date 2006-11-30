@@ -102,6 +102,10 @@ class AssetPrinter {
 			}
 		}
 		
+		// Authorization Icon
+		print AuthZPrinter::getAZIcon($assetId);
+		print " &nbsp; ";
+		
 		
 	//===== View Links =====/
 		if ($authZ->isUserAuthorized(
@@ -131,7 +135,7 @@ class AssetPrinter {
 					"asset_id" => $assetId->getIdString()))."'>";
 				$links[count($links) - 1] .= _("Details")."</a>";
 			} else
-				$links[] = _("details");
+				$links[] = _("Details");
 		//===== Export Link =====//
 // 			if (ereg("^asset\..*$", $actionString) && 
 // 					$harmoni->request->get("asset_id") == 
@@ -160,7 +164,7 @@ class AssetPrinter {
 						"asset_id" => $assetId->getIdString()))."'>";
 					$links[count($links) - 1] .= _("Browse")."</a>";
 				} else
-					$links[] = _("browse");
+					$links[] = _("Browse");
 			}
 		}
 	//===== Edit Link =====//	
@@ -183,9 +187,24 @@ class AssetPrinter {
 		//===== Delete Link =====//
 			if ($authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.delete"),
-					$assetId)) {
-				$harmoni->history->markReturnURL("concerto/asset/delete-return",
-					$harmoni->request->mkURL(null, null, $params));
+					$assetId)) 
+			{
+				// If we are viewing the asset and we delete it, we can't return
+				// to viewing it.
+				if (ereg("^asset\..*$", $actionString) && 
+						$harmoni->request->get("asset_id") == 
+						$assetId->getIdString())
+				{
+					$deleteParams = $params;
+					unset ($deleteParams['asset_id']);
+					$harmoni->history->markReturnURL("concerto/asset/delete-return",
+						$harmoni->request->mkURL('collection', 'browse', $deleteParams));
+				} 
+				// otherwise, go bact to where we are.
+				else {
+					$harmoni->history->markReturnURL("concerto/asset/delete-return",
+						$harmoni->request->mkURL(null, null, $params));
+				}
 				ob_start();
 				print "<a href='Javascript:deleteAsset(\"".$assetId->getIdString().
 					"\", \"".$repositoryId->getIdString()."\", \"".
@@ -253,6 +272,10 @@ class AssetPrinter {
 	 */
 	function getMultiEditOptionsBlock () {
 		$harmoni =& Harmoni::instance();
+		
+		$harmoni->history->markReturnURL("concerto/asset/delete-return");
+		$harmoni->history->markReturnURL("concerto/asset/edit-return");
+		
 		$harmoni->request->startNamespace("AssetMultiEdit");
 		
 		ob_start();
@@ -440,7 +463,7 @@ class AssetPrinter {
 </script>
 END;
 		
-		$block = new Block(ob_get_contents(), 4);
+		$block = new Block(ob_get_contents(), HIGHLIT_BLOCK);
 		ob_end_clean();
 		$harmoni->request->endNamespace();
 		return $block;

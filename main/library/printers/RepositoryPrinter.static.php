@@ -47,6 +47,11 @@ class RepositoryPrinter {
 		$actionString = $harmoni->getCurrentAction();
 		$url =& $harmoni->request->mkURL();	
 		$url->setValue("collection_id", $repositoryId->getIdString());
+		
+		// Authorization Icon
+		print AuthZPrinter::getAZIcon($repositoryId);
+		print " &nbsp; ";
+		
 	//===== Browse Link =====//
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.access"),
@@ -150,26 +155,6 @@ class RepositoryPrinter {
 		if ($canEditStructures) {
 			// Schema Editing
 			ob_start();
-			print<<<END
-
-<script type='text/javascript'>
-/* <![CDATA[ */
-
-	/**
-	 * Replace '&amp;' in URLs with '&'
-	 * 
-	 * @return string
-	 * @access public
-	 * @since 6/12/06
-	 */
-	String.prototype.urlDecodeAmpersands = function () {
-		return this.replace(/&amp;/, '&');
-	}
-
-/* ]]> */
-</script>
-		
-END;
 			print "\n<select";
 			print " onchange=\"var url = '";
 			print $harmoni->request->quickURL(
@@ -238,7 +223,7 @@ END;
 			
 			print "\n<script type='text/javascript'>\n//<![CDATA[";
 			print "\n	function deleteRepository(repositoryId, url) {";
-			print "\n		if (confirm(\""._("Are you sure you want to delete this Collection?")."\")) {";
+			print "\n		if (confirm(\""._("Are you sure you want to delete this Collection and all of its Assets?")."\") && confirm(\""._("Clicking OK will permenantly delete this Collection and all of the Assets in it.\\nAre you REALLY sure you want to delete this Collection and all of its Assets?")."\")) {";
 			print "\n			window.location = url;";
 			print "\n		}";
 			print "\n	}";

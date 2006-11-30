@@ -62,7 +62,7 @@ class typebrowseAction
 		CollectionsPrinter::printFunctionLinks();
 		
 		print "<p>";
-		print _("Below are listed the availible <em>Collections</em>, organized by type, then name.");
+		print _("Below are listed the available <em>Collections</em>, organized by type, then name.");
 		print "</p>\n<p>";
 		print _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
 		print "</p>";
@@ -90,7 +90,8 @@ class typebrowseAction
 		
 		// print the Results
 		$resultPrinter =& new ArrayResultPrinter($typeArray, 2, 20, "printTypeShort");
-		$resultLayout =& $resultPrinter->getLayout($harmoni);
+		$resultPrinter->addLinksStyleProperty(new MarginTopSP("10px"));
+		$resultLayout =& $resultPrinter->getLayout();
 		$actionRows->add($resultLayout, null, null, CENTER, CENTER);
 	}
 }

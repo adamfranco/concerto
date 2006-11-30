@@ -173,19 +173,16 @@ class mainAction
 		ob_end_clean();
 		
 			
-		$actionRows->add(new Heading(_("CourseManagement"), 2));
-		
-		
-		
+		$actionRows->add(new Heading(_("Theme Editing"), 2));
 		
 		ob_start();
 		print "\n<ul>";
 		
 		print "\n\t<li><a href='".$harmoni->request->quickURL("gui","theme_editor")."'>";
 		print _("Edit Themes");
-		print "</a> <font color='red'><i> * HOT!!! *</i></font></li>";
+		print "</a></li>";
 		print "\n\t<li><a href='".$harmoni->request->quickURL("gui","colorwheel_test")."'>";
-		print _("This ColorWheel Does Nothing");
+		print _("Color-Wheel Test");
 		print "</a></li>";
 
 	

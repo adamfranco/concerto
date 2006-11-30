@@ -11,6 +11,9 @@
 
 require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
 require_once(POLYPHONY."/main/library/Importer/XMLImporters/XMLRepositoryImporter.class.php");
+require_once(POLYPHONY."/main/library/RepositoryImporter/FilesOnlyRepositoryImporter.class.php");
+require_once(POLYPHONY."/main/library/RepositoryImporter/ExifRepositoryImporter.class.php");
+
 
 /**
  * Imports assets into a collection in concerto
@@ -118,20 +121,21 @@ class importAction extends MainWindowAction {
 		$harmoni =& Harmoni::Instance();
 		$wizard =& SimpleWizard::withText(
 			"<table border='0' style='margin-top:20px' >\n" .
-			"\n<tr><td><h3>"._("File type:")."</h3></td></tr>".
-			"\n<tr><td>"._("The type of file to be imported: ")."</td>".
+			"\n<tr><td><h3>"._("Source data type:")."</h3></td>".
+			"\n<td style='font-size: small;'>".("* Please see the <strong>Help</strong> below for more information.")."</td></tr>".
+			"\n<tr><td>"._("The format of data to be imported: ")."</td>".
 			"\n<td>[[file_type]]</td></tr>".
 // 			"\n<tr><td colspan='2'>"._("If Exif click ")."<a href=\"".
 // 			$harmoni->request->quickURL("collection", "exifschema").
 // 			"\">"._("here")."</a>".
 // 			_(" to customize your schema (Suggested)")."</td></tr>".
-			"\n<tr><td>"._("Is this file an archive? ")."</td>".
-			"\n<td>[[is_archived]] (Tab-Delimited and Exif must be Archived)</td></tr>".
+			"\n<tr><td>"._("Is this file a Zip/GZip/BZip/Tar archive? ")."</td>".
+			"\n<td>[[is_archived]] <em>"._("(All except XML source data must be Archived)")."</em></td></tr>".
 			"\n<tr><td><h3>"._("Import type:")."</h3></td></tr>".
 			"\n<tr><td>"._("The type of import to execute: ")."</td>".
 			"\n<td>[[import_type]]</td></tr>".
 			"\n<tr><td><h3>"._("File:")."</h3></td></tr>".
-			"\n<tr><td>"._("The file to be imported: ")."</td>".
+			"\n<tr><td>"._("The Zip/GZip/BZip/Tar/XML file to be imported: ")."</td>".
 			"\n<td>[[filename]]</td>".
 			"<tr>\n" .
 			"<td align='left'>\n" .
@@ -145,10 +149,12 @@ class importAction extends MainWindowAction {
 		$select->addOption("XML", "XML");
 		$select->addOption("Tab-Delimited", "Tab-Delimited");
 		$select->addOption("Exif", "Exif");
-		$select->setValue("XML");
+		$select->addOption("FilesOnly", "Files Only (no metadata)");
+		$select->setValue("FilesOnly");
 
 		$archive =& $wizard->addComponent("is_archived", 
 			WCheckBox::withLabel("is Archived"));
+		$archive->setChecked(true);
 
 		$type =& $wizard->addComponent("import_type", new WSelectList());
 //		$type->addOption("update", "update");  
@@ -199,7 +205,7 @@ class importAction extends MainWindowAction {
 		$idManager =& Services::getService("Id");
 		$repositoryManager =& Services::getService("Repository");
 		$wizard =& $this->getWizard($cacheName);
-		$properties =& $wizard->getAllValues();
+		$properties = $wizard->getAllValues();
 
 		$centerPane =& $this->getActionRows();
 		ob_start();
@@ -220,11 +226,19 @@ class importAction extends MainWindowAction {
 		"edu.middlebury.harmoni.repository.asset_content", 
 		"edu.middlebury.harmoni.repository.asset_content.Content");
 		
+		
+		$repository =& $repositoryManager->getRepository(
+					$idManager->getId($harmoni->request->get('collection_id')));
+		
+		$startTime =& DateAndTime::now();
+		
 //===== Exif and Tab-Delim Importers are special =====//
 		if ($properties['file_type'] == "Tab-Delimited") 
-			$importer =& new TabRepositoryImporter($newName, $dr->getId(), false);
+			$importer =& new TabRepositoryImporter($newName, $repository->getId(), false);
 		else if ($properties['file_type'] == "Exif") 
-			$importer =& new ExifRepositoryImporter($newName, $dr->getId(), false);
+			$importer =& new ExifRepositoryImporter($newName, $repository->getId(), false);
+		else if ($properties['file_type'] == "FilesOnly") 
+			$importer =& new FilesOnlyRepositoryImporter($newName, $repository->getId(), false);
 		if (isset($importer))
 			$importer->import();						
 //===== Done with special "RepositoryImporters" =====//
@@ -237,8 +251,7 @@ class importAction extends MainWindowAction {
 				unset($importer);
 				$importer =& XMLRepositoryImporter::withObject(
 					$array,
-					$repositoryManager->getRepository(
-					$idManager->getId($harmoni->request->get('collection_id'))),
+					$repository,
 					$directory."/metadata.xml",
 					$properties['import_type']);
 			}
@@ -248,7 +261,7 @@ class importAction extends MainWindowAction {
 					$harmoni->request->get('collection_id'))), $newName,
 					$properties['import_type']);
 			$importer->parseAndImportBelow("asset", 100);
-		}		
+		}
 		if ($importer->hasErrors()) {
 		// something happened so tell the end user
 			$importer->printErrorMessages();
@@ -257,6 +270,29 @@ class importAction extends MainWindowAction {
 			ob_end_clean();
 			return FALSE;
 		}
+		
+		// Update any newly modified assets' tags
+		$searchProperties =& new HarmoniProperties(
+					new Type("repository", "harmoni", "order"));
+		$searchProperties->addProperty("order", $order = "ModificationDate");
+		$searchProperties->addProperty("direction", $direction = "DESC");
+		$assets =& $repository->getAssetsBySearch(
+				$criteria = '*',
+				new Type("Repository", "edu.middlebury.harmoni", "DisplayName"),
+				$searchProperties);
+				
+		$systemAgentId =& $idManager->getId('system:concerto');
+		$tagGenerator =& StructuredMetaDataTagGenerator::instance();	
+		
+		while ($assets->hasNext()) {
+			$asset =& $assets->next();
+			if ($startTime->isGreaterThan($asset->getModificationDate()))
+				break;
+			
+			$tagGenerator->regenerateTagsForAsset($asset, $systemAgentId,
+			'concerto', $repository->getId());
+		}
+		
 		// clean and clear
 		$centerPane->add(new Block(ob_get_contents(), 1));
 		ob_end_clean();

@@ -38,6 +38,7 @@ class AssetEditingAction
 	function _init () {
 		$this->_recStructsToIgnore = array();
 		$this->_multExistString = _("(multiple values exist)");
+		$this->_newStructuredTagValues = array();
 	}
 	
 	/**
@@ -55,7 +56,9 @@ class AssetEditingAction
 	 	$this->_assets = array();
 	 	
 	 	foreach ($assetIdStrings as $idString) {
-	 		$this->_assets[] =& $repository->getAsset($idManager->getId($idString));
+	 		// ignore whitepace or empty strings
+			if (preg_match('/\\S+/', $idString))
+	 			$this->_assets[] =& $repository->getAsset($idManager->getId($idString));
 	 	}
 	}
 	
@@ -153,6 +156,9 @@ class AssetEditingAction
 					
 					if ($this->hasChangedParts($results, $initialState, $recStructId)) {
 						$this->updateAssetRecords($results, $initialState, $recStructId, $asset);
+						
+						// Update the structured-metadata generated tags for this asset
+						$this->updateAssetTags($asset->getId());
 					}
 					
 				}
@@ -599,19 +605,70 @@ class AssetEditingAction
 	function updateAssetRecords (&$results, &$initialState, &$recStructId, &$asset) {
 		printpre("<hr>updateAssetRecords:".$asset->getDisplayName());
 		
+		// Create an array of new tag values;
+		$assetId =& $asset->getId();
+		$this->_newStructuredTagValues[$assetId->getIdString()] = array();
+		
 		$recStructIdString = preg_replace("/[^a-zA-Z0-9:_\-]/", "_",  $recStructId->getIdString());
 		
 		$records =& $asset->getRecordsByRecordStructure($recStructId);
 		if (!$records->hasNext()) {
 			$record =& $asset->createRecord($recStructId);
 			$this->updateRecord($results[$recStructIdString], 
-				$initialState[$recStructIdString], $record);
+				$initialState[$recStructIdString], $record, $assetId);
 		} else {
 			while ($records->hasNext()) {
 				$this->updateRecord($results[$recStructIdString], 
-				$initialState[$recStructIdString], $records->next());
+				$initialState[$recStructIdString], $records->next(), $assetId);
 			}
 		}
+	}
+	
+	/**
+	 * Update the auto-generated tags for the asset
+	 * 
+	 * @param object Id $assetId
+	 * @return void
+	 * @access public
+	 * @since 11/21/06
+	 */
+	function updateAssetTags ( &$assetId ) {		
+		// Clean the values into nice tag values
+		$newTagValues = array();
+		foreach ($this->_newStructuredTagValues[$assetId->getIdString()] as $value) {
+			$tag =& new Tag($value);
+			if ($tag->getValue())
+				$newTagValues[] = $tag->getValue();
+		}
+		
+		// Get the TaggedItem for this asset
+		$idManager =& Services::getService("Id");
+		$systemAgentId =& $idManager->getId('system:concerto');
+		$item =& TaggedItem::forId($assetId, 'concerto');
+		
+		// Remove any missing tags
+		$systemTags =& $item->getTagsByAgent($systemAgentId);
+		$existingTagValues = array();
+		while ($systemTags->hasNext()) {
+			$tag =& $systemTags->next();
+			if (in_array($tag->getValue(), $newTags))
+				$existingTagValues[] = $tag->getValue();
+			else {
+				$tag->removeFromItemsForAgent($item, $systemAgentId);
+				printpre("Removing tag '$tagValue'");
+			}
+		}
+		
+		// Add any new tags
+		foreach ($newTagValues as $tagValue) {
+			if (!in_array($tagValue, $existingTagValues)) {
+				printpre("Adding tag '$tagValue'");
+				$tag =& new Tag($tagValue);
+				$tag->tagItemForAgent($item, $systemAgentId);
+			}
+		}
+		
+		unset($this->_newStructuredTagValues[$assetId->getIdString()]);
 	}
 	
 	/**
@@ -620,11 +677,12 @@ class AssetEditingAction
 	 * @param array $results, the wizard results
 	 * @param array $initialState, the initial wizard results
 	 * @param object Record $record
+	 * @param object Id $assetId
 	 * @return void
 	 * @access public
 	 * @since 10/24/05
 	 */
-	function updateRecord (&$results, &$initialState, &$record) {
+	function updateRecord (&$results, &$initialState, &$record, &$assetId) {
 		$recordId =& $record->getId();
 		$recStruct =& $record->getRecordStructure();
 		$recStructId =& $recStruct->getId();
@@ -649,13 +707,13 @@ class AssetEditingAction
 				$this->updateRepeatablePart(
 					$results[$partStructIdString], 
 					$initialState[$partStructIdString], 
-					$partStruct, $record);
+					$partStruct, $record, $assetId);
 			} else {
 				printpre("Updating SingleValuedPart: ".$partStruct->getDisplayName());
 				$this->updateSingleValuedPart(
 					$results[$partStructIdString],
 					$initialState[$partStructIdString], 
-					$partStruct, $record);
+					$partStruct, $record, $assetId);
 			}
 		}
 		
@@ -668,17 +726,15 @@ class AssetEditingAction
 	 * @param array $results, the wizard results
 	 * @param array $initialState, the initial wizard results
 	 * @param object Record $record
+	 * @param object Id $assetId
 	 * @return void
 	 * @access public
 	 * @since 10/24/05
 	 */
 	function updateSingleValuedPart (&$partResults, &$partInitialState, 
-		&$partStruct, &$record) 
+		&$partStruct, &$record, &$assetId) 
 	{
 		$partStructId = $partStruct->getId();
-		
-		$partStructType =& $partStruct->getType();
-		$valueObjClass = $partStructType->getKeyword();
 		
 		
 		$value =& $partResults['value'];
@@ -699,21 +755,34 @@ class AssetEditingAction
 		}
 		
 		if ($partResults['checked'] == '1'
+			&& is_object($value)
 			&& ($partInitialState['checked'] =='0'
 				|| $value != $initialValue))
 		{
 			$parts =& $record->getPartsByPartStructure($partStructId);
 			if ($parts->hasNext()) {
 				$part =& $parts->next();
-				if (is_object($value))
-					$part->updateValue($value);
-				else
-					$part->updateValue(String::withvalue($value));
+				$part->updateValue($value);
 			} else {
-				if (is_object($value))
-					$record->createPart($partStructId, $value);
-				else
-					$record->createPart($partStructId, String::withvalue($value));
+				$record->createPart($partStructId, $value);
+			}
+			
+			// Add this value to the Structured Tags list for this asset.
+			$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+			if ($tagGenerator->shouldGenerateTagsForPartStructure(
+					$partStruct->getRepositoryId(), $partStructId))
+			{
+				$this->_newStructuredTagValues[$assetId->getIdString()][] = $value->asString();
+			}
+		} 
+		// If we aren't passed a value, then the user didn't enter a value
+		// or deleted the one that was there.
+		// Remove any existing parts.
+		else if ($partResults['checked'] == '1' && !is_object($value)) {
+			$parts =& $record->getPartsByPartStructure($partStructId);
+			while ($parts->hasNext()) {
+				$part =& $parts->next();
+				$record->deletePart($part->getId());
 			}
 		}
 	}
@@ -729,12 +798,13 @@ class AssetEditingAction
 	 * @param array $results, the wizard results
 	 * @param array $initialState, the initial wizard results
 	 * @param object Record $record
+	 * @param object Id $assetId
 	 * @return void
 	 * @access public
 	 * @since 10/24/05
 	 */
 	function updateRepeatablePart (&$partResults, &$partInitialState, 
-		&$partStruct, &$record) 
+		&$partStruct, &$record, &$assetId) 
 	{
 		$partStructId = $partStruct->getId();
 		$partValsHandled = array();
@@ -765,6 +835,14 @@ class AssetEditingAction
 			$partId =& $part->getId();
 			printpre("\tIgnoring Part: Id: ".$partId->getIdString()." Value: ".$partStrVal);
 			
+			// Add this value to the Structured Tags list for this asset.
+			$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+			if ($tagGenerator->shouldGenerateTagsForPartStructure(
+					$partStruct->getRepositoryId(), $partStructId))
+			{
+				$this->_newStructuredTagValues[$assetId->getIdString()][] = $partStrVal;
+			}
+			
 			continue;
 		}
 		
@@ -774,27 +852,39 @@ class AssetEditingAction
 			$checked = ($valueArray['partvalue']['checked'] == '1')?true:false;
 			
 			$value =& $valueArray['partvalue']['value'];
-			$valueStr = $value->asString();
-			
-			$authZManager =& Services::getService("AuthZ");
-			$idManager =& Services::getService("Id");
-			$authoritativeValues =& $partStruct->getAuthoritativeValues();
-			if ($authZManager->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.modify_authority_list"),
-					$this->getRepositoryId())
-				&& !$partStruct->isAuthoritativeValue($value)
-				&& $authoritativeValues->hasNext()) 
-			{
-				$partStruct->addAuthoritativeValue($value);
-				printpre("\tAdding AuthoritativeValue: ".$valueStr);
-			}
-		
-			
-			if ($checked && !in_array($valueStr, $partValsHandled)) {
-				$part =& $record->createPart($partStructId, $value);
+			if (is_object($value)) {
+				$valueStr = $value->asString();
 				
-				$partId =& $part->getId();
-				printpre("\tAdding Part: Id: ".$partId->getIdString()." Value: ".$valueStr);
+				
+				
+				$authZManager =& Services::getService("AuthZ");
+				$idManager =& Services::getService("Id");
+				$authoritativeValues =& $partStruct->getAuthoritativeValues();
+				if ($authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.modify_authority_list"),
+						$this->getRepositoryId())
+					&& !$partStruct->isAuthoritativeValue($value)
+					&& $authoritativeValues->hasNext()) 
+				{
+					$partStruct->addAuthoritativeValue($value);
+					printpre("\tAdding AuthoritativeValue: ".$valueStr);
+				}
+			
+				
+				if ($checked && !in_array($valueStr, $partValsHandled)) {
+					$part =& $record->createPart($partStructId, $value);
+					
+					$partId =& $part->getId();
+					printpre("\tAdding Part: Id: ".$partId->getIdString()." Value: ".$valueStr);
+					
+					// Add this value to the Structured Tags list for this asset.
+					$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+					if ($tagGenerator->shouldGenerateTagsForPartStructure(
+							$partStruct->getRepositoryId(), $partStructId))
+					{
+						$this->_newStructuredTagValues[$assetId->getIdString()][] = $valueStr;
+					}
+				}
 			}
 		}
 	}

@@ -117,7 +117,7 @@ class importAction extends MainWindowAction {
 			$uniqueString .= "_".$id->getIdString();
 		}
 
-		$cacheName = 'import_asset_wizard_'.$uniqueString;
+		$cacheName = str_replace('.', '_', 'import_asset_wizard_'.$uniqueString);
 		
 		$this->runWizard($cacheName, $centerPane);
 		

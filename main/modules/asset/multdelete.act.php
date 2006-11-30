@@ -59,8 +59,11 @@ class multdeleteAction
 			$idManager =& Services::getService("Id");
 			$assetIdStrings = explode(",", RequestContext::value('assets'));
 			$this->_assetIds = array();
-			foreach ($assetIdStrings as $idString)
-				$this->_assetIds[] =& $idManager->getId($idString);
+			foreach ($assetIdStrings as $idString) {
+				// ignore whitepace or empty strings
+				if (preg_match('/\\S+/', $idString))
+					$this->_assetIds[] =& $idManager->getId($idString);
+			}
 		}
 		
 		return $this->_assetIds;
@@ -101,9 +104,18 @@ class multdeleteAction
 		
 		$idManager =& Services::getService("Id");
 		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
-				$idManager->getId(
-					RequestContext::value('collection_id')));
+		if (RequestContext::value('collection_id')) {
+			$collectionId =& $idManager->getId(RequestContext::value('collection_id'));
+			$repository =& $repositoryManager->getRepository($collectionId);
+		} else if (RequestContext::value('asset_id')) {
+			$parentAssetId =& $idManager->getId(RequestContext::value('asset_id'));
+			$parentAsset =& $repositoryManager->getAsset($parentAssetId);
+			$repository =& $parentAsset->getRepository();
+		} else if (count($this->getAssetIds())) {
+			$assetIds = $this->getAssetIds();
+			$firstAsset =& $repositoryManager->getAsset(current($assetIds));
+			$repository =& $firstAsset->getRepository();
+		}
 		
 		// Log the action
 		if (Services::serviceRunning("Logging")) {
@@ -114,8 +126,17 @@ class multdeleteAction
 			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
 							"Normal events.");
 		}
-		foreach ($this->getAssetIds() as $id) {
+		
+		$itemsToDelete = array();
+		$assetIds =& $this->getAssetIds();
+		$status =& new StatusStars(_("Deleting Assets"));
+		$status->initializeStatistics(count($assetIds));
+		foreach ($assetIds as $id) {
 			$asset =& $repository->getAsset($id);
+			
+			// Record the Tagged item to delete.
+			$itemsToDelete[] =& TaggedItem::forId($id, 'concerto');
+			
 			if (isset($log)) {
 				$item =& new AgentNodeEntryItem("Delete Node", 
 					"Asset deleted:\n<br/>&nbsp; &nbsp; &nbsp;".$asset->getDisplayName());
@@ -124,7 +145,12 @@ class multdeleteAction
 				$log->appendLogWithTypes($item,	$formatType, $priorityType);
 			}
 			$repository->deleteAsset($id);
+			$status->updateStatistics();
 		}
+		
+		// Remove this asset from the tagging manager
+		$tagManager =& Services::getService('Tagging');
+		$tagManager->deleteItems($itemsToDelete, 'concerto');
 		
 		$harmoni->history->goBack("concerto/asset/delete-return");
 	}

@@ -83,7 +83,7 @@ class importAction extends MainWindowAction {
 			$uniqueString .= "_".$id->getIdString();
 		}
 
-		$cacheName = 'import_collection_wizard_'.$uniqueString;
+		$cacheName = str_replace('.', '_', 'import_collection_wizard_'.$uniqueString);
 		
 		$this->runWizard($cacheName, $centerPane);
 		

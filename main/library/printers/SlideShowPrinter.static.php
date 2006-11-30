@@ -52,10 +52,14 @@ class SlideShowPrinter {
 		
 		$actionString = $harmoni->getCurrentAction();
 		
+		// Authorization Icon
+		print AuthZPrinter::getAZIcon($assetId);
+		print " &nbsp; ";
+		
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId())) {
 			$viewertheme = 'black';
 			ob_start();
-			print "<a href='#' onclick='Javascript:window.open(";
+			print "<a onclick='Javascript:window.open(";
 			print '"'.VIEWER_URL."?&source=";
 			print urlencode($harmoni->request->quickURL("exhibitions", "slideshowOutlineXml", 
 						array("slideshow_id" => $assetId->getIdString())));
@@ -122,6 +126,41 @@ class SlideShowPrinter {
 				$links[] = _("Delete");
 			}
 		}
+		
+		
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $asset->getId())) {
+			if ($actionString != "exhibitions.browse_slideshow") {
+				$setManager =& Services::getService("Sets");
+				$parents =& $asset->getParents();
+				$exhibition =& $parents->next();
+				$exhibitionId =& $exhibition->getId();
+				$exhibitionSet =& $setManager->getPersistentSet($exhibitionId);
+				$position = $exhibitionSet->getPosition($assetId);
+				
+				$url = $harmoni->request->quickURL(
+							"exhibitions", "reorder_slideshows", array(
+								"exhibition_id" => $exhibitionId->getIdString(),
+								"slideshow_id" => $assetId->getIdString(),
+								"new_position" => "XXXXXX"));
+				
+				ob_start();
+				print "\n<select name='reorder_".$assetId->getIdString()."'";
+				print " onchange='";
+				print ' var url = "'.str_replace("&amp;", "&", $url).'"; ';
+				print 'window.location = url.replace(/XXXXXX/, this.value);';
+				print "'>";
+				for ($i = 0; $i < $exhibitionSet->count(); $i++) {
+					print "\n\t<option value='".$i."'";
+					if ($i == $position)
+						print " selected='selected'";
+					print ">".($i + 1)."</option>";
+				}
+				print "\n</select>";
+				
+				$links[] = ob_get_clean();
+			}
+		}
+		
 		print  implode("\n\t | ", $links);
 	}
 }

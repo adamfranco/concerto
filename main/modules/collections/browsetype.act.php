@@ -85,7 +85,8 @@ class browsetypeAction
 		
 		// print the Results
 		$resultPrinter =& new ArrayResultPrinter($repositoryArray, 2, 20, "printrepositoryShort", $harmoni);
-		$resultLayout =& $resultPrinter->getLayout($harmoni);
+		$resultPrinter->addLinksStyleProperty(new MarginTopSP("10px"));
+		$resultLayout =& $resultPrinter->getLayout();
 		$actionRows->add($resultLayout, null, null, CENTER, CENTER);
 	}
 }
@@ -101,7 +102,6 @@ function printrepositoryShort(& $repository, $harmoni) {
 	$description =& HtmlString::withValue($repository->getDescription());
 	$description->trim(100);
 	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	
-	
 	RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
 	
 	$layout =& new Block(ob_get_contents(), EMPHASIZED_BLOCK);

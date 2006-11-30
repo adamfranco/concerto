@@ -96,7 +96,7 @@ class createAction
 		$displayNameProp->setErrorText(_("A value for this field is required."));
 		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		
-		$descriptionProp =& $stepOne->addComponent("description", WTextArea::withRowsAndColumns(3, 50));
+		$descriptionProp =& $stepOne->addComponent("description", WTextArea::withRowsAndColumns(10, 80));
 		
 		// Create the step text
 		ob_start();

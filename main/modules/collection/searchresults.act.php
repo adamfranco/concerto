@@ -112,7 +112,7 @@ class searchresultsAction
 		// print the results
 		//***********************************
 		$resultPrinter =& new IteratorResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
-		$resultLayout =& $resultPrinter->getLayout($harmoni);
+		$resultLayout =& $resultPrinter->getLayout();
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 	}
 }

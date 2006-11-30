@@ -18,6 +18,11 @@ debug::level(-100);
 /******************************************************************************
  * Start the session so that we can use the session for storage.
  ******************************************************************************/
+if (file_exists(MYDIR.'/config/harmoni.conf.php'))
+	require_once (MYDIR.'/config/harmoni.conf.php');
+else
+	require_once (MYDIR.'/config/harmoni_default.conf.php');
+ 
 $harmoni->startSession();
 
 
@@ -80,6 +85,7 @@ $configs = array(
 					'scheduling',
 					'coursemanagement',
 					'grading',
+					'tagging',
 					'post_config_setup',
 					'viewer'
 				);

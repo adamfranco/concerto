@@ -11,6 +11,7 @@
 require_once(POLYPHONY."/main/library/AbstractActions/Action.class.php");
 require_once(POLYPHONY."/main/library/Basket/Basket.class.php");
 require_once(DOMIT);
+require_once(POLYPHONY."/main/modules/tags/TagAction.abstract.php");
 
 /**
  * build the frame of the window
@@ -189,18 +190,167 @@ class displayAction
 		}
 		
 		// use the result from previous actions
-		$contentDestination->add($harmoni->result, null, null, CENTER, TOP); 
+		if (is_object($harmoni->result))
+			$contentDestination->add($harmoni->result, null, null, CENTER, TOP);
+		else if (is_string($harmoni->result))
+			$contentDestination->add(new Block($harmoni->result, STANDARD_BLOCK), null, null, CENTER, TOP);
 		
 		// Menu Column
 		$menuColumn =& $centerPane->add(new Container($yLayout, OTHER, 1), "140px", null, LEFT, TOP);
 		// Main menu
 		$menuGenerator =& new ConcertoMenuGenerator;
 		$menuColumn->add($menuGenerator->generateMainMenu(), "140px", null, LEFT, TOP);
+		
+		// RSS Links
+		$outputHandler =& $harmoni->getOutputHandler();
+		if (ereg("^(collection|asset)\.browse(Asset)?$", $harmoni->getCurrentAction()) 	
+			&& RequestContext::value('collection_id'))
+		{
+			ob_start();
+			print "<div style='font-size: small; padding-left: 5px;'>";
+			
+			$url = $harmoni->request->quickURL('collection', 'rss_latest', 
+				array('collection_id' => RequestContext::value('collection_id')));
+			$title = _("RSS feed of the most recently added Assets");
+			
+			$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<link rel='alternate' type='application/rss+xml'"
+				." title='".$title."' href='".$url."'/>");
+			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."icons/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t"._("RSS: newest");
+			print "\n\t\t</a><br/>";
+			
+			
+			$url = $harmoni->request->quickURL('collection', 'rss_latest', 
+				array('collection_id' => RequestContext::value('collection_id'),
+					'order' => 'modification'));
+			$title = _("RSS feed of the most recently changed Assets");
+			
+			$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<link rel='alternate' type='application/rss+xml'"
+				." title='".$title."' href='".$url."'/>");
+			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."icons/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t"._("RSS: recently updated");
+			print "\n\t\t</a>";
+			print "\n</div>";
+			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
+		}
+/*		if (ereg("^collections\..+$", $harmoni->getCurrentAction())) {
+			ob_start();
+			print "<div style='font-size: small; padding-left: 5px;'>";
+			
+			$url = $harmoni->request->quickURL('collection', 'rss_all_latest');
+			$title = _("RSS feed of the most recently added Assets across all Collections");
+			
+			$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<link rel='alternate' type='application/rss+xml'"
+				." title='".$title."' href='".$url."'/>");
+			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."icons/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t"._("RSS: all newest");
+			print "\n\t\t</a><br/>";
+			
+			
+			$url = $harmoni->request->quickURL('collections', 'rss_all_latest', 
+				array('order' => 'modification'));
+			$title = _("RSS feed of the most recently changed Assets across all Collections");
+			
+			$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<link rel='alternate' type='application/rss+xml'"
+				." title='".$title."' href='".$url."'/>");
+			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."icons/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t"._("RSS: all recently updated");
+			print "\n\t\t</a>";
+			print "\n</div>";
+			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
+		}
+*/		if (ereg("^exhibitions\.browse_exhibition$", $harmoni->getCurrentAction())
+			&& RequestContext::value('exhibition_id')) 
+		{
+			ob_start();
+			print "<div style='font-size: small; padding-left: 5px;'>";
+			
+			$url = $harmoni->request->quickURL('exhibitions', 'rss_latest_slideshows',
+				array('exhibition_id' => RequestContext::value('exhibition_id')));
+			$title = _("RSS feed of the most recently added Slideshows in this Exhibition");
+			
+			$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<link rel='alternate' type='application/rss+xml'"
+				." title='".$title."' href='".$url."'/>");
+			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."icons/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t"._("RSS: newest");
+			print "\n\t\t</a><br/>";
+			
+			$url = $harmoni->request->quickURL('exhibitions', 'rss_latest_slideshows', 
+				array('order' => 'modification', 
+					'exhibition_id' => RequestContext::value('exhibition_id')));
+			$title = _("RSS feed of the most recently changed Slideshows in this Exhibition");
+			
+			$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<link rel='alternate' type='application/rss+xml'"
+				." title='".$title."' href='".$url."'/>");
+			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."icons/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t"._("RSS: recently updated");
+			print "\n\t\t</a>";
+			print "\n</div>";
+			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
+		}
+/*		if (ereg("^exhibitions\.browse$", $harmoni->getCurrentAction())) {
+			ob_start();
+			print "<div style='font-size: small; padding-left: 5px;'>";
+			
+			$url = $harmoni->request->quickURL('exhibitions', 'rss_latest_slideshows');
+			$title = _("RSS feed of the most recently added Slideshows across all Exhibitions");
+			
+			$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<link rel='alternate' type='application/rss+xml'"
+				." title='".$title."' href='".$url."'/>");
+			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."icons/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t"._("RSS: all newest");
+			print "\n\t\t</a><br/>";
+			
+			$url = $harmoni->request->quickURL('exhibitions', 'rss_latest_slideshows', 
+				array('order' => 'modification'));
+			$title = _("RSS feed of the most recently changed Slideshows across all Exhibitions");
+			
+			$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<link rel='alternate' type='application/rss+xml'"
+				." title='".$title."' href='".$url."'/>");
+			print "\n\t\t<a href='".$url."' style='white-space: nowrap;' title='".$title."'>";
+			print "\n\t\t\t<img src='".POLYPHONY_PATH."icons/rss_icon02.png' border='0' alt='"._("RSS Icon")."'/>";
+			print "\n\t\t\t"._("RSS: all recently updated");
+			print "\n\t\t</a>";
+			print "\n</div>";
+			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
+		}
+*/		
 		// Basket
 		$basket =& Basket::instance();
 		if (ereg("^(collection|asset)\.browse(Asset)?$", $harmoni->getCurrentAction()))
 			$menuColumn->add(AssetPrinter::getMultiEditOptionsBlock(), "100%", null, LEFT, TOP);
 		$menuColumn->add($basket->getSmallBasketBlock(EMPHASIZED_BLOCK), "100%", null, LEFT, TOP);
+		
+		// Collection Tags
+		if (ereg("^(collection|asset|tags)\.", $harmoni->getCurrentAction())
+			&& $this->getCurrentRepository()) 
+		{
+			$harmoni->request->passthrough("collection_id");
+			$harmoni->request->passthrough("asset_id");
+			$menuColumn->add(
+				new Block(
+					"<strong>"._("Tags in this Collection: ")."</strong>"
+					.TagAction::getTagCloudForRepository($this->getCurrentRepository(), 'concerto'), 
+					EMPHASIZED_BLOCK),
+				"100%", null, LEFT, TOP);
+			$harmoni->request->forget("collection_id");
+			$harmoni->request->forget("asset_id");
+		}
 		
 	// :: Footer ::
 		$footer =& new Container (new XLayout, FOOTER, 1);
@@ -236,7 +386,33 @@ class displayAction
 		$mainScreen->add($footer, "100%", null, RIGHT, BOTTOM);
 
 		return $mainScreen;
-	}	
+	}
+	
+	/**
+	 * Answer the current repositoryId
+	 * 
+	 * @return object Repository
+	 * @access public
+	 * @since 11/14/06
+	 */
+	function &getCurrentRepository () {
+		if (!isset($this->_currentRepository)) {
+			$idManager =& Services::getService('Id');
+			if (RequestContext::value('collection_id')) {
+				$id =& $idManager->getId(RequestContext::value('collection_id'));
+				$repositoryManager =& Services::getService('Repository');
+				$this->_currentRepository =& $repositoryManager->getRepository($id);
+			} else if (RequestContext::value('asset_id')) {
+				$repositoryManager =& Services::getService('Repository');
+				$asset =& $repositoryManager->getAsset(
+					$idManager->getId(RequestContext::value('asset_id')));
+				$this->_currentRepository =& $asset->getRepository();
+			} else {
+				$this->_currentRepository = null;
+			}
+		}
+		return $this->_currentRepository;	
+	}
 }
 
 ?>

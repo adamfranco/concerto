@@ -92,7 +92,7 @@ class browsetypeAction
 		
 		// print the results
 		$resultPrinter =& new IteratorResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
-		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
+		$resultLayout =& $resultPrinter->getLayout("canView");
 		$actionRows->add($resultLayout, null, null, CENTER, CENTER);
 	}
 }

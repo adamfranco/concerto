@@ -10,6 +10,7 @@
 
 require_once(MYDIR."/main/library/abstractActions/AssetAction.class.php");
 require_once(HARMONI."/Primitives/Collections-Text/HtmlString.class.php");
+require_once(POLYPHONY."/main/modules/tags/TagAction.abstract.php");
 
 /**
  * 
@@ -89,40 +90,80 @@ class viewAction
 		$contentCols =& new Container($xLayout, OTHER, 1);
 		$actionRows->add($contentCols, "100%", null, LEFT, CENTER);
 		
-			// Description and dates
-			ob_start();
-			$assetId =& $asset->getId();
-			print  "\n\t<strong>"._("Description").":</strong>";
+		// Description and dates
+		ob_start();
+		$assetId =& $asset->getId();			
+			
+		print "\n\t<dl>";
+		
+		if ($asset->getDescription()) {
 			$description =& HtmlString::withValue($asset->getDescription());
 			$description->clean();
-			print  "\n\t<div>".$description->asString()."</div>";
-			print  "\n\t<br /><strong>"._("ID#").":</strong> ".$assetId->getIdString();
-			print  "\n\t<br /><strong>"._("Type").":</strong> ".Type::typeToString($asset->getAssetType());
-			
-			
-			$date =& $asset->getModificationDate();
-			print  "\n\t<table><tr><td>\n\t\t<strong>";
-			print _("Modification Date");
-			print ":</strong>\n\t</td><td>\n\t\t<em>".$date->asString()."</em>\n\t</tr>";
-			$date =& $asset->getCreationDate();
-			print  "\n\t<tr><td>\n\t\t<strong>";
-			print _("Creation Date");
-			print ":</strong>\n\t</td><td>\n\t\t<em>".$date->asString()."</em>\n\t</tr>";
-			print "\n\t</table>";
+			print "\n\t\t<dt style='font-weight: bold;'>"._("Description:")."</dt>";
+			print "\n\t\t<dd>".$description->asString()."</dd>";
+		}
 		
-			if(is_object($asset->getEffectiveDate())) {
-				$effectDate =& $asset->getEffectiveDate();
-				print  "\t<br />\n\t<strong>"._("Effective Date").":</strong>\n\t<em>".$effectDate->asString()."</em>\n";
-			}
-			
-			if(is_object($asset->getExpirationDate())) {
-				$expirationDate =& $asset->getExpirationDate();
-				print  "\t<br />\n\t<strong>"._("Expiration Date").":</strong>\n\t<em>".$expirationDate->asString()."</em>\n";
-			}
+		print  "\n\t\t<dt style='font-weight: bold;'>";
+		print _("ID#");
+		print ":</dt>\n\t\t<dd >";
+		print $assetId->getIdString();
+		print "</dd>";
 		
-			$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
-			ob_end_clean();
-			$contentCols->add($layout, "100%", null, LEFT, CENTER);
+		print  "\n\t\t<dt style='font-weight: bold;'>";
+		print _("Type");
+		print ":</dt>\n\t\t<dd >";
+		print Type::typeToString($asset->getAssetType());
+		print "</dd>";
+		
+		$date = $asset->getModificationDate();
+		print  "\n\t\t<dt style='font-weight: bold;'>";
+		print _("Modification Date");
+		print ":</dt>\n\t\t<dd >";
+		print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+		print "</dd>";
+		
+		$date = $asset->getCreationDate();
+		print  "\n\t\t<dt style='font-weight: bold;'>";
+		print _("Creation Date");
+		print ":</dt>\n\t\t<dd >";
+		print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+		print "</dd>";
+	
+		if(is_object($asset->getEffectiveDate())) {
+			$date = $asset->getEffectiveDate();
+			print  "\n\t\t<dt style='font-weight: bold;'>";
+			print _("Effective Date");
+			print ":</dt>\n\t\t<dd >";
+			print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+			print "</dd>";
+		}
+		
+		if(is_object($asset->getExpirationDate())) {
+			$date = $asset->getExpirationDate();
+			print  "\n\t\t<dt style='font-weight: bold;'>";
+			print _("Expiration Date");
+			print ":</dt>\n\t\t<dd >";
+			print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+			print "</dd>";
+		}
+		print "\n\t</dl>";
+		
+		$contentCols->add(new Block(ob_get_clean(), STANDARD_BLOCK), "60%", null, LEFT, TOP);
+		
+		
+		// Add the tagging manager script to the header
+		$outputHandler =& $harmoni->getOutputHandler();
+		$outputHandler->setHead($outputHandler->getHead()
+			."\n\t\t<script type='text/javascript' src='".POLYPHONY_PATH."javascript/Tagger.js'></script>"
+			."\n\t\t<link rel='stylesheet' type='text/css' href='".POLYPHONY_PATH."javascript/Tagger.css' />");
+		
+		// Tags
+		ob_start();
+		print "\n\t<div style='font-weight: bold; margin-bottom: 10px;'>"._("Tags given to this Asset: ")."</div>";
+		print "\n\t<div style=' text-align: justify;'>";
+		print TagAction::getTagCloudForItem(TaggedItem::forId($assetId, 'concerto'), 'view');
+		print "\n\t</div>";
+		$contentCols->add(new Block(ob_get_clean(), STANDARD_BLOCK), "40%", null, LEFT, TOP);
 		
 		
 		//***********************************

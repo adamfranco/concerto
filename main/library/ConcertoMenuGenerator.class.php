@@ -59,20 +59,28 @@ class ConcertoMenuGenerator
 		
 		// Collection browse links.
 		// Just show if we are not in a particular collection.
-		if (ereg("collection(s)?|asset", $module)) {			
+		if (ereg("collection(s)?|asset|basket|tags", $module)) {			
 			// Collection root
-			if (ereg("^(collection|asset)$", $module)) {
+			if (ereg("^(collection|asset|basket|tags)$", $module)
+				&& ($harmoni->request->get('collection_id') ||
+					$harmoni->request->get('asset_id'))) 
+			{
 				// Repository Link
 				$repository =& $this->getRepository();
-				if ($repository)
+				if ($repository) {
 					$linkTitle = $repository->getDisplayName();
-				else
+					$repositoryId =& $repository->getId();
+				} else {
 					$linkTitle = _("Collection");
+					$repositoryId = null;
+				}
+					
+				
 				$mainMenu->add(
 					new MenuItemLink(
 						$linkTitle,
 						$harmoni->request->quickURL("collection", "browse",
-							array('collection_id' => $harmoni->request->get('collection_id'))),
+							array('collection_id' => $repositoryId->getIdString())),
 						($module == "collection")?TRUE:FALSE, 2), 
 					"100%", null, LEFT, CENTER);
 					
@@ -90,7 +98,8 @@ class ConcertoMenuGenerator
 							new MenuItemLink(
 								$assets[$i]->getDisplayName(),
 								$harmoni->request->quickURL("asset", "browseAsset",
-									array('asset_id' => $assetId->getIdString())),
+									array('collection_id' => $repositoryId->getIdString(),
+										'asset_id' => $assetId->getIdString())),
 								($module == "asset")?TRUE:FALSE, $j+3), 
 							"100%", null, LEFT, CENTER);
 						$j++;
@@ -153,7 +162,25 @@ class ConcertoMenuGenerator
 				$this->addSlideshowHierarchy($mainMenu, $slideshowAssetId, false);
 			}
 		}
-	
+		
+		
+	// :: Tagging ::
+		$mainMenu_item1 =& new MenuItemLink(
+			_("Tags"), 
+			$harmoni->request->quickURL("tags", "all"), 
+			($module == "tags" && $action == "all")?TRUE:FALSE, 1);
+		$mainMenu->add($mainMenu_item1, "100%", null, LEFT, CENTER);
+		
+		$tagManager =& Services::getService("Tagging");
+		if ($currentUserIdString = $tagManager->getCurrentUserIdString()) {
+			$harmoni->request->startNamespace("polyphony-tags");
+			$mainMenu_item1 =& new MenuItemLink(
+				_("Your Tags"), 
+				$harmoni->request->quickURL("tags", "user", array('agent_id' => $currentUserIdString)), 
+				($module == "tags" && $action == "user" && RequestContext::value('agent_id') == $currentUserIdString)?TRUE:FALSE, 1);
+			$mainMenu->add($mainMenu_item1, "100%", null, LEFT, CENTER);
+			$harmoni->request->endNamespace();
+		}
 	
 		return $mainMenu;
 	}
@@ -218,7 +245,6 @@ class ConcertoMenuGenerator
 			$currentAssetId =& $assets[$i]->getId();
 			if ($slideshowType->isEqual($assets[$i]->getAssetType()) || $altSlideshowType->isEqual($assets[$i]->getAssetType())) {
 				if ($viewMode) {
-					printpre($currentAssetId);
 					$mainMenu->add(
 						new MenuItemLink(
 							$assets[$i]->getDisplayName(),

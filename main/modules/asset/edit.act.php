@@ -217,8 +217,8 @@ class editAction
 		$repeatableComponent =& $step->addComponent("files", 
 			new WRepeatableComponentCollection);
 		$repeatableComponent->setStartingNumber(0);
-		$repeatableComponent->setAddLabel(_("Add New Record"));
-		$repeatableComponent->setRemoveLabel(_("Remove Record"));
+		$repeatableComponent->setAddLabel(_("Add New File"));
+		$repeatableComponent->setRemoveLabel(_("Remove File"));
 		
 		
 		ob_start();
@@ -228,6 +228,7 @@ class editAction
 		$component =& $repeatableComponent->addComponent("file_upload", new WFileUploadField());		
 		
 		$vComponent =& $repeatableComponent->addComponent("file_name", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
 		$component =& $vComponent->setInputComponent(new WTextField);
 		
 		$component =& $repeatableComponent->addComponent("file_size", new WTextField());
@@ -235,6 +236,7 @@ class editAction
 		
 		
 		$vComponent =& $repeatableComponent->addComponent("mime_type", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
 		$component =& $vComponent->setInputComponent(new WTextField);
 		
 		
@@ -247,9 +249,11 @@ class editAction
 		$dimensionComponent->addOnChange("validateWizard(this.form);");
 		
 		$vComponent =& $repeatableComponent->addComponent("height", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
 		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
 		$vComponent =& $repeatableComponent->addComponent("width", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
 		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
 		
@@ -257,13 +261,16 @@ class editAction
 		$component =& $repeatableComponent->addComponent("thumbnail_upload", new WFileUploadField());
 		
 		$vComponent =& $repeatableComponent->addComponent("thumbnail_mime_type", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
 		$component =& $vComponent->setInputComponent(new WTextField);
 		
 		// Thumbnail dimensions
 		$vComponent =& $repeatableComponent->addComponent("thumbnail_height", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
 		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
 		$vComponent =& $repeatableComponent->addComponent("thumbnail_width", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
 		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
 		print "\n<p>"._("Upload a new file and/or change the properties below.")."</p>";
@@ -543,12 +550,14 @@ class editAction
 			
 			// If our image format is supported by the image processor,
 			// generate a thumbnail.
-			if ($imageProcessor->isFormatSupported($mimeType)) {				
-				$parts['THUMBNAIL_DATA']->updateValue(
-					$imageProcessor->generateThumbnailData($mimeType, 
-											file_get_contents($tmpName)));
+			if ($imageProcessor->isFormatSupported($mimeType)) 
+				$thumbnailData = $imageProcessor->generateThumbnailData($mimeType, 
+											file_get_contents($tmpName));
+			
+			if ($thumbnailData) {
+				$parts['THUMBNAIL_DATA']->updateValue($thumbnailData);
 				$parts['THUMBNAIL_MIME_TYPE']->updateValue($imageProcessor->getThumbnailFormat());
-			} 
+			}
 			// just make our thumbnail results empty. Default icons will display
 			// instead.
 			else {
@@ -824,6 +833,10 @@ class editAction
 		$idManager =& Services::getService("Id");
 		$exisistingRecords = array();
 		
+		// Create an array of new tag values;
+		$assetId =& $asset->getId();
+		$this->_newStructuredTagValues[$assetId->getIdString()] = array();
+		
 		foreach (array_keys($results[$recStructIdString]['records']) as $i) {
 			$recordResults =& $results[$recStructIdString]['records'][$i];
 			if ($recordResults['record_id']) {
@@ -837,7 +850,7 @@ class editAction
 			$exisistingRecords[] = $recordId->getIdString();
 			
 			$this->updateRecord($recordResults, 
-				$initialState[$recStructIdString]['records'][$i], $record);
+				$initialState[$recStructIdString]['records'][$i], $record, $asset->getId());
 		}
 		
 		// Delete any records that were removed.
@@ -856,12 +869,13 @@ class editAction
 	 * @param array $results, the wizard results
 	 * @param array $initialState, the initial wizard results
 	 * @param object Record $record
+	 * @param object Id $assetId
 	 * @return void
 	 * @access public
 	 * @since 10/24/05
 	 */
 	function updateSingleValuedPart (&$partResults, &$partInitialState, 
-		&$partStruct, &$record) 
+		&$partStruct, &$record, $assetId) 
 	{	
 // 		print "<hr/>";
 // 		print "PartResults: ";
@@ -871,32 +885,48 @@ class editAction
 		
 		$partStructId = $partStruct->getId();
 		
-		$partStructType =& $partStruct->getType();
-		$valueObjClass = $partStructType->getKeyword();
-		
 		$value =& $partResults;
-		$valueStr = $value->asString();
 		
-		$authZManager =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
-		$authoritativeValues =& $partStruct->getAuthoritativeValues();
-			if ($authZManager->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.modify_authority_list"),
-					$this->getRepositoryId())
-				&& !$partStruct->isAuthoritativeValue($value)
-				&& $authoritativeValues->hasNext()) 
+		if (is_object($value)) {
+			$authZManager =& Services::getService("AuthZ");
+			$idManager =& Services::getService("Id");
+			$authoritativeValues =& $partStruct->getAuthoritativeValues();
+				if ($authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.modify_authority_list"),
+						$this->getRepositoryId())
+					&& !$partStruct->isAuthoritativeValue($value)
+					&& $authoritativeValues->hasNext()) 
+				{
+				$partStruct->addAuthoritativeValue($value);
+				printpre("\tAdding AuthoritativeValue: ".$value->asString());
+			}
+			
+			if ($value->isNotEqualTo($partInitialState)) {
+				$parts =& $record->getPartsByPartStructure($partStructId);
+				if ($parts->hasNext()) {
+					$part =& $parts->next();
+					$part->updateValue($value);
+				} else {
+					$part =& $record->createPart($partStructId, $value);
+				}
+			}
+			
+			// Add this value to the Structured Tags list for this asset.
+			$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+			if ($tagGenerator->shouldGenerateTagsForPartStructure(
+					$partStruct->getRepositoryId(), $partStructId))
 			{
-			$partStruct->addAuthoritativeValue($value);
-			printpre("\tAdding AuthoritativeValue: ".$valueStr);
+				$this->_newStructuredTagValues[$assetId->getIdString()][] = $value->asString();
+			}
 		}
-		
-		if ($value->isNotEqualTo($partInitialState)) {
+		// If we aren't passed a value, then the user didn't enter a value
+		// or deleted the one that was there.
+		// Remove any existing parts.
+		else {
 			$parts =& $record->getPartsByPartStructure($partStructId);
-			if ($parts->hasNext()) {
+			while ($parts->hasNext()) {
 				$part =& $parts->next();
-				$part->updateValue($value);
-			} else {
-				$part =& $record->createPart($partStructId, $value);
+				$record->deletePart($part->getId());
 			}
 		}
 	}
@@ -912,18 +942,19 @@ class editAction
 	 * @param array $results, the wizard results
 	 * @param array $initialState, the initial wizard results
 	 * @param object Record $record
+	 * @param object Id $assetId
 	 * @return void
 	 * @access public
 	 * @since 10/24/05
 	 */
 	function updateRepeatablePart (&$partResults, &$partInitialState, 
-		&$partStruct, &$record) 
+		&$partStruct, &$record, &$assetId) 
 	{
 		$partStructId = $partStruct->getId();
 		$partValsHandled = array();
 		
-		printpre("<hr/>");
-		printpre($partResults);
+// 		printpre("<hr/>");
+// 		printpre($partResults);
 		
 		$parts =& $record->getPartsByPartStructure($partStructId);
 		while ($parts->hasNext()) {
@@ -951,6 +982,14 @@ class editAction
 			$partId =& $part->getId();
 			printpre("\tIgnoring Part: Id: ".$partId->getIdString()." Value: ".$partStrVal);
 			
+			// Add this value to the Structured Tags list for this asset.
+			$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+			if ($tagGenerator->shouldGenerateTagsForPartStructure(
+					$partStruct->getRepositoryId(), $partStructId))
+			{
+				$this->_newStructuredTagValues[$assetId->getIdString()][] = $partStrVal;
+			}
+			
 			continue;
 		}
 		
@@ -958,26 +997,37 @@ class editAction
 		// been handled and need to be, add them.
 		foreach ($partResults as $key => $valueArray) {
 			$value =& $valueArray['partvalue'];
-			$valueStr = $value->asString();
 			
-			$authZManager =& Services::getService("AuthZ");
-			$idManager =& Services::getService("Id");
-			$authoritativeValues =& $partStruct->getAuthoritativeValues();
-			if ($authZManager->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.modify_authority_list"),
-					$this->getRepositoryId())
-				&& !$partStruct->isAuthoritativeValue($value)
-				&& $authoritativeValues->hasNext()) 
-			{
-				$partStruct->addAuthoritativeValue($value);
-				printpre("\tAdding AuthoritativeValue:".$valueStr);
-			}
-			
-			if (!in_array($valueStr, $partValsHandled)) {
-				$part =& $record->createPart($partStructId, $value);
+			if (is_object($value)) {
+				$valueStr = $value->asString();
 				
-				$partId =& $part->getId();
-				printpre("\tAdding Part: Id: ".$partId->getIdString()." Value: ".$valueStr);
+				$authZManager =& Services::getService("AuthZ");
+				$idManager =& Services::getService("Id");
+				$authoritativeValues =& $partStruct->getAuthoritativeValues();
+				if ($authZManager->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.modify_authority_list"),
+						$this->getRepositoryId())
+					&& !$partStruct->isAuthoritativeValue($value)
+					&& $authoritativeValues->hasNext()) 
+				{
+					$partStruct->addAuthoritativeValue($value);
+					printpre("\tAdding AuthoritativeValue:".$valueStr);
+				}
+				
+				if (!in_array($valueStr, $partValsHandled)) {
+					$part =& $record->createPart($partStructId, $value);
+					
+					$partId =& $part->getId();
+					printpre("\tAdding Part: Id: ".$partId->getIdString()." Value: ".$valueStr);
+					
+					// Add this value to the Structured Tags list for this asset.
+					$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+					if ($tagGenerator->shouldGenerateTagsForPartStructure(
+							$partStruct->getRepositoryId(), $partStructId))
+					{
+						$this->_newStructuredTagValues[$assetId->getIdString()][] = $valueStr;
+					}
+				}
 			}
 		}
 	}

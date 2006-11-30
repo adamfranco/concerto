@@ -9,25 +9,26 @@
  *
  * @version $Id$
  */
+ 
+if (file_exists(MYDIR.'/config/libraries.conf.php'))
+	require_once (MYDIR.'/config/libraries.conf.php');
+else
+	require_once (MYDIR.'/config/libraries_default.conf.php');
 
 /******************************************************************************
  * Include Harmoni - required
  ******************************************************************************/
-$harmoniPath = MYDIR."/../harmoni/harmoni.inc.php";
-if (!file_exists($harmoniPath)) {
+if (!file_exists(HARMONI_DIR."/harmoni.inc.php")) {
 	print "<h2>Harmoni was not found in the specified location, '";
-	print $harmoniPath;
+	print HARMONI_DIR."/harmoni.inc.php";
 	print "'. Please install Harmoni there or change the location specifed.</h2>";
 	print "<h3>Harmoni is part of the Harmoni project and can be downloaded from <a href='http://sf.net/projects/harmoni/'>http://sf.net/projects/harmoni/</a></h3>";
 }
-require_once ($harmoniPath);
+require_once (HARMONI_DIR."/harmoni.inc.php");
 
 /******************************************************************************
  * Include Polyphony
  ******************************************************************************/
-define("POLYPHONY_DIR", MYDIR."/../polyphony/");
-define("POLYPHONY_PATH", MYPATH."/../polyphony/");
-
 if (!file_exists(POLYPHONY_DIR."/polyphony.inc.php")) {
 	print "<h2>Polyphony was not found in the specified location, '";
 	print POLYPHONY_DIR;

@@ -76,7 +76,7 @@ class importAction extends MainWindowAction {
 		}
 
 		
-		$cacheName = 'import_concerto_data_wizard'.$uniqueString;
+		$cacheName = str_replace('.', '_', 'import_concerto_data_wizard'.$uniqueString);
 		$this->runWizard($cacheName, $centerPane);
 	}
 	

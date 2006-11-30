@@ -51,9 +51,14 @@ class ExhibitionPrinter {
 		$links = array();
 		
 		$actionString = $harmoni->getCurrentAction();
+		
+		// Authorization Icon
+		print AuthZPrinter::getAZIcon($assetId);
+		print " &nbsp; ";
+		
 	//====== Browse Link ======//	
 		if ($authZ->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.access"), 
+				$idManager->getId("edu.middlebury.authorization.view"), 
 				$asset->getId())) {
 			if ($actionString != "exhibitions.browse_exhibition" || 
 					$assetId->getIdString() != 
@@ -78,8 +83,8 @@ class ExhibitionPrinter {
 				."'>";
 			$links[count($links) - 1] .= _("Edit")."</a>";
 			$harmoni->request->endNamespace();
-		} else
-			$links[] = _("Edit");
+		} 
+		
 	//===== Delete Link =====//
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.delete"),
@@ -96,13 +101,13 @@ class ExhibitionPrinter {
 			ob_end_clean();			
 			print "\n<script type='text/javascript'>\n//<![CDATA[";
 			print "\n	function deleteExhibition(assetId, url) {";
-			print "\n		if (confirm(\""._("Are you sure you want to delete this Exhibition and all of its Slide-Shows?")."\")) {";
+			print "\n		if (confirm(\""._("Are you sure you want to delete this Exhibition and all of its Slide-Shows?")."\") && confirm(\""._("Clicking OK will permenantly delete this Exhibition and all of the Slide-Shows in it.\\nAre you REALLY sure you want to delete this Exhibition and all of its Slide-Shows?")."\")) {";
 			print "\n			window.location = url;";
 			print "\n		}";
 			print "\n	}";
 			print "\n//]]>\n</script>\n";
-		} else 
-			$links[] = _("delete");
+		} 
+		
 	//===== Add Slideshow Link =====//	
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.add_children"),

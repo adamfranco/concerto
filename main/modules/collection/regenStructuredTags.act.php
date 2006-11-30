@@ -1,29 +1,27 @@
 <?php
 /**
- * @package concerto.modules.exhibitions
- * 
- * @copyright Copyright &copy; 2005, Middlebury College
- * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
- *
- * @version $Id$
- */ 
-
-require_once(dirname(__FILE__)."/delete.act.php");
-
-/**
- * 
- * 
- * @package concerto.modules.exhibitions
+ * @package concerto.modules.collection
  * 
  * @copyright Copyright &copy; 2005, Middlebury College
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
  *
  * @version $Id$
  */
-class delete_slideshowAction 
-	extends deleteAction
-{
+require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php");
 
+/**
+ * 
+ * 
+ * @package concerto.modules.collection
+ * 
+ * @copyright Copyright &copy; 2005, Middlebury College
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
+ *
+ * @version $Id$
+ */
+class regenStructuredTagsAction 
+	extends MainWindowAction
+{
 	/**
 	 * Check Authorizations
 	 * 
@@ -36,10 +34,10 @@ class delete_slideshowAction
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
 		return $authZ->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.delete"), 
-					$idManager->getId(RequestContext::value('slideshow_id')));
+					$idManager->getId("edu.middlebury.authorization.modify"), 
+					$idManager->getId(RequestContext::value('collection_id')));
 	}
-	
+
 	/**
 	 * Return the "unauthorized" string to pring
 	 * 
@@ -48,7 +46,7 @@ class delete_slideshowAction
 	 * @since 4/26/05
 	 */
 	function getUnauthorizedMessage () {
-		return _("You are not authorized to delete this <em>Slideshow</em> or its <em>Slides</em>.");
+		return _("You are not authorized to regenerate stuctured tags for this <em>Collection</em> or its <em>Assets</em>.");
 	}
 
 	/**
@@ -62,13 +60,11 @@ class delete_slideshowAction
 		$idManager =& Services::getService("Id");
 		$repositoryManager =& Services::getService("Repository");
 		$repository =& $repositoryManager->getRepository(
-				$idManager->getId(
-					"edu.middlebury.concerto.exhibition_repository"));
-		$asset =& $repository->getAsset(
-				$idManager->getId(RequestContext::value('slideshow_id')));
-		return _("Delete Slideshow")." <em>".$asset->getDisplayName()."</em> ";
+				$idManager->getId(RequestContext::value('collection_id')));
+		return _("Regenerate Structured Tags for Collection")." <em>".$repository->getDisplayName().
+			"</em> ";
 	}
-	
+
 	/**
 	 * Build the content for this action
 	 * 
@@ -81,21 +77,16 @@ class delete_slideshowAction
 		$harmoni =& Harmoni::instance();
 		
 		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
-				$idManager->getId(
-					"edu.middlebury.concerto.exhibition_repository"));
+		$repositoryId =& $idManager->getId(RequestContext::value('collection_id'));
 		
-		$asset =& $repository->getAsset(
-			$idManager->getId(RequestContext::value('slideshow_id')));
+
+		$systemAgentId =& $idManager->getId('system:concerto');
+		$tagGenerator =& StructuredMetaDataTagGenerator::instance();	
+		$tagGenerator->regenerateTagsForRepository($repositoryId, $systemAgentId,
+			'concerto');
 		
-		// Remove it from its set.
-		$exhibitionId =& $idManager->getId(RequestContext::value('exhibition_id'));		
-		$setManager =& Services::getService("Sets");
-		$exhibitionSet =& $setManager->getPersistentSet($exhibitionId);
-		$exhibitionSet->removeItem($asset->getId());
-		
-		// Log the action
+
+		// Log the success or failure
 		if (Services::serviceRunning("Logging")) {
 			$loggingManager =& Services::getService("Logging");
 			$log =& $loggingManager->getLogForWriting("Concerto");
@@ -104,18 +95,13 @@ class delete_slideshowAction
 			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
 							"Normal events.");
 			
-			$item =& new AgentNodeEntryItem("Delete Node", "Slideshow deleted:\n<br/>&nbsp; &nbsp; &nbsp;".$asset->getDisplayName());
-			$item->addNodeId($asset->getId());
-			$item->addNodeId($idManager->getId(RequestContext::value('exhibition_id')));
+			$item =& new AgentNodeEntryItem("Regenerated Tags", "Auto-generated tags were regenerated");
+			$item->addNodeId($repositoryId);
 			
 			$log->appendLogWithTypes($item,	$formatType, $priorityType);
 		}
 		
-		$repository->deleteAsset(
-				$idManager->getId(RequestContext::value('slideshow_id')));
-
-		RequestContext::locationHeader($harmoni->request->quickURL(
-			"exhibitions", "browse_exhibition",
-			array("exhibition_id" => RequestContext::value('exhibition_id'))));
+		RequestContext::sendTo(
+			$harmoni->request->quickURL("collection", "browse", array('collection_id' => RequestContext::value('collection_id'))));
 	}
 }

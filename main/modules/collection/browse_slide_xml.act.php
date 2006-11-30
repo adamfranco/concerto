@@ -438,32 +438,16 @@ END;
 	 * @since 9/28/05
 	 */
 	function printAsset ( &$asset ) {
-		/*********************************************************
-		 * Asset Info
-		 *********************************************************/
 		$assetId =& $asset->getId();
+		/*********************************************************
+		 * Description
+		 *********************************************************/
+		
 		print "\n<div>\n";
-		print "\t<strong>"._("DisplayName").":</strong>\n";
-		print "\t".$asset->getDisplayName()."\n";
-		print "\t<br />\n";
-		print "\t<strong>"._("Description").":</strong>\n";
 		print "\t".$asset->getDescription()."\n";
-		print "\t<br />\n";
-		print "\t<strong>"._("ID#").":</strong>\n";
-		print "\t".$assetId->getIdString()."\n";
-	
+		print "\n</div>";
 		
-		if(is_object($asset->getEffectiveDate())) {
-			$effectDate =& $asset->getEffectiveDate();
-			print  "\t<br />\n\t<strong>"._("Effective Date").":</strong>\n\t<em>".$effectDate->asString()."</em>\n";
-		}
-		
-		if(is_object($asset->getExpirationDate())) {
-			$expirationDate =& $asset->getExpirationDate();
-			print  "\t<br />\n\t<strong>"._("Expiration Date").":</strong>\n\t<em>".$expirationDate->asString()."</em>\n";
-		}
-		
-		
+				
 		/*********************************************************
 		 * Expanding to child assets
 		 *********************************************************/
@@ -501,6 +485,48 @@ END;
 				}
 			}
 		}
+		
+		/*********************************************************
+		 * ID and Dates
+		 *********************************************************/
+		print "\t<div style='padding: 5px; border-top: 1px solid;'>\n";
+		print "\t<strong>"._("ID#").":</strong>\n";
+		print "\t".$assetId->getIdString()."\n";
+	
+		
+		print "\n\t<dl>";
+		$date = $asset->getModificationDate();
+		print  "\n\t\t<dt style='font-weight: bold;'>";
+		print _("Modification Date");
+		print ":</dt>\n\t\t<dd >";
+		print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+		print "</dd>";
+		
+		$date = $asset->getCreationDate();
+		print  "\n\t\t<dt style='font-weight: bold;'>";
+		print _("Creation Date");
+		print ":</dt>\n\t\t<dd >";
+		print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+		print "</dd>";
+	
+		if(is_object($asset->getEffectiveDate())) {
+			$date = $asset->getEffectiveDate();
+			print  "\n\t\t<dt style='font-weight: bold;'>";
+			print _("Effective Date");
+			print ":</dt>\n\t\t<dd >";
+			print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+			print "</dd>";
+		}
+		
+		if(is_object($asset->getExpirationDate())) {
+			$date = $asset->getExpirationDate();
+			print  "\n\t\t<dt style='font-weight: bold;'>";
+			print _("Expiration Date");
+			print ":</dt>\n\t\t<dd >";
+			print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+			print "</dd>";
+		}
+		print "\n\t</dl>";	
 		
 		/*********************************************************
 		 * Asset Content
@@ -567,7 +593,7 @@ END;
 		$repository =& $asset->getRepository();
 		$repositoryId =& $repository->getId();
 		
-		print "\t<br />\n";
+		print "\t<div>\n";
 		print "\t<input type='button'";
 		print " value='"._("View child-Assets")."'";
 		print " onclick='";
@@ -584,5 +610,6 @@ END;
 		print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
 		print ")";
 		print "' />\n";
+		print "\n</div>";
 	}
 }

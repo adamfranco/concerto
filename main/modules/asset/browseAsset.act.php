@@ -36,9 +36,12 @@ class browseAssetAction
 		// Check that the user can access this collection
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
-		return $authZ->isUserAuthorized(
+		return ($authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.access"), 
-					$this->getAssetId());
+					$this->getAssetId())
+				|| $authZ->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.view"), 
+					$this->getAssetId()));
 	}
 	
 	/**
@@ -112,36 +115,85 @@ class browseAssetAction
 		
 		ob_start();
 		print "\n<table width='100%'>\n<tr><td style='text-align: left; vertical-align: top'>";				
-		
-		print "\n\t<strong>"._("Title").":</strong> \n<em>".$asset->getDisplayName()."</em>";
-		print "\n\t<br /><strong>"._("Description").":</strong>";
-		$description =& HtmlString::withValue($asset->getDescription());
-		$description->clean();
-		print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";
-		print "\n\t<br /><strong>"._("ID#").":</strong> ".$assetId->getIdString();
-	
-		
-		if(is_object($asset->getEffectiveDate())) {
-			$effectDate =& $asset->getEffectiveDate();
-			$effectDate =& $effectDate->asDate();
-			print  "\n\t<br /><strong>"._("Effective Date").":</strong> \n<em>".$effectDate->asString()."</em>";
+
+		print "\n\t<dl>";		
+		if ($asset->getDisplayName()) {
+			print "\n\t\t<dt style='font-weight: bold;'>"._("Title:")."</dt>";
+			print "\n\t\t<dd>".$asset->getDisplayName()."</dd>";
 		}
+		
+		if ($asset->getDescription()) {
+			$description =& HtmlString::withValue($asset->getDescription());
+			$description->clean();
+			print "\n\t\t<dt style='font-weight: bold;'>"._("Description:")."</dt>";
+			print "\n\t\t<dd>".$description->asString()."</dd>";
+		}
+		
+		print  "\n\t\t<dt style='font-weight: bold;'>";
+		print _("ID#");
+		print ":</dt>\n\t\t<dd >";
+		print $assetId->getIdString();
+		print "</dd>";
+		
+		print  "\n\t\t<dt style='font-weight: bold;'>";
+		print _("Type");
+		print ":</dt>\n\t\t<dd >";
+		print Type::typeToString($asset->getAssetType());
+		print "</dd>";
+		
+		$date = $asset->getModificationDate();
+		print  "\n\t\t<dt style='font-weight: bold;'>";
+		print _("Modification Date");
+		print ":</dt>\n\t\t<dd >";
+		print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+		print "</dd>";
+		
+		$date = $asset->getCreationDate();
+		print  "\n\t\t<dt style='font-weight: bold;'>";
+		print _("Creation Date");
+		print ":</dt>\n\t\t<dd >";
+		print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+		print "</dd>";
 	
+		if(is_object($asset->getEffectiveDate())) {
+			$date = $asset->getEffectiveDate();
+			print  "\n\t\t<dt style='font-weight: bold;'>";
+			print _("Effective Date");
+			print ":</dt>\n\t\t<dd >";
+			print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+			print "</dd>";
+		}
 		
 		if(is_object($asset->getExpirationDate())) {
-			$expirationDate =& $asset->getExpirationDate();
-			$expirationDate =& $expirationDate->asDate();
-			print  "\n\t<br /><strong>"._("Expiration Date").":</strong> \n<em>".$expirationDate->asString()."</em>";
+			$date = $asset->getExpirationDate();
+			print  "\n\t\t<dt style='font-weight: bold;'>";
+			print _("Expiration Date");
+			print ":</dt>\n\t\t<dd >";
+			print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+			print "</dd>";
 		}
+		print "\n\t</dl>";
 		
 		
 		print "\n</td><td style='text-align: right; vertical-align: top'>";
 		
 		
 		$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($assetId);
-	if ($thumbnailURL !== FALSE) {
+		if ($thumbnailURL !== FALSE) {
 			print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' align='right' />";
 		}
+		
+		// Add the tagging manager script to the header
+		$outputHandler =& $harmoni->getOutputHandler();
+		$outputHandler->setHead($outputHandler->getHead()
+			."\n\t\t<script type='text/javascript' src='".POLYPHONY_PATH."javascript/Tagger.js'></script>"
+			."\n\t\t<link rel='stylesheet' type='text/css' href='".POLYPHONY_PATH."javascript/Tagger.css' />");
+		
+		// Tags
+		print "\n\t<div style='font-weight: bold; margin-bottom: 10px; text-align: left;'>"._("Tags given to this Asset: ")."</div>";
+		print "\n\t<div style=' text-align: justify;'>";
+		print TagAction::getTagCloudForItem(TaggedItem::forId($assetId, 'concerto'), 'view');
+		print "\n\t</div>";
 		
 		print "\n</td></tr></table>";
 // 		print "\n\t<hr/>";
@@ -167,7 +219,7 @@ class browseAssetAction
 									"printAssetShort", $this->getParams());
 		$resultPrinter->setStartingNumber($this->_state['startingNumber']);
 		
-		$resultLayout =& $resultPrinter->getLayout($harmoni, "canView");
+		$resultLayout =& $resultPrinter->getLayout("canView");
 		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
 		$resultLayout->setPostHTML("</form>");
 		
@@ -182,7 +234,7 @@ class browseAssetAction
 		$searchBar->setPreHTML(
 			"\n<form action='".$currentUrl->write()."' method='post'>
 	<input type='hidden' name='".RequestContext::name('form_submitted')."' value='true'/>");
-		$searchBar->setPostHTML("\n</form");
+		$searchBar->setPostHTML("\n</form>");
 		
 		ob_start();
 		print  "\n\t<strong>"._("Child Assets").":</strong>";

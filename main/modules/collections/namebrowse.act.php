@@ -63,7 +63,7 @@ class namebrowseAction
 		CollectionsPrinter::printFunctionLinks();
 		
 		print "<p>";
-		print _("Below are listed the availible <em>Collections</em>, organized by name.");
+		print _("Below are listed the available <em>Collections</em>, organized by name.");
 		print "</p>\n<p>";
 		print _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
 		print "</p>";
@@ -97,23 +97,26 @@ class namebrowseAction
 		
 		// print the Results
 		$resultPrinter =& new ArrayResultPrinter($repositoryArray, 1, 20, "printRepositoryShort", $harmoni);
-		$resultLayout =& $resultPrinter->getLayout($harmoni);
+		$resultPrinter->addLinksStyleProperty(new MarginTopSP("10px"));
+		$resultLayout =& $resultPrinter->getLayout('canView');
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 	}
 }
 
 
 // Callback function for printing Repositories
-function printRepositoryShort(& $repository, & $harmoni) {
+function printRepositoryShort(& $repository) {
+	$harmoni =& Harmoni::instance();
 	ob_start();
 	
 	$repositoryId =& $repository->getId();
 	print  "\n\t<div style='font-weight: bold' title='"._("ID#").": ".
 			$repositoryId->getIdString()."'>".$repository->getDisplayName()."</div>";
 	$description =& HtmlString::withValue($repository->getDescription());
-	$description->trim(100);
+	$description->trim(500);
 	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	
 	
+
 	RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
 	$xLayout =& new XLayout();
 	$layout =& new Container($xLayout, BLANK, 1);
@@ -121,6 +124,20 @@ function printRepositoryShort(& $repository, & $harmoni) {
 	$layout->add($layout2, null, null, CENTER, CENTER);
 	ob_end_clean();
 	return $layout;
+}
+
+// Callback function for checking authorizations
+function canView( &$item ) {
+	$authZ =& Services::getService("AuthZ");
+	$idManager =& Services::getService("Id");
+	
+	if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $item->getId())
+		|| $authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $item->getId()))
+	{
+		return TRUE;
+	} else {
+		return FALSE;
+	}
 }
 
 ?>

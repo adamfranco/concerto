@@ -74,31 +74,38 @@ class AssetComponent
 		
 		if (is_object($this->_id)) {
 			$repositoryManager =& Services::getService('Repository');
-			$asset =& $repositoryManager->getAsset($this->_id);
-			
-			print "\n<table border='0'>";
-			print "\n\t<tr>\n\t\t<td>";
-			
-			$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($this->_id);
-			if ($thumbnailURL !== FALSE) {
+			if ($repositoryManager->getAsset($this->_id)) {
+				$asset =& $repositoryManager->getAsset($this->_id);
 				
-//				print "\n\t<br /><a href='".$assetViewUrl."'>";
-				print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' />";
-//				print "\n\t</a>";
+				
+				print "\n<table border='0'>";
+				print "\n\t<tr>\n\t\t<td>";
+				
+				$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($this->_id);
+				if ($thumbnailURL !== FALSE) {
+					
+	//				print "\n\t<br /><a href='".$assetViewUrl."'>";
+					print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' />";
+	//				print "\n\t</a>";
+				}
+				
+				print "\n\t\t</td>\n\t\t</tr>";
+				print "\n\t<tr>\n\t\t<td>";
+				
+				print _("Id: ").$this->_id->getIdString();
+				
+				print "\n\t\t</td>\n\t\t</tr>";
+				print "\n\t<tr>\n\t\t<td>";
+				
+				print _("Name: ").$asset->getDisplayName();
+				
+				print "\n\t\t</td>\n\t\t</tr>";
+				print "\n</table>";
+			} else {
+				print "\n<div style='margin: 10px; padding: 10px; border: 1px dotted;'>";
+				print _("The target Asset has been deleted or is no longer available.");
+				print "</div>";
 			}
-			
-			print "\n\t\t</td>\n\t\t</tr>";
-			print "\n\t<tr>\n\t\t<td>";
-			
-			print _("Id: ").$this->_id->getIdString();
-			
-			print "\n\t\t</td>\n\t\t</tr>";
-			print "\n\t<tr>\n\t\t<td>";
-			
-			print _("Name: ").$asset->getDisplayName();
-			
-			print "\n\t\t</td>\n\t\t</tr>";
-			print "\n</table>";
 		}
 		
 		$m = ob_get_contents();
