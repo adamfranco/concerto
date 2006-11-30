@@ -802,8 +802,21 @@ function printAssetShort(& $asset, $params, $num) {
 		print "\n\t<div>"._("ID#").": ".$assetId->getIdString()."</div>";
 	if ($_SESSION["show_description"] == 'true') {
 		$description =& HtmlString::withValue($asset->getDescription());
-		$description->trim(25);
-		print  "\n\t<div style='font-size: smaller; height: 50px; overflow: auto;'>".$description->asString()."</div>";
+		$description->trim(16);
+		$descriptionShort = preg_replace('/\.\.\.$/', 
+			"<a onclick=\""
+				."var panel = Panel.run("
+					."'".addslashes(htmlspecialchars($asset->getDisplayName()))."', "
+					."100, 400, this.parentNode); "
+				."if (!panel.contentElement.innerHTML) "
+					."{panel.contentElement.innerHTML = this.parentNode.nextSibling.innerHTML;}"
+			."\">...</a>", $description->asString());
+		print  "\n\t<div style='font-size: smaller; height: 50px; overflow: auto;'>";
+		print $descriptionShort;
+		print "</div>";
+		if (preg_match('/\.\.\.$/', $description->asString())) {
+			print "<div style='display: none'>".$asset->getDescription()."</div>";
+		}
 		
 		// Tags
 		print "\n\t<div style='font-size: smaller; height: 50px; overflow: auto; text-align: justify; margin-top: 5px;'>";
