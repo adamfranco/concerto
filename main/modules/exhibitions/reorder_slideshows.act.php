@@ -134,6 +134,24 @@ class reorder_slideshowsAction
 							
 				$log->appendLogWithTypes($item,	$formatType, $priorityType);
 			}
+			
+			// Remove any missing slideshows
+			$slideshowsIdStrings = array();
+			$slideshows =& $exhibition->getAssets();
+			while ($slideshows->hasNext()) {
+				$slideshow =& $slideshows->next();
+				$slideshowId =& $slideshow->getId();
+				$slideshowsIdStrings[] = $slideshowId->getIdString();
+			}
+			$itemsToRemove = array();
+			$exhibitionSet->reset();
+			while ($exhibitionSet->hasNext()) {
+				$itemId =& $exhibitionSet->next();
+				if (!in_array($itemId->getIdString(), $slideshowsIdStrings))
+					$itemsToRemove[] = $itemId;
+			}
+			foreach ($itemsToRemove as $id)
+				$exhibitionSet->removeItem($id);
 		}
 	
 		RequestContext::locationHeader(

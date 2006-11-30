@@ -89,6 +89,12 @@ class delete_slideshowAction
 		$asset =& $repository->getAsset(
 			$idManager->getId(RequestContext::value('slideshow_id')));
 		
+		// Remove it from its set.
+		$exhibitionId =& $idManager->getId(RequestContext::value('exhibition_id'));		
+		$setManager =& Services::getService("Sets");
+		$exhibitionSet =& $setManager->getPersistentSet($exhibitionId);
+		$exhibitionSet->removeItem($asset->getId());
+		
 		// Log the action
 		if (Services::serviceRunning("Logging")) {
 			$loggingManager =& Services::getService("Logging");
