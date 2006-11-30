@@ -36,9 +36,12 @@ class browseAssetAction
 		// Check that the user can access this collection
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
-		return $authZ->isUserAuthorized(
+		return ($authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.access"), 
-					$this->getAssetId());
+					$this->getAssetId())
+				|| $authZ->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.view"), 
+					$this->getAssetId()));
 	}
 	
 	/**

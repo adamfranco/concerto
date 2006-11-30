@@ -58,7 +58,7 @@ class ExhibitionPrinter {
 		
 	//====== Browse Link ======//	
 		if ($authZ->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.access"), 
+				$idManager->getId("edu.middlebury.authorization.view"), 
 				$asset->getId())) {
 			if ($actionString != "exhibitions.browse_exhibition" || 
 					$assetId->getIdString() != 
@@ -83,8 +83,8 @@ class ExhibitionPrinter {
 				."'>";
 			$links[count($links) - 1] .= _("Edit")."</a>";
 			$harmoni->request->endNamespace();
-		} else
-			$links[] = _("Edit");
+		} 
+		
 	//===== Delete Link =====//
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.delete"),
@@ -106,8 +106,8 @@ class ExhibitionPrinter {
 			print "\n		}";
 			print "\n	}";
 			print "\n//]]>\n</script>\n";
-		} else 
-			$links[] = _("delete");
+		} 
+		
 	//===== Add Slideshow Link =====//	
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.add_children"),

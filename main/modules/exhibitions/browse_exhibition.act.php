@@ -38,9 +38,12 @@ class browse_exhibitionAction
 		// Check that the user can access this collection
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
-		return $authZ->isUserAuthorized(
+		return ($authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.access"), 
-					$idManager->getId(RequestContext::value('exhibition_id')));
+					$idManager->getId(RequestContext::value('exhibition_id')))
+				|| $authZ->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.view"), 
+					$idManager->getId(RequestContext::value('exhibition_id'))));
 	}
 	
 	/**
