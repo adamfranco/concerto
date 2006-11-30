@@ -51,6 +51,11 @@ class ExhibitionPrinter {
 		$links = array();
 		
 		$actionString = $harmoni->getCurrentAction();
+		
+		// Authorization Icon
+		print AuthZPrinter::getAZIcon($assetId);
+		print " &nbsp; ";
+		
 	//====== Browse Link ======//	
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.access"), 

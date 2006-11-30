@@ -289,7 +289,11 @@ function printSlideShort(&$asset, $params, $slideshowIdString, $num) {
 	// Controls
 	ob_start();
 	
-	$container->add(new UnstyledBlock(ob_get_clean()), "100%", null, RIGHT, BOTTOM);
+	// Authorization Icons
+	print _("Slide: ").AuthZPrinter::getAZIcon($asset->getId());
+	if (isset($mediaId) && $mediaId)
+		print "<br/>"._("Media: ").AuthZPrinter::getAZIcon($mediaId);
+	$container->add(new UnstyledBlock(ob_get_clean()), "100%", null, LEFT, BOTTOM);
 		
 	return $container;
 }

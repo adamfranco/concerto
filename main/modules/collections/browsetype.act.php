@@ -102,7 +102,6 @@ function printrepositoryShort(& $repository, $harmoni) {
 	$description =& HtmlString::withValue($repository->getDescription());
 	$description->trim(100);
 	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	
-	
 	RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
 	
 	$layout =& new Block(ob_get_contents(), EMPHASIZED_BLOCK);

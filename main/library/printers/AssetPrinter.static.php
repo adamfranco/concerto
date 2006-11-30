@@ -102,6 +102,10 @@ class AssetPrinter {
 			}
 		}
 		
+		// Authorization Icon
+		print AuthZPrinter::getAZIcon($assetId);
+		print " &nbsp; ";
+		
 		
 	//===== View Links =====/
 		if ($authZ->isUserAuthorized(

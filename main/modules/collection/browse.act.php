@@ -818,15 +818,18 @@ function printAssetShort(& $asset, $params, $num) {
 	ob_end_clean();
 	$container->add($component, "100%", null, LEFT, TOP);
 	
-	
+	// Bottom controls
+	$authZ =& Services::getService("AuthZ");
+	$idManager =& Services::getService("Id");
 	ob_start();
 	print "\n<div style='margin-top: 5px; font-size: small; white-space: nowrap;'>";
+	
+	
 	if ($_SESSION["show_controls"] == 'true') {
 		AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num, false);
 		print " | ";
 	}
-	$authZ =& Services::getService("AuthZ");
-	$idManager =& Services::getService("Id");
+	
 	$harmoni->request->startNamespace("AssetMultiEdit");
 	print "\n<input type='checkbox'";
 	print " name='".RequestContext::name("asset")."'";
@@ -862,8 +865,7 @@ function canView( & $asset ) {
 	$authZ =& Services::getService("AuthZ");
 	$idManager =& Services::getService("Id");
 	
-	if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $asset->getId())
-		|| $authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
+	if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
 	{
 		return TRUE;
 	} else {

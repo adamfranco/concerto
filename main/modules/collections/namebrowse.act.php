@@ -116,6 +116,7 @@ function printRepositoryShort(& $repository) {
 	$description->trim(500);
 	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	
 	
+
 	RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
 	$xLayout =& new XLayout();
 	$layout =& new Container($xLayout, BLANK, 1);

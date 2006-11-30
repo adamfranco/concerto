@@ -221,7 +221,7 @@ function printAssetShort(& $asset, &$harmoni) {
 	$description->clean();
 	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";
 	
-	print "\n<div style='clear: both; white-space: nowrap;'>";
+	print "\n<div style='clear: both; white-space: nowrap;'>";;
 	SlideShowPrinter::printFunctionLinks($asset);
 	print "</div>";
 	

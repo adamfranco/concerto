@@ -52,6 +52,10 @@ class SlideShowPrinter {
 		
 		$actionString = $harmoni->getCurrentAction();
 		
+		// Authorization Icon
+		print AuthZPrinter::getAZIcon($assetId);
+		print " &nbsp; ";
+		
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId())) {
 			$viewertheme = 'black';
 			ob_start();

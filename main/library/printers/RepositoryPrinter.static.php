@@ -47,6 +47,11 @@ class RepositoryPrinter {
 		$actionString = $harmoni->getCurrentAction();
 		$url =& $harmoni->request->mkURL();	
 		$url->setValue("collection_id", $repositoryId->getIdString());
+		
+		// Authorization Icon
+		print AuthZPrinter::getAZIcon($repositoryId);
+		print " &nbsp; ";
+		
 	//===== Browse Link =====//
 		if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.access"),
