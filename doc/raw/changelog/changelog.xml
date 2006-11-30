@@ -10,10 +10,16 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="2.1.13" date="2006-11-29">
+	<version number="2.1.13" date="2006-11-30">
 		<fix author='adam'>
 			Exhibitions: Now Slideshow order is properly maintained when deleting 
 			slideshows.
+		</fix>
+		<new author='adam'>
+			AuthZ: Added icon and popup display of Authorizations.
+		</new>
+		<fix author='adam'>
+			Tagging: Fixed IE javascript errors.
 		</fix>
 	</version>
 	<version number="2.1.12" date="2006-11-28">
