@@ -54,7 +54,8 @@ class SimpleThemeBlack extends Theme {
 		$collection =& new StyleCollection("body", null, "Global Style", "Style settings affecting the overall look and feel.");
 		$collection->addSP(new BackgroundColorSP("#000"));
 		$collection->addSP(new ColorSP("#FFF"));
-		//$collection->addSP(new FontFamilySP("Verdana"));
+		$collection->addSP(new FontFamilySP("Verdana, sans-serif"));
+		$collection->addSP(new FontSizeSP("90%"));
 		$collection->addSP(new PaddingSP("0px"));
 		$collection->addSP(new MarginSP("1px"));
 		$this->addGlobalStyle($collection);
