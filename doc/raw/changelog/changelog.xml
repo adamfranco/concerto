@@ -10,6 +10,20 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
+	<version number="2.2.0" date="2006-12-01">
+		<important author='adam'>
+			Concerto 2.2.0 is a merging of Concerto 2.1.13 with work done on the
+			Concerto trunk by Tim and John over the summer. The additions on the
+			trunk include configurations and admin interfaces for the 
+			CourseManagement and Scheduling OSIDs and for GUI-theme-management.
+		</important>
+		<new author='tim'>
+			Admin interface for managing themes.
+		</new>
+		<new author='john'>
+			Admin interface for managing courses.
+		</new>
+	</version>
 	<version number="2.1.13" date="2006-11-30">
 		<fix author='adam'>
 			Exhibitions: Now Slideshow order is properly maintained when deleting 
@@ -538,13 +552,15 @@
 	</version>
 	
 	<authors>
-		<name short="gabe">Gabe Schine</name>
 		<name short="adam">Adam Franco</name>
+		<name short="gabe">Gabe Schine</name>
 		<name short="dobo">Dobo Radichkov</name>
 		<name short="nik">Nikitas Stamatopoulos</name>
 		<name short="niraj">Niraj Dhungel</name>
 		<name short="alex">Alex Chapin</name>
 		<name short="chris">Christopher Shubert</name>
+		<name short="tim">Tim Bahls</name>
+		<name short="john">John Lee</name>
 	</authors>
 	<groupid>82873</groupid>
 	<reftypes>

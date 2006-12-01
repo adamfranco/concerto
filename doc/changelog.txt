@@ -3,6 +3,15 @@
 Name: Concerto ChangeLog
 
 
+v. 2.2.0 (2006-12-01)
+----------------------------------------------------
+		
+	**** IMPORTANT *** Change: Concerto 2.2.0 is a merging of Concerto 2.1.13 with work done on the Concerto trunk by Tim and John over the summer. The additions on the trunk include configurations and admin interfaces for the CourseManagement and Scheduling OSIDs and for GUI-theme-management. (Adam Franco)
+		
+	* New feature: Admin interface for managing themes. (Tim Bahls)
+		
+	* New feature: Admin interface for managing courses. (John Lee)
+	
 v. 2.1.13 (2006-11-30)
 ----------------------------------------------------
 		

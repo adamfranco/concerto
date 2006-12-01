@@ -109,6 +109,24 @@ if (!isset($_SESSION['table_setup_complete'])) {
 				// Create nodes for Qualifiers
 				$collectionsId =& $idManager->getId("edu.middlebury.concerto.collections_root");
 				$authorizationHierarchy->createNode($collectionsId, $allOfConcertoId, new DefaultQualifierType, "Concerto Collections", "All Collections in Concerto.");
+				
+		
+       /*********************************************************
+        * Script for setting up the CourseManagement Hierarchy
+        *********************************************************/     
+				// Create nodes 
+				
+				$courseManagementIdString = "edu.middlebury.coursemanagement";
+				$courseManagementId =& $idManager->getId($courseManagementIdString);
+				
+				$type =& new Type("NodeType","edu.middlebury","CourseManagement","These are top level nodes in the CourseManagement part of the Hierarchy");            
+				$authorizationHierarchy->createNode($courseManagementId,  $allOfConcertoId, $type,"Course Management","This node is the ancestor of all information about course management in the hierar
+				chy");
+				$authorizationHierarchy->createNode($idManager->getId($courseManagementIdString.".canonicalcourses"),$courseManagementId,$type,"Canonical Courses","This node is the parent of all root l
+				evel canonical courses");
+				$authorizationHierarchy->createNode($idManager->getId($courseManagementIdString.".coursegroups"),$courseManagementId,$type,"Course Groups","This node is the parent of all course groups 
+				in the hierarchy");
+
 		
 		/*********************************************************
 		 * Script for setting up the AgentManager Hierarchy
