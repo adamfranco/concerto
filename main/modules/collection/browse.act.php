@@ -785,7 +785,11 @@ function printAssetShort(& $asset, $params, $num) {
 			print '"_blank", ';
 			print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
 			print ")'>";
-			print "\n\t\t<img src='$thumbnailURL' class='thumbnail' alt='Thumbnail Image' border='0' style='max-height: $thumbSize; max-width: $thumbSize;' />";
+			if (RepositoryInputOutputModuleManager::hasThumbnailNotIcon($asset))
+				$border = 'border: 1px solid #000;';
+			else
+				$border = '';
+			print "\n\t\t<img src='$thumbnailURL' class='thumbnail' alt='Thumbnail Image' border='0' style='max-height: $thumbSize; max-width: $thumbSize; $border' />";
 			print "\n\t</a>";
 			print "\n</div>";
 			$component =& new UnstyledBlock(ob_get_contents());
