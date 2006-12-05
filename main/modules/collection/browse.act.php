@@ -536,7 +536,7 @@ END;
 		$searchProperties->addProperty("order", $_SESSION["asset_order"]);
 		$searchProperties->addProperty("direction", $_SESSION['asset_order_direction']);
 		
-		if (isset($this->_state['selectedTypes']) && count($this->_state['selectedTypes'])) {
+		if ($this->_state["limit_by_type"] == 'true' && isset($this->_state['selectedTypes']) && count($this->_state['selectedTypes'])) {
 			$searchProperties->addProperty("allowed_types", $this->_state['selectedTypes']);
 		}
 					
@@ -550,7 +550,7 @@ END;
 				$criteria,
 				$this->_state['searchtype'],
 				$searchProperties);
-		} else if (isset($this->_state['selectedTypes']) && count($this->_state['selectedTypes'])) {
+		} else if ($this->_state["limit_by_type"] == 'true' && isset($this->_state['selectedTypes']) && count($this->_state['selectedTypes'])) {
 			$assets =& new MultiIteratorIterator($null = null);
 			foreach (array_keys($this->_state['selectedTypes']) as $key) {
 				$assets->addIterator($repository->getAssetsByType($this->_state['selectedTypes'][$key]));
