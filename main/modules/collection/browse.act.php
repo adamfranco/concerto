@@ -777,10 +777,13 @@ function printAssetShort(& $asset, $params, $num) {
 	if ($_SESSION["show_thumbnail"] == 'true') {
 		$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($asset);
 		if ($thumbnailURL !== FALSE) {
-			$isNotIcon = RepositoryInputOutputModuleManager::hasThumbnailNotIcon($asset);
+			if (RepositoryInputOutputModuleManager::hasThumbnailNotIcon($asset))
+				$thumbClass = 'thumbnail_image';
+			else
+				$thumbClass = 'thumbnail_icon';
 		} else {
 			$thumbnailURL = POLYPHONY_PATH."/icons/filetypes/unknown.png";
-			$isNotIcon = false;
+			$thumbClass = 'thumbnail_icon';
 		}
 		
 		$xmlModule = 'collection';
@@ -801,11 +804,7 @@ function printAssetShort(& $asset, $params, $num) {
 		print '"_blank", ';
 		print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
 		print ")'>";
-		if ($isNotIcon)
-			$border = 'border: 1px solid #000;';
-		else
-			$border = '';
-		print "\n\t\t<img src='$thumbnailURL' class='thumbnail' alt='Thumbnail Image' border='0' style='max-height: $thumbSize; max-width: $thumbSize; $border' />";
+		print "\n\t\t<img src='$thumbnailURL' class='thumbnail $thumbClass' alt='Thumbnail Image' style='max-height: $thumbSize; max-width: $thumbSize;' />";
 		print "\n\t</a>";
 		print "\n</div>";
 		$component =& new UnstyledBlock(ob_get_contents());

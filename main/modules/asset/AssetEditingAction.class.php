@@ -266,7 +266,7 @@ class AssetEditingAction
 				
 				print "\n<div style='height: $thumbSize; width: $thumbSize; margin: auto; float: left; text-align: center;'>";
 				
-				print "\n\t\t<img src='$thumbnailURL' class='thumbnail' alt='Thumbnail Image' border='0'";
+				print "\n\t\t<img src='$thumbnailURL' class='thumbnail thumbnail_image' alt='Thumbnail Image' border='0'";
 				
 				print " onclick='Javascript:window.open(";
 				print '"'.VIEWER_URL."?&amp;source=";

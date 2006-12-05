@@ -81,6 +81,14 @@ class SimpleThemeBlack extends Theme {
 // 		$collection->addSP(new TextDecorationSP("underline"));
 // 		$this->addGlobalStyle($collection);
 // 
+		
+		$collection =& new StyleCollection(".thumbnail_image", null, "Thumbnail Images", "Style settings affecting the look and feel of Thumbnail images.");
+		$collection->addSP(new BorderSP("1px", "solid", "#000"));
+		$this->addGlobalStyle($collection);
+		
+		$collection =& new StyleCollection(".thumbnail_icon", null, "Thumbnail Icons", "Style settings affecting the look and feel of Thumbnail icons.");
+		$collection->addSP(new BorderSP("0px", "solid", "#000"));
+		$this->addGlobalStyle($collection);
 		// =====================================================================
 		// Block 1 style
 		$collection =& new StyleCollection("*.block1", "block1", "Block 1", "The main block where normally all of the page content goes in.");

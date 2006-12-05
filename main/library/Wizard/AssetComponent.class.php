@@ -85,7 +85,7 @@ class AssetComponent
 				if ($thumbnailURL !== FALSE) {
 					
 	//				print "\n\t<br /><a href='".$assetViewUrl."'>";
-					print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' />";
+					print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' class='thumbnail_image' />";
 	//				print "\n\t</a>";
 				}
 				

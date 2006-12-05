@@ -180,7 +180,7 @@ class browseAssetAction
 		
 		$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($assetId);
 		if ($thumbnailURL !== FALSE) {
-			print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' align='right' style='margin-bottom: 5px; border: 1px solid #000;' />";
+			print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' align='right' class='thumbnail_image' style='margin-bottom: 5px;' />";
 		}
 		
 		// Add the tagging manager script to the header

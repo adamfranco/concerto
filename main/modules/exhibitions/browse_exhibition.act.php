@@ -213,7 +213,7 @@ function printAssetShort(& $asset, &$harmoni) {
 		print '"'.$asset->getDisplayName().'", ';
 		print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
 		print ")'>";
-		print "\n<img src='".$firstMediaUrl."' style='float: right; border: 0px;'/>";
+		print "\n<img src='".$firstMediaUrl."' style='float: right; max-height: 200px; max-width: 200px;' class='thumbnail_image'/>";
 		print "</a>";
 	}
 	

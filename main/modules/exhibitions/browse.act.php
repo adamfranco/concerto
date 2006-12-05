@@ -155,7 +155,7 @@ function printAssetShort(&$asset, &$harmoni) {
 		print "\n\t<br /><a href='";
 		print $harmoni->request->quickURL("asset", "view", array('asset_id' => $assetId->getIdString()));
 		print "'>";
-		print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' />";
+		print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' class='thumbnail_image' />";
 		print "\n\t</a>";
 	}
 	

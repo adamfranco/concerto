@@ -206,7 +206,7 @@ function printSlideShort(&$asset, $params, $slideshowIdString, $num) {
 			ob_start();
 			print "\n<div style='height: $thumbSize; width: $thumbSize; margin: auto;'>";
 			print $viewerATag;
-			print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' style='max-height: $thumbSize; max-width: $thumbSize;' />";
+			print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' style='max-height: $thumbSize; max-width: $thumbSize;' class='thumbnail_image' />";
 			print "\n\t</a>";
 			print "\n</div>";
 			$component =& new UnstyledBlock(ob_get_clean());
