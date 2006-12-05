@@ -89,6 +89,7 @@ class browseAction
 			'show_thumbnail' => 'true',
 			'show_displayName' => 'true',
 			'show_description' => 'true',
+			'show_tags' => 'true',
 			'show_id' => 'false',
 			'show_controls' => 'true',
 			
@@ -701,6 +702,15 @@ END;
 		print _("Description,");
 		
 		print "\n\t\t&nbsp;&nbsp;<input type='checkbox'";
+		print " name='".RequestContext::name("show_tags")."'";
+		print $onChange;
+		print " value='true'";
+		if ($_SESSION["show_tags"] == 'true')
+			print " checked='checked'";
+		print "/> ";
+		print _("Tags,");
+		
+		print "\n\t\t&nbsp;&nbsp;<input type='checkbox'";
 		print " name='".RequestContext::name("show_id")."'";
 		print $onChange;
 		print " value='true'";
@@ -767,36 +777,42 @@ function printAssetShort(& $asset, $params, $num) {
 	if ($_SESSION["show_thumbnail"] == 'true') {
 		$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($asset);
 		if ($thumbnailURL !== FALSE) {
-			$xmlModule = 'collection';
-			$xmlAssetIdString = $assetId->getIdString();
-			$xmlStart = $num - 1;
-			
-			$thumbSize = $_SESSION["thumbnail_size"]."px";
-	
-			ob_start();
-			print "\n<div style='height: $thumbSize; width: $thumbSize; margin: auto;'>";
-			print "\n\t<a style='cursor: pointer;'";
-			print " onclick='Javascript:window.open(";
-			print '"'.VIEWER_URL."?&amp;source=";
-			$params["asset_id"] = $xmlAssetIdString;
-			print urlencode($harmoni->request->quickURL($xmlModule, "browse_outline_xml", $params));
-			print '&amp;start='.$xmlStart.'", ';
-	// 		print '"'.preg_replace("/[^a-z0-9]/i", '_', $assetId->getIdString()).'", ';
-			print '"_blank", ';
-			print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
-			print ")'>";
-			if (RepositoryInputOutputModuleManager::hasThumbnailNotIcon($asset))
-				$border = 'border: 1px solid #000;';
-			else
-				$border = '';
-			print "\n\t\t<img src='$thumbnailURL' class='thumbnail' alt='Thumbnail Image' border='0' style='max-height: $thumbSize; max-width: $thumbSize; $border' />";
-			print "\n\t</a>";
-			print "\n</div>";
-			$component =& new UnstyledBlock(ob_get_contents());
-			$component->addStyle($centered);
-			ob_end_clean();
-			$container->add($component, "100%", null, CENTER, CENTER);
+			$isNotIcon = RepositoryInputOutputModuleManager::hasThumbnailNotIcon($asset);
+		} else {
+			$thumbnailURL = POLYPHONY_PATH."/icons/filetypes/unknown.png";
+			$isNotIcon = false;
 		}
+		
+		$xmlModule = 'collection';
+		$xmlAssetIdString = $assetId->getIdString();
+		$xmlStart = $num - 1;
+		
+		$thumbSize = $_SESSION["thumbnail_size"]."px";
+
+		ob_start();
+		print "\n<div style='height: $thumbSize; width: $thumbSize; margin: auto;'>";
+		print "\n\t<a style='cursor: pointer;'";
+		print " onclick='Javascript:window.open(";
+		print '"'.VIEWER_URL."?&amp;source=";
+		$params["asset_id"] = $xmlAssetIdString;
+		print urlencode($harmoni->request->quickURL($xmlModule, "browse_outline_xml", $params));
+		print '&amp;start='.$xmlStart.'", ';
+// 		print '"'.preg_replace("/[^a-z0-9]/i", '_', $assetId->getIdString()).'", ';
+		print '"_blank", ';
+		print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
+		print ")'>";
+		if ($isNotIcon)
+			$border = 'border: 1px solid #000;';
+		else
+			$border = '';
+		print "\n\t\t<img src='$thumbnailURL' class='thumbnail' alt='Thumbnail Image' border='0' style='max-height: $thumbSize; max-width: $thumbSize; $border' />";
+		print "\n\t</a>";
+		print "\n</div>";
+		$component =& new UnstyledBlock(ob_get_contents());
+		$component->addStyle($centered);
+		ob_end_clean();
+		$container->add($component, "100%", null, CENTER, CENTER);
+		
 	}
 	
 	ob_start();
@@ -821,7 +837,8 @@ function printAssetShort(& $asset, $params, $num) {
 		if (preg_match('/\.\.\.$/', $description->asString())) {
 			print "<div style='display: none'>".$asset->getDescription()."</div>";
 		}
-		
+	}
+	if ($_SESSION["show_tags"] == 'true') {
 		// Tags
 		print "\n\t<div style='font-size: smaller; height: 50px; overflow: auto; text-align: justify; margin-top: 5px;'>";
 		print TagAction::getTagCloudForItem(TaggedItem::forId($assetId, 'concerto'), 'view',
@@ -836,43 +853,42 @@ function printAssetShort(& $asset, $params, $num) {
 	$container->add($component, "100%", null, LEFT, TOP);
 	
 	// Bottom controls
-	$authZ =& Services::getService("AuthZ");
-	$idManager =& Services::getService("Id");
-	ob_start();
-	print "\n<div style='margin-top: 5px; font-size: small; white-space: nowrap;'>";
-	
-	
 	if ($_SESSION["show_controls"] == 'true') {
+		$authZ =& Services::getService("AuthZ");
+		$idManager =& Services::getService("Id");
+		ob_start();
+		print "\n<div style='margin-top: 5px; font-size: small; white-space: nowrap;'>";
+	
 		AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num, false);
 		print " | ";
+		
+		$harmoni->request->startNamespace("AssetMultiEdit");
+		print "\n<input type='checkbox'";
+		print " name='".RequestContext::name("asset")."'";
+		print " value='".$assetId->getIdString()."'";
+		print "/>";
+		
+		print "\n<input type='hidden'";
+		print " name='".RequestContext::name("asset_can_modify_".$assetId->getIdString())."'";
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $assetId))
+			print " value='true'";
+		else
+			print " value='false'";
+		print "/>";	
+		
+		print "\n<input type='hidden'";
+		print " name='".RequestContext::name("asset_can_delete_".$assetId->getIdString())."'";
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.delete"), $assetId))
+			print " value='true'";
+		else
+			print " value='false'";
+		print "/>";	
+		
+		$harmoni->request->endNamespace();
+		print "</div>";
+		
+		$container->add(new UnstyledBlock(ob_get_clean()), "100%", null, RIGHT, BOTTOM);
 	}
-	
-	$harmoni->request->startNamespace("AssetMultiEdit");
-	print "\n<input type='checkbox'";
-	print " name='".RequestContext::name("asset")."'";
-	print " value='".$assetId->getIdString()."'";
-	print "/>";
-	
-	print "\n<input type='hidden'";
-	print " name='".RequestContext::name("asset_can_modify_".$assetId->getIdString())."'";
-	if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $assetId))
-		print " value='true'";
-	else
-		print " value='false'";
-	print "/>";	
-	
-	print "\n<input type='hidden'";
-	print " name='".RequestContext::name("asset_can_delete_".$assetId->getIdString())."'";
-	if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.delete"), $assetId))
-		print " value='true'";
-	else
-		print " value='false'";
-	print "/>";	
-	
-	$harmoni->request->endNamespace();
-	print "</div>";
-	
-	$container->add(new UnstyledBlock(ob_get_clean()), "100%", null, RIGHT, BOTTOM);
 	
 	return $container;
 }
