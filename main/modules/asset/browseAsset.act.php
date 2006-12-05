@@ -180,7 +180,7 @@ class browseAssetAction
 		
 		$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($assetId);
 		if ($thumbnailURL !== FALSE) {
-			print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' border='0' align='right' />";
+			print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' align='right' style='margin-bottom: 5px; border: 1px solid #000;' />";
 		}
 		
 		// Add the tagging manager script to the header
@@ -190,7 +190,7 @@ class browseAssetAction
 			."\n\t\t<link rel='stylesheet' type='text/css' href='".POLYPHONY_PATH."javascript/Tagger.css' />");
 		
 		// Tags
-		print "\n\t<div style='font-weight: bold; margin-bottom: 10px; text-align: left;'>"._("Tags given to this Asset: ")."</div>";
+		print "\n\t<div style='font-weight: bold; margin-bottom: 10px; text-align: left; clear: both;'>"._("Tags given to this Asset: ")."</div>";
 		print "\n\t<div style=' text-align: justify;'>";
 		print TagAction::getTagCloudForItem(TaggedItem::forId($assetId, 'concerto'), 'view');
 		print "\n\t</div>";
@@ -210,10 +210,39 @@ class browseAssetAction
 		//***********************************
 		$assets =& $asset->getAssets();
 		
+		$tmpAssets = array();
+		while ($assets->hasNext()) {
+			$asset =& $assets->next();
+			switch($_SESSION["asset_order"]) {
+				case 'DisplayName':
+					$tmpAssets[$asset->getDisplayName()] =& $asset;
+					break;
+				case 'Id':
+					$id =& $asset->getId();
+					$tmpAssets[$id->getIdString()] =& $asset;
+					break;
+				case 'ModificationDate':
+					$date =& $asset->getModificationDate();
+					$tmpAssets[$date->asString()] =& $asset;
+					break;
+				case 'CreationDate':
+					$date =& $asset->getCreationDate();
+					$tmpAssets[$date->asString()] =& $asset;
+					break;
+				default:
+					$tmpAssets[] =& $asset;
+			}
+		}
+		
+		if ($_SESSION["asset_order_direction"] == 'ASC')
+			ksort($tmpAssets);
+		else
+			krsort($tmpAssets);
+		
 		//***********************************
 		// print the results
 		//***********************************
-		$resultPrinter =& new IteratorResultPrinter($assets, 
+		$resultPrinter =& new ArrayResultPrinter($tmpAssets, 
 									$_SESSION["asset_columns"], 
 									$_SESSION["assets_per_page"], 
 									"printAssetShort", $this->getParams());
