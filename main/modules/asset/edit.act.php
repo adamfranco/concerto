@@ -435,6 +435,247 @@ class editAction
 	}
 	
 	/**
+	 * Answer a step for all of the the files of the asset
+	 * 
+	 * @return object WizardStep
+	 * @access public
+	 * @since 10/31/05
+	 */
+	function &getRemoteFileRecordsStep () {
+		$idManager =& Services::getService("Id");
+		$repository =& $this->getRepository();
+		$recStructId =& $idManager->getId("REMOTE_FILE");
+		$recStruct =& $repository->getRecordStructure($recStructId);
+		
+		$step =& new WizardStep();
+		$step->setDisplayName($recStruct->getDisplayName());
+		
+		ob_start();
+		print "\n<h2>"._("Remote Files")."</h2>";
+		print "\n[[files]]";
+		$step->setContent(ob_get_clean());
+		
+		$repeatableComponent =& $step->addComponent("files", 
+			new WRepeatableComponentCollection);
+		$repeatableComponent->setStartingNumber(0);
+		$repeatableComponent->setAddLabel(_("Add New File"));
+		$repeatableComponent->setRemoveLabel(_("Remove File"));
+		
+		
+		ob_start();
+		
+		$component =& $repeatableComponent->addComponent("record_id", new WHiddenField());
+		
+		$component =& $repeatableComponent->addComponent("file_url", new WTextField());	
+		$component->setSize(50);
+		
+		$vComponent =& $repeatableComponent->addComponent("file_name", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
+		$component =& $vComponent->setInputComponent(new WTextField);
+		
+		$vComponent =& $repeatableComponent->addComponent("file_size", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
+		$component =& $vComponent->setInputComponent(new WTextField);
+		
+		
+		$vComponent =& $repeatableComponent->addComponent("mime_type", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
+		$component =& $vComponent->setInputComponent(new WTextField);
+		
+		
+		// Dimensions 
+		$dimensionComponent =& new WTextField();
+		$dimensionComponent->setSize(8);
+		$dimensionComponent->setStyle("text-align: right");
+		$dimensionComponent->setErrorRule(new WECOptionalRegex("^([0-9]+px)?$"));
+		$dimensionComponent->setErrorText(_("Must be a positive integer followed by 'px'."));
+		$dimensionComponent->addOnChange("validateWizard(this.form);");
+		
+		$vComponent =& $repeatableComponent->addComponent("height", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
+		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
+		
+		$vComponent =& $repeatableComponent->addComponent("width", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
+		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
+		
+		
+		// Thumnail Upload
+		$component =& $repeatableComponent->addComponent("thumbnail_upload", new WFileUploadField());
+		
+		$vComponent =& $repeatableComponent->addComponent("thumbnail_mime_type", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
+		$component =& $vComponent->setInputComponent(new WTextField);
+		
+		// Thumbnail dimensions
+		$vComponent =& $repeatableComponent->addComponent("thumbnail_height", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
+		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
+		
+		$vComponent =& $repeatableComponent->addComponent("thumbnail_width", new WVerifiedChangeInput());
+		$vComponent->setChecked(FALSE);
+		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
+		
+		print "\n<p>"._("Url:")." ";
+		print "\n[[file_url]]</p>";
+		
+		print "\n<p>";
+		print _("By default, the values below will be automatically populated from your uploaded file.");
+		print " "._("If needed, change the properties below to custom values: ");
+		
+		print "\n<table border='1'>";
+		
+		print "\n<tr>";
+		print "\n\t<th>";
+		print "\n\t\t"._("Property")."";
+		print "\n\t</th>";
+		print "\n\t<th>";
+		print "\n\t\t"._("Custom Value")."";
+		print "\n\t</th>";
+		print "\n</tr>";
+		
+		print "\n<tr>";
+		print "\n\t<td>";
+		print "\n\t\t"._("File Name")."";
+		print "\n\t</td>";
+		print "\n\t<td>";
+		print "\n\t\t[[file_name]]";
+		print "\n\t</td>";
+		print "\n</tr>";
+		
+		print "\n<tr>";
+		print "\n\t<td>";
+		print "\n\t\t"._("File Size")."";
+		print "\n\t</td>";
+		print "\n\t<td>";
+		print "\n\t\t[[file_size]]";
+		print "\n\t</td>";
+		print "\n</tr>";
+		
+		
+		print "\n<tr>";
+		print "\n\t<td>";
+		print "\n\t\t"._("Mime Type")."";
+		print "\n\t</td>";
+		print "\n\t<td>";
+		print "\n\t\t[[mime_type]]";
+		print "\n\t</td>";
+		print "\n</tr>";
+		
+		print "\n<tr>";
+		print "\n\t<td>";
+		print "\n\t\t"._("Width")."";
+		print "\n\t</td>";
+		print "\n\t<td>";
+		print "\n\t\t[[width]]";
+		print "\n\t</td>";
+		print "\n</tr>";
+		
+		print "\n<tr>";
+		print "\n\t<td>";
+		print "\n\t\t"._("Height")."";
+		print "\n\t</td>";
+		print "\n\t<td>";
+		print "\n\t\t[[height]]";
+		print "\n\t</td>";
+		print "\n</tr>";
+		
+		print "\n<tr>";
+		print "\n\t<td>";
+		print "\n\t\t"._("Thumbnail")."";
+		print "\n\t</td>";
+		print "\n\t<td>";
+		print "\n[[thumbnail_upload]]";
+		print "\n\t</td>";
+		print "\n</tr>";
+		
+		print "\n<tr>";
+		print "\n\t<td>";
+		print "\n\t\t"._("Thumbnail Mime Type")."";
+		print "\n\t</td>";
+		print "\n\t<td>";
+		print "\n\t\t[[thumbnail_mime_type]]";
+		print "\n\t</td>";
+		print "\n</tr>";
+		
+		print "\n<tr>";
+		print "\n\t<td>";
+		print "\n\t\t"._("Thumbnail Width")."";
+		print "\n\t</td>";
+		print "\n\t<td>";
+		print "\n\t\t[[thumbnail_width]]";
+		print "\n\t</td>";
+		print "\n</tr>";
+		
+		print "\n<tr>";
+		print "\n\t<td>";
+		print "\n\t\t"._("Thumbnail Height")."";
+		print "\n\t</td>";
+		print "\n\t<td>";
+		print "\n\t\t[[thumbnail_height]]";
+		print "\n\t</td>";
+		print "\n</tr>";
+		
+		print "\n</table>";
+		
+		print "\n</p>";
+		
+		$repeatableComponent->setContent(ob_get_contents());
+		ob_end_clean();
+		
+		
+		$records =& $this->_assets[0]->getRecordsByRecordStructure($recStructId);
+		while ($records->hasNext()) {
+			$record =& $records->next();
+			
+			$partIterator =& $record->getParts();
+			$parts = array();
+			while($partIterator->hasNext()) {
+				$part =& $partIterator->next();
+				$partStructure =& $part->getPartStructure();
+				$partStructureId =& $partStructure->getId();
+				$parts[$partStructureId->getIdString()] =& $part;
+			}
+			
+			$collection = array();
+			
+			$recordId =& $record->getId();
+			$collection['record_id'] = $recordId->getIdString();
+			
+			$collection['file_url'] = $parts['FILE_URL']->getValue();
+			
+			$collection['file_name'] = $parts['FILE_NAME']->getValue();
+	
+			$size =& ByteSize::withValue($parts['FILE_SIZE']->getValue());
+			$collection['file_size'] = $size->asString();
+	
+			$collection['mime_type'] = $parts['MIME_TYPE']->getValue();
+	
+			$dim = $parts['DIMENSIONS']->getValue();
+			if ($dim[1])
+				$collection['height'] = $dim[1].'px';
+			if ($dim[0])
+				$collection['width'] = $dim[0].'px';
+			
+			$collection['thumbnail_upload'] = array(
+					"starting_name" => "thumb.jpg",
+					"starting_size" => strlen($parts['THUMBNAIL_DATA']->getValue()));
+	
+			$collection['thumbnail_mime_type'] = $parts['THUMBNAIL_MIME_TYPE']->getValue();
+	
+			$thumDim = $parts['THUMBNAIL_DIMENSIONS']->getValue();
+			if ($thumDim[1])
+				$collection['thumbnail_height'] = $thumDim[1].'px';
+			if ($thumDim[0])
+				$collection['thumbnail_width'] = $thumDim[0].'px';
+			
+			$repeatableComponent->addValueCollection($collection);
+		}
+				
+		return $step;
+	}
+	
+	/**
 	 * Update the file records of the asset based on the values from the wizard
 	 * 
 	 * @param array $results
@@ -444,11 +685,11 @@ class editAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function updateFileRecords ( &$results, &$initialState, &$asset ) {
-		printpre("<hr>updateFileRecords:".$asset->getDisplayName());
+	function updateFileRecords ( &$results, &$initialState, &$asset, $structIdString = 'FILE' ) {
+		printpre("<hr>updateFileRecords:$structIdString:".$asset->getDisplayName());
 		
 		$idManager =& Services::getService("Id");
-		$recStructId =& $idManager->getId("FILE");
+		$recStructId =& $idManager->getId($structIdString);
 		$exisistingRecords = array();
 		
 		foreach (array_keys($results) as $i) {
@@ -465,7 +706,7 @@ class editAction
 			$exisistingRecords[] = $recordId->getIdString();
 			
 			$this->updateFileRecord($recordResults, 
-				$initialState[$i], $record);
+				$initialState[$i], $record, $structIdString);
 		}
 		
 		// Delete any records that were removed.
@@ -488,7 +729,7 @@ class editAction
 	 * @access public
 	 * @since 10/31/05
 	 */
-	function updateFileRecord ( &$results, &$initialState, &$record ) {
+	function updateFileRecord ( &$results, &$initialState, &$record, $structIdString = 'FILE') {
 		$recordId =& $record->getId();
 		printpre("<hr>updateFileRecord: ".$recordId->getIdString());
 		
@@ -502,24 +743,10 @@ class editAction
 			$parts[$partStructureId->getIdString()] =& $part;
 		}
 		
-		// if a new File was uploaded, store it.
-		if ($results['file_upload']['tmp_name'] 
-			&& $results['file_upload']['name']) 
-		{
-			$name = $results['file_upload']['name'];
-			$tmpName = $results['file_upload']['tmp_name'];			
-			$mimeType = $results['file_upload']['type'];
-			// If we weren't passed a mime type or were passed the generic
-			// application/octet-stream type, see if we can figure out the
-			// type.
-			if (!$mimeType || $mimeType == 'application/octet-stream') {
-				$mime =& Services::getService("MIME");
-				$mimeType = $mime->getMimeTypeForFileName($name);
-			}
-			
-			$parts['FILE_DATA']->updateValue(file_get_contents($tmpName));
-			$parts['FILE_NAME']->updateValue($name);
-			$parts['MIME_TYPE']->updateValue($mimeType);
+		if ($structIdString == 'REMOTE_FILE') {
+			$mimeType = $this->storeFileUrl($results, $parts);
+		} else {
+			$mimeType = $this->storeUploadedFile($results, $parts);
 		}
 		
 		// If we've uploaded a thumbnail, safe it.
@@ -543,16 +770,24 @@ class editAction
 		}
 		// otherwise, if we've uploaded a new file only, get rid of the
 		// old one and try to create a new one
-		else if ($results['file_upload']['tmp_name'] 
-			&& $results['file_upload']['name']) 
+		else if (($results['file_upload']['tmp_name'] 
+				&& $results['file_upload']['name'])
+			|| ($results['file_url'] &&  $results['file_url'] != $initialState['file_url'])) 
 		{
 			$imageProcessor =& Services::getService("ImageProcessor");
+			if ($results['file_upload']['tmp_name']) {
+				$sourceData = file_get_contents($results['file_upload']['tmp_name']);
+			} else {
+				// Download the file data and temporarily store it in the results
+				if (!isset($results['remote_file_data']))
+					$results['remote_file_data'] = file_get_contents($results['file_url']);
+				$sourceData = $results['remote_file_data'];
+			}
 			
 			// If our image format is supported by the image processor,
 			// generate a thumbnail.
 			if ($imageProcessor->isFormatSupported($mimeType)) 
-				$thumbnailData = $imageProcessor->generateThumbnailData($mimeType, 
-											file_get_contents($tmpName));
+				$thumbnailData = $imageProcessor->generateThumbnailData($mimeType, $sourceData);
 			
 			if ($thumbnailData) {
 				$parts['THUMBNAIL_DATA']->updateValue($thumbnailData);
@@ -621,6 +856,83 @@ class editAction
 			$parts['THUMBNAIL_DIMENSIONS']->updateValue($dimArray);
 		}
 		unset($dimArray, $matches);
+	}
+	
+	/**
+	 * Store uploaded file
+	 * 
+	 * @param ref array $results
+	 * @param ref array $parts
+	 * @return string or null
+	 * @access public
+	 * @since 12/6/06
+	 */
+	function storeUploadedFile (&$results, &$parts) {
+		// if a new File was uploaded, store it.
+		if ($results['file_upload']['tmp_name'] 
+			&& $results['file_upload']['name']) 
+		{
+			$name = $results['file_upload']['name'];
+			$tmpName = $results['file_upload']['tmp_name'];			
+			$mimeType = $results['file_upload']['type'];
+			// If we weren't passed a mime type or were passed the generic
+			// application/octet-stream type, see if we can figure out the
+			// type.
+			if (!$mimeType || $mimeType == 'application/octet-stream') {
+				$mime =& Services::getService("MIME");
+				$mimeType = $mime->getMimeTypeForFileName($name);
+			}
+			
+			$parts['FILE_DATA']->updateValue(file_get_contents($tmpName));
+			$parts['FILE_NAME']->updateValue($name);
+			$parts['MIME_TYPE']->updateValue($mimeType);
+			
+			return $mimeType;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Store a file url
+	 * 
+	 * @param ref array $results
+	 * @param ref array $parts
+	 * @return string or null
+	 * @access public
+	 * @since 12/6/06
+	 */
+	function storeFileUrl (&$results, &$parts) {
+		// if a new File was uploaded, store it.
+		if ($results['file_url']) {
+			if ($results['file_name']['checked'] == '1' && $results['file_name']['value'])
+				$name = basename($results['file_name']);
+			else
+				$name = basename($results['file_url']);
+			
+			if ($results['mime_type']['checked'] == '1' && $results['mime_type']['value'])
+				$mimeType = $results['mime_type']['value'];
+			else {	
+				// If we weren't passed a mime type or were passed the generic
+				// application/octet-stream type, see if we can figure out the
+				// type.
+				$mime =& Services::getService("MIME");
+				$mimeType = $mime->getMimeTypeForFileName($name);
+			}		
+			
+			$parts['FILE_URL']->updateValue($results['file_url']);
+			$parts['FILE_NAME']->updateValue($name);
+			$parts['MIME_TYPE']->updateValue($mimeType);
+			
+			// Download the file data and temporarily store it in the results
+			if (!isset($results['remote_file_data']))
+				$results['remote_file_data'] = file_get_contents($results['file_url']);
+			$parts['FILE_SIZE']->updateValue(strval(strlen($results['remote_file_data'])));
+			
+			return $mimeType;
+		}
+		
+		return null;
 	}
 	
 	/**

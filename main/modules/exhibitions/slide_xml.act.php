@@ -165,8 +165,11 @@ END;
 			$mediaAssetRepository =& $mediaAsset->getRepository();
 			$mediaAssetRepositoryId =& $mediaAssetRepository->getId();
 			
-			$fileRecords =& $mediaAsset->getRecordsByRecordStructure(
-				$idManager->getId("FILE"));
+			$fileRecords =& new MultiIteratorIterator();
+			$fileRecords->addIterator($mediaAsset->getRecordsByRecordStructure(
+				$idManager->getId("FILE")));
+			$fileRecords->addIterator($mediaAsset->getRecordsByRecordStructure(
+				$idManager->getId("REMOTE_FILE")));
 							
 			while ($fileRecords->hasNext())
 				$this->printFileRecord($fileRecords->next(), $mediaAssetRepositoryId, $mediaId);
@@ -276,8 +279,11 @@ END;
 			$mediaAssetRepository =& $mediaAsset->getRepository();
 			$mediaAssetRepositoryId =& $mediaAssetRepository->getId();
 			
-			$fileRecords =& $mediaAsset->getRecordsByRecordStructure(
-				$idManager->getId("FILE"));
+			$fileRecords =& new MultiIteratorIterator();
+			$fileRecords->addIterator($mediaAsset->getRecordsByRecordStructure(
+				$idManager->getId("FILE")));
+			$fileRecords->addIterator($mediaAsset->getRecordsByRecordStructure(
+				$idManager->getId("REMOTE_FILE")));
 							
 			while ($fileRecords->hasNext())
 				$this->printFileRecord($fileRecords->next(), $mediaAssetRepositoryId, $mediaId);

@@ -173,13 +173,14 @@ class RepositoryPrinter {
 			$localStructures = '';
 			$globalStructures = '';
 			$fileId = $idManager->getId("FILE");
+			$remoteFileId = $idManager->getId("REMOTE_FILE");
 			
 			$setManager =& Services::getService("Sets");
 			$set =& $setManager->getPersistentSet($repositoryId);
 			$set->reset();
 			while ($set->hasNext()) {
 				$recStructId =& $set->next();
-				if (!$recStructId->isEqual($fileId)) {
+				if (!$recStructId->isEqual($fileId) && !$recStructId->isEqual($remoteFileId)) {
 					ob_start();
 					$recStruct =& $repository->getRecordStructure($recStructId);
 						$harmoni->history->markReturnURL(

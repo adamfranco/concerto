@@ -15,6 +15,12 @@
 			Thumbnails: Can now determine if a thumbnail is real or an icon.
 			Added borders around thumbnails.
 		</fix>
+		<fix author='adam'>
+			Thumbnails: Fixed spacing in Browse child Assets view.
+		</fix>
+		<fix author='adam'>
+			AssetBrowsing: Fixed ordering in Browse child Assets view.
+		</fix>
 	</version>
 	<version number="2.2.0" date="2006-12-01">
 		<important author='adam'>

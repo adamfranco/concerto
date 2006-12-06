@@ -145,6 +145,8 @@ class AssetEditingAction
 				$this->updateAssetContent($results['contentstep']['content'], $asset);
 				if (isset($results['filestep']))
 					$this->updateFileRecords($results['filestep']['files'], $initialState, $asset);
+				if (isset($results['remotefilestep']))
+					$this->updateFileRecords($results['remotefilestep']['files'], $initialState, $asset, 'REMOTE_FILE');
 				
 				// First, lets go through the info structures listed in the set and print out
 				// the info records for those structures in order.
@@ -308,6 +310,9 @@ class AssetEditingAction
 		// File Record Id
 		$idManager =& Services::getService("Id");
 		$fileRecStructId =& $idManager->getId('FILE');
+		$remoteFileRecStructId =& $idManager->getId('REMOTE_FILE');
+		
+		
 		
 		// First, lets go through the info structures listed in the set and print out
 		// the info records for those structures in order.
@@ -319,6 +324,9 @@ class AssetEditingAction
 			if ($recStructId->isEqual($fileRecStructId)) {
 				if ($fileRecordStep =& $this->getFileRecordsStep())
 					$wizard->addStep("filestep", $fileRecordStep);
+			} else if ($recStructId->isEqual($remoteFileRecStructId)) {
+				if ($fileRecordStep =& $this->getRemoteFileRecordsStep())
+					$wizard->addStep("remotefilestep", $fileRecordStep);
 			} else {			
 				$recStruct =& $repository->getRecordStructure($recStructId);
 			
@@ -517,6 +525,18 @@ class AssetEditingAction
 	}
 	
 	/**
+	 * Answer a step for all of the the files of the asset
+	 * 
+	 * @return object WizardStep
+	 * @access public
+	 * @since 10/31/05
+	 */
+	function &getRemoteFileRecordsStep () {
+		$false = false;
+		return $false;
+	}
+	
+	/**
 	 * Update the file records of the asset based on the values from the wizard
 	 * 
 	 * @param array $results
@@ -526,6 +546,19 @@ class AssetEditingAction
 	 * @since 10/26/05
 	 */
 	function updateFileRecords ( &$results, &$asset ) {
+		
+	}
+	
+	/**
+	 * Update the file records of the asset based on the values from the wizard
+	 * 
+	 * @param array $results
+	 * @param object Asset $asset
+	 * @return void
+	 * @access public
+	 * @since 10/26/05
+	 */
+	function updateRemoteFileRecords ( &$results, &$asset ) {
 		
 	}
 	

@@ -9,6 +9,7 @@
  */ 
 
 require_once(MYDIR."/main/library/abstractActions/AssetAction.class.php");
+require_once(HARMONI."/oki2/shared/MultiIteratorIterator.class.php");
 
 /**
  * 
@@ -159,8 +160,11 @@ END;
 			print "right";
 		print "</text-position>\n";
 		
-		$fileRecords =& $asset->getRecordsByRecordStructure(
-			$idManager->getId("FILE"));
+		$fileRecords =& new MultiIteratorIterator();
+		$fileRecords->addIterator($asset->getRecordsByRecordStructure(
+			$idManager->getId("FILE")));
+		$fileRecords->addIterator($asset->getRecordsByRecordStructure(
+			$idManager->getId("REMOTE_FILE")));
 		
 		/*********************************************************
 		 * Files
@@ -472,7 +476,9 @@ END;
 		$structSet->reset();
 		while ($structSet->hasNext()) {
 			$structureId =& $structSet->next();
-			if (!$structureId->isEqual($idManager->getId("FILE"))) {
+			if (!$structureId->isEqual($idManager->getId("FILE"))
+				&& !$structureId->isEqual($idManager->getId("REMOTE_FILE"))) 
+			{
 				$records =& $asset->getRecordsByRecordStructure($structureId);
 				while ($records->hasNext()) {
 					$record =& $records->next();
