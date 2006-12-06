@@ -186,16 +186,20 @@ class exportAction
 			$properties['compression']);
 
 		$file = $exporter->export($repositoryId);
-
+		
 		shell_exec('cd '.str_replace(":", "\:", $file).";".
 		'tar -czf /tmp/'.$properties['filepath'].$properties['compression'].
-		" *");
-
+		" * ;".' rm -R '.str_replace(":", "\:", $file).";");
+		
+		
+		
 		header("Content-type: application/x-gzip");
 		header('Content-Disposition: attachment; filename="'.
 			$properties['filepath'].$properties['compression'].'"');
 
 		print file_get_contents(
+			"/tmp/".$properties['filepath'].$properties['compression']);
+		unlink(
 			"/tmp/".$properties['filepath'].$properties['compression']);
 		exit();
 
