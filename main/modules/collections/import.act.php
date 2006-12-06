@@ -193,7 +193,7 @@ class importAction extends MainWindowAction {
 		}	
 		$newName = $this->moveArchive($path, $filename);
 //===== THIS ARRAY DEFINES THINGS THAT SHOULD NOT BE IMPORTED =====// 
-		$array = array("FILE", "FILE_DATA", "FILE_NAME", "MIME_TYPE",
+		$array = array("REMOTE_FILE", "FILE_URL", "FILE", "FILE_DATA", "FILE_NAME", "MIME_TYPE",
 		"THUMBNAIL_DATA", "THUMBNAIL_MIME_TYPE", "FILE_SIZE", "DIMENSIONS",
 		"THUMBNAIL_DIMENSIONS", 	
 		"edu.middlebury.harmoni.repository.asset_content", 
@@ -203,14 +203,22 @@ class importAction extends MainWindowAction {
 "Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id",
 "Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position",
 "Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata");
-		
+		$hasErrors = false;
 		if ($properties['file_type'] == "XML") {
 		//	define an empty importer for decompression
 			if ($properties['is_archived'] == TRUE) {
 				$importer =& new XMLImporter($array);
 				$directory = $importer->decompress($newName);
+								
+				// something happened so tell the end user
+				if ($importer->hasErrors()) {
+					$importer->printErrorMessages();
+					$hasErrors = true;
+				}
+				
 				unset($importer);
 				$dir = opendir($directory);
+				
 				while ($file = readdir($dir)) // each folder is a collection
 					if (is_dir($directory."/".$file) && $file != "." && $file != "..") {
 						$importer =& XMLRepositoryImporter::withFile(
@@ -218,20 +226,33 @@ class importAction extends MainWindowAction {
 							$directory."/".$file."/metadata.xml", 
 							$properties['import_type']);
 						$importer->parseAndImport("asset");
+						
+						// something happened so tell the end user
+						if ($importer->hasErrors()) {
+							$importer->printErrorMessages();
+							$hasErrors = true;
+						}
 						unset($importer);
 					}
 					closedir($dir);
+					// Unlink the directory
+					shell_exec(' rm -R '.$directory);
 			}
 			else {// not compressed, only one xml file
 				$importer =& XMLRepositoryImporter::withFile($array, $newName,
 					$properties['import_type']);
 				$importer->parseAndImport("asset");
+				// something happened so tell the end user
+				if ($importer->hasErrors()) {
+					$importer->printErrorMessages();
+					$hasErrors = true;
+				}
 			}
+			
 		}
-		if ($importer->hasErrors()) {
-		// something happened so tell the end user
-			$importer->printErrorMessages();
-	
+		unlink($newName);
+		
+		if ($hasErrors) {	
 			$centerPane->add(new Block(ob_get_contents(), 1));
 			ob_end_clean();
 			return FALSE;

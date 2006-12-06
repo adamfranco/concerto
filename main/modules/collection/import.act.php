@@ -220,7 +220,7 @@ class importAction extends MainWindowAction {
 		}
 		$newName = $this->moveArchive($path, $filename);
 //===== THIS ARRAY DEFINES THINGS THAT SHOULD NOT BE IMPORTED =====// 
-		$array = array("FILE", "FILE_DATA", "FILE_NAME", "MIME_TYPE",
+		$array = array("REMOTE_FILE", "FILE_URL", "FILE", "FILE_DATA", "FILE_NAME", "MIME_TYPE",
 		"THUMBNAIL_DATA", "THUMBNAIL_MIME_TYPE", "FILE_SIZE", "DIMENSIONS",
 		"THUMBNAIL_DIMENSIONS", 	
 		"edu.middlebury.harmoni.repository.asset_content", 
@@ -254,6 +254,8 @@ class importAction extends MainWindowAction {
 					$repository,
 					$directory."/metadata.xml",
 					$properties['import_type']);
+				
+				
 			}
 			else // not compressed, only one xml file
 				$importer =& XMLRepositoryImporter::withObject($array,
@@ -262,6 +264,11 @@ class importAction extends MainWindowAction {
 					$properties['import_type']);
 			$importer->parseAndImportBelow("asset", 100);
 		}
+		
+		// Unlink the directory
+		if ($directory)
+			shell_exec(' rm -R '.$directory);
+		unlink($newName);
 		if ($importer->hasErrors()) {
 		// something happened so tell the end user
 			$importer->printErrorMessages();
