@@ -775,19 +775,22 @@ class editAction
 			|| ($results['file_url'] &&  $results['file_url'] != $initialState['file_url'])) 
 		{
 			$imageProcessor =& Services::getService("ImageProcessor");
-			if ($results['file_upload']['tmp_name']) {
-				$sourceData = file_get_contents($results['file_upload']['tmp_name']);
-			} else {
-				// Download the file data and temporarily store it in the results
-				if (!isset($results['remote_file_data']))
-					$results['remote_file_data'] = file_get_contents($results['file_url']);
-				$sourceData = $results['remote_file_data'];
-			}
-			
+					
 			// If our image format is supported by the image processor,
 			// generate a thumbnail.
-			if ($imageProcessor->isFormatSupported($mimeType)) 
+			if ($imageProcessor->isFormatSupported($mimeType)) {
+				if ($results['file_upload']['tmp_name']) {
+					$sourceData = file_get_contents($results['file_upload']['tmp_name']);
+				} else {
+					// Download the file data and temporarily store it in the results
+					if (!isset($results['remote_file_data']))
+						$results['remote_file_data'] = file_get_contents($results['file_url']);
+					$sourceData = $results['remote_file_data'];
+					$parts['FILE_SIZE']->updateValue(strval(strlen($results['remote_file_data'])));
+				}
+			
 				$thumbnailData = $imageProcessor->generateThumbnailData($mimeType, $sourceData);
+			}
 			
 			if ($thumbnailData) {
 				$parts['THUMBNAIL_DATA']->updateValue($thumbnailData);

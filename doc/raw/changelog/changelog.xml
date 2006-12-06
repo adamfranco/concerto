@@ -11,6 +11,12 @@
 
 <changelog name="Concerto ChangeLog">
 	<version number="2.2.1" date="The Future">
+		<new author='adam'>
+			Files: Added support for files stored at remote locations.
+		</new>
+		<fix author='adam'>
+			Exporting: Temporary files are now removed after they are used.
+		</fix>
 		<fix author='adam'>
 			Thumbnails: Can now determine if a thumbnail is real or an icon.
 			Added borders around thumbnails.
