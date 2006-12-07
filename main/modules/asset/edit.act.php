@@ -809,6 +809,11 @@ class editAction
 			$parts['FILE_NAME']->updateValue($results['file_name']['value']);
 		}
 		
+		// if the "use custom" box was checked store the size.
+		if ($results['file_size']['checked'] == '1') {
+			$parts['FILE_SIZE']->updateValue($results['file_size']['value']);
+		}
+		
 		// if the "use custom" box was checked store the mime type.
 		if ($results['mime_type']['checked'] == '1') {
 			$parts['MIME_TYPE']->updateValue($results['mime_type']['value']);
@@ -909,7 +914,7 @@ class editAction
 		// if a new File was uploaded, store it.
 		if ($results['file_url']) {
 			if ($results['file_name']['checked'] == '1' && $results['file_name']['value'])
-				$name = basename($results['file_name']);
+				$name = basename($results['file_name']['value']);
 			else
 				$name = basename($results['file_url']);
 			

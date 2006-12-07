@@ -220,7 +220,7 @@ class importAction extends MainWindowAction {
 		}
 		$newName = $this->moveArchive($path, $filename);
 //===== THIS ARRAY DEFINES THINGS THAT SHOULD NOT BE IMPORTED =====// 
-		$array = array(
+		$this->_ignore = array(
 			"REMOTE_FILE", 
 			"FILE_URL", 
 			"FILE", 
@@ -240,6 +240,7 @@ class importAction extends MainWindowAction {
 					$idManager->getId($harmoni->request->get('collection_id')));
 		
 		$startTime =& DateAndTime::now();
+		$this->_hasErrors = false;
 		
 //===== Exif and Tab-Delim Importers are special =====//
 		if ($properties['file_type'] == "Tab-Delimited") 
@@ -248,40 +249,52 @@ class importAction extends MainWindowAction {
 			$importer =& new ExifRepositoryImporter($newName, $repository->getId(), false);
 		else if ($properties['file_type'] == "FilesOnly") 
 			$importer =& new FilesOnlyRepositoryImporter($newName, $repository->getId(), false);
-		if (isset($importer))
-			$importer->import();						
+		if (isset($importer)) {
+			$importer->import();	
+			
+			// something happened so tell the end user
+			if ($importer->hasErrors()) {
+				$importer->printErrorMessages();
+				$this->_hasErrors = true;
+			}
+		}
+		
 //===== Done with special "RepositoryImporters" =====//
 
-		if ($properties['file_type'] == "XML") {
+		if ($properties['file_type'] == "XML") {			
 			if ($properties['is_archived'] == TRUE) {
 				//	define an empty importer for decompression
-				$importer =& new XMLImporter($array);
+				$importer =& new XMLImporter($this->_ignore);
 				$directory = $importer->decompress($newName);
 				unset($importer);
-				$importer =& XMLRepositoryImporter::withObject(
-					$array,
-					$repository,
-					$directory."/metadata.xml",
-					$properties['import_type']);
 				
-				
+				$this->_repository =& $repository;
+				$this->_importType = $properties['import_type'];
+				$this->importDirectoriesDown($directory);
 			}
-			else // not compressed, only one xml file
-				$importer =& XMLRepositoryImporter::withObject($array,
+			else {
+				// not compressed, only one xml file
+				$importer =& XMLRepositoryImporter::withObject($this->_ignore,
 					$repositoryManager->getRepository($idManager->getId(
 					$harmoni->request->get('collection_id'))), $newName,
 					$properties['import_type']);
-			$importer->parseAndImportBelow("asset", 100);
+				$importer->parseAndImportBelow("asset", 100);
+				
+				// something happened so tell the end user
+				if ($importer->hasErrors()) {
+					$importer->printErrorMessages();
+					$this->_hasErrors = true;
+				}
+				unset($importer);
+			}
 		}
 		
 		// Unlink the directory
 		if ($directory)
 			shell_exec(' rm -R '.$directory);
 		unlink($newName);
-		if ($importer->hasErrors()) {
-		// something happened so tell the end user
-			$importer->printErrorMessages();
-	
+		
+		if ($this->_hasErrors) {	
 			$centerPane->add(new Block(ob_get_contents(), 1));
 			ob_end_clean();
 			return FALSE;
@@ -334,6 +347,71 @@ class importAction extends MainWindowAction {
 		$harmoni->request->startNamespace("import");
 		
 		return $url->write();
+	}
+	
+	/**
+	 * Import a directories that contain metadata.xml files
+	 * 
+	 * @param string $directory
+	 * @return void
+	 * @access public
+	 * @since 12/7/06
+	 */
+	function importDirectory ($directory) {
+		$importer =& XMLRepositoryImporter::withObject(
+			$this->_ignore,
+			$this->_repository,
+			$directory."/metadata.xml",
+			$this->_importType);
+		$importer->parseAndImportBelow("asset", 100);
+		
+		// something happened so tell the end user
+		if ($importer->hasErrors()) {
+			$importer->printErrorMessages();
+			$this->_hasErrors = true;
+		}
+		unset($importer);
+	}
+	
+	/**
+	 * Answer true if the directory can be imported
+	 * 
+	 * @param string $directory
+	 * @return boolean
+	 * @access public
+	 * @since 12/7/06
+	 */
+	function hasImport ($directory) {
+		$dir = opendir($directory);
+		while ($file = readdir($dir)) {
+			if ($file == "metadata.xml") {
+				closedir($dir);
+				return true;
+			}
+		}
+		closedir($dir);
+		return false;
+	}
+	
+	/**
+	 * Import the current directory or any valid subdirectories.
+	 * 
+	 * @param string $directory
+	 * @return boolean
+	 * @access public
+	 * @since 12/7/06
+	 */
+	function importDirectoriesDown ($directory) {
+		if ($this->hasImport($directory))
+			$this->importDirectory($directory);
+		
+		$dir = opendir($directory);
+		while ($file = readdir($dir)) {
+			if (is_dir($directory."/".$file) && $file != "." && $file != "..") {
+				$this->importDirectoriesDown($directory."/".$file);
+			}
+		}
+		closedir($dir);
 	}
 	
 }
