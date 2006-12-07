@@ -193,16 +193,25 @@ class importAction extends MainWindowAction {
 		}	
 		$newName = $this->moveArchive($path, $filename);
 //===== THIS ARRAY DEFINES THINGS THAT SHOULD NOT BE IMPORTED =====// 
-		$array = array("REMOTE_FILE", "FILE_URL", "FILE", "FILE_DATA", "FILE_NAME", "MIME_TYPE",
-		"THUMBNAIL_DATA", "THUMBNAIL_MIME_TYPE", "FILE_SIZE", "DIMENSIONS",
-		"THUMBNAIL_DIMENSIONS", 	
-		"edu.middlebury.harmoni.repository.asset_content", 
-		"edu.middlebury.harmoni.repository.asset_content.Content", 
-		"edu.middlebury.concerto.exhibition_repository",
-"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure",
-"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id",
-"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position",
-"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata");
+		$array = array(
+			"REMOTE_FILE", 
+			"FILE_URL", 
+			"FILE", 
+			"FILE_DATA", 
+			"FILE_NAME", 
+			"MIME_TYPE",
+			"THUMBNAIL_DATA", 
+			"THUMBNAIL_MIME_TYPE", 
+			"FILE_SIZE", 
+			"DIMENSIONS",
+			"THUMBNAIL_DIMENSIONS", 
+			"edu.middlebury.harmoni.repository.asset_content", 		
+			"edu.middlebury.harmoni.repository.asset_content.Content", 
+			"edu.middlebury.concerto.exhibition_repository",
+			"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure",
+			"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id",
+			"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position",
+			"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata");
 		$hasErrors = false;
 		if ($properties['file_type'] == "XML") {
 		//	define an empty importer for decompression
