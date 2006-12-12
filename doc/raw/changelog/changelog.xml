@@ -21,6 +21,10 @@
 			Importing: Temporary files are now removed after they are used.
 		</fix>
 		<fix author='adam'>
+			Importing: Can now do xml imports that are in multiple directories 
+			and subdirectories.
+		</fix>
+		<fix author='adam'>
 			Thumbnails: Can now determine if a thumbnail is real or an icon.
 			Added borders around thumbnails.
 		</fix>

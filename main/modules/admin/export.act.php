@@ -77,8 +77,8 @@ class exportAction
 		$authN =& Services::getService("AuthN");
 		$authTypes =& $authN->getAuthenticationTypes();
 		$uniqueString = "";
-		while($authTypes->hasNextType()) {
-			$authType =& $authTypes->nextType();
+		while($authTypes->hasNext()) {
+			$authType =& $authTypes->next();
 			$uniqueString .= "_".$authN->getUserId($authType);
 		}
 		

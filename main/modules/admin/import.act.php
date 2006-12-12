@@ -69,8 +69,8 @@ class importAction extends MainWindowAction {
 		$authN =& Services::getService("AuthN");
 		$authTypes =& $authN->getAuthenticationTypes();
 		$uniqueString = "";
-		while($authTypes->hasNextType()) {
-			$authType =& $authTypes->nextType();
+		while($authTypes->hasNext()) {
+			$authType =& $authTypes->next();
 			$id =& $authN->getUserId($authType);
 			$uniqueString .= "_".$id->getIdString();
 		}

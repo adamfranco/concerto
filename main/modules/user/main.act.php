@@ -70,8 +70,8 @@ class mainAction
 		print _("Current Authentications: ");
 		print "</center>\n\t</th></tr>";
 		
-		while($authTypes->hasNextType()) {
-			$authType =& $authTypes->nextType();
+		while($authTypes->hasNext()) {
+			$authType =& $authTypes->next();
 			$typeString = HarmoniType::typeToString($authType);
 			print "\n\t<tr>";
 			print "\n\t\t<td><small>";

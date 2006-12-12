@@ -106,8 +106,8 @@ class mainAction
 		print "\n<ul>";
 		$authN =& Services::getService("AuthN");
 		$authNTypesIterator =& $authN->getAuthenticationTypes();
-		if($authNTypesIterator->hasNextType()){
-			$authNType1 =& $authNTypesIterator->nextType();
+		if($authNTypesIterator->hasNext()){
+			$authNType1 =& $authNTypesIterator->next();
 			//hopefully the first one is the right one to choose.
 			$id =& $authN->getUserId($authNType1);
 			print "\n\t<li><a href='".$harmoni->request->quickURL("agents","edit_agent_details", array("agentId"=>$id->getIdString()))."'>";
