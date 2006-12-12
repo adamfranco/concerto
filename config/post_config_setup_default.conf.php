@@ -129,6 +129,26 @@ if (!isset($_SESSION['post_config_setup_complete'])) {
 		
 		$id =& $idManager->getId("edu.middlebury.authorization.modify_authority_list");
 		$function =& $authZManager->createFunction($id, "Modify Authority List", "Modify the values that appear in the Authority Lists of a Repository (a.k.a. Collection).", $type, $qualifierHierarchyId);
+		
+	}
+	
+	// Ensure that we have the Admin Act As function
+	$type =& new Type ("Authorization", "edu.middlebury.harmoni", "Administration", "");
+	$qualifierHierarchyId = $idManager->getId("edu.middlebury.authorization.hierarchy");
+	$changeUserId = $idManager->getId('edu.middlebury.authorization.change_user');
+	
+	$functions =& $authZManager->getFunctions($type);
+	$changeUserFound = false;
+	while ($functions->hasNext()) {
+		$function =& $functions->next();
+		if ($changeUserId->isEqual($function->getId())) {
+			$changeUserFound = true;
+			break;
+		}
+	}
+	
+	if (!$changeUserFound) {
+		$function =& $authZManager->createFunction($changeUserId, "Change User", "act as another user in the system.", $type, $qualifierHierarchyId);
 	}
 	
 	$_SESSION['post_config_setup_complete'] = TRUE;
