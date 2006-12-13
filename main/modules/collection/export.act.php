@@ -185,23 +185,23 @@ class exportAction
 		$exporter =& XMLRepositoryExporter::withCompression(
 			$properties['compression']);
 
-		$file = $exporter->export($repositoryId);
+		$dir = $exporter->export($repositoryId);
 		
-		shell_exec('cd '.str_replace(":", "\:", $file).";".
-		'tar -czf /tmp/'.$properties['filepath'].$properties['compression'].
-		" * ;".' rm -R '.str_replace(":", "\:", $file).";");
+		$this->_archiveFile = $exporter->compressWithStatus();
+		$this->_archiveFileKey = str_replace('.', '', basename($this->_archiveFile, $properties['compression']));
+		
+// 		printpre($this->_archiveFile);
+		
+		// For security, only files listed in the following array will be allowed
+		// to be downloaded.
+		if (!isset($_SESSION['EXPORTED_FILES']))
+			$_SESSION['EXPORTED_FILES'] = array();
 		
 		
-		
-		header("Content-type: application/x-gzip");
-		header('Content-Disposition: attachment; filename="'.
-			$properties['filepath'].$properties['compression'].'"');
-
-		print file_get_contents(
-			"/tmp/".$properties['filepath'].$properties['compression']);
-		unlink(
-			"/tmp/".$properties['filepath'].$properties['compression']);
-		exit();
+		$_SESSION['EXPORTED_FILES'][$this->_archiveFileKey] = array(
+			'file' => $this->_archiveFile,
+			'name' => basename($properties['filepath'].$properties['compression']),
+			'mime' => 'application/x-gzip');
 
 		return TRUE;
 	}
@@ -218,8 +218,71 @@ class exportAction
 		
 		$harmoni->request->forget('collection_id');
 		
-		return $harmoni->request->quickURL("collections", "namebrowse");
+		$return = $harmoni->request->quickURL("collections", "namebrowse");
+		
+		if ($this->_archiveFile) {
+			$downloadUrl = $harmoni->request->quickURL("export", "getFile",
+					array('file' => urlencode($this->_archiveFileKey)));
+			print "<div>"._("Your download should begin momentarily. If it does not, please click the download button below.")."</div>";
+			print "<div style='margin: 10px; margin-left: 20px;'><a href='".$downloadUrl."'>"._("Download")."</a></div>";
+			
+			print "<div style=''><a href='".$return."'>"._("&lt;-- Return")."</a></div>";
+			
+			while(ob_get_level())
+				ob_end_flush();
+			
+			flush();
+			
+			$harmoni->request->sendTo($downloadUrl);
+			exit;
+		} else
+			return $return;
 	}
+}
+
+// Run linux command in background and return the PID created by the OS
+function run_in_background($Command, $Priority = 0, $outputFile = '/dev/null')
+{
+   if($Priority)
+	   $PID = shell_exec("nohup nice -n $Priority $Command > $outputFile & echo $!");
+   else
+	   $PID = shell_exec("nohup $Command > $outputFile & echo $!");
+   return($PID);
+}
+
+//Verifies if a process is running in linux
+function is_process_running($PID)
+{
+   exec("ps $PID", $ProcessState);
+   return(count($ProcessState) >= 2);
+}
+
+/**
+ * Return the number of files in a directory (recursively) including the directory
+ * its self;
+ * 
+ * @param string $dir
+ * @return integer
+ * @access public
+ * @since 12/12/06
+ */
+function numFiles ($dir) {
+	$numFiles = 1;
+	if (is_dir($dir)) {
+		if ($dh = opendir($dir)) {
+			while (($file = readdir($dh)) !== false) {
+				if ($file != "." && $file != "..") {
+					if (is_dir($dir."/".$file))
+						$numFiles = $numFiles + numFiles($dir."/".$file);
+					else
+						$numFiles++;
+				}
+			}
+			closedir($dh);
+		}
+	}
+	
+	return $numFiles;
 }
 
 ?>

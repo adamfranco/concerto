@@ -12,7 +12,13 @@
 <changelog name="Concerto ChangeLog">
 	<version number="2.2.1" date="The Future">
 		<new author='adam'>
+			AuthN: Added support for administrators to act as another user.
+		</new>
+		<new author='adam'>
 			Files: Added support for files stored at remote locations.
+		</new>
+		<new author='adam'>
+			Exporting: Now shows status of the export.
 		</new>
 		<fix author='adam'>
 			Exporting: Temporary files are now removed after they are used.
