@@ -39,11 +39,25 @@
 
 
 		<h1>Importing with non-XML Data</h1>
-		<h2><em>Assets</em> - Importing with Exif Data</h2>
+		<h2><em>Assets</em> - Importing "Files Only" with no metadata</h2>
 		<div>
+		<h3>Instructions</h3>
+		<p>The 'Files Only <em>Asset</em> Importer' is available through the 'Import <em>Assets</em>' link on a <em>Collection</em>.  Simply create a ZIP archive of your files and upload the archive in the importer interface. An <em>Asset</em> will be created for each file. Directories are traversed but do not have <em>Assets</em> created for them.</p>
+		
+		<h2><em>Assets</em> - Importing Images with Exif Data</h2>
+		<div>
+		
 		<h3>Overview</h3>
 		<p>The 'Exif <em>Asset</em> Importer' is available through the 'Import <em>Assets</em>' link on a <em>Collection</em>.  Exif metadata is stored in image files by cameras and other digital imaging devices to describe many things about the image.  These categories form a standard <em>Schema</em> for cataloging.  <em>Concerto's</em> 'Exif <em>Asset</em> Importer' allows you to map the Exif metadata from it's <em>Schema</em> to a <em>Schema</em> of your choice, or even your own creation.  Because Exif metadata is embedded in the images when importing the images only the Exif metadata and image will be imported.</p>
-		<h3>Instructions</h3>
+		
+		<h3>Adding EXIF/IPTC data to Images</h3>
+		<p><a href='http://en.wikipedia.org/wiki/Exif'>EXIF</a> and <a href='http://en.wikipedia.org/wiki/International_Press_Telecommunications_Council'>IPTC</a> metadata can be written to an image file by many image editing and managing programs including <a href='http://www.adobe.com/products/photoshop/'>Adobe's Photoshop</a>, <a href='http://www.apple.com/aperture/'>Apple's Aperture</a>, and <a href='http://mapivi.sourceforge.net/'>Mapivi</a>.</p>
+		
+		<h3>Instructions - Basic Dublin Core/VRA Core</h3>
+		<p>If your <em>Collection</em> uses either the Dublin Core or VRA Core <em>Schemas</em> then Concerto can use its built-in mapping to associate the EXIF fields with the Dublin Core and VRA Core fields.</p>
+		<p>As with the 'Files Only <em>Asset</em> Importer' above, simply create a ZIP archive of your image files and upload the archive in the importer interface. An <em>Asset</em> will be created for each file. Directories are traversed but do not have <em>Assets</em> created for them.</p>
+		
+		<h3>Instructions - Other Metadata Schemas</h3>
 		<p>To import a group of <em>Assets</em> with their Exif metadata use the 'Import <em>Assets</em>' link on a <em>Collection</em>.  Once at the form for importing <em>Assets</em> choose to import an archive, and choose Exif from the drop down menu of filetypes.  As long as your archive follows the format presented below the images should be added to the <em>Collection</em> as individual <em>Assets</em> using the <em>Schema</em> defined by the "schema.xml" file described below.</p>
 		<h3>Formatting</h3>
 		<p>First the substructure of the archive itself.  This is the easy part, take images with Exif metadata, and put them into a folder, add a "schema.xml" file for mapping <em>Schemas</em>, compress the archive, and you're done.</p>

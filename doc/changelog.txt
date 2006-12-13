@@ -3,6 +3,31 @@
 Name: Concerto ChangeLog
 
 
+v. 2.3.0 (2006-12-13)
+----------------------------------------------------
+		
+	* New feature: AuthN: Added support for administrators to act as another user. (Adam Franco)
+		
+	* New feature: Files: Added support for files stored at remote locations. (Adam Franco)
+		
+	* New feature: Exporting: Now shows status of the export. (Adam Franco)
+		
+	* New feature: Importing: Exif importing method now has a default Dublin Core / VRA Core schema, so collections that use Dublin Core/VRA Core will not need to include a schema.xml file when importing images. (Adam Franco)
+		
+	* Bug Fix: Exporting: Temporary files are now removed after they are used. (Adam Franco)
+		
+	* Bug Fix: Importing: Temporary files are now removed after they are used. (Adam Franco)
+		
+	* Bug Fix: Importing: Can now do xml imports that are in multiple directories and subdirectories. (Adam Franco)
+		
+	* Bug Fix: Thumbnails: Can now determine if a thumbnail is real or an icon. Added borders around thumbnails. (Adam Franco)
+		
+	* Bug Fix: Thumbnails: Fixed spacing in Browse child Assets view. (Adam Franco)
+		
+	* Bug Fix: AssetBrowsing: Fixed ordering in Browse child Assets view. (Adam Franco)
+		
+	* Bug Fix: Documentation: Updated documentation for importing images with EXIF/IPTC metadata. (Adam Franco)
+	
 v. 2.2.0 (2006-12-01)
 ----------------------------------------------------
 		

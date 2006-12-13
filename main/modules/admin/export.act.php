@@ -156,23 +156,25 @@ class exportAction
 		$properties = $wizard->getAllValues();
 		// instantiate new exporter
 		$exporter =& XMLExporter::withCompression($properties['compression']);
+		
 		// export all of concerto to this location
-		$file = $exporter->exportAll();
-		// down and dirty compression
-		shell_exec('cd '.str_replace(":", "\:", $file).";".
-		'tar -czf /tmp/'.$properties['filepath'].$properties['compression'].
-		" *".' rm -R '.str_replace(":", "\:", $file).";");
-		// give out the archive for download
-		header("Content-type: application/x-gzip");
-		header('Content-Disposition: attachment; filename="'.
-			$properties['filepath'].$properties['compression'].'"');
-		print file_get_contents(
-			"/tmp/".$properties['filepath'].$properties['compression']);
-		unlink(
-			"/tmp/".$properties['filepath'].$properties['compression']);
-		exit();
-
-		// never ever even think about returning true :)
+		$dir = $exporter->exportAll();
+		
+		$this->_archiveFile = $exporter->compressWithStatus();
+		$this->_archiveFileKey = str_replace('.', '', basename($this->_archiveFile, $properties['compression']));
+		
+// 		printpre($this->_archiveFile);
+		
+		// For security, only files listed in the following array will be allowed
+		// to be downloaded.
+		if (!isset($_SESSION['EXPORTED_FILES']))
+			$_SESSION['EXPORTED_FILES'] = array();
+		
+		
+		$_SESSION['EXPORTED_FILES'][$this->_archiveFileKey] = array(
+			'file' => $this->_archiveFile,
+			'name' => basename($properties['filepath'].$properties['compression']),
+			'mime' => 'application/x-gzip');
 
 		return TRUE;
 	}
@@ -187,7 +189,27 @@ class exportAction
 	function getReturnUrl () {
 		$harmoni =& Harmoni::instance();
 		
-		return $harmoni->request->quickURL("admin", "main");
+		$return = $harmoni->request->quickURL("admin", "main");
+		
+		if ($this->_archiveFile) {
+			$harmoni->request->startNamespace('export');
+			$downloadUrl = $harmoni->request->quickURL("export", "getFile",
+					array('file' => urlencode($this->_archiveFileKey)));
+			$harmoni->request->endNamespace();
+			print "<div>"._("Your download should begin momentarily. If it does not, please click the download link below.")."</div>";
+			print "<div style='margin: 10px; margin-left: 20px;'><a href='".$downloadUrl."'>"._("Download")."</a></div>";
+			
+			print "<div style=''><a href='".$return."'>"._("&lt;-- Return")."</a></div>";
+			
+			while(ob_get_level())
+				ob_end_flush();
+			
+			flush();
+			
+			$harmoni->request->sendTo($downloadUrl);
+			exit;
+		} else
+			return $return;
 	}
 }
 
