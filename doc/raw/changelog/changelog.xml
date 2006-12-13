@@ -25,6 +25,9 @@
 			schema, so collections that use Dublin Core/VRA Core will not need
 			to include a schema.xml file when importing images.
 		</new>
+		<new author='adam'>
+			Changelog: Changelog view now displays Polyphony and Harmoni changelogs.
+		</new>
 		<fix author='adam'>
 			Exporting: Temporary files are now removed after they are used.
 		</fix>

@@ -16,25 +16,45 @@
 ///////////////////////////////////////////////////////////////////////
 -->
 <xsl:template match="changelog">
-	<style type="text/css">
-	h1, h2 {color: #005;}
-	h1 {font-size: 18pt;}
-	li {padding-bottom: 3px;}
-	</style>
-    <div style="font-family: Verdana; font-size: 12px;">
-        <h1><xsl:value-of select="@name" /></h1>
-        
-        
-        <xsl:for-each select="version">
-        <h2>Version <xsl:value-of select="@number" /></h2>
+
+<html>
+	<head>
+		<style type="text/css">
+			body {
+				font-family: Verdana; font-size: 12px;
+			}
+			
+			h1, h2 {
+				color: #005;
+			}
+			
+			h1 {
+				font-size: 18pt;
+			}
+			
+			li {
+				padding-bottom: 3px;
+			}
+		</style>
+		<title><xsl:value-of select="@name" /></title>
+
+	</head>
+	<body>
+		<h1><xsl:value-of select="@name" /></h1>
+	
+	
+<xsl:for-each select="version">
+		<h2>Version <xsl:value-of select="@number" /></h2>
 		<xsl:if test="@date!=''"><h3><xsl:value-of select="@date" /></h3></xsl:if>
 
-        <ul>
-        	<xsl:apply-templates />
-        </ul>
-        <br />
-        </xsl:for-each>
-    </div>
+		<ul>
+			<xsl:apply-templates />
+		</ul>
+		<br />
+</xsl:for-each>
+
+	</body>
+</html>
 </xsl:template>
 
 <!--
@@ -43,8 +63,7 @@
 ///////////////////////////////////////////////////////////////////////
 -->
 <xsl:template match="fix">
-	<li /> Bug Fix:
-	<xsl:call-template name="entry" />
+	<li> Bug Fix: <xsl:call-template name="entry" /></li>	
 </xsl:template>
 
 <!--
@@ -53,7 +72,7 @@
 ///////////////////////////////////////////////////////////////////////
 -->
 <xsl:template match="change">
-	<li /> Change: <xsl:call-template name="entry" />
+	<li> Change: <xsl:call-template name="entry" /></li>
 </xsl:template>
 
 <!--
@@ -62,7 +81,7 @@
 ///////////////////////////////////////////////////////////////////////
 -->
 <xsl:template match="new">
-	<li /> New feature: <xsl:call-template name="entry" />
+	<li> New feature: <xsl:call-template name="entry" /></li>
 </xsl:template>
 
 <!--
@@ -71,7 +90,7 @@
 ///////////////////////////////////////////////////////////////////////
 -->
 <xsl:template match="important">
-	<li /> <span style='color: red'>*** IMPORTANT ***</span> Change: <xsl:call-template name="entry" />
+	<li> <span style='color: red'>*** IMPORTANT ***</span> Change: <xsl:call-template name="entry" /></li>
 </xsl:template>
 
 <!--
@@ -101,9 +120,9 @@
 	<xsl:if test="@author">
 		<xsl:variable name="short" select="@author"/>
 		<xsl:text> (</xsl:text>
-		<i>
+		<em>
 			<xsl:value-of select="//authors/name[@short=$short]" />
-		</i>
+		</em>
 		<xsl:text>)</xsl:text>
 	</xsl:if>
 </xsl:template>

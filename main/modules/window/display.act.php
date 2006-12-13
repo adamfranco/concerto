@@ -377,7 +377,7 @@ class displayAction
 			}
 		}
 		
-		$footerText = "<a href='doc/changelog.html'>Concerto v.".$_SESSION['ConcertoVersion']."</a> &nbsp; &nbsp; &nbsp; ";
+		$footerText = "<a href='".$harmoni->request->quickURL('window', 'changelog')."' target='_blank'>Concerto v.".$_SESSION['ConcertoVersion']."</a> &nbsp; &nbsp; &nbsp; ";
 		$footerText .= "&copy;".$_SESSION['ConcertoCopyrightYear']." Middlebury College  &nbsp; &nbsp; &nbsp; <a href='http://concerto.sourceforge.net'>";
 		$footerText .= _("about");
 		$footerText .= "</a>";
