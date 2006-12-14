@@ -47,6 +47,10 @@ if (!isset($_SESSION['table_setup_complete'])) {
 		// Grading
 		if (!in_array('gr_gradable', $tables))
 			SQLUtils::runSQLfile(HARMONI_BASE."/SQL/Grading/MySQL_Grading.sql", $dbID);
+			
+		// Grading
+		if (!in_array('dr_file_url', $tables))
+			SQLUtils::runSQLfile(HARMONI_BASE."/SQL/DigitalRepository/MySQL_FileUrl.sql", $dbID);
 		
 		$_SESSION['table_setup_complete'] = TRUE;
 	} else {
