@@ -61,6 +61,7 @@
 //  		$ldapConfiguration->addProperty("LDAPHost", $arg1 = "ad.middlebury.edu");
 //  		$ldapConfiguration->addProperty("UserBaseDN", $arg2 = "cn=users,dc=middlebury,dc=edu");
 //  		$ldapConfiguration->addProperty("ClassesBaseDN", $arg2a = "ou=classes,ou=groups,dc=middlebury,dc=edu");
+// 			$ldapConfiguration->addProperty("ClassesBaseDN", $arg2a = "ou=classes,ou=groups,dc=middlebury,dc=edu");
 //  		$ldapConfiguration->addProperty("GroupBaseDN", $arg3 = "ou=groups,dc=middlebury,dc=edu");
 //  		$ldapConfiguration->addProperty("bindDN", $arg4 = "juser");
 //  		$ldapConfiguration->addProperty("bindDNPassword", $arg5 = "password");

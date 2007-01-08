@@ -215,23 +215,27 @@ class browseAssetAction
 			$asset =& $assets->next();
 			switch($_SESSION["asset_order"]) {
 				case 'DisplayName':
-					$tmpAssets[$asset->getDisplayName()] =& $asset;
+					$assetKey = $asset->getDisplayName();					
 					break;
 				case 'Id':
 					$id =& $asset->getId();
-					$tmpAssets[$id->getIdString()] =& $asset;
+					$assetKey = $id->getIdString();
 					break;
 				case 'ModificationDate':
 					$date =& $asset->getModificationDate();
-					$tmpAssets[$date->asString()] =& $asset;
+					$assetKey = $date->asString();
 					break;
 				case 'CreationDate':
 					$date =& $asset->getCreationDate();
-					$tmpAssets[$date->asString()] =& $asset;
+					$assetKey = $date->asString();
 					break;
 				default:
-					$tmpAssets[] =& $asset;
+					$assetKey = '0';
 			}
+			$i = 0;
+			while (isset($tmpAssets[$assetKey."_".$i]))
+				$i++;
+			$tmpAssets[$assetKey."_".$i] =& $asset;
 		}
 		
 		if ($_SESSION["asset_order_direction"] == 'ASC')

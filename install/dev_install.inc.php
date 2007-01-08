@@ -55,7 +55,7 @@ if (!isset($_SESSION['table_setup_complete'])) {
 		$_SESSION['table_setup_complete'] = TRUE;
 	} else {
 	
-		print "<h1>Creating tables and default data set.</h1>";
+// 		print "<h1>Creating tables and default data set.</h1>";
 		
 		/*********************************************************
 		 * Create the needed database tables
@@ -362,10 +362,10 @@ if (!isset($_SESSION['table_setup_complete'])) {
 				$function =& $authZManager->createFunction($id, "Modify Group Membership", "Modify Group membership.", $type, $qualifierHierarchyId);
 				$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);	
 	
-		print "\n<br> ...done";
+// 		print "\n<br> ...done";
 		$_SESSION['table_setup_complete'] = TRUE;
 		
-		RequestContext::locationHeader($_SERVER['REQUEST_URI']);
+// 		RequestContext::locationHeader($_SERVER['REQUEST_URI']);
 	}
 }
 ?>
