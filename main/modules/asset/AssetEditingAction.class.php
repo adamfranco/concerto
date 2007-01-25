@@ -972,7 +972,7 @@ class AssetEditingAction
 					printpre("Removing from: "); 
 					printpre($parent->getId());
 					
-					$parent->removeAsset($asset->getId());
+					$parent->removeAsset($asset->getId(), TRUE);
 				} else {
 					printpre("No Authorization to remove from: "); 
 					printpre($parent->getId());
@@ -1003,7 +1003,7 @@ class AssetEditingAction
 					printpre($parent->getId());
 					printpre("To: ");
 					printpre($newParentId);
-					$parent->removeAsset($asset->getId());
+					$parent->removeAsset($asset->getId(), TRUE);
 					
 					$repository =& $asset->getRepository();
 					$newParent =& $repository->getAsset($newParentId);
