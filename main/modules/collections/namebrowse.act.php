@@ -131,8 +131,7 @@ function canView( &$item ) {
 	$authZ =& Services::getService("AuthZ");
 	$idManager =& Services::getService("Id");
 	
-	if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.access"), $item->getId())
-		|| $authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $item->getId()))
+	if ($authZ->isUserAuthorizedBelow($idManager->getId("edu.middlebury.authorization.view"), $item->getId()))
 	{
 		return TRUE;
 	} else {

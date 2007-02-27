@@ -53,9 +53,10 @@ class RepositoryPrinter {
 		print " &nbsp; ";
 		
 	//===== Browse Link =====//
-		if ($authZ->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.access"),
-				$repositoryId)) {
+		if ($authZ->isUserAuthorizedBelow(
+				$idManager->getId("edu.middlebury.authorization.view"),
+				$repositoryId)) 
+		{
 			if ($actionString != "collection.browse") {
 				$url->setModuleAction("collection", "browse");
 				$links[] = "<a href='".$url->write()."'>";

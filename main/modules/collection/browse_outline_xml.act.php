@@ -37,8 +37,8 @@ class browse_outline_xmlAction
 		// Check that the user can access this collection
 		$authZ =& Services::getService("AuthZ");
 		$idManager =& Services::getService("Id");
-		return $authZ->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.access"), 
+		return $authZ->isUserAuthorizedBelow(
+					$idManager->getId("edu.middlebury.authorization.view"), 
 					$this->getRepositoryId());
 	}
 	

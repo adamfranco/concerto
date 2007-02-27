@@ -40,7 +40,7 @@ class importAction extends MainWindowAction {
 
 		$return = $authZ->isUserAuthorized(
 			$idManager->getId("edu.middlebury.authorization.add_children"),
-			$idManager->getId("edu.middlebury.concerto.collections_root"));
+			$idManager->getId(REPOSITORY_ROOT_ID));
 
 		$harmoni->request->endNamespace();
 		

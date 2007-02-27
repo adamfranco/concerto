@@ -150,8 +150,8 @@ class AssetPrinter {
 // 			}
  		}
 	//===== Browse Link =====//
-		if ($authZ->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.access"),
+		if ($authZ->isUserAuthorizedBelow(
+				$idManager->getId("edu.middlebury.authorization.view"),
 				$assetId)) {
 			$children =& $asset->getAssets();
 			if ($children->hasNext()) {

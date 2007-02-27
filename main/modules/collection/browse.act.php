@@ -44,8 +44,8 @@ class browseAction
 		$idManager =& Services::getService("Id");
 		if (!$this->getRepositoryId())
 			return false;
-		return $authZ->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.access"), 
+		return $authZ->isUserAuthorizedBelow(
+					$idManager->getId("edu.middlebury.authorization.view"), 
 					$this->getRepositoryId());
 	}
 	
@@ -897,7 +897,7 @@ function canView( & $asset ) {
 	$authZ =& Services::getService("AuthZ");
 	$idManager =& Services::getService("Id");
 	
-	if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
+	if ($authZ->isUserAuthorizedBelow($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
 	{
 		return TRUE;
 	} else {
