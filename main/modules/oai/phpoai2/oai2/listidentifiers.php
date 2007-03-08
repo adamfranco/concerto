@@ -60,7 +60,8 @@ foreach($args as $key => $val) {
 
 		case 'metadataPrefix':
 			if (!isset($metadataPrefix)) {
-				if (is_array($METADATAFORMATS[$val]) 
+				if (isset($METADATAFORMATS[$val])
+					&& is_array($METADATAFORMATS[$val]) 
 					&& isset($METADATAFORMATS[$val]['myhandler'])) {
 					$metadataPrefix = $val;
 					$inc_record  = $METADATAFORMATS[$val]['myhandler'];
@@ -91,15 +92,15 @@ if (isset($args['resumptionToken'])) {
 		// overwrite all other errors
 		$errors = oai_error('exclusiveArgument');
 	} else {
-		if (is_file("tokens/id-$resumptionToken")) {
-			$fp = fopen("tokens/id-$resumptionToken", 'r');
+		if (is_file($tokenDir."/id-$resumptionToken")) {
+			$fp = fopen($tokenDir."/id-$resumptionToken", 'r');
 			$filetext = fgets($fp, 255);
 			$textparts = explode('#', $filetext);
 			$deliveredrecords = (int)$textparts[0];
 			$extquery = $textparts[1];
 			$metadataPrefix = $textparts[2];
 			fclose($fp); 
-			unlink ("tokens/id-$resumptionToken");
+			unlink ($tokenDir."/id-$resumptionToken");
 		} else {
 			$errors .= oai_error('badResumptionToken', '', $resumptionToken);
 		}
@@ -173,7 +174,10 @@ $output .= " <ListIdentifiers>\n";
 // Will we need a ResumptionToken?
 if ($num_rows - $deliveredrecords > $MAXIDS) {
 	$token = get_token(); 
-	$fp = fopen ("tokens/id-$token", 'w');
+	if (!is_dir($tokenDir)) {
+		mkdir($tokenDir, 0700);
+	}
+	$fp = fopen ($tokenDir."/id-$token", 'w');
 	$thendeliveredrecords = (int)$deliveredrecords + $MAXIDS;
 	fputs($fp, "$thendeliveredrecords#"); 
 	fputs($fp, "$extquery#"); 

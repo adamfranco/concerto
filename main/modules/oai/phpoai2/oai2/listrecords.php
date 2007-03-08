@@ -90,8 +90,8 @@ if (isset($args['resumptionToken'])) {
 		// overwrite all other errors
 		$errors = oai_error('exclusiveArgument');
 	} else {
-		if (is_file("tokens/re-$resumptionToken")) {
-			$fp = fopen("tokens/re-$resumptionToken", 'r');
+		if (is_file($tokenDir."/re-$resumptionToken")) {
+			$fp = fopen($tokenDir."/re-$resumptionToken", 'r');
 			$filetext = fgets($fp, 255);
 			$textparts = explode('#', $filetext); 
 			$deliveredrecords = (int)$textparts[0]; 
@@ -113,7 +113,7 @@ if (isset($args['resumptionToken'])) {
 // no, we start a new session
 else {
 	$deliveredrecords = 0; 
-	if (!$args['metadataPrefix']) {
+	if (!isset($args['metadataPrefix']) || !$args['metadataPrefix']) {
 		$errors .= oai_error('missingArgument', 'metadataPrefix');
 	}
 
@@ -178,7 +178,7 @@ $output .= " <ListRecords>\n";
 // Will we need a ResumptionToken?
 if ($num_rows - $deliveredrecords > $MAXRECORDS) {
 	$token = get_token(); 
-	$fp = fopen ("tokens/re-$token", 'w'); 
+	$fp = fopen ($tokenDir."/re-$token", 'w'); 
 	$thendeliveredrecords = (int)$deliveredrecords + $MAXRECORDS;  
 	fputs($fp, "$thendeliveredrecords#"); 
 	fputs($fp, "$extquery#"); 
@@ -236,7 +236,7 @@ while ($countrec++ < $maxrec) {
 
 // return the metadata record itself
 	if (!$status_deleted)
-		include('oai2/'.$inc_record);
+		include(dirname(__FILE__).'/'.$inc_record);
 
 	$output .= '  </record>'."\n";   
 }

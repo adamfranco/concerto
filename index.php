@@ -21,10 +21,13 @@ if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
 else
 	$protocol = 'http';
 
-define("MYPATH", $protocol."://".$_SERVER['HTTP_HOST'].str_replace(
+if (!defined('MYPATH')) 
+	define("MYPATH", $protocol."://".$_SERVER['HTTP_HOST'].str_replace(
 												"\\", "/", 
 												dirname($_SERVER['PHP_SELF'])));
-define("MYURL", MYPATH."/index.php");
+
+if (!defined('MYURL')) 
+	define("MYURL", MYPATH."/index.php");
 
 define("LOAD_GUI", true);
 

@@ -138,7 +138,7 @@ $delimiter			= ':';
 // see: http://www.openarchives.org/OAI/2.0/guidelines-oai-identifier.htm
 // Basically use domainname-word.domainname
 // please adjust
-$repositoryIdentifier = 'aName.org'; 
+$repositoryIdentifier = OAI_REPOSITORY_ID; 
 
 
 // description is defined in identify.php 
@@ -164,10 +164,11 @@ $MAXIDS = 200;
 // After 24 hours resumptionTokens become invalid.
 $tokenValid = 24*3600;
 $expirationdatetime = gmstrftime('%Y-%m-%dT%TZ', time()+$tokenValid); 
+$tokenDir = OAI_TOKEN_DIR;
 
 // define all supported sets in your repository
 $SETS = 	array (
-				array('setSpec'=>'phdthesis', 'setName'=>'PHD Thesis', 'setDescription'=>'') //,
+// 				array('setSpec'=>'phdthesis', 'setName'=>'PHD Thesis', 'setDescription'=>'') //,
 				// array('setSpec'=>'math', 'setName'=>'Mathematics') ,
 				// array('setSpec'=>'phys', 'setName'=>'Physics') 
 			);
@@ -235,7 +236,7 @@ $SQL['id_column'] = 'serial';
 // the name of the column where you store the unique identifiers
 // pointing to your item.
 // this is your internal identifier for the item
-$SQL['identifier'] = 'url';
+$SQL['identifier'] = 'oai_identifier';
 
 // If you want to expand the internal identifier in some way
 // use this (but not for OAI stuff, see next line)

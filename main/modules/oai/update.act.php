@@ -68,26 +68,14 @@ class updateAction
 		
 		$baseUpdateQuery =& new UpdateQuery;
 		$baseUpdateQuery->setTable('oai_records');
-		$baseUpdateQuery->setColumns(array(
+		
+		$baseUpdateColumns = array(
 			'datestamp',
 			'deleted',
 			'oai_set',
 			'dc_title',
-			'dc_description',
-// 			'dc_creator',
-// 			'dc_subject',
-// 			'dc_contributor',
-// 			'dc_publisher',
-// 			'dc_date',
-// 			'dc_type',
-// 			'dc_format',
-// 			'dc_identifier',
-// 			'dc_source',
-// 			'dc_language',
-// 			'dc_relation',
-// 			'dc_coverage',
-// 			'dc_rights'
-		));
+			'dc_description'
+		);
 		$dcUpdateColumns = array(
 			'datestamp',
 			'deleted',
@@ -111,28 +99,15 @@ class updateAction
 		
 		$baseInsertQuery =& new InsertQuery;
 		$baseInsertQuery->setTable('oai_records');
-		$baseInsertQuery->setColumns(array(
+		$baseInsertColumns = array(
 			'datestamp',
 			'repository',
 			'oai_identifier',
 			'deleted',
 			'oai_set',
 			'dc_title',
-			'dc_description',
-// 			'dc_creator',
-// 			'dc_subject',
-// 			'dc_contributor',
-// 			'dc_publisher',
-// 			'dc_date',
-// 			'dc_type',
-// 			'dc_format',
-// 			'dc_identifier',
-// 			'dc_source',
-// 			'dc_language',
-// 			'dc_relation',
-// 			'dc_coverage',
-// 			'dc_rights'		
-		));
+			'dc_description'	
+		);
 		$dcInsertColumns = array(
 			'datestamp',
 			'repository',
@@ -158,27 +133,19 @@ class updateAction
 		
 		$baseDeleteQuery =& new UpdateQuery;
 		$baseDeleteQuery->setTable('oai_records');
-		$baseDeleteQuery->setColumns(array(
-			'deleted',
-			'datestamp'
-		));
-		$baseDeleteQuery->setValues(array(
-			"'true'",
-			"NOW()"
-		));
+		$baseDeleteQuery->addValue('deleted', 'true');
+		$baseDeleteQuery->addRawValue('datestamp', 'NOW()');
 		
 		$baseUndeleteQuery =& new UpdateQuery;
 		$baseUndeleteQuery->setTable('oai_records');
-		$baseUndeleteQuery->setColumns(array(
-			'deleted',
-			'datestamp'
-		));
-		$baseUndeleteQuery->setValues(array(
-			"'false'",
-			"NOW()"
-		));
+		$baseUndeleteQuery->addValue('deleted', 'false');
+		$baseUndeleteQuery->addRawValue('datestamp', 'NOW()');
 		
-		$forceUpdate = false;
+		
+		$forceUpdate = true;
+		$allowedRepositories = array(
+			'153764'
+		);
 		$repositories =& $repositoryManager->getRepositories();
 		
 		$r = 0;
@@ -200,6 +167,10 @@ class updateAction
 			$updatesInRepository = 0;
 			$repository =& $repositories->next();
 			$repositoryId =& $repository->getId();
+			
+			// Only work with allowed repositories
+			if (!in_array($repositoryId->getIdString(), $allowedRepositories))
+				continue;
 			
 			$existingRepositoryIds[] = "'".addslashes($repositoryId->getIdString())."'";
 			
@@ -224,17 +195,12 @@ class updateAction
 				
 				$result =& $dbc->query($query, OAI_DBID);
 				
-				$values = array();
-				$values[] = 'NOW()';
-				
+					
 				if (!$result->getNumberOfRows()) {
 // 					printpre("Doesn't exist:\t".$asset->getDisplayName()."");
 					$query =& $baseInsertQuery->copy();
-					$values[] = "'".addslashes($repositoryId->getIdString())."'";
-					$values[] = "'".addslashes($assetId->getIdString())."'";
-					if ($this->hasDublinCore($asset)) {
-						$query->setColumns($dcInsertColumns);
-					}
+					$query->addValue('repository', $repositoryId->getIdString());
+					$query->addValue('oai_identifier', $assetId->getIdString());
 				} else {
 // 					printpre("Exists:\t".$asset->getDisplayName()."");
 					if ($modificationDate->isGreaterThan(
@@ -247,16 +213,15 @@ class updateAction
 							"repository='".addslashes($repositoryId->getIdString())."'");
 						$query->addWhere(
 							"oai_identifier='".addslashes($assetId->getIdString())."'");
-						
-						if ($this->hasDublinCore($asset)) {
-							$query->setColumns($dcUpdateColumns);
-						}
 					} 
 					// If it is up to date, skip.
 					else {
 						$query = null;
 					}
 				}
+				
+				if ($query)
+					$query->addRawValue('datestamp', 'NOW()');
 				
 				$isCurrentlyDeleted = (($result->getNumberOfRows() &&$result->field('deleted') == 'true')?true:false);
 				$result->free();
@@ -265,28 +230,14 @@ class updateAction
 				//Add the data fields
 					// Deleted
 					if ($authorizationManager->isAuthorized($instituteId, $viewId, $assetId)) {
-						$values[] = "'false'";
+						$query->addValue('deleted', 'false');
 					} else {
-						$values[] = "'true'";
+						$query->addValue('deleted', 'true');
 					}
-						
-					// oai_set
-					$values[] = "''";
-					
-					// title
-					$values[] = "'".addslashes($asset->getDisplayName())."'";
-					
-					// description
-					$values[] = "'".addslashes($asset->getDescription())."'";
-					
-					if ($this->hasDublinCore($asset)) {
-						$this->addDublinCoreValues($asset, $values);
-					}
-					
-					if (method_exists($query, 'addRowOfValues'))
-						$query->addRowOfValues($values);
-					else
-						$query->setValues($values);
+					$query->addRawValue('oai_set', 'NULL');
+					$query->addValue('dc_title', $asset->getDisplayName());
+					$query->addValue('dc_description', $asset->getDescription());
+					$this->addDublinCoreValues($asset, $query);
 						
 					$dbc->query($query, OAI_DBID);
 					
@@ -356,207 +307,105 @@ class updateAction
 	}
 	
 	/**
-	 * Answer true if the asset has Dublin Core-mappable metadata.
-	 * 
-	 * @param object Asset $asset
-	 * @return boolean
-	 * @access public
-	 * @since 3/5/07
-	 */
-	function hasDublinCore ( &$asset ) {
-		$assetId =& $asset->getId();
-		
-		if (!isset($this->_hasDcResults)) {
-			$this->_hasDcResults = array();
-			$idManager =& Services::getService("Id");
-			$this->_dcId =& $idManager->getId('dc');
-			$this->_vraId =& $idManager->getId('vra_core');
-		}
-			
-		if (!isset($this->_hasDcResults[$assetId->getIdString()])) {
-			$this->_hasDcResults[$assetId->getIdString()] = false;
-			$recStructs =& $asset->getRecordStructures();
-			while ($recStructs->hasNext()) {
-				$recStruct =& $recStructs->next();
-				if ($this->_dcId->isEqual($recStruct->getId())
-					|| $this->_vraId->isEqual($recStruct->getId()))
-				{
-					$this->_hasDcResults[$assetId->getIdString()] = true;
-					break;
-				}
-			}
-			
-		}
-		return $this->_hasDcResults[$assetId->getIdString()];
-	}
-	
-	/**
 	 * Add Dublin Core fields to the result set where possible
 	 * 
 	 * @param object Asset $asset
-	 * @param ref array $values
+	 * @param object Query $query
 	 * @return void
 	 * @access public
 	 * @since 3/5/07
 	 */
-	function addDublinCoreValues (&$asset, &$values) {
+	function addDublinCoreValues (&$asset, &$query) {
+		$idManager =& Services::getService("Id");
 		$records =& $asset->getRecordsByRecordStructure($idManager->getId('dc'));
 		// use the first Dublin Core record if availible
 		if ($records->hasNext()) {
 			$record =& $records->next();
-			// 'dc_creator',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('dc.creator')));
+			$ids = array(
+				'dc_creator' 		=> 'dc.creator',
+				'dc_subject'	 	=> 'dc.subject',
+				'dc_contributor'	=> 'dc.contributor',
+				'dc_publisher'	 	=> 'dc.publisher',
+				'dc_date' 			=> 'dc.date',
+				'dc_type' 			=> 'dc.type',
+				'dc_format' 		=> 'dc.format',
+				'dc_identifier' 	=> 'dc.identifier',
+				'dc_source' 		=> 'dc.source',
+				'dc_language' 		=> 'dc.language',
+				'dc_relation' 		=> 'dc.relation',
+				'dc_coverage' 		=> 'dc.coverage',
+				'dc_rights' 		=> 'dc.rights');
 			
-			// 'dc_subject',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('dc.subject')));
-					
-			// 'dc_contributor',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('dc.contributor')));
-					
-			// 'dc_publisher',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('dc.publisher')));
-					
-			// 'dc_date',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('dc.date')));
-					
-			// 'dc_type',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('dc.type')));
-					
-			// 'dc_format',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('dc.format')));
-					
-			// 'dc_identifier',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('dc.identifier')));
-					
-			// 'dc_source',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('dc.source')));
-					
-			// 'dc_language',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('dc.language')));
-					
-			// 'dc_relation',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('dc.relation')));
-					
-			// 'dc_coverage',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('dc.coverage')));
-					
-			// 'dc_rights'	
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('dc.rights')));
-					
+			foreach ($ids as $column => $partId) {
+				$parts =& $record->getPartsByPartStructure($idManager->getId($partId));
+				if ($parts->hasNext())
+					$query->addValue($column, $this->getPartsString($parts));
+			}
+			
 			return;
 		}
 		
-		$records =& $asset->getRecordsByRecordStructure($this->_vraId);
+		$records =& $asset->getRecordsByRecordStructure($idManager->getId('vra_core'));
 		// otherwise use first VRA Core record
 		if ($records->hasNext()) {
 			$record =& $records->next();
-			// 'dc_creator',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('vra_core.creator')));
+			$ids = array(
+				'dc_creator' 		=> 'vra_core.creator',
+				'dc_subject'	 	=> 'vra_core.subject',
+				'dc_contributor'	=> 'vra_core.contributor',
+// 				'dc_publisher'	 	=> 'vra_core.publisher',
+				'dc_date' 			=> 'vra_core.date',
+				'dc_type' 			=> 'vra_core.type',
+				'dc_format' 		=> array(	'vra_core.material',
+												'vra_core.measurements',
+												'vra_core.technique'),
+				'dc_identifier' 	=> 'vra_core.id_number',
+				'dc_source' 		=> 'vra_core.source',
+// 				'dc_language' 		=> 'vra_core.language',
+				'dc_relation' 		=> 'vra_core.relation',
+				'dc_coverage' 		=> array(	'vra_core.culture',
+												'vra_core.style_period'),
+				'dc_rights' 		=> 'vra_core.rights');
 			
-			// 'dc_subject',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('vra_core.subject')));
-					
-			// 'dc_contributor',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('vra_core.contributor')));
-					
-			// 'dc_publisher',
-			$values[] = "''";
-// 			$values[] = $this->getPartsString(
-// 				$record->getPartsByPartStructure(
-// 					$idManager->getId('vra_core.publisher')));
-					
-			// 'dc_date',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('vra_core.date')));
-					
-			// 'dc_type',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('vra_core.type')));
-					
-			// 'dc_format',
-			$parts =& new MultiIteratorIterator;
-			$parts->addIterator(
-				$record->getPartsByPartStructure(
-					$idManager->getId('vra_core.material')));
-			$parts->addIterator(
-				$record->getPartsByPartStructure(
-					$idManager->getId('vra_core.measurements')));
-			$parts->addIterator(
-				$record->getPartsByPartStructure(
-					$idManager->getId('vra_core.technique')));
-			$values[] = $this->getPartsString($parts);
-					
-			// 'dc_identifier',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('vra_core.id_number')));
-					
-			// 'dc_source',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('vra_core.source')));
-					
-			// 'dc_language',
-			$values[] = "''";
-// 			$values[] = $this->getPartsString(
-// 				$record->getPartsByPartStructure(
-// 					$idManager->getId('vra_core.language')));
-					
-			// 'dc_relation',
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('vra_core.relation')));
-					
-			// 'dc_coverage',
-			$parts =& new MultiIteratorIterator;
-			$parts->addIterator(
-				$record->getPartsByPartStructure(
-					$idManager->getId('vra_core.culture')));
-			$parts->addIterator(
-				$record->getPartsByPartStructure(
-					$idManager->getId('vra_core.style_period')));
-			$values[] = $this->getPartsString($parts);
-					
-			// 'dc_rights'	
-			$values[] = $this->getPartsString(
-				$record->getPartsByPartStructure(
-					$idManager->getId('vra_core.rights')));
+			foreach ($ids as $column => $partId) {
+				if (is_array($partId)) {
+					$parts =& new MultiIteratorIterator;
+					foreach ($partId as $id) {
+						$parts->addIterator(
+							$record->getPartsByPartStructure($idManager->getId($id)));
+					}
+				} else {
+					$parts =& $record->getPartsByPartStructure($idManager->getId($partId));
+				}
+				if ($parts->hasNext())
+					$query->addValue($column, $this->getPartsString($parts));
+			}
+			
 			return;
 		}
+	}
+	
+	/**
+	 * Answer the string value of a part to be inserted into a field. Multiple
+	 * values will be semicolon delimited.
+	 * 
+	 * @param object Iterator $partIterator
+	 * @return string
+	 * @access public
+	 * @since 3/8/07
+	 */
+	function getPartsString ( &$partIterator ) {
+		$string = '';
+		while ($partIterator->hasNext()) {
+			$part =& $partIterator->next();
+			$value =& $part->getValue();
+			$string .= $value->asString();
+			
+			if ($partIterator->hasNext()) {
+				$string .= ';';
+			}
+		}
+		return $string;
 	}
 }
 

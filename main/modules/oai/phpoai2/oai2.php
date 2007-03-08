@@ -35,8 +35,23 @@
 
 $output = '';
 $errors = '';
+$xmlheader = '';
+$CONTENT_TYPE = '';
+$request = '';
+$granularity = '';
+$message = '';
+$charset = '';
+$xmlescaped = '';
+$SQL = '';
+$request_err = '';
+$compress = '';
+$METADATAFORMATS = null;
+$XMLSCHEMA = null;
+global $errors, $output, $xmlheader, $CONTENT_TYPE, $request, $granularity, 
+	$message, $charset, $xmlescaped, $SQL, $request_err, $compress, 
+	$METADATAFORMATS, $XMLSCHEMA;
 
-require_once('oai2/oaidp-util.php');
+require_once(dirname(__FILE__).'/oai2/oaidp-util.php');
 
 // register_globals does not need to be set
 if (!php_is_at_least('4.1.0')) {
@@ -61,7 +76,7 @@ foreach ($argKeys as $key) {
 	$args[$key] = $harmoni->request->get($key);
 }
 
-require_once('oai2/oaidp-config.php');
+require_once(dirname(__FILE__).'/oai2/oaidp-config.php');
 
 // and now we make the OAI Repository Explorer really happy
 // I have not found any way to check this for POST requests.
@@ -108,34 +123,34 @@ if (isset($args['verb'])) {
 
 		case 'GetRecord':
 			unset($args['verb']);
-			include 'oai2/getrecord.php';
+			include dirname(__FILE__).'/oai2/getrecord.php';
 			break;
 
 		case 'Identify':
 			unset($args['verb']);
 			// we never use compression in Identify
 			$compress = FALSE;
-			include 'oai2/identify.php';
+			include dirname(__FILE__).'/oai2/identify.php';
 			break;
 
 		case 'ListIdentifiers':
 			unset($args['verb']);
-			include 'oai2/listidentifiers.php';
+			include dirname(__FILE__).'/oai2/listidentifiers.php';
 			break;
 
 		case 'ListMetadataFormats':
 			unset($args['verb']);
-			include 'oai2/listmetadataformats.php';
+			include dirname(__FILE__).'/oai2/listmetadataformats.php';
 			break;
 
 		case 'ListRecords':
 			unset($args['verb']);
-			include 'oai2/listrecords.php';
+			include dirname(__FILE__).'/oai2/listrecords.php';
 			break;
 
 		case 'ListSets':
 			unset($args['verb']);
-			include 'oai2/listsets.php';
+			include dirname(__FILE__).'/oai2/listsets.php';
 			break;
 
 		default:

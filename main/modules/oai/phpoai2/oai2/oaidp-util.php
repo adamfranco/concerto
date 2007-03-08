@@ -171,6 +171,26 @@ function xmlrecord($sqlrecord, $element, $attr = '', $indent = 0)
 	}
 }
 
+// will return XML without splitting
+// supposed to print values from database
+function rawxmlrecord($sqlrecord, $element, $attr = '', $indent = 0)
+{
+	global $SQL;
+	global $xmlescaped;
+	global $charset;
+
+	$str = '';
+
+	if ($attr != '') {
+		$attr = ' '.$attr;
+	}
+	if ($sqlrecord != '') {
+		return str_pad('', $indent).'<'.$element.$attr.'>'.xmlstr($sqlrecord, $charset, $xmlescaped).'</'.$element.">\n";
+	} else {
+		return '';
+	}
+}
+
 function xmlelement($element, $attr = '', &$indent, $open = true)
 {
 	global $SQL;

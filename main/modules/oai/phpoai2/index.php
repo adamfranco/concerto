@@ -1,5 +1,5 @@
 <?php
-require_once('oai2/oaidp-config.php');
+require_once(dirname(__FILE__).'/oai2/oaidp-config.php');
 ?>
 <html>
 <head>

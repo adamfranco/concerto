@@ -17,6 +17,7 @@
 ini_set('include_path', ini_get('include_path').':/usr/local/lib/php/PEAR');
 
 define('OAI_REPOSITORY_NAME', 'Concerto at Middlebury College');
+define('OAI_REPOSITORY_ID', 'concerto.middlebury.edu');
 
 
 define('OAI_DBID', $dbID);
@@ -26,7 +27,4 @@ define('OAI_DB_USER', $dbUser);
 define('OAI_DB_PASSWD', $dbPass);
 define('OAI_DB_NAME', $dbName);
 
-// define('OAI_DB_HOST', 'localhost');
-// define('OAI_DB_USER', 'username');
-// define('OAI_DB_PASSWD', 'password');
-// define('OAI_DB_NAME', 'concerto_oai_cache');
+define('OAI_TOKEN_DIR', '/tmp/concerto-oai_tokens');

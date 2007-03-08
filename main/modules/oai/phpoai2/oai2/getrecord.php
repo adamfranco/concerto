@@ -42,7 +42,8 @@ foreach($args as $key => $val) {
 			break;
 
 		case 'metadataPrefix':
-			if (is_array($METADATAFORMATS[$val])
+			if (isset($METADATAFORMATS[$val])
+					&& is_array($METADATAFORMATS[$val])
 					&& isset($METADATAFORMATS[$val]['myhandler'])) {
 				$metadataPrefix = $val;
 				$inc_record  = $METADATAFORMATS[$val]['myhandler'];
@@ -141,7 +142,7 @@ if ($num_rows) {
 
 // return the metadata record itself
 	if (!$status_deleted) 
-		include('oai2/'.$inc_record); 
+		include(dirname(__FILE__).'/'.$inc_record); 
 
 	$output .= 
 '  </record>'."\n"; 
