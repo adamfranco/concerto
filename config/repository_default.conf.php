@@ -15,11 +15,11 @@
  
 // :: Set up the RepositoryManager ::
 	$repositoryHierarchyId = "edu.middlebury.authorization.hierarchy";
-	$defaultParentId = "edu.middlebury.concerto.collections_root";
+	define('REPOSITORY_ROOT_ID', "edu.middlebury.repositories_root");
 	$configuration =& new ConfigurationProperties;
 	$configuration->addProperty('database_index', $dbID);
 	$configuration->addProperty('hierarchy_id', $repositoryHierarchyId);
-	$configuration->addProperty('default_parent_id', $defaultParentId);
+	$configuration->addProperty('default_parent_id', $arg1 = REPOSITORY_ROOT_ID);
 	$configuration->addProperty('version_control_all', $arg2 = TRUE);
 	$configuration->addProperty('use_filesystem_for_files', $arg3 = TRUE);
 // 	$configuration->addProperty('file_data_path', $arg4 = MYPATH."/../concerto_data");
