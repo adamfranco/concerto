@@ -223,6 +223,16 @@ class mainAction
 				"export")."'>";
 			print _("Export");
 			print "</a></li>";
+			
+			if ($authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.modify"),
+				$idManager->getId("edu.middlebury.authorization.root"))) {
+				print "\n\t<li><a href='".$harmoni->request->quickURL("updates", 
+					"list")."'>";
+				print _("Concerto Updates");
+				print "</a></li>";
+			}
+			
 			print "\n</ul>";
 			
 			$introText =& new Block(ob_get_contents(), 2);

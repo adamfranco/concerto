@@ -87,7 +87,8 @@ $configs = array(
 					'grading',
 					'tagging',
 					'post_config_setup',
-					'viewer'
+					'viewer',
+					'oai'
 				);
 
 foreach ($configs as $config) {

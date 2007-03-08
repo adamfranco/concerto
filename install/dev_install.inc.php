@@ -111,7 +111,7 @@ if (!isset($_SESSION['table_setup_complete'])) {
 		 * Script for setting up the RepositoryManager Hierarchy
 		 *********************************************************/	
 				// Create nodes for Qualifiers
-				$collectionsId =& $idManager->getId("edu.middlebury.concerto.collections_root");
+				$collectionsId =& $idManager->getId("edu.middlebury.repositories_root");
 				$authorizationHierarchy->createNode($collectionsId, $allOfConcertoId, new DefaultQualifierType, "Concerto Collections", "All Collections in Concerto.");
 				
 		
@@ -268,10 +268,6 @@ if (!isset($_SESSION['table_setup_complete'])) {
 				
 			// View/Use Functions
 				$type =& new Type ("Authorization", "edu.middlebury.harmoni", "View/Use", "Functions for viewing and using.");
-			
-				$id =& $idManager->getId("edu.middlebury.authorization.access");
-				$function =& $authZManager->createFunction($id, "Access", "Access a qualifier.", $type, $qualifierHierarchyId);
-				$authZManager->createAuthorization($adminGroup->getId(), $function->getId(), $allOfConcertoId);
 				
 				$id =& $idManager->getId("edu.middlebury.authorization.view");
 				$function =& $authZManager->createFunction($id, "View", "View a qualifier.", $type, $qualifierHierarchyId);

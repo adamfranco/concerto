@@ -10,7 +10,7 @@
 			<keyword>Multimedia</keyword>
 			<description>User-created repository for storing multimedia.</description>
 		</type>
-		<recordstructure xml:id="dc" isGlobal="TRUE">
+		<recordstructure xml:id="dc" id="dc" isGlobal="TRUE">
 			<name>Dublin Core</name>
 			<description><![CDATA[
 <h2>Dublin Core Metadata Element Set, Version 1.1</h2>
@@ -64,7 +64,7 @@ terms maintained by the Dublin Core Metadata Initiative please see:: <a href="ht
 </td></tr></tbody></table>
 			]]></description>
 			<format>text/plain</format>
-			<partstructure xml:id="dc-title" isRepeatable="FALSE">
+			<partstructure xml:id="dc-title" id="dc.title" isRepeatable="FALSE">
 				<name>Title</name>
 				<description><![CDATA[
 <dl>
@@ -80,7 +80,7 @@ terms maintained by the Dublin Core Metadata Initiative please see:: <a href="ht
 					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-creator" isRepeatable="TRUE">
+			<partstructure xml:id="dc-creator" id="dc.creator" isRepeatable="TRUE">
 				<name>Creator</name>
 				<description><![CDATA[
 <dl>
@@ -98,7 +98,7 @@ the entity.</dd>
 					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-subject" isRepeatable="TRUE">
+			<partstructure xml:id="dc-subject" id="dc.subject" isRepeatable="TRUE">
 				<name>Subject</name>
 				<description><![CDATA[
 <dl>
@@ -117,7 +117,7 @@ formal classification scheme.</dd>
 					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-description" isRepeatable="FALSE">
+			<partstructure xml:id="dc-description" id="dc.description" isRepeatable="FALSE">
 				<name>Description</name>
 				<description><![CDATA[
 <dl>
@@ -135,7 +135,7 @@ content or a free-text account of the content.</dd>
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-publisher" isRepeatable="FALSE">
+			<partstructure xml:id="dc-publisher" id="dc.publisher" isRepeatable="FALSE">
 				<name>Publisher</name>
 				<description><![CDATA[
 <dl>
@@ -153,7 +153,7 @@ the entity.</dd>
 					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-contributor" isRepeatable="TRUE">
+			<partstructure xml:id="dc-contributor" id="dc.contributor" isRepeatable="TRUE">
 				<name>Contributor</name>
 				<description><![CDATA[
 <dl>
@@ -171,7 +171,7 @@ indicate the entity.</dd>
 					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-date" isRepeatable="FALSE">
+			<partstructure xml:id="dc-date" id="dc.date" isRepeatable="FALSE">
 				<name>Date</name>
 				<description><![CDATA[
 <dl>
@@ -189,7 +189,7 @@ the date value is defined in a profile of ISO 8601 [<a href="#w3cdtf">W3CDTF</a>
 					<keyword>datetime</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-type" isRepeatable="TRUE">
+			<partstructure xml:id="dc-type" id="dc.type" isRepeatable="TRUE">
 				<name>Type</name>
 				<description><![CDATA[
 <dl>
@@ -208,7 +208,7 @@ Type Vocabulary [<a href="#dct1">DCT1</a>]). To describe the physical or digital
 					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-format" isRepeatable="TRUE">
+			<partstructure xml:id="dc-format" id="dc.format" isRepeatable="TRUE">
 				<name>Format</name>
 				<description><![CDATA[
 <dl>
@@ -229,7 +229,7 @@ Internet Media Types [<a href="#mime">MIME</a>] defining computer media formats)
 					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-identifier" isRepeatable="TRUE">
+			<partstructure xml:id="dc-identifier" id="dc.identifier" isRepeatable="TRUE">
 				<name>Identifier</name>
 				<description><![CDATA[
 <dl>
@@ -250,7 +250,7 @@ Standard Book Number (ISBN).</dd>
 					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-source" isRepeatable="TRUE">
+			<partstructure xml:id="dc-source" id="dc.source" isRepeatable="TRUE">
 				<name>Source</name>
 				<description><![CDATA[
 <dl>
@@ -269,7 +269,7 @@ formal identification system.</dd>
 					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-language" isRepeatable="TRUE">
+			<partstructure xml:id="dc-language" id="dc.language" isRepeatable="TRUE">
 				<name>Language</name>
 				<description><![CDATA[
 <dl>
@@ -288,7 +288,7 @@ Akkadian", and "en-GB" for English used in the United Kingdom.</dd>
 					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-relation" isRepeatable="TRUE">
+			<partstructure xml:id="dc-relation" id="dc.relation" isRepeatable="TRUE">
 				<name>Relation</name>
 				<description><![CDATA[
 <dl>
@@ -306,7 +306,7 @@ system.</dd>
 					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-coverage" isRepeatable="TRUE">
+			<partstructure xml:id="dc-coverage" id="dc.coverage" isRepeatable="TRUE">
 				<name>Coverage</name>
 				<description><![CDATA[
 <dl>
@@ -328,7 +328,7 @@ to numeric identifiers such as sets of coordinates or date ranges.</dd>
 					<keyword>shortstring</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="dc-rights" isRepeatable="TRUE">
+			<partstructure xml:id="dc-rights" id="dc.rights" isRepeatable="TRUE">
 				<name>Rights</name>
 				<description><![CDATA[
 <dl>
@@ -350,7 +350,7 @@ resource.</dd>
 				</type>
 			</partstructure>
 		</recordstructure>
-		<recordstructure xml:id="vra_core" isGlobal="TRUE">
+		<recordstructure xml:id="vra_core" id="vra_core" isGlobal="TRUE">
 			<name>VRA Core</name>
 			<description><![CDATA[
 <div align="left">
@@ -413,7 +413,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 <p><b>Standards Recommended</b><br/><a href="http://www.library.cornell.edu/tsmanual/CIRM/AACR2.html">AACR</a><br/><a href="http://shiva.pub.getty.edu/aat_browser/">AAT</a><br/><a href="http://www.getty.edu/gri/standard/cdwa/">CDWA</a><br/><a href="http://catalog.loc.gov">LCSH</a><br/><a href="http://lcweb.loc.gov/rr/print/tgm1">LCTGM</a><br/><a href="http://shiva.pub.getty.edu/tgn_browser/">TGN</a><br/><a href="http://shiva.pub.getty.edu/ulan_browser/">ULAN</p>
 			]]></description>
 			<format>text/plain</format>
-			<partstructure xml:id="vra_core-title" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-title" id="vra_core.title" isRepeatable="TRUE">
 				<name>Title</name>
 				<description><![CDATA[
 <dl>
@@ -442,7 +442,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="vra_core-creator" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-creator" id="vra_core.creator" isRepeatable="TRUE">
 				<name>Creator</name>
 				<description><![CDATA[
 <dl>
@@ -471,7 +471,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="vra_core-description" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-description" id="vra_core.description" isRepeatable="TRUE">
 				<name>Description</name>
 				<description><![CDATA[
 <dl>
@@ -494,7 +494,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="vra_core-subject" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-subject" id="vra_core.subject" isRepeatable="TRUE">
 				<name>Subject</name>
 				<description><![CDATA[
 <dl>
@@ -517,7 +517,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="vra_core-record_type" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-record_type" id="vra_core.record_type" isRepeatable="TRUE">
 				<name>Record Type</name>
 				<description><![CDATA[
 <dl>
@@ -540,7 +540,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="vra_core-type" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-type" id="vra_core.type" isRepeatable="TRUE">
 				<name>Type</name>
 				<description><![CDATA[
 <dl>
@@ -564,7 +564,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="vra_core-measurements" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-measurements" id="vra_core.measurements" isRepeatable="TRUE">
 				<name>Measurements</name>
 				<description><![CDATA[
 <dl>
@@ -589,7 +589,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="vra_core-material" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-material" id="vra_core.material" isRepeatable="TRUE">
 				<name>Material</name>
 				<description><![CDATA[
 <dl>
@@ -613,7 +613,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="vra_core-technique" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-technique" id="vra_core.technique" isRepeatable="TRUE">
 				<name>Technique</name>
 				<description><![CDATA[
 <dl>
@@ -636,7 +636,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="vra_core-date" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-date" id="vra_core.date" isRepeatable="TRUE">
 				<name>Date</name>
 				<description><![CDATA[
 <dl>
@@ -664,7 +664,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 					<keyword>datetime</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="vra_core-location" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-location" id="vra_core.location" isRepeatable="TRUE">
 				<name>Location</name>
 				<description><![CDATA[
 <dl>
@@ -692,7 +692,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="vra_core-id_number" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-id_number" id="vra_core.id_number" isRepeatable="TRUE">
 				<name>ID Number</name>
 				<description><![CDATA[
 <dl>
@@ -719,7 +719,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="vra_core-style_period" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-style_period" id="vra_core.style_period" isRepeatable="TRUE">
 				<name>Style/Period</name>
 				<description><![CDATA[
 <dl>
@@ -747,7 +747,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="vra_core-culture" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-culture" id="vra_core.culture" isRepeatable="TRUE">
 				<name>Culture</name>
 				<description><![CDATA[
 <dt>Description:</dt>
@@ -769,7 +769,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="vra_core-relation" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-relation" id="vra_core.relation" isRepeatable="TRUE">
 				<name>Relation</name>
 				<description><![CDATA[
 <dl>
@@ -793,7 +793,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="vra_core-source" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-source" id="vra_core.source" isRepeatable="TRUE">
 				<name>Source</name>
 				<description><![CDATA[
 <dl>
@@ -816,7 +816,7 @@ It is possible to repeat and link together the<i> VRA Core 3.0</i> element set i
 					<keyword>string</keyword>
 				</type>
 			</partstructure>
-			<partstructure xml:id="vra_core-rights" isRepeatable="TRUE">
+			<partstructure xml:id="vra_core-rights" id="vra_core.rights" isRepeatable="TRUE">
 				<name>Rights</name>
 				<description><![CDATA[
 <dl>
