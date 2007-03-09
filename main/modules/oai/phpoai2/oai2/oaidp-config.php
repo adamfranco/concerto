@@ -41,6 +41,10 @@
  - the encoding your data is stored (all below DATABASE SETUP)
 */
 
+require_once(dirname(__FILE__)."/../../OAI.class.php");
+$harmoni =& Harmoni::instance();
+$config =& $harmoni->getAttachedData('OAI_CONFIG');
+
 // To install, test and debug use this	
 // If set to TRUE, will die and display query and database error message
 // as soon as there is a problem. Do not set this to TRUE on a production site,
@@ -76,7 +80,7 @@ $MY_URI = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME'];
 
 // MUST (only one)
 // please adjust
-$repositoryName       = OAI_REPOSITORY_NAME;
+$repositoryName       = $config->getProperty('OAI_REPOSITORY_NAME');
 // $baseURL			  = $MY_URI;
 // You can use a static URI as well.
  $baseURL 			= $harmoni->request->quickURL('oai', 'provider');
@@ -96,7 +100,7 @@ $protocolVersion      = '2.0';
 // Currently if $record['deleted'] is set to 'true', $status_deleted is set.
 // Some lines in listidentifiers.php, listrecords.php, getrecords.php  
 // must be changed to fit the condition for your database.
-$deletedRecord        = 'no'; 
+$deletedRecord        = 'persistant'; 
 
 // MAY (only one)
 //granularity is days
@@ -117,7 +121,7 @@ if ($granularity == 'YYYY-MM-DDThh:mm:ss:Z') {
 
 // MUST (multiple)
 // please adjust
-$adminEmail			= array('mailto:me@localhost.de'); 
+$adminEmail			= array($config->getProperty('OAI_ADMIN_EMAIL')); 
 
 // MAY (multiple) 
 // Comment out, if you do not want to use it.
@@ -138,7 +142,7 @@ $delimiter			= ':';
 // see: http://www.openarchives.org/OAI/2.0/guidelines-oai-identifier.htm
 // Basically use domainname-word.domainname
 // please adjust
-$repositoryIdentifier = OAI_REPOSITORY_ID; 
+$repositoryIdentifier = $config->getProperty('OAI_REPOSITORY_ID'); 
 
 
 // description is defined in identify.php 
@@ -164,7 +168,7 @@ $MAXIDS = 200;
 // After 24 hours resumptionTokens become invalid.
 $tokenValid = 24*3600;
 $expirationdatetime = gmstrftime('%Y-%m-%dT%TZ', time()+$tokenValid); 
-$tokenDir = OAI_TOKEN_DIR;
+$tokenDir = $config->getProperty('OAI_TOKEN_DIR');
 
 // define all supported sets in your repository
 $SETS = 	array (
@@ -201,10 +205,10 @@ $METADATAFORMATS = 	array (
 //
 
 // change according to your local DB setup.
-$DB_HOST   = OAI_DB_HOST;
-$DB_USER   = OAI_DB_USER;
-$DB_PASSWD = OAI_DB_PASSWD;
-$DB_NAME   = OAI_DB_NAME;												           
+$DB_HOST   = $config->getProperty('OAI_DB_HOST');
+$DB_USER   = $config->getProperty('OAI_DB_USER');
+$DB_PASSWD = $config->getProperty('OAI_DB_PASSWD');
+$DB_NAME   = $config->getProperty('OAI_DB_NAME');												           
 
 // Data Source Name: This is the universal connection string
 // if you use something other than mysql edit accordingly.
@@ -227,7 +231,7 @@ $xmlescaped = false;
 $SQL['split'] = ';';
 
 // the name of the table where your store your metadata
-$SQL['table'] = 'oai_records';
+// At end of file.... $SQL['table'] = OAI::getCurrentRecordTable();
 
 // the name of the column where you store your sequence 
 // (or autoincrement values).
@@ -350,7 +354,8 @@ $xmlheader = $XMLHEADER .
 // the xml schema namespace, do not change this
 $XMLSCHEMA = 'http://www.w3.org/2001/XMLSchema-instance';
 
-
+// the name of the table where your store your metadata
+$SQL['table'] = OAI::getCurrentRecordTable();
 
 
 ?>

@@ -9,6 +9,7 @@
  */ 
 
 require_once(POLYPHONY."/main/library/AbstractActions/Action.class.php");
+require_once(dirname(__FILE__)."/OAI.class.php");
 
 /**
  * 
@@ -41,14 +42,27 @@ class providerAction
 	 * @access public
 	 * @since 4/26/05
 	 */
-	function execute () {
-		$harmoni =& Harmoni::instance();
+	function execute () {	
 		if (!isset($_SESSION['oai_table_setup_complete'])) {
 			$dbc =& Services::getService("DatabaseManager");
-			$tables = $dbc->getTableList(OAI_DBID);
+			$harmoni =& Harmoni::instance();
+			$config =& $harmoni->getAttachedData('OAI_CONFIG');
+			$tables = $dbc->getTableList($config->getProperty('OAI_DBID'));
+			$harvesterConfig = $config->getProperty('OAI_HARVESTER_CONFIG');
 			
-			if (!in_array('oai_records', $tables))
-				SQLUtils::runSQLfile(dirname(__FILE__)."/phpoai2/doc/oai_records_mysql.sql", OAI_DBID);
+			foreach ($harvesterConfig as $configArray) {
+				$table = 'oai_'.$configArray['name'];
+				if (!in_array($table, $tables)) {
+					$queryString = file_get_contents(
+						dirname(__FILE__)."/phpoai2/doc/oai_records_mysql.sql");
+					$queryString = str_replace('oai_records', $table, $queryString);
+					
+					$query =& new GenericSQLQuery;
+					$query->addSQLQuery(SQLUtils::parseSQLString($queryString));
+					
+					$dbc->query($query,	$config->getProperty('OAI_DBID'));
+				}
+			}
 			
 			$_SESSION['oai_table_setup_complete'] = true;
 		}
@@ -56,8 +70,7 @@ class providerAction
 		
 		require(dirname(__FILE__)."/phpoai2/oai2.php");
 		
-		while (ob_get_level())
-			ob_end_flush();
+		
 		exit;
 	}
 }

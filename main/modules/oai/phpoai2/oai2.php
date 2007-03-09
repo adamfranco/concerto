@@ -49,7 +49,7 @@ $METADATAFORMATS = null;
 $XMLSCHEMA = null;
 global $errors, $output, $xmlheader, $CONTENT_TYPE, $request, $granularity, 
 	$message, $charset, $xmlescaped, $SQL, $request_err, $compress, 
-	$METADATAFORMATS, $XMLSCHEMA;
+	$METADATAFORMATS, $XMLSCHEMA, $DSN;
 
 require_once(dirname(__FILE__).'/oai2/oaidp-util.php');
 
@@ -70,6 +70,7 @@ if (!php_is_at_least('4.1.0')) {
 // 	$errors .= oai_error('badRequestMethod', $_SERVER['REQUEST_METHOD']);
 // }
 
+$harmoni =& Harmoni::instance();
 $argKeys = $harmoni->request->getKeys();
 $args = array();
 foreach ($argKeys as $key) {

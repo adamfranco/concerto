@@ -43,31 +43,89 @@ class updateAction
 	 */
 	function execute () {
 		$harmoni =& Harmoni::instance();
-		if (!isset($_SESSION['oai_table_setup_complete'])) {
-			$dbc =& Services::getService("DatabaseManager");
-			$tables = $dbc->getTableList(OAI_DBID);
-			
-			if (!in_array('oai_records', $tables))
-				SQLUtils::runSQLfile(dirname(__FILE__)."/phpoai2/doc/oai_records_mysql.sql", OAI_DBID);
-			
-			$_SESSION['oai_table_setup_complete'] = true;
-		}
+		$config =& $harmoni->getAttachedData('OAI_CONFIG');
 		
 		while (ob_get_level())
 			ob_end_flush();
+		
+		$harvesterConfig = $config->getProperty('OAI_HARVESTER_CONFIG');
+		
+		if (!isset($_SESSION['oai_table_setup_complete'])) {
+			$dbc =& Services::getService("DatabaseManager");
+			$tables = $dbc->getTableList($config->getProperty('OAI_DBID'));
 			
+			foreach ($harvesterConfig as $configArray) {
+				$table = 'oai_'.$configArray['name'];
+				if (!in_array($table, $tables)) {
+					$queryString = file_get_contents(
+						dirname(__FILE__)."/phpoai2/doc/oai_records_mysql.sql");
+					$queryString = str_replace('oai_records', $table, $queryString);
+					
+					$query =& new GenericSQLQuery;
+					$query->addSQLQuery(SQLUtils::parseSQLString($queryString));
+					
+					$dbc->query($query,	$config->getProperty('OAI_DBID'));
+				}
+			}
+			
+			$_SESSION['oai_table_setup_complete'] = true;
+		}		
+		
+		$i = 1;
+		foreach ($harvesterConfig as $configArray) {
+			print "\n<hr/><h2>Updating table oai_".$configArray['name']." (table ".$i." of ".count($harvesterConfig).")</h2>";
+			$this->updateTable(
+				$configArray['name'], 
+				$configArray['repository_ids'],
+				$configArray['auth_group_ids']);
+		}
+		
+		exit;
+	}
+	
+	/**
+	 * Update a record table for a set of harvesters and repositories
+	 * 
+	 * @param string $table
+	 * @param array $allowedRepositoryIdStrings
+	 * @param array $authGroupIdStrings	The ids of the groups to check view authorization for,
+	 *	May be one of the following or another group Id string:
+	 *		edu.middlebury.agents.everyone
+	 *		edu.middlebury.agents.all_agents
+	 *	If empty, all assets in the specified repositories will be added regardless of
+	 *	their visibility.
+	 *
+	 * @return void
+	 * @access public
+	 * @since 3/9/07
+	 */
+	function updateTable ( $table, $allowedRepositoryIdStrings, $authGroupIdStrings ) {
+		ArgumentValidator::validate($table, StringValidatorRule::getRule());
+		ArgumentValidator::validate($allowedRepositoryIdStrings, ArrayValidatorRuleWithRule::getRule(
+			StringValidatorRule::getRule()));
+		ArgumentValidator::validate($authGroupIdStrings, ArrayValidatorRuleWithRule::getRule(
+			StringValidatorRule::getRule()));
+		
+		$harmoni =& Harmoni::instance();
+		$config =& $harmoni->getAttachedData('OAI_CONFIG');
+		
 		$repositoryManager =& Services::getService('Repository');
 		$authorizationManager =& Services::getService('AuthZ');
 		$idManager =& Services::getService("IdManager");
 		$dbc =& Services::getService("DatabaseManager");
+		
+		$authGroupIds = array();
+		foreach ($authGroupIdStrings as $id) {
+			$authGroupIds[] = $idManager->getId($id);
+		}
 				
 		$baseCheckQuery =& new SelectQuery;
-		$baseCheckQuery->addTable('oai_records');
+		$baseCheckQuery->addTable('oai_'.$table);
 		$baseCheckQuery->addColumn('datestamp');
 		$baseCheckQuery->addColumn('deleted');
 		
 		$baseUpdateQuery =& new UpdateQuery;
-		$baseUpdateQuery->setTable('oai_records');
+		$baseUpdateQuery->setTable('oai_'.$table);
 		
 		$baseUpdateColumns = array(
 			'datestamp',
@@ -98,7 +156,7 @@ class updateAction
 		);
 		
 		$baseInsertQuery =& new InsertQuery;
-		$baseInsertQuery->setTable('oai_records');
+		$baseInsertQuery->setTable('oai_'.$table);
 		$baseInsertColumns = array(
 			'datestamp',
 			'repository',
@@ -132,24 +190,24 @@ class updateAction
 		);
 		
 		$baseDeleteQuery =& new UpdateQuery;
-		$baseDeleteQuery->setTable('oai_records');
+		$baseDeleteQuery->setTable('oai_'.$table);
 		$baseDeleteQuery->addValue('deleted', 'true');
 		$baseDeleteQuery->addRawValue('datestamp', 'NOW()');
 		
 		$baseUndeleteQuery =& new UpdateQuery;
-		$baseUndeleteQuery->setTable('oai_records');
+		$baseUndeleteQuery->setTable('oai_'.$table);
 		$baseUndeleteQuery->addValue('deleted', 'false');
 		$baseUndeleteQuery->addRawValue('datestamp', 'NOW()');
 		
 		
-		$forceUpdate = true;
-		$allowedRepositories = array(
-			'153764'
-		);
+		$forceUpdate = false;
 		$repositories =& $repositoryManager->getRepositories();
 		
 		$r = 0;
-		$numR = $repositories->count();
+		if (count($allowedRepositoryIdStrings))
+			$numR = count($allowedRepositoryIdStrings);
+		else
+			$numR = $repositories->count();
 		$numUpdates = 0;	
 		$numDeleted = 0;	
 		$message = _('Updating OAI records for repository (%1 of %2) : ');
@@ -163,16 +221,17 @@ class updateAction
 		$existingRepositoryIds = array();
 		
 		while ($repositories->hasNext()) {
-			$r++;
 			$updatesInRepository = 0;
 			$repository =& $repositories->next();
 			$repositoryId =& $repository->getId();
 			
 			// Only work with allowed repositories
-			if (!in_array($repositoryId->getIdString(), $allowedRepositories))
+			if (count($allowedRepositoryIdStrings)
+					&& !in_array($repositoryId->getIdString(), $allowedRepositoryIdStrings))
 				continue;
+			$r++;
 			
-			$existingRepositoryIds[] = "'".addslashes($repositoryId->getIdString())."'";
+			$existingRepositoryIds[] = $repositoryId->getIdString();
 			
 			$assets =& $repository->getAssets();			
 			$status =& new StatusStars(
@@ -184,16 +243,14 @@ class updateAction
 			while ($assets->hasNext()) {
 				$asset =& $assets->next();
 				$assetId =& $asset->getId();
-				$existingAssetIds[] = "'".addslashes($assetId->getIdString())."'";
+				$existingAssetIds[] = $assetId->getIdString();
 				$modificationDate =& $asset->getModificationDate();
 				
 				$query =& $baseCheckQuery->copy();
-				$query->addWhere(
-					"repository='".addslashes($repositoryId->getIdString())."'");
-				$query->addWhere(
-					"oai_identifier='".addslashes($assetId->getIdString())."'");
+				$query->addWhereEqual("repository", $repositoryId->getIdString());
+				$query->addWhereEqual("oai_identifier", $assetId->getIdString());
 				
-				$result =& $dbc->query($query, OAI_DBID);
+				$result =& $dbc->query($query, $config->getProperty('OAI_DBID'));
 				
 					
 				if (!$result->getNumberOfRows()) {
@@ -209,10 +266,8 @@ class updateAction
 					{
 // 						printpre("\tUpdating:\t".$asset->getDisplayName());
 						$query =& $baseUpdateQuery->copy();
-						$query->addWhere(
-							"repository='".addslashes($repositoryId->getIdString())."'");
-						$query->addWhere(
-							"oai_identifier='".addslashes($assetId->getIdString())."'");
+						$query->addWhereEqual("repository", $repositoryId->getIdString());
+						$query->addWhereEqual("oai_identifier", $assetId->getIdString());
 					} 
 					// If it is up to date, skip.
 					else {
@@ -226,10 +281,22 @@ class updateAction
 				$isCurrentlyDeleted = (($result->getNumberOfRows() &&$result->field('deleted') == 'true')?true:false);
 				$result->free();
 				
+				if (!count($authGroupIds)) {
+					$isVisible = true;
+				} else {
+					$isVisible = false;
+					foreach ($authGroupIds as $id) {
+						if ($authorizationManager->isAuthorized($id, $viewId, $assetId)) {
+							$isVisible = true;
+							break;
+						}
+					}
+				}
+				
 				if ($query) {
 				//Add the data fields
 					// Deleted
-					if ($authorizationManager->isAuthorized($instituteId, $viewId, $assetId)) {
+					if ($isVisible) {
 						$query->addValue('deleted', 'false');
 					} else {
 						$query->addValue('deleted', 'true');
@@ -239,30 +306,24 @@ class updateAction
 					$query->addValue('dc_description', $asset->getDescription());
 					$this->addDublinCoreValues($asset, $query);
 						
-					$dbc->query($query, OAI_DBID);
+					$dbc->query($query, $config->getProperty('OAI_DBID'));
 					
 					$updatesInRepository++;
 					$numUpdates++;
 				} else {
-					if ($isCurrentlyDeleted 
-						&& $authorizationManager->isAuthorized($instituteId, $viewId, $assetId)) 
+					if ($isCurrentlyDeleted && $isVisible) 
 					{
 						$query =& $baseUndeleteQuery->copy();
-					} else if (!$isCurrentlyDeleted 
-						&& !$authorizationManager->isAuthorized(
-								$instituteId, $viewId, $assetId)) 
-					{
+					} else if (!$isCurrentlyDeleted && !$isVisible) {
 						$query =& $baseDeleteQuery->copy();
 					} else {
 						$query = null;
 					}
 					
 					if ($query) {
-						$query->addWhere(
-							"repository='".addslashes($repositoryId->getIdString())."'");
-						$query->addWhere(
-							"oai_identifier='".addslashes($assetId->getIdString())."'");
-						$dbc->query($query, OAI_DBID);
+						$query->addWhereEqual("repository", $repositoryId->getIdString());
+						$query->addWhereEqual("oai_identifier", $assetId->getIdString());
+						$dbc->query($query, $config->getProperty('OAI_DBID'));
 						$updatesInRepository++;
 						$numUpdates++;
 					}
@@ -273,12 +334,12 @@ class updateAction
 			
 			// Update any missing assets as deleted
 			$query =& $baseDeleteQuery->copy();
-			$query->addWhere("repository='".addslashes($repositoryId->getIdString())."'");
+			$query->addWhereEqual("repository", $repositoryId->getIdString());
 			if (count($existingAssetIds)) {
-				$query->addWhere("deleted='false'");
-				$query->addWhere("oai_identifier NOT IN (".implode(", ", $existingAssetIds).")");			
+				$query->addWhereEqual("deleted", "false");
+				$query->addWhereNotIn("oai_identifier", $existingAssetIds);
 			}			
-			$result =& $dbc->query($query, OAI_DBID);
+			$result =& $dbc->query($query, $config->getProperty('OAI_DBID'));
 			if ($result->getNumberOfRows()) {
 				$updatesInRepository = $updatesInRepository + $result->getNumberOfRows();
 				$numUpdates = $numUpdates + $result->getNumberOfRows();
@@ -293,9 +354,9 @@ class updateAction
 		
 		// Update any missing repositories as deleted
 		$query =& $baseDeleteQuery->copy();
-		$query->addWhere("deleted='false'");
-		$query->addWhere("repository NOT IN (".implode(", ", $existingRepositoryIds).")");
-		$result =& $dbc->query($query, OAI_DBID);
+		$query->addWhereEqual("deleted", "false");
+		$query->addWhereNotIn("oai_identifier", $existingRepositoryIds);
+		$result =& $dbc->query($query, $config->getProperty('OAI_DBID'));
 		if ($result->getNumberOfRows()) {
 			$updatesInRepository = $updatesInRepository + $result->getNumberOfRows();
 			$numUpdates = $numUpdates + $result->getNumberOfRows();
@@ -303,7 +364,6 @@ class updateAction
 		
 		printpre("Total Updates:\t".$numUpdates);
 		
-		exit;
 	}
 	
 	/**
