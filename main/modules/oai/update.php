@@ -24,7 +24,7 @@ $params = getParameterArray(__FILE__, $_SERVER['argv']);
 $helpFlags = array_intersect_key(array('help'=>TRUE, 'help'=>TRUE, 'h'=>TRUE, '?'=>TRUE), $options);
 
 // check the number of args and print help if necessary
-if (count($helpFlags) || count($options) || count ($params) )
+if (count($options) > 1 || count ($params) || count($helpFlags))
 {
 ?>
 
@@ -32,7 +32,8 @@ This is a command line script that will populate the OAI data tables from the
 repositories in Concerto.
 
 Options:
-    
+    -v       Verbose output
+
 Usage:
 
 <?php echo $argv[0]; ?> [options] 
