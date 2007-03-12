@@ -10,6 +10,17 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
+	<version number="2.4.0" date="The Future">
+		<new author='adam'>
+			OAI: Added Open Archives Initiative (OAI) provider support to Concerto.
+		</new>
+		<new author='adam'>
+			Updates: Added an updater system.
+		</new>
+		<change author='adam'>
+			Schemas: Updating Dublin Core and VRA ids to be static strings.
+		</change>
+	</version>
 	<version number="2.3.0" date="2006-12-13">
 		<new author='adam'>
 			AuthN: Added support for administrators to act as another user.

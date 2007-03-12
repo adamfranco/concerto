@@ -29,7 +29,7 @@ $config->addProperty('OAI_DB_USER', $dbUser);
 $config->addProperty('OAI_DB_PASSWD', $dbPass);
 $config->addProperty('OAI_DB_NAME', $dbName);
 
-$config->addProperty('OAI_TOKEN_DIR', $arg2 = '/tmp/concerto-oai_tokens');
+$config->addProperty('OAI_TOKEN_DIR', $arg4 = '/tmp/concerto-oai_tokens');
 
 // The search order is the array order. I.e, if the IP of the harvester matches the
 // first entry, then that entry will be used and later ones ignored.
