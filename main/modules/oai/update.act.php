@@ -45,6 +45,10 @@ class updateAction
 		$harmoni =& Harmoni::instance();
 		$config =& $harmoni->getAttachedData('OAI_CONFIG');
 		
+		if (!defined('OAI_UPDATE_OUTPUT_HTML')) {
+			define("OAI_UPDATE_OUTPUT_HTML", TRUE);
+		}
+		
 		while (ob_get_level())
 			ob_end_flush();
 		
@@ -73,11 +77,24 @@ class updateAction
 		
 		$i = 1;
 		foreach ($harvesterConfig as $configArray) {
-			print "\n<hr/><h2>Updating table oai_".$configArray['name']." (table ".$i." of ".count($harvesterConfig).")</h2>";
+			$tableMessage = "Updating table oai_".$configArray['name']." (table ".$i." of ".count($harvesterConfig).")";
+			if (OAI_UPDATE_OUTPUT_HTML)
+				print "\n<hr/><h2>".$tableMessage."</h2>";
+			else
+				print "
+
+---------------------------------------------------
+| $tableMessage
+---------------------------------------------------
+";
+
+			
 			$this->updateTable(
 				$configArray['name'], 
 				$configArray['repository_ids'],
 				$configArray['auth_group_ids']);
+			
+			$i++;
 		}
 		
 		exit;
@@ -234,7 +251,7 @@ class updateAction
 			$existingRepositoryIds[] = $repositoryId->getIdString();
 			
 			$assets =& $repository->getAssets();			
-			$status =& new StatusStars(
+			$status =& new CLIStatusStars(
 				str_replace('%1', $r, $message).$repository->getDisplayName());
 			$status->initializeStatistics($assets->count());
 			
@@ -345,24 +362,30 @@ class updateAction
 				$numUpdates = $numUpdates + $result->getNumberOfRows();
 			}
 			
-			print "<pre>Elapsed Time:\t";
+			print ((OAI_UPDATE_OUTPUT_HTML)?"<pre>":"\n");				
+			print "Elapsed Time:\t";
 			$timer->end();		
 			printf("%1.2f", $timer->printTime());
-			print " seconds</pre>";
-			printpre("Updates: ".$updatesInRepository);
+			print " seconds";
+			print ((OAI_UPDATE_OUTPUT_HTML)?"</pre>":"");
+			print ((OAI_UPDATE_OUTPUT_HTML)?"<pre>":"\n");
+			print "Updates: ".$updatesInRepository;
+			print ((OAI_UPDATE_OUTPUT_HTML)?"</pre>":"\n");
 		}	
 		
 		// Update any missing repositories as deleted
 		$query =& $baseDeleteQuery->copy();
 		$query->addWhereEqual("deleted", "false");
-		$query->addWhereNotIn("oai_identifier", $existingRepositoryIds);
+		$query->addWhereNotIn("repository", $existingRepositoryIds);
 		$result =& $dbc->query($query, $config->getProperty('OAI_DBID'));
 		if ($result->getNumberOfRows()) {
 			$updatesInRepository = $updatesInRepository + $result->getNumberOfRows();
 			$numUpdates = $numUpdates + $result->getNumberOfRows();
 		}
 		
-		printpre("Total Updates:\t".$numUpdates);
+		print ((OAI_UPDATE_OUTPUT_HTML)?"<pre>":"\n");
+		print "Total Updates:\t".$numUpdates;
+		print ((OAI_UPDATE_OUTPUT_HTML)?"</pre>":"\n");
 		
 	}
 	
