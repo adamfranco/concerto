@@ -205,7 +205,9 @@ class viewAction
 		$content =& $asset->getContent();
 		if ($string = $content->asString()) {
 			ob_start();
-			printpre( htmlspecialchars($string));
+			print "\n<textarea readonly='readonly' rows='30' cols='80'>";
+			print htmlspecialchars($string);
+			print "</textarea>";
 			$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
 			ob_end_clean();
 			$actionRows->add($layout, "100%", null, LEFT, CENTER);
