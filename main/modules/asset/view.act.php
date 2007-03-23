@@ -205,7 +205,7 @@ class viewAction
 		$content =& $asset->getContent();
 		if ($string = $content->asString()) {
 			ob_start();
-			print ($string);
+			printpre( htmlspecialchars($string));
 			$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
 			ob_end_clean();
 			$actionRows->add($layout, "100%", null, LEFT, CENTER);
