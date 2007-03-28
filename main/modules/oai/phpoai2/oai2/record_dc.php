@@ -58,10 +58,11 @@ $output .= xmlrecord($record['dc_date'], 'dc:date', '', $indent);
 $output .= xmlrecord($record['dc_type'], 'dc:type', '', $indent);
 $output .= xmlrecord($record['dc_format'], 'dc:format', '', $indent);
 $output .= rawxmlrecord(
-	$harmoni->request->quickURL('asset', 'view', array(
-			'collection_id' => $record['repository'],
+	str_replace('&amp;', '&', 
+		$harmoni->request->quickURL('asset', 'view', array(
+			'collection_id' => $record['oai_set'],
 			'asset_id' => $record['oai_identifier'],
-		)), 
+		))), 
 	'dc:identifier', '', $indent);
 $output .= xmlrecord($record['dc_source'], 'dc:source', '', $indent);
 $output .= xmlrecord($record['dc_language'], 'dc:language', '', $indent);

@@ -54,7 +54,7 @@ $SHOW_QUERY_ERROR = TRUE;
 
 // The content-type the WWW-server delivers back. For debug-puposes, "text/plain" 
 // is easier to view. On a production site you should use "text/xml".
-$CONTENT_TYPE = 'Content-Type: text/plain';
+$CONTENT_TYPE = 'Content-Type: text/xml';
 
 // If everything is running ok, you should use this
 // $SHOW_QUERY_ERROR = FALSE;
