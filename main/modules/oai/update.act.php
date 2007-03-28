@@ -176,7 +176,6 @@ class updateAction
 		$baseInsertQuery->setTable('oai_'.$table);
 		$baseInsertColumns = array(
 			'datestamp',
-			'repository',
 			'oai_identifier',
 			'deleted',
 			'oai_set',
@@ -185,7 +184,6 @@ class updateAction
 		);
 		$dcInsertColumns = array(
 			'datestamp',
-			'repository',
 			'oai_identifier',
 			'deleted',
 			'oai_set',
@@ -264,7 +262,7 @@ class updateAction
 				$modificationDate =& $asset->getModificationDate();
 				
 				$query =& $baseCheckQuery->copy();
-				$query->addWhereEqual("repository", $repositoryId->getIdString());
+				$query->addWhereEqual("oai_set", $repositoryId->getIdString());
 				$query->addWhereEqual("oai_identifier", $assetId->getIdString());
 				
 				$result =& $dbc->query($query, $config->getProperty('OAI_DBID'));
@@ -273,7 +271,7 @@ class updateAction
 				if (!$result->getNumberOfRows()) {
 // 					printpre("Doesn't exist:\t".$asset->getDisplayName()."");
 					$query =& $baseInsertQuery->copy();
-					$query->addValue('repository', $repositoryId->getIdString());
+					$query->addValue('oai_set', $repositoryId->getIdString());
 					$query->addValue('oai_identifier', $assetId->getIdString());
 				} else {
 // 					printpre("Exists:\t".$asset->getDisplayName()."");
@@ -283,7 +281,7 @@ class updateAction
 					{
 // 						printpre("\tUpdating:\t".$asset->getDisplayName());
 						$query =& $baseUpdateQuery->copy();
-						$query->addWhereEqual("repository", $repositoryId->getIdString());
+						$query->addWhereEqual("oai_set", $repositoryId->getIdString());
 						$query->addWhereEqual("oai_identifier", $assetId->getIdString());
 					} 
 					// If it is up to date, skip.
@@ -318,7 +316,6 @@ class updateAction
 					} else {
 						$query->addValue('deleted', 'true');
 					}
-					$query->addRawValue('oai_set', 'NULL');
 					$query->addValue('dc_title', $asset->getDisplayName());
 					$query->addValue('dc_description', $asset->getDescription());
 					$this->addDublinCoreValues($asset, $query);
@@ -338,7 +335,7 @@ class updateAction
 					}
 					
 					if ($query) {
-						$query->addWhereEqual("repository", $repositoryId->getIdString());
+						$query->addWhereEqual("oai_set", $repositoryId->getIdString());
 						$query->addWhereEqual("oai_identifier", $assetId->getIdString());
 						$dbc->query($query, $config->getProperty('OAI_DBID'));
 						$updatesInRepository++;
@@ -351,7 +348,7 @@ class updateAction
 			
 			// Update any missing assets as deleted
 			$query =& $baseDeleteQuery->copy();
-			$query->addWhereEqual("repository", $repositoryId->getIdString());
+			$query->addWhereEqual("oai_set", $repositoryId->getIdString());
 			if (count($existingAssetIds)) {
 				$query->addWhereEqual("deleted", "false");
 				$query->addWhereNotIn("oai_identifier", $existingAssetIds);
@@ -376,7 +373,8 @@ class updateAction
 		// Update any missing repositories as deleted
 		$query =& $baseDeleteQuery->copy();
 		$query->addWhereEqual("deleted", "false");
-		$query->addWhereNotIn("repository", $existingRepositoryIds);
+		if (count($existingRepositoryIds))
+			$query->addWhereNotIn("oai_set", $existingRepositoryIds);
 		$result =& $dbc->query($query, $config->getProperty('OAI_DBID'));
 		if ($result->getNumberOfRows()) {
 			$updatesInRepository = $updatesInRepository + $result->getNumberOfRows();

@@ -134,12 +134,12 @@ else {
 	}
 
     if (isset($args['set'])) {
-	    if (is_array($SETS)) {
+// 	    if (is_array($SETS)) {
 		    $extquery .= setQuery($set);
-	    } else {
-			$errors .= oai_error('noSetHierarchy'); 
-			oai_exit();
-		}
+// 	    } else {
+// 			$errors .= oai_error('noSetHierarchy'); 
+// 			oai_exit();
+// 		}
 	}
 }
 

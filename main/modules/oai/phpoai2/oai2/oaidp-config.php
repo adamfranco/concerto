@@ -171,11 +171,60 @@ $expirationdatetime = gmstrftime('%Y-%m-%dT%TZ', time()+$tokenValid);
 $tokenDir = $config->getProperty('OAI_TOKEN_DIR');
 
 // define all supported sets in your repository
-$SETS = 	array (
+// $SETS = 	array (
 // 				array('setSpec'=>'phdthesis', 'setName'=>'PHD Thesis', 'setDescription'=>'') //,
 				// array('setSpec'=>'math', 'setName'=>'Mathematics') ,
 				// array('setSpec'=>'phys', 'setName'=>'Physics') 
-			);
+// 			);
+
+/**
+ * Answer an array of set information
+ * 
+ * @return array
+ * @access public
+ * @since 3/28/07
+ */
+function getOaiSetArray ($db) {
+	global $SQL;
+	$query = "SELECT DISTINCT oai_set FROM ".$SQL['table'];
+	$res = $db->query($query);   
+	if (DB::isError($res)) {
+		if ($SHOW_QUERY_ERROR) {
+			echo __FILE__.",". __LINE__."<br />";
+			echo "Query: $query<br />\n";
+			die($db->errorNative());
+		} else {
+			$errors .= oai_error('noSetHierarchy'); 
+		}
+	} else {
+		$num_rows = $res->numRows();
+		if (DB::isError($num_rows)) {
+			if ($SHOW_QUERY_ERROR) {
+				echo __FILE__.",". __LINE__."<br />";
+				die($db->errorNative());
+			} 
+		}
+		if (!$num_rows) {
+			$errors .= oai_error('noSetHierarchy'); 
+		}
+	}
+	
+	$repositoryManager =& Services::getService('Repository');
+	$idManager =& Services::getService('Id');
+	
+	$sets = array();
+	while ($row = $res->fetchRow(DB_FETCHMODE_ASSOC)) {
+		$set = array();
+		$set['setSpec'] = $row['oai_set'];
+		$id =& $idManager->getId($row['oai_set']);
+		$repository =& $repositoryManager->getRepository($id);
+		$set['setName'] = $repository->getDisplayName();
+		$set['setDescription'] = $repository->getDescription();
+		$sets[] = $set;
+	}
+	
+	return $sets;
+}
 
 // define all supported metadata formats
 
@@ -284,7 +333,7 @@ function selectallQuery ($id = '')
 		$query .= $SQL['id_column'].' = '.$SQL['id_column'];
 	}
 	else {
-		$query .= $SQL['identifier']." ='$id'";
+		$query .= $SQL['identifier']." ='".addslashes($id)."'";
 	}
 	return $query;
 }
@@ -304,7 +353,7 @@ function idQuery ($id = '')
 		$query .= $SQL['id_column'].' = '.$SQL['id_column'];
 	}
 	else {
-		$query .= $SQL['identifier']." = '$id'";
+		$query .= $SQL['identifier']." = '".addslashes($id)."'";
 	}
 
 	return $query;
@@ -315,7 +364,7 @@ function untilQuery($until)
 {
 	global $SQL;
 
-	return ' and '.$SQL['datestamp']." <= '$until'";
+	return ' and '.$SQL['datestamp']." <= '".addslashes($until)."'";
 }
 
 // filter for from
@@ -323,7 +372,7 @@ function fromQuery($from)
 {
 	global $SQL;
 
-	return ' and '.$SQL['datestamp']." >= '$from'";
+	return ' and '.$SQL['datestamp']." >= '".addslashes($from)."'";
 }
 
 // filter for sets
@@ -331,7 +380,7 @@ function setQuery($set)
 {
 	global $SQL;
 
-	return ' and '.$SQL['set']." LIKE '%$set%'";
+	return ' and '.$SQL['set']." LIKE '%".addslashes($set)."%'";
 }
 
 // There is no need to change anything below.

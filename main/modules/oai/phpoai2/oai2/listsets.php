@@ -49,6 +49,10 @@ if ($errors != '') {
 	oai_exit();
 }
 
+
+$SETS = getOaiSetArray($db);
+	
+
 if (is_array($SETS)) {
 	$output .= "  <ListSets>\n";
 	foreach($SETS as $key=>$val) {

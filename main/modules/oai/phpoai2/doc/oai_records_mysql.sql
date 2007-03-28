@@ -10,7 +10,6 @@
 CREATE TABLE oai_records (
   serial int(11) NOT NULL auto_increment,
   url varchar(255),
-  repository varchar(255),
   oai_identifier varchar(255),
   oai_set varchar(255),
   datestamp datetime,
