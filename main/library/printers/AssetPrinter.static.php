@@ -113,29 +113,93 @@ class AssetPrinter {
 				$assetId)) {
 		
 		//===== Viewer Link =====//
-			ob_start();
-			print "<a href='#' onclick='Javascript:window.open(";
-			print '"'.VIEWER_URL."?&amp;source=";
+			// Add the options panel script to the header
+			$outputHandler =& $harmoni->getOutputHandler();
+			$outputHandler->setHead($outputHandler->getHead()
+			."\n\t\t<script type='text/javascript' src='".MYPATH."/javascript/AssetOptionsPanel.js'></script>"
+			."\n\t\t<link rel='stylesheet' type='text/css' href='".MYPATH."/javascript/AssetOptionsPanel.css' />");
 			
-			print urlencode($harmoni->request->quickURL($xmlModule, $xmlAction, $params));
-			print '&amp;start='.$xmlStart.'", ';
-// 			print '"'.preg_replace("/[^a-z0-9]/i", '_', $assetId->getIdString()).'", ';
-			print '"_blank", ';
-			print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
-			print ")'>";
-			print _("View")."</a>";			
-			$links[] = ob_get_contents();
-			ob_end_clean();
+			ob_start();
+			$viewerUrl = VIEWER_URL."?&amp;source=";
+			$viewerUrl .= urlencode($harmoni->request->quickURL($xmlModule, $xmlAction, $params));
+			$viewerUrl .= '&amp;start='.$xmlStart;
+			
+			print "<a href='#' onclick=\"Javascript:AssetOptionsPanel.run('".$repositoryId->getIdString()."', '".$assetId->getIdString()."', this, [";
+			$toShow = array();
+			if ($authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.view"),
+				$assetId)) 
+			{
+				$toShow[] = "'view'";
+			}
+			
+			if ($authZ->isUserAuthorizedBelow(
+				$idManager->getId("edu.middlebury.authorization.view"),
+				$assetId)) 
+			{
+				$children =& $asset->getAssets();
+				if ($children->hasNext()) {
+					if ($actionString != "asset.browse" ||
+							$assetId->getIdString() != 
+							$harmoni->request->get('asset_id')) 
+					{
+						$toShow[] = "'browse'";
+					}
+				}
+			}
+			
+			if ($authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.modify"),
+				$assetId)) 
+			{
+				$toShow[] = "'edit'";
+			}
+			
+			if ($authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.delete"),
+				$assetId)) 
+			{
+				// If we are viewing the asset and we delete it, we can't return
+				// to viewing it.
+				if (ereg("^asset\..*$", $actionString) && 
+						$harmoni->request->get("asset_id") == 
+						$assetId->getIdString())
+				{
+					$deleteParams = $params;
+					unset ($deleteParams['asset_id']);
+					$harmoni->history->markReturnURL("concerto/asset/delete-return",
+						$harmoni->request->mkURL('collection', 'browse', $deleteParams));
+				} 
+				// otherwise, go bact to where we are.
+				else {
+					$harmoni->history->markReturnURL("concerto/asset/delete-return",
+						$harmoni->request->mkURL(null, null, $params));
+				}
+				
+				$toShow[] = "'delete'";
+			}
+			
+			if ($authZ->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.add_children"),
+					$assetId)) 
+			{
+				$toShow[] = "'add_children'";
+			}
+			
+			print implode(", ", $toShow);
+			print "], '".$viewerUrl."'); return false;\">"._("Options...")."</a> ";
+					
+			$links[] = ob_get_clean();
 
 		//===== Details Link =====//
-			if ($actionString != "asset.view") {
-				$links[] = "<a href='".$harmoni->request->quickURL(
-					"asset", "view",
-					array("collection_id" => $repositoryId->getIdString(),
-					"asset_id" => $assetId->getIdString()))."'>";
-				$links[count($links) - 1] .= _("Details")."</a>";
-			} else
-				$links[] = _("Details");
+// 			if ($actionString != "asset.view") {
+// 				$links[] = "<a href='".$harmoni->request->quickURL(
+// 					"asset", "view",
+// 					array("collection_id" => $repositoryId->getIdString(),
+// 					"asset_id" => $assetId->getIdString()))."'>";
+// 				$links[count($links) - 1] .= _("Details")."</a>";
+// 			} else
+// 				$links[] = _("Details");
 		//===== Export Link =====//
 // 			if (ereg("^asset\..*$", $actionString) && 
 // 					$harmoni->request->get("asset_id") == 
@@ -168,86 +232,86 @@ class AssetPrinter {
 			}
 		}
 	//===== Edit Link =====//	
-		$harmoni->history->markReturnURL("concerto/asset/edit-return",
-			$harmoni->request->mkURL(null, null, $params));
-		
-		if ($includeEditDelete) {
-			if ($authZ->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.modify"),
-					$assetId)) {
-				if ($actionString != "asset.edit") {
-					$links[] = "<a href='".$harmoni->request->quickURL(
-						"asset", "edit", 
-						array("collection_id" => $repositoryId->getIdString(), 
-						"assets" => $assetId->getIdString()))."'>";
-					$links[count($links) - 1] .= _("Edit")."</a>";
-				} else
-					$links[] = _("Edit");
-			}
+// 		$harmoni->history->markReturnURL("concerto/asset/edit-return",
+// 			$harmoni->request->mkURL(null, null, $params));
+// 		
+// 		if ($includeEditDelete) {
+// 			if ($authZ->isUserAuthorized(
+// 					$idManager->getId("edu.middlebury.authorization.modify"),
+// 					$assetId)) {
+// 				if ($actionString != "asset.edit") {
+// 					$links[] = "<a href='".$harmoni->request->quickURL(
+// 						"asset", "edit", 
+// 						array("collection_id" => $repositoryId->getIdString(), 
+// 						"assets" => $assetId->getIdString()))."'>";
+// 					$links[count($links) - 1] .= _("Edit")."</a>";
+// 				} else
+// 					$links[] = _("Edit");
+// 			}
 		//===== Delete Link =====//
-			if ($authZ->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.delete"),
-					$assetId)) 
-			{
-				// If we are viewing the asset and we delete it, we can't return
-				// to viewing it.
-				if (ereg("^asset\..*$", $actionString) && 
-						$harmoni->request->get("asset_id") == 
-						$assetId->getIdString())
-				{
-					$deleteParams = $params;
-					unset ($deleteParams['asset_id']);
-					$harmoni->history->markReturnURL("concerto/asset/delete-return",
-						$harmoni->request->mkURL('collection', 'browse', $deleteParams));
-				} 
-				// otherwise, go bact to where we are.
-				else {
-					$harmoni->history->markReturnURL("concerto/asset/delete-return",
-						$harmoni->request->mkURL(null, null, $params));
-				}
-				ob_start();
-				print "<a href='Javascript:deleteAsset(\"".$assetId->getIdString().
-					"\", \"".$repositoryId->getIdString()."\", \"".
-					$harmoni->request->quickURL("asset", "delete",
-					array("collection_id" => $repositoryId->getIdString(),
-					"asset_id" => $assetId->getIdString()))."\");'>";
-				print _("Delete")."</a>";
-				$links[] = ob_get_contents();
-				ob_end_clean();
-				
-				print "\n<script type='text/javascript'>\n//<![CDATA[";
-				print "\n	function deleteAsset(assetId, repositoryId, url) {";
-				print "\n		if (confirm(\""._("Are you sure you want to delete this Asset?")."\")) {";
-				print "\n			window.location = url;";
-				print "\n		}";
-				print "\n	}";
-				print "\n//]]>\n</script>\n";
-			}
+// 			if ($authZ->isUserAuthorized(
+// 					$idManager->getId("edu.middlebury.authorization.delete"),
+// 					$assetId)) 
+// 			{
+// 				// If we are viewing the asset and we delete it, we can't return
+// 				// to viewing it.
+// 				if (ereg("^asset\..*$", $actionString) && 
+// 						$harmoni->request->get("asset_id") == 
+// 						$assetId->getIdString())
+// 				{
+// 					$deleteParams = $params;
+// 					unset ($deleteParams['asset_id']);
+// 					$harmoni->history->markReturnURL("concerto/asset/delete-return",
+// 						$harmoni->request->mkURL('collection', 'browse', $deleteParams));
+// 				} 
+// 				// otherwise, go bact to where we are.
+// 				else {
+// 					$harmoni->history->markReturnURL("concerto/asset/delete-return",
+// 						$harmoni->request->mkURL(null, null, $params));
+// 				}
+// 				ob_start();
+// 				print "<a href='Javascript:deleteAsset(\"".$assetId->getIdString().
+// 					"\", \"".$repositoryId->getIdString()."\", \"".
+// 					$harmoni->request->quickURL("asset", "delete",
+// 					array("collection_id" => $repositoryId->getIdString(),
+// 					"asset_id" => $assetId->getIdString()))."\");'>";
+// 				print _("Delete")."</a>";
+// 				$links[] = ob_get_contents();
+// 				ob_end_clean();
+// 				
+// 				print "\n<script type='text/javascript'>\n//<![CDATA[";
+// 				print "\n	function deleteAsset(assetId, repositoryId, url) {";
+// 				print "\n		if (confirm(\""._("Are you sure you want to delete this Asset?")."\")) {";
+// 				print "\n			window.location = url;";
+// 				print "\n		}";
+// 				print "\n	}";
+// 				print "\n//]]>\n</script>\n";
+// 			}
 		
 		//===== Add Child Asset Link =====//
-			if ($authZ->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.add_children"),
-					$assetId)) {
-				if (ereg("^asset\..*$", $actionString) && 
-						$harmoni->request->get("asset_id") == 
-						$assetId->getIdString()) {
-					$links[] = "<a href='".$harmoni->request->quickURL(
-						"asset", "add",
-						array("collection_id" => $repositoryId->getIdString(),
-						"parent" => $assetId->getIdString()))."'>";
-					$links[count($links) - 1] .= _("Add Child <em>Asset</em>").
-						"</a>";
-		//===== Import Link =====//
-	// 				$harmoni->request->startNamespace("import");
-	// 				$links[] = "<a href='".$harmoni->request->quickURL(
-	// 					"asset", "import",
-	// 					array("collection_id" => $repositoryId->getIdString(), 
-	// 					"asset_id" => $assetId->getIdString()))."'>".
-	// 					_("Import Child <em>Asset(s)</em>")."</a>";
-	// 				$harmoni->request->endNamespace();
-				}
-			}
-		}
+// 			if ($authZ->isUserAuthorized(
+// 					$idManager->getId("edu.middlebury.authorization.add_children"),
+// 					$assetId)) {
+// 				if (ereg("^asset\..*$", $actionString) && 
+// 						$harmoni->request->get("asset_id") == 
+// 						$assetId->getIdString()) {
+// 					$links[] = "<a href='".$harmoni->request->quickURL(
+// 						"asset", "add",
+// 						array("collection_id" => $repositoryId->getIdString(),
+// 						"parent" => $assetId->getIdString()))."'>";
+// 					$links[count($links) - 1] .= _("Add Child <em>Asset</em>").
+// 						"</a>";
+// 		//===== Import Link =====//
+// 	// 				$harmoni->request->startNamespace("import");
+// 	// 				$links[] = "<a href='".$harmoni->request->quickURL(
+// 	// 					"asset", "import",
+// 	// 					array("collection_id" => $repositoryId->getIdString(), 
+// 	// 					"asset_id" => $assetId->getIdString()))."'>".
+// 	// 					_("Import Child <em>Asset(s)</em>")."</a>";
+// 	// 				$harmoni->request->endNamespace();
+// 				}
+// 			}
+// 		}
 		
 	//===== Basket Link =====//
 		if ($authZ->isUserAuthorized(
