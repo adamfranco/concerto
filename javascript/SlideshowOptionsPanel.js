@@ -65,7 +65,11 @@ function SlideshowOptionsPanel ( exhibitionId, assetId, positionElement, toShow,
 		
 		if (toShow.elementExists('delete')) {
 			this.addConfirmButton ('exhibitions', 'delete_slideshow', 'Delete', 'Delete this Slideshow.', 'Are you sure that you want to delete this Slideshow?', {'exhibition_id': this.exhibitionId, 'slideshow_id': this.assetId});
-		}		
+		}
+		
+		if (toShow.elementExists('duplicate')) {
+			this.addButton ('exhibitions', 'duplicate_slideshow', 'Duplicate', 'Make a copy of this Slideshow.', {'exhibition_id': this.exhibitionId, 'slideshow_id': this.assetId});
+		}
 	}
 	
 	/**

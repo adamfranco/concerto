@@ -118,6 +118,13 @@ class SlideShowPrinter {
 			}
 			
 			if ($authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.add_children"),
+				$exhibitionId)) 
+			{
+				$toShow[] = "'duplicate'";
+			}
+			
+			if ($authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.delete"),
 				$assetId)) 
 			{

@@ -45,6 +45,9 @@
 		<change author='adam'>
 			Asset Editing: Removed unused date fields to prevent user confusion.
 		</change>
+		<new author='adam'>
+			Slideshows: Can now duplicate slideshows to easily make derivatives.
+		</new>
 	</version>
 	<version number="2.3.0" date="2006-12-13">
 		<new author='adam'>
