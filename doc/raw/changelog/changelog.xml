@@ -31,6 +31,13 @@
 		<change author='adam'>
 			Wizards: Now steps can be accessed out-of-order via links.
 		</change>
+		<change author='adam'>
+			Importing: Can now import Assets directly under another Asset rather 
+			than just at the Repository root.
+		</change>
+		<change author='adam'>
+			Importing: Can now import a single file as an Asset, without compression.
+		</change>
 	</version>
 	<version number="2.3.0" date="2006-12-13">
 		<new author='adam'>

@@ -132,15 +132,15 @@ class importAction extends MainWindowAction {
 // 			"\">"._("here")."</a>".
 // 			_(" to customize your schema (Suggested)")."</td></tr>".
 			
-			"\n<tr><td>"._("Is this file a Zip/GZip/BZip/Tar archive? ")."</td>".
-			"\n<td>[[is_archived]] <em>"._("(All except XML source data must be Archived)")."</em></td></tr>".
+			"\n<tr><td>"._("Is this file a Zip/GZip/BZip/Tar archive?<br/>If checked, the archive will be decompressed and all files in it will be imported.")."</td>".
+			"\n<td>[[is_archived]]</td></tr>".
 			
 			"\n<tr><td><h3>"._("Import type:")."</h3></td></tr>".
 			"\n<tr><td>"._("The type of import to execute: ")."</td>".
 			"\n<td>[[import_type]]</td></tr>".
 			
 			"\n<tr><td><h3>"._("File:")."</h3></td></tr>".
-			"\n<tr><td>"._("The Zip/GZip/BZip/Tar/XML file to be imported: ")."</td>".
+			"\n<tr><td>"._("The Zip/GZip/BZip/Tar/XML achive file or a single file to be imported: ")."</td>".
 			"\n<td>[[filename]]</td></tr>".
 			
 			"\n<tr><td><h3>"._("Parent Asset:")."</h3></td></tr>".
@@ -337,7 +337,7 @@ class importAction extends MainWindowAction {
 						$idManager->getId($properties['parent'])));
 			}
 			
-			$importer->import();	
+			$importer->import($properties['is_archived']);	
 			
 			// something happened so tell the end user
 			if ($importer->hasErrors()) {
