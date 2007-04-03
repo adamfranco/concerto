@@ -24,6 +24,13 @@
 			AssetView: Now escaping content and placing it in a text-area so that 
 			it doesn't stretch the page.
 		</change>
+		<change author='adam'>
+			Asset Browsing: Asset options/commands are now placed in a pop-up 
+			panel to save space and provide easy access to them.
+		</change>
+		<change author='adam'>
+			Wizards: Now steps can be accessed out-of-order via links.
+		</change>
 	</version>
 	<version number="2.3.0" date="2006-12-13">
 		<new author='adam'>

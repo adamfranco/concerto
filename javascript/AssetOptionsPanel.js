@@ -72,6 +72,11 @@ function AssetOptionsPanel ( repositoryId, assetId, positionElement, toShow, vie
 		
 		if (toShow.elementExists('add_children')) {
 			this.addButton ('add', 'Add Child', 'Add an Asset below this Asset.', {'collection_id': this.repositoryId, 'parent': this.assetId});
+			
+			var url = Harmoni.quickUrl('collection', 'import', {'collection_id': this.repositoryId, 'parent': this.assetId}, 'import');
+			this.addOnclickButton (
+				function () { window.location = url.urlDecodeAmpersands(); },
+				'Import Children', 'Import Assets below this Asset.');
 		}
 		
 	}
@@ -112,7 +117,7 @@ function AssetOptionsPanel ( repositoryId, assetId, positionElement, toShow, vie
 		}
 		this.addOnclickButton (
 			function () { window.location = url.urlDecodeAmpersands(); },
-			title, description, params);
+			title, description);
 	}
 	
 	/**
@@ -166,7 +171,7 @@ function AssetOptionsPanel ( repositoryId, assetId, positionElement, toShow, vie
 	 * @access public
 	 * @since 4/2/07
 	 */
-	AssetOptionsPanel.prototype.addOnclickButton = function (onclick, title, description, params) {
+	AssetOptionsPanel.prototype.addOnclickButton = function (onclick, title, description) {
 		var row = this.options.appendChild(document.createElement('tr'));
 		var col1 = row.appendChild(document.createElement('td'));
 		var col2 = row.appendChild(document.createElement('td'));

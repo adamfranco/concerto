@@ -121,22 +121,32 @@ class importAction extends MainWindowAction {
 		$harmoni =& Harmoni::Instance();
 		$wizard =& SimpleWizard::withText(
 			"<table border='0' style='margin-top:20px' >\n" .
+			
 			"\n<tr><td><h3>"._("Source data type:")."</h3></td>".
 			"\n<td style='font-size: small;'>".("* Please see the <strong>Help</strong> below for more information.")."</td></tr>".
+			
 			"\n<tr><td>"._("The format of data to be imported: ")."</td>".
 			"\n<td>[[file_type]]</td></tr>".
 // 			"\n<tr><td colspan='2'>"._("If Exif click ")."<a href=\"".
 // 			$harmoni->request->quickURL("collection", "exifschema").
 // 			"\">"._("here")."</a>".
 // 			_(" to customize your schema (Suggested)")."</td></tr>".
+			
 			"\n<tr><td>"._("Is this file a Zip/GZip/BZip/Tar archive? ")."</td>".
 			"\n<td>[[is_archived]] <em>"._("(All except XML source data must be Archived)")."</em></td></tr>".
+			
 			"\n<tr><td><h3>"._("Import type:")."</h3></td></tr>".
 			"\n<tr><td>"._("The type of import to execute: ")."</td>".
 			"\n<td>[[import_type]]</td></tr>".
+			
 			"\n<tr><td><h3>"._("File:")."</h3></td></tr>".
 			"\n<tr><td>"._("The Zip/GZip/BZip/Tar/XML file to be imported: ")."</td>".
-			"\n<td>[[filename]]</td>".
+			"\n<td>[[filename]]</td></tr>".
+			
+			"\n<tr><td><h3>"._("Parent Asset:")."</h3></td></tr>".
+			"\n<tr><td>"._("If specified, all Assets imported will be placed below this parent. ")."</td>".
+			"\n<td>[[parent]]</td></tr>".
+			
 			"<tr>\n" .
 			"<td align='left'>\n" .
 			"[[_cancel]]".
@@ -163,6 +173,16 @@ class importAction extends MainWindowAction {
 		//$type->addOption("replace", "replace");
 		
 		$fileField =& $wizard->addComponent("filename", new WFileUploadField());
+		
+		$parent =& $wizard->addComponent("parent", new WSelectList());
+		$parent->addOption("", "none");
+		$rootAssets =& $this->getRootAssets();
+		while ($rootAssets->hasNext()) {
+			$this->addAssetOption($parent, $rootAssets->next());
+		}
+		if (RequestContext::value('parent')) {
+			$parent->setValue(RequestContext::value('parent'));
+		}
 				
 		$save =& $wizard->addComponent("_save", 
 			WSaveButton::withLabel("Import"));
@@ -170,6 +190,67 @@ class importAction extends MainWindowAction {
 		//$fileField->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 		//$fileField->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		return $wizard;
+	}
+	
+	/**
+	 * Add an asset option to a WSelectList recursively
+	 * 
+	 * @param object $field
+	 * @param object $asset
+	 * @return void
+	 * @access public
+	 * @since 4/2/07
+	 */
+	function addAssetOption (&$field, &$asset, $depth = 0) {
+		$assetId =& $asset->getId();
+		
+		ob_start();
+		for ($i = 0; $i <= $depth; $i++)
+			print "-";
+		
+		print " ".$asset->getDisplayName();
+		print " (".$assetId->getIdString().")";
+		
+		$field->addOption($assetId->getIdString(), ob_get_clean());
+		
+		$children =& $asset->getAssets();
+		while ($children->hasNext()) {
+			$this->addAssetOption($field, $children->next(), $depth + 1);
+		}
+	}
+	
+	/**
+	 * Answer the root assets in the current repository
+	 * 
+	 * @return object Iterator
+	 * @access public
+	 * @since 4/2/07
+	 */
+	function &getRootAssets () {
+		$harmoni =& Harmoni::Instance();
+		$idManager =& Services::getService("Id");
+		$rm =& Services::getService("Repository");
+		
+		$harmoni->request->startNamespace("import");
+		
+		$repository =& $rm->getRepository($idManager->getId(
+			$harmoni->request->get("collection_id")));
+		
+		$harmoni->request->endNamespace();
+		
+		$criteria = NULL;
+		$searchProperties =& new HarmoniProperties(
+					Type::fromString("repository::harmoni::order"));
+		$searchProperties->addProperty("order", $orderBy = 'DisplayName');
+		$searchProperties->addProperty("direction", $direction = 'ASC');
+		unset($orderBy, $direction);
+		
+		$assets =& $repository->getAssetsBySearch(
+			$criteria, 
+			new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", ""), 
+			$searchProperties);
+		
+		return $assets;
 	}
 	
 	/**
@@ -250,6 +331,12 @@ class importAction extends MainWindowAction {
 		else if ($properties['file_type'] == "FilesOnly") 
 			$importer =& new FilesOnlyRepositoryImporter($newName, $repository->getId(), false);
 		if (isset($importer)) {
+			if ($properties['parent']) {
+				$importer->setParent(
+					$repository->getAsset(
+						$idManager->getId($properties['parent'])));
+			}
+			
 			$importer->import();	
 			
 			// something happened so tell the end user
@@ -270,7 +357,15 @@ class importAction extends MainWindowAction {
 				
 				$this->_repository =& $repository;
 				$this->_importType = $properties['import_type'];
-				$this->importDirectoriesDown($directory);
+				
+				if ($properties['parent']) {
+					$parent =& $repository->getAsset(
+							$idManager->getId($properties['parent']));
+				} else {
+					$parent = null;
+				}
+				
+				$this->importDirectoriesDown($directory, $parent);
 			}
 			else {
 				// not compressed, only one xml file
@@ -278,6 +373,14 @@ class importAction extends MainWindowAction {
 					$repositoryManager->getRepository($idManager->getId(
 					$harmoni->request->get('collection_id'))), $newName,
 					$properties['import_type']);
+				
+				if ($properties['parent']) {
+					$importer->setParent(
+						$repository->getAsset(
+							$idManager->getId($properties['parent'])));
+				}
+
+				
 				$importer->parseAndImportBelow("asset", 100);
 				
 				// something happened so tell the end user
@@ -290,7 +393,7 @@ class importAction extends MainWindowAction {
 		}
 		
 		// Unlink the directory
-		if ($directory)
+		if (isset($directory) && $directory)
 			shell_exec(' rm -R '.$directory);
 		unlink($newName);
 		
@@ -353,16 +456,21 @@ class importAction extends MainWindowAction {
 	 * Import a directories that contain metadata.xml files
 	 * 
 	 * @param string $directory
+	 * @param optional object Asset $parentAsset
 	 * @return void
 	 * @access public
 	 * @since 12/7/06
 	 */
-	function importDirectory ($directory) {
+	function importDirectory ($directory, $parentAsset = null) {
 		$importer =& XMLRepositoryImporter::withObject(
 			$this->_ignore,
 			$this->_repository,
 			$directory."/metadata.xml",
 			$this->_importType);
+			
+		if ($parentAsset) {
+			$importer->setParent($parentAsset);
+		}
 		$importer->parseAndImportBelow("asset", 100);
 		
 		// something happened so tell the end user
@@ -397,18 +505,19 @@ class importAction extends MainWindowAction {
 	 * Import the current directory or any valid subdirectories.
 	 * 
 	 * @param string $directory
+	 * @param optional object Asset $parentAsset
 	 * @return boolean
 	 * @access public
 	 * @since 12/7/06
 	 */
-	function importDirectoriesDown ($directory) {
+	function importDirectoriesDown ($directory, $parentAsset = null) {
 		if ($this->hasImport($directory))
-			$this->importDirectory($directory);
+			$this->importDirectory($directory, $parentAsset);
 		
 		$dir = opendir($directory);
 		while ($file = readdir($dir)) {
 			if (is_dir($directory."/".$file) && $file != "." && $file != "..") {
-				$this->importDirectoriesDown($directory."/".$file);
+				$this->importDirectoriesDown($directory."/".$file, $parentAsset);
 			}
 		}
 		closedir($dir);
