@@ -114,10 +114,14 @@ class AssetPrinter {
 		
 		//===== Viewer Link =====//
 			// Add the options panel script to the header
-			$outputHandler =& $harmoni->getOutputHandler();
-			$outputHandler->setHead($outputHandler->getHead()
-			."\n\t\t<script type='text/javascript' src='".MYPATH."/javascript/AssetOptionsPanel.js'></script>"
-			."\n\t\t<link rel='stylesheet' type='text/css' href='".MYPATH."/javascript/AssetOptionsPanel.css' />");
+			// Add the options panel script to the header
+			if (!defined('ASSET_PANEL_LOADED')) {
+				$outputHandler =& $harmoni->getOutputHandler();
+				$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<script type='text/javascript' src='".MYPATH."/javascript/AssetOptionsPanel.js'></script>"
+				."\n\t\t<link rel='stylesheet' type='text/css' href='".MYPATH."/javascript/AssetOptionsPanel.css' />");
+				define('ASSET_PANEL_LOADED', true);
+			}
 			
 			ob_start();
 			$viewerUrl = VIEWER_URL."?&amp;source=";

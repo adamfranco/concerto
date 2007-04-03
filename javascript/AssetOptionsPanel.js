@@ -46,32 +46,34 @@ function AssetOptionsPanel ( repositoryId, assetId, positionElement, toShow, vie
 								300,
 								positionElement);
 		
+		this.defaultModule = 'asset';
 		this.repositoryId = repositoryId;
 		this.assetId = assetId;
 		this.toShow = toShow;
-		this.viewerUrl = viewerUrl
+		this.viewerUrl = viewerUrl;
+		this.defaultParams = {'collection_id': this.repositoryId, 'asset_id': this.assetId};
 				
 		this.options = this.contentElement.appendChild(document.createElement('table'));
 				
 		if (toShow.elementExists('view')) {
 			this.addPopupButton(this.viewerUrl, 'View', 'View this Asset in the pop-up viewer.');
-			this.addButton ('view', 'Details', 'View the detail screen for this Asset.');
+			this.addButton ('asset', 'view', 'Details', 'View the detail screen for this Asset.');
 		}
 		
 		if (toShow.elementExists('browse')) {
-			this.addButton ('browse', 'Browse', 'Browse the Assets contained by this Asset.');
+			this.addButton ('asset', 'browse', 'Browse', 'Browse the Assets contained by this Asset.');
 		}
 		
 		if (toShow.elementExists('edit')) {
-			this.addButton ('edit', 'Edit', 'Modify this Asset.', {'collection_id': this.repositoryId, 'assets': this.assetId});
+			this.addButton ('asset', 'edit', 'Edit', 'Modify this Asset.', {'collection_id': this.repositoryId, 'assets': this.assetId});
 		}
 		
 		if (toShow.elementExists('delete')) {
-			this.addConfirmButton ('delete', 'Delete', 'Delete this Asset.', 'Are you sure that you want to delete this Asset and any Assets within it?');
+			this.addConfirmButton ('asset', 'delete', 'Delete', 'Delete this Asset.', 'Are you sure that you want to delete this Asset and any Assets within it?');
 		}
 		
 		if (toShow.elementExists('add_children')) {
-			this.addButton ('add', 'Add Child', 'Add an Asset below this Asset.', {'collection_id': this.repositoryId, 'parent': this.assetId});
+			this.addButton ('asset', 'add', 'Add Child', 'Add an Asset below this Asset.', {'collection_id': this.repositoryId, 'parent': this.assetId});
 			
 			var url = Harmoni.quickUrl('collection', 'import', {'collection_id': this.repositoryId, 'parent': this.assetId}, 'import');
 			this.addOnclickButton (
@@ -109,11 +111,11 @@ function AssetOptionsPanel ( repositoryId, assetId, positionElement, toShow, vie
 	 * @access public
 	 * @since 4/2/07
 	 */
-	AssetOptionsPanel.prototype.addButton = function (action, title, description, params) {
+	AssetOptionsPanel.prototype.addButton = function (module, action, title, description, params, namespace) {
 		if (params) {
-			var url = Harmoni.quickUrl('asset', action, params);
+			var url = Harmoni.quickUrl(module, action, params, namespace);
 		} else {
-			var url = Harmoni.quickUrl('asset', action, {'collection_id': this.repositoryId, 'asset_id': this.assetId});
+			var url = Harmoni.quickUrl(module, action, this.defaultParams);
 		}
 		this.addOnclickButton (
 			function () { window.location = url.urlDecodeAmpersands(); },
@@ -131,11 +133,11 @@ function AssetOptionsPanel ( repositoryId, assetId, positionElement, toShow, vie
 	 * @access public
 	 * @since 4/2/07
 	 */
-	AssetOptionsPanel.prototype.addConfirmButton = function (action, title, description, confirmation, params) {
+	AssetOptionsPanel.prototype.addConfirmButton = function (module, action, title, description, confirmation, params, namespace) {
 		if (params) {
-			var url = Harmoni.quickUrl('asset', action, params);
+			var url = Harmoni.quickUrl(module, action, params, namespace);
 		} else {
-			var url = Harmoni.quickUrl('asset', action, {'collection_id': this.repositoryId, 'asset_id': this.assetId});
+			var url = Harmoni.quickUrl(module, action, this.defaultParams);
 		}
 		this.addOnclickButton (
 			function () { if (confirm(confirmation)) { window.location = url.urlDecodeAmpersands(); } },

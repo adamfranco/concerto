@@ -76,56 +76,125 @@ class SlideShowPrinter {
 // 					.$harmoni->request->quickURL("exhibitions", "slideshowxml", 
 // 						array("slideshow_id" => $assetId->getIdString()))
 // 					."'>"._("view xml (debug)")."</a>";
-		}
-		
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId())) {
-			if ($actionString != "exhibitions.browseSlideshow") {
-				$links[] = "<a href='".$harmoni->request->quickURL(
-					"exhibitions", "browseSlideshow",
-					array("asset_id" => $assetId->getIdString())).
-					"'>";
-				$links[count($links) - 1] .= _("Browse")."</a>";
-			} else {
-				$links[] = _("Browse");
+			
+			// Add the options panel script to the header
+			if (!defined('ASSET_PANEL_LOADED')) {
+				$outputHandler =& $harmoni->getOutputHandler();
+				$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<script type='text/javascript' src='".MYPATH."/javascript/AssetOptionsPanel.js'></script>"
+				."\n\t\t<link rel='stylesheet' type='text/css' href='".MYPATH."/javascript/AssetOptionsPanel.css' />");
+				define('ASSET_PANEL_LOADED', true);
 			}
-		}
-		
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $asset->getId())) {
-			$harmoni->request->startNamespace('modify_slideshow');
-			if ($actionString != "exhibitions.modify_slideshow") {
-				$links[] = "<a href='".$harmoni->request->quickURL(
-					"exhibitions", "modify_slideshow",
-					array("slideshow_id" => $assetId->getIdString())).
-					"'>";
-				$links[count($links) - 1] .= _("Edit")."</a>";
-			} else {
-				$links[] = _("Edit");
+			if (!defined('SLIDESHOW_PANEL_LOADED')) {
+				$outputHandler =& $harmoni->getOutputHandler();
+				$outputHandler->setHead($outputHandler->getHead()
+				."\n\t\t<script type='text/javascript' src='".MYPATH."/javascript/SlideshowOptionsPanel.js'></script>");
+				define('SLIDESHOW_PANEL_LOADED', true);
 			}
-			$harmoni->request->endNamespace();
-		}
-		
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.delete"), $asset->getId())) {
-			if ($actionString != "exhibitions.delete") {
-				$harmoni->history->markReturnURL("concerto/exhibitions/delete-return");
-				ob_start();
-				print "<a href='Javascript:deleteSlideShow(\"".$assetId->getIdString()."\", \"".$harmoni->request->quickURL("exhibitions", "delete_slideshow", array("exhibition_id" => RequestContext::value('exhibition_id'), "slideshow_id" => $assetId->getIdString()))."\");'";
-				print ">";
-				print _("Delete")."</a>";
+			
+			ob_start();
+			$viewerUrl = VIEWER_URL."?&amp;source=";
+			$viewerUrl .= urlencode($harmoni->request->quickURL("exhibitions", "slideshowOutlineXml", array("slideshow_id" => $assetId->getIdString())));
+// 			$viewerUrl .= '&amp;start='.$xmlStart;
+			
+			$parents =& $asset->getParents();
+			$exhibition =& $parents->next();
+			$exhibitionId =& $exhibition->getId();
+			
+			print "<a href='#' onclick=\"Javascript:SlideshowOptionsPanel.run('".$exhibitionId->getIdString()."', '".$assetId->getIdString()."', this, [";
+			$toShow = array();
+			if ($authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.view"),
+				$assetId)) 
+			{
+				$toShow[] = "'view'";
+			}
+			
+			if ($authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.modify"),
+				$assetId)) 
+			{
+				$toShow[] = "'edit'";
+			}
+			
+			if ($authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.delete"),
+				$assetId)) 
+			{
+				$deleteParams = array('exhibition_id' => RequestContext::value('exhibition_id'));
 				
-				$links[] = ob_get_contents();
-				ob_end_clean();
+				// If we are viewing the asset and we delete it, we can't return
+				// to viewing it.
+				if (ereg("^slideshow\..*$", $actionString) && 
+						$harmoni->request->get("slideshow_id") == 
+						$assetId->getIdString())
+				{
+					$harmoni->history->markReturnURL("concerto/slideshow/delete-return",
+						$harmoni->request->mkURL('exhibition', 'browse', $deleteParams));
+				} 
+				// otherwise, go bact to where we are.
+				else {
+					$harmoni->history->markReturnURL("concerto/slideshow/delete-return",
+						$harmoni->request->mkURL(null, null, $deleteParams));
+				}
 				
-				print "\n<script type='text/javascript'>\n//<![CDATA[";
-				print "\n	function deleteSlideShow(assetId, url) {";
-				print "\n		if (confirm(\""._("Are you sure you want to delete this Slide-Show?")."\")) {";
-				print "\n			window.location = url;";
-				print "\n		}";
-				print "\n	}";
-				print "\n//]]>\n</script>\n";
-			} else {
-				$links[] = _("Delete");
+				$toShow[] = "'delete'";
 			}
+			
+			print implode(", ", $toShow);
+			print "], '".$viewerUrl."'); return false;\">"._("Options...")."</a> ";
+					
+			$links[] = ob_get_clean();
 		}
+		
+// 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId())) {
+// 			if ($actionString != "exhibitions.browseSlideshow") {
+// 				$links[] = "<a href='".$harmoni->request->quickURL(
+// 					"exhibitions", "browseSlideshow",
+// 					array("asset_id" => $assetId->getIdString())).
+// 					"'>";
+// 				$links[count($links) - 1] .= _("Browse")."</a>";
+// 			} else {
+// 				$links[] = _("Browse");
+// 			}
+// 		}
+// 		
+// 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $asset->getId())) {
+// 			$harmoni->request->startNamespace('modify_slideshow');
+// 			if ($actionString != "exhibitions.modify_slideshow") {
+// 				$links[] = "<a href='".$harmoni->request->quickURL(
+// 					"exhibitions", "modify_slideshow",
+// 					array("slideshow_id" => $assetId->getIdString())).
+// 					"'>";
+// 				$links[count($links) - 1] .= _("Edit")."</a>";
+// 			} else {
+// 				$links[] = _("Edit");
+// 			}
+// 			$harmoni->request->endNamespace();
+// 		}
+// 		
+// 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.delete"), $asset->getId())) {
+// 			if ($actionString != "exhibitions.delete") {
+// 				$harmoni->history->markReturnURL("concerto/exhibitions/delete-return");
+// 				ob_start();
+// 				print "<a href='Javascript:deleteSlideShow(\"".$assetId->getIdString()."\", \"".$harmoni->request->quickURL("exhibitions", "delete_slideshow", array("exhibition_id" => RequestContext::value('exhibition_id'), "slideshow_id" => $assetId->getIdString()))."\");'";
+// 				print ">";
+// 				print _("Delete")."</a>";
+// 				
+// 				$links[] = ob_get_contents();
+// 				ob_end_clean();
+// 				
+// 				print "\n<script type='text/javascript'>\n//<![CDATA[";
+// 				print "\n	function deleteSlideShow(assetId, url) {";
+// 				print "\n		if (confirm(\""._("Are you sure you want to delete this Slide-Show?")."\")) {";
+// 				print "\n			window.location = url;";
+// 				print "\n		}";
+// 				print "\n	}";
+// 				print "\n//]]>\n</script>\n";
+// 			} else {
+// 				$links[] = _("Delete");
+// 			}
+// 		}
 		
 		
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $asset->getId())) {
