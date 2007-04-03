@@ -98,22 +98,22 @@ class editAction
 		$property->setValue($this->_assets[0]->getDescription());
 				
 	// Effective Date
-		$property =& $step->addComponent("effective_date", new WTextField);
-		$property->setSize(40);
-		if(is_object($this->_assets[0]->getEffectiveDate())) {
-			$date =& $this->_assets[0]->getEffectiveDate();
-			$date =& $date->asDate();
-			$property->setValue($date->yyyymmddString());
-		}	
+// 		$property =& $step->addComponent("effective_date", new WTextField);
+// 		$property->setSize(40);
+// 		if(is_object($this->_assets[0]->getEffectiveDate())) {
+// 			$date =& $this->_assets[0]->getEffectiveDate();
+// 			$date =& $date->asDate();
+// 			$property->setValue($date->yyyymmddString());
+// 		}	
 	
 	// Expiration Date
-		$property =& $step->addComponent("expiration_date", new WTextField);
-		$property->setSize(40);
-		if (is_object($this->_assets[0]->getExpirationDate())) {
-			$date =& $this->_assets[0]->getExpirationDate();
-			$date =& $date->asDate();
-			$property->setValue($date->yyyymmddString());
-		}
+// 		$property =& $step->addComponent("expiration_date", new WTextField);
+// 		$property->setSize(40);
+// 		if (is_object($this->_assets[0]->getExpirationDate())) {
+// 			$date =& $this->_assets[0]->getExpirationDate();
+// 			$date =& $date->asDate();
+// 			$property->setValue($date->yyyymmddString());
+// 		}
 		
 	 	
 		$step->setContent($this->getAssetPropertiesContent());
@@ -137,12 +137,12 @@ class editAction
 		$asset->updateDescription($results['description']);
 		
 		// Effective Date
-		$newEffDate =& DateAndTime::fromString($results['effective_date']);
-		$asset->updateEffectiveDate($newEffDate);
+// 		$newEffDate =& DateAndTime::fromString($results['effective_date']);
+// 		$asset->updateEffectiveDate($newEffDate);
 		
 		// Expiration Date
-		$newExpDate =& DateAndTime::fromString($results['expiration_date']);
-		$asset->updateExpirationDate($newExpDate);
+// 		$newExpDate =& DateAndTime::fromString($results['expiration_date']);
+// 		$asset->updateExpirationDate($newExpDate);
 	}
 	
 	/**

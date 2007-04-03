@@ -418,25 +418,25 @@ class AssetEditingAction
 		print "\n\t\t</td>";
 		print "\n\t</tr>";
 		
-		print "\n\t<tr>";
-		print "\n\t\t<th>";
-		print "\n\t\t\t"._("Effective Date");
-// 		print "\n"._("The date that this <em>Asset</em> becomes effective: ");
-		print "\n\t\t</th>";
-		print "\n\t\t<td>";
-		print "\n\t\t\t[[effective_date]]";
-		print "\n\t\t</td>";
-		print "\n\t</tr>";
+// 		print "\n\t<tr>";
+// 		print "\n\t\t<th>";
+// 		print "\n\t\t\t"._("Effective Date");
+// // 		print "\n"._("The date that this <em>Asset</em> becomes effective: ");
+// 		print "\n\t\t</th>";
+// 		print "\n\t\t<td>";
+// 		print "\n\t\t\t[[effective_date]]";
+// 		print "\n\t\t</td>";
+// 		print "\n\t</tr>";
 		
-		print "\n\t<tr>";
-		print "\n\t\t<th>";
-		print "\n\t\t\t"._("Expiration Date");
-// 		print "\n"._("The date that this <em>Asset</em> expires: ");
-		print "\n\t\t</th>";
-		print "\n\t\t<td>";
-		print "\n\t\t\t[[expiration_date]]";
-		print "\n\t\t</td>";
-		print "\n\t</tr>";
+// 		print "\n\t<tr>";
+// 		print "\n\t\t<th>";
+// 		print "\n\t\t\t"._("Expiration Date");
+// // 		print "\n"._("The date that this <em>Asset</em> expires: ");
+// 		print "\n\t\t</th>";
+// 		print "\n\t\t<td>";
+// 		print "\n\t\t\t[[expiration_date]]";
+// 		print "\n\t\t</td>";
+// 		print "\n\t</tr>";
 		
 		print "\n</table>";
 		$text = ob_get_contents();

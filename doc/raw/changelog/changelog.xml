@@ -42,6 +42,9 @@
 			Asset Editing: Parent Asset menu is now more workable with hierarchies
 			of large numbers of Assets.
 		</fix>
+		<change author='adam'>
+			Asset Editing: Removed unused date fields to prevent user confusion.
+		</change>
 	</version>
 	<version number="2.3.0" date="2006-12-13">
 		<new author='adam'>

@@ -126,7 +126,7 @@ class addAction
 	
 		// :: Type Step ::
 		$step =& $wizard->addStep("typestep", new WizardStep());
-		$step->setDisplayName(_("Type"));
+		$step->setDisplayName(_("Type"." ("._("optional").")"));
 		// Create the properties.
 		$selectProperty =& $step->addComponent("type", new WSelectOrNew());
 		
@@ -231,29 +231,29 @@ class addAction
 // 		ob_end_clean();
 		
 		// :: Effective/Expiration Dates ::
-		$step =& $wizard->addStep("datestep", new WizardStep());
-		$step->setDisplayName(_("Effective Dates")." ("._("optional").")");
-		
-		// Create the properties.
-		$property =& $step->addComponent("effective_date", new WTextField());
-	//	$property->setDefaultValue();
-//		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
-	
-		$property =& $step->addComponent("expiration_date", new WTextField());
-	//	$property->setDefaultValue();
-//		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
-		
-		// Create the step text
-		ob_start();
-		print "\n<h2>"._("Effective Date")."</h2>";
-		print "\n"._("The date that this <em>Asset</em> becomes effective: ");
-		print "\n<br />[[effective_date]]";
-		
-		print "\n<h2>"._("Expiration Date")."</h2>";
-		print "\n"._("The date that this <em>Asset</em> expires: ");
-		print "\n<br />[[expiration_date]]";
-		$step->setContent(ob_get_contents());
-		ob_end_clean();
+// 		$step =& $wizard->addStep("datestep", new WizardStep());
+// 		$step->setDisplayName(_("Effective Dates")." ("._("optional").")");
+// 		
+// 		// Create the properties.
+// 		$property =& $step->addComponent("effective_date", new WTextField());
+// 	//	$property->setDefaultValue();
+// //		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
+// 	
+// 		$property =& $step->addComponent("expiration_date", new WTextField());
+// 	//	$property->setDefaultValue();
+// //		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
+// 		
+// 		// Create the step text
+// 		ob_start();
+// 		print "\n<h2>"._("Effective Date")."</h2>";
+// 		print "\n"._("The date that this <em>Asset</em> becomes effective: ");
+// 		print "\n<br />[[effective_date]]";
+// 		
+// 		print "\n<h2>"._("Expiration Date")."</h2>";
+// 		print "\n"._("The date that this <em>Asset</em> expires: ");
+// 		print "\n<br />[[expiration_date]]";
+// 		$step->setContent(ob_get_contents());
+// 		ob_end_clean();
 		
 		
 		
@@ -267,18 +267,9 @@ class addAction
 		
 		$property->addOption("NONE", _("None"));
 		
-		$assets =& $repository->getAssets();
-		$authZManager =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
-		while ($assets->hasNext()) {
-			$asset =& $assets->next();
-			$assetId =& $asset->getId();
-			if ($authZManager->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.add_children"),
-				$assetId))
-			{
-				$property->addOption($assetId->getIdString(), $assetId->getIdString()." - ".$asset->getDisplayName());
-			}
+		$rootAssets =& $this->getRootAssets();
+		while ($rootAssets->hasNext()) {
+			$this->addAssetOption($property, $rootAssets->next());
 		}
 		
 		if (RequestContext::value('parent'))
@@ -296,6 +287,71 @@ class addAction
 		ob_end_clean();
 		
 		return $wizard;
+	}
+	
+	/**
+	 * Answer the root assets in the current repository
+	 * 
+	 * @return object Iterator
+	 * @access public
+	 * @since 4/2/07
+	 */
+	function &getRootAssets () {
+		$repository =& $this->getRepository();
+		
+		$criteria = NULL;
+		$searchProperties =& new HarmoniProperties(
+					Type::fromString("repository::harmoni::order"));
+		$searchProperties->addProperty("order", $orderBy = 'DisplayName');
+		$searchProperties->addProperty("direction", $direction = 'ASC');
+		unset($orderBy, $direction);
+		
+		$assets =& $repository->getAssetsBySearch(
+			$criteria, 
+			new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", ""), 
+			$searchProperties);
+		
+		return $assets;
+	}
+	
+	/**
+	 * Add an asset option to a WSelectList recursively
+	 * 
+	 * @param object $field
+	 * @param object $asset
+	 * @return void
+	 * @access public
+	 * @since 4/2/07
+	 */
+	function addAssetOption (&$field, &$asset, $skip = array(), $depth = 0) {
+		$assetId =& $asset->getId();
+		$authZManager =& Services::getService('AuthZ');
+		$idManager =& Services::getService('Id');
+		
+		if (in_array($assetId->getIdString(), $skip))
+			return;
+		
+		
+		ob_start();
+		for ($i = 0; $i <= $depth; $i++)
+			print "-";
+		
+		print " ".$asset->getDisplayName();
+		print " (".$assetId->getIdString().")";
+		
+		if ($authZManager->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.add_children"),
+				$assetId))
+		{
+			$field->addOption($assetId->getIdString(), ob_get_clean());
+		} else {
+			$field->addDisabledOption($assetId->getIdString(), ob_get_clean());
+		}
+		
+		$children =& $asset->getAssets();
+		while ($children->hasNext()) {
+			$this->addAssetOption($field, $children->next(), $skip, $depth + 1);
+		}
 	}
 		
 	/**
@@ -369,12 +425,12 @@ class addAction
 			$asset->updateContent($content);
 			
 			// Update the effective/expiration dates
-			if ($properties['datestep']['effective_date'])
-				$asset->updateEffectiveDate(
-					DateAndTime::fromString($properties['datestep']['effective_date']));
-			if ($properties['datestep']['expiration_date'])
-				$asset->updateExpirationDate(
-					DateAndTime::fromString($properties['datestep']['expiration_date']));
+// 			if ($properties['datestep']['effective_date'])
+// 				$asset->updateEffectiveDate(
+// 					DateAndTime::fromString($properties['datestep']['effective_date']));
+// 			if ($properties['datestep']['expiration_date'])
+// 				$asset->updateExpirationDate(
+// 					DateAndTime::fromString($properties['datestep']['expiration_date']));
 			
 			// Add our parent if we have specified one.
 			if ($properties['parentstep']['parent'] 

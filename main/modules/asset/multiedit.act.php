@@ -135,63 +135,63 @@ class multieditAction
 	 	}
 				
 	// Effective Date
-		$vProperty =& $step->addComponent("effective_date", new WVerifiedChangeInput);
-		$property =& $vProperty->setInputComponent(new WTextField);
-		$property->setSize(40);
-		
-		if (is_object($this->_assets[0]->getEffectiveDate()))
-			$date =& $this->_assets[0]->getEffectiveDate();
-		else
-			$date = null;
-		
-		$multipleExist = FALSE;
-		for ($i = 1; $i < count($this->_assets); $i++) {
-			if (($date && !$date->isEqualTo($this->_assets[$i]->getEffectiveDate()))
-				|| (!$date && $this->_assets[$i]->getEffectiveDate()))
-			{
-				$multipleExist = TRUE;
-				break;
-			}
-		}
-		if ($multipleExist) {
-			$property->setStartingDisplayText($this->_multExistString);
-			$vProperty->setChecked(false);
-		} else if ($date) {
-	 		$date =& $date->asDate();
-			$property->setValue($date->yyyymmddString());
-	 		$vProperty->setChecked(true);
-	 	} else {
-	 		$vProperty->setChecked(true);
-	 	}
+// 		$vProperty =& $step->addComponent("effective_date", new WVerifiedChangeInput);
+// 		$property =& $vProperty->setInputComponent(new WTextField);
+// 		$property->setSize(40);
+// 		
+// 		if (is_object($this->_assets[0]->getEffectiveDate()))
+// 			$date =& $this->_assets[0]->getEffectiveDate();
+// 		else
+// 			$date = null;
+// 		
+// 		$multipleExist = FALSE;
+// 		for ($i = 1; $i < count($this->_assets); $i++) {
+// 			if (($date && !$date->isEqualTo($this->_assets[$i]->getEffectiveDate()))
+// 				|| (!$date && $this->_assets[$i]->getEffectiveDate()))
+// 			{
+// 				$multipleExist = TRUE;
+// 				break;
+// 			}
+// 		}
+// 		if ($multipleExist) {
+// 			$property->setStartingDisplayText($this->_multExistString);
+// 			$vProperty->setChecked(false);
+// 		} else if ($date) {
+// 	 		$date =& $date->asDate();
+// 			$property->setValue($date->yyyymmddString());
+// 	 		$vProperty->setChecked(true);
+// 	 	} else {
+// 	 		$vProperty->setChecked(true);
+// 	 	}
 	
 	// Expiration Date
-		$vProperty =& $step->addComponent("expiration_date", new WVerifiedChangeInput);
-		$property =& $vProperty->setInputComponent(new WTextField);
-		$property->setSize(40);
-				
-		if (is_object($this->_assets[0]->getExpirationDate()))
-			$date =& $this->_assets[0]->getExpirationDate();
-		else
-			$date = null;
-		$multipleExist = FALSE;
-		for ($i = 1; $i < count($this->_assets); $i++) {
-			if (($date && !$date->isEqualTo($this->_assets[$i]->getExpirationDate()))
-				|| (!$date && $this->_assets[$i]->getExpirationDate()))
-			{
-				$multipleExist = TRUE;
-				break;
-			}
-		}
-		if ($multipleExist) {
-			$property->setStartingDisplayText($this->_multExistString);
-			$vProperty->setChecked(false);
-		} else if ($date) {
-	 		$date =& $date->asDate();
-			$property->setValue($date->yyyymmddString());
-			$vProperty->setChecked(true);
-	 	} else {
-	 		$vProperty->setChecked(true);
-	 	}
+// 		$vProperty =& $step->addComponent("expiration_date", new WVerifiedChangeInput);
+// 		$property =& $vProperty->setInputComponent(new WTextField);
+// 		$property->setSize(40);
+// 				
+// 		if (is_object($this->_assets[0]->getExpirationDate()))
+// 			$date =& $this->_assets[0]->getExpirationDate();
+// 		else
+// 			$date = null;
+// 		$multipleExist = FALSE;
+// 		for ($i = 1; $i < count($this->_assets); $i++) {
+// 			if (($date && !$date->isEqualTo($this->_assets[$i]->getExpirationDate()))
+// 				|| (!$date && $this->_assets[$i]->getExpirationDate()))
+// 			{
+// 				$multipleExist = TRUE;
+// 				break;
+// 			}
+// 		}
+// 		if ($multipleExist) {
+// 			$property->setStartingDisplayText($this->_multExistString);
+// 			$vProperty->setChecked(false);
+// 		} else if ($date) {
+// 	 		$date =& $date->asDate();
+// 			$property->setValue($date->yyyymmddString());
+// 			$vProperty->setChecked(true);
+// 	 	} else {
+// 	 		$vProperty->setChecked(true);
+// 	 	}
 	 	
 	 	
 		$step->setContent($this->getAssetPropertiesContent());
@@ -223,20 +223,20 @@ class multieditAction
 		}
 		
 		// Effective Date
-		if ($results['effective_date']['checked'] == '1') {
-			$effDate = $asset->getEffectiveDate();
-			$newEffDate =& DateAndTime::fromString($results['effective_date']['value']);
-			if (is_object($effDate) && !$effDate->isEqualTo($newEffDate))
-				$asset->updateEffectiveDate($newEffDate);
-		}
+// 		if ($results['effective_date']['checked'] == '1') {
+// 			$effDate = $asset->getEffectiveDate();
+// 			$newEffDate =& DateAndTime::fromString($results['effective_date']['value']);
+// 			if (is_object($effDate) && !$effDate->isEqualTo($newEffDate))
+// 				$asset->updateEffectiveDate($newEffDate);
+// 		}
 		
 		// Expiration Date
-		if ($results['expiration_date']['checked'] == '1') {
-			$expDate = $asset->getEffectiveDate();
-			$newExpDate =& DateAndTime::fromString($results['expiration_date']['value']);
-			if (is_object($expDate) && !$expDate->isEqualTo($newExpDate))
-				$asset->updateEffectiveDate($newExpDate);
-		}
+// 		if ($results['expiration_date']['checked'] == '1') {
+// 			$expDate = $asset->getEffectiveDate();
+// 			$newExpDate =& DateAndTime::fromString($results['expiration_date']['value']);
+// 			if (is_object($expDate) && !$expDate->isEqualTo($newExpDate))
+// 				$asset->updateEffectiveDate($newExpDate);
+// 		}
 	}
 	
 	/**
