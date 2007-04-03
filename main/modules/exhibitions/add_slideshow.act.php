@@ -221,29 +221,29 @@ class add_slideshowAction
 		
 		
 		// :: Effective/Expiration Dates ::
-		$step =& $wizard->addStep("datestep", new WizardStep());
-		$step->setDisplayName(_("Effective Dates")." ("._("optional").")");
-		
-		// Create the properties.
-		$property =& $step->addComponent("effective_date", new WTextField());
-	//	$property->setDefaultValue();
-//		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
-	
-		$property =& $step->addComponent("expiration_date", new WTextField());
-	//	$property->setDefaultValue();
-//		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
-		
-		// Create the step text
-		ob_start();
-		print "\n<h2>"._("Effective Date")."</h2>";
-		print "\n"._("The date that this <em>Slide-Show</em> becomes effective: ");
-		print "\n<br />[[effective_date]]";
-		
-		print "\n<h2>"._("Expiration Date")."</h2>";
-		print "\n"._("The date that this <em>Slide-Show</em> expires: ");
-		print "\n<br />[[expiration_date]]";
-		$step->setContent(ob_get_contents());
-		ob_end_clean();
+// 		$step =& $wizard->addStep("datestep", new WizardStep());
+// 		$step->setDisplayName(_("Effective Dates")." ("._("optional").")");
+// 		
+// 		// Create the properties.
+// 		$property =& $step->addComponent("effective_date", new WTextField());
+// 	//	$property->setDefaultValue();
+// //		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
+// 	
+// 		$property =& $step->addComponent("expiration_date", new WTextField());
+// 	//	$property->setDefaultValue();
+// //		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
+// 		
+// 		// Create the step text
+// 		ob_start();
+// 		print "\n<h2>"._("Effective Date")."</h2>";
+// 		print "\n"._("The date that this <em>Slide-Show</em> becomes effective: ");
+// 		print "\n<br />[[effective_date]]";
+// 		
+// 		print "\n<h2>"._("Expiration Date")."</h2>";
+// 		print "\n"._("The date that this <em>Slide-Show</em> expires: ");
+// 		print "\n<br />[[expiration_date]]";
+// 		$step->setContent(ob_get_contents());
+// 		ob_end_clean();
 		
 		
 		return $wizard;
@@ -298,12 +298,12 @@ class add_slideshowAction
 			$this->_slideshowAssetId =& $slideshowAssetId;
 			
 			// Update the effective/expiration dates
-			if ($properties['datestep']['effective_date'])
-				$slideshowAsset->updateEffectiveDate(
-					DateAndTime::fromString($properties['datestep']['effective_date']));
-			if ($properties['datestep']['expiration_date'])
-				$slideshowAsset->updateExpirationDate(
-					DateAndTime::fromString($properties['datestep']['expiration_date']));
+// 			if ($properties['datestep']['effective_date'])
+// 				$slideshowAsset->updateEffectiveDate(
+// 					DateAndTime::fromString($properties['datestep']['effective_date']));
+// 			if ($properties['datestep']['expiration_date'])
+// 				$slideshowAsset->updateExpirationDate(
+// 					DateAndTime::fromString($properties['datestep']['expiration_date']));
 			
 			$exhibitionAsset->addAsset($slideshowAssetId);
 			
