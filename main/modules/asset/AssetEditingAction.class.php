@@ -1024,6 +1024,71 @@ class AssetEditingAction
 			}
 		}
 	}
+	
+	/**
+	 * Answer the root assets in the current repository
+	 * 
+	 * @return object Iterator
+	 * @access public
+	 * @since 4/2/07
+	 */
+	function &getRootAssets () {
+		$repository =& $this->getRepository();
+		
+		$criteria = NULL;
+		$searchProperties =& new HarmoniProperties(
+					Type::fromString("repository::harmoni::order"));
+		$searchProperties->addProperty("order", $orderBy = 'DisplayName');
+		$searchProperties->addProperty("direction", $direction = 'ASC');
+		unset($orderBy, $direction);
+		
+		$assets =& $repository->getAssetsBySearch(
+			$criteria, 
+			new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", ""), 
+			$searchProperties);
+		
+		return $assets;
+	}
+	
+	/**
+	 * Add an asset option to a WSelectList recursively
+	 * 
+	 * @param object $field
+	 * @param object $asset
+	 * @return void
+	 * @access public
+	 * @since 4/2/07
+	 */
+	function addAssetOption (&$field, &$asset, $skip = array(), $depth = 0) {
+		$assetId =& $asset->getId();
+		$authZManager =& Services::getService('AuthZ');
+		$idManager =& Services::getService('Id');
+		
+		if (in_array($assetId->getIdString(), $skip))
+			return;
+		
+		
+		ob_start();
+		for ($i = 0; $i <= $depth; $i++)
+			print "-";
+		
+		print " ".$asset->getDisplayName();
+		print " (".$assetId->getIdString().")";
+		
+		if ($authZManager->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.add_children"),
+				$assetId))
+		{
+			$field->addOption($assetId->getIdString(), ob_get_clean());
+		} else {
+			$field->addDisabledOption($assetId->getIdString(), ob_get_clean());
+		}
+		
+		$children =& $asset->getAssets();
+		while ($children->hasNext()) {
+			$this->addAssetOption($field, $children->next(), $skip, $depth + 1);
+		}
+	}
 }
 
 ?>

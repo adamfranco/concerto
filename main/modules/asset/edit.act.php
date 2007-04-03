@@ -1392,36 +1392,27 @@ class editAction
 				$parentId))
 			{
 				$property->addOption("NONE", _("None"));
-				$property->addOption($parentId->getIdString(), $parentId->getIdString()." - ".$parent->getDisplayName());
 				$property->setValue($parentId->getIdString());
 			} else {
-				$property->addOption($parentId->getIdString(), $parentId->getIdString()." - ".$parent->getDisplayName());
+				$property->addOption($parentId->getIdString(), "- ".$parent->getDisplayName()." (".$parentId->getIdString().")");
 				$property->setValue($parentId->getIdString());
-
 				return $step;
 			}
 		} else {
 			$property->addOption("NONE", _("None"));
 			$property->setValue("NONE");
 		}
-	
 		
-		// print options for the rest of the assets
-		$repository =& $this->_assets[0]->getRepository();
-		$assets =& $repository->getAssets();
-		while ($assets->hasNext()) {
-			$asset =& $assets->next();
+		$skip = array();
+		foreach ($this->_assets as $asset) {
 			$assetId =& $asset->getId();
-			if ($authZManager->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.add_children"),
-				$assetId)
-				&& (!isset($parentId) || !$assetId->isEqual($parentId))
-				&& !$assetId->isEqual($this->_assets[0]->getId()))
-			{
-				$property->addOption($assetId->getIdString(), $assetId->getIdString()." - ".$asset->getDisplayName());
-			}
+			$skip[] = $assetId->getIdString();
 		}
-		
+		$rootAssets =& $this->getRootAssets();
+		while ($rootAssets->hasNext()) {
+			$this->addAssetOption($property, $rootAssets->next(), $skip);
+		}
+				
 		return $step;
 	}
 }

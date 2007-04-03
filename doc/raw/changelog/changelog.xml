@@ -38,6 +38,10 @@
 		<change author='adam'>
 			Importing: Can now import a single file as an Asset, without compression.
 		</change>
+		<fix author='adam'>
+			Asset Editing: Parent Asset menu is now more workable with hierarchies
+			of large numbers of Assets.
+		</fix>
 	</version>
 	<version number="2.3.0" date="2006-12-13">
 		<new author='adam'>

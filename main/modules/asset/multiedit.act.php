@@ -610,15 +610,12 @@ class multieditAction
 				$commonParentId))
 			{
 				$property->addOption("NONE", _("None"));
-				$property->addOption(
-					$commonParentId->getIdString(), 
-					$commonParentId->getIdString()." - ".$commonParent->getDisplayName());
 				$property->setValue($commonParentId->getIdString());
 				$vProperty->setChecked(true);
 			} else {
 				$property->addOption(
 					$commonParentId->getIdString(), 
-					$commonParentId->getIdString()." - ".$commonParent->getDisplayName());
+					"- ".$commonParent->getDisplayName()." (".$commonParentId->getIdString().")");
 				$property->setValue($commonParentId->getIdString());
 				$vProperty->setChecked(true);
 
@@ -633,25 +630,14 @@ class multieditAction
 		else {
 			$property->addOption("", _("(multiple values exist)"));
 			$property->setValue("");
+			$vProperty->setChecked(false);
 		}
 		
 		$property->_startingDisplay = "";
 	
-		
-		// print options for the rest of the assets
-		$repository =& $this->_assets[0]->getRepository();
-		$assets =& $repository->getAssets();
-		while ($assets->hasNext()) {
-			$asset =& $assets->next();
-			$assetId =& $asset->getId();
-			if ($authZManager->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.add_children"),
-				$assetId)
-				&& (!is_object($commonParentId) || !$assetId->isEqual($commonParentId))
-				&& !in_array($assetId->getIdString(), $excluded))
-			{
-				$property->addOption($assetId->getIdString(), $assetId->getIdString()." - ".$asset->getDisplayName());
-			}
+		$rootAssets =& $this->getRootAssets();
+		while ($rootAssets->hasNext()) {
+			$this->addAssetOption($property, $rootAssets->next(), $excluded);
 		}
 		
 		return $step;
