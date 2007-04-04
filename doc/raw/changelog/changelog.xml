@@ -48,6 +48,15 @@
 		<new author='adam'>
 			Slideshows: Can now duplicate slideshows to easily make derivatives.
 		</new>
+		<change author='adam'>
+			Slideshows: Most recently browsed collection and asset are maintained
+			in the menu when going back to edit a slideshow, eliminating the need
+			for much 'drilling-down'.
+		</change>
+		<fix author='adam'>
+			Slideshows: Fixed an id conflict when going back to a slideshow
+			a second time (from browsing an asset).
+		</fix>
 	</version>
 	<version number="2.3.0" date="2006-12-13">
 		<new author='adam'>

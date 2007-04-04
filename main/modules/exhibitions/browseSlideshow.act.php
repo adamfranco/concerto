@@ -37,6 +37,24 @@ class browseSlideshowAction
 	}
 	
 	/**
+	 * Get the asset Id for the collection id specified in the context
+	 * 
+	 * @return object Id
+	 * @access public
+	 * @since 4/26/05
+	 */
+	function &getAssetId () {
+		$harmoni =& Harmoni::instance();
+		if (!$harmoni->request->get('slideshow_id')) {
+			$false = false;
+			return $false;
+		}
+			
+		$idManager =& Services::getService("Id");
+		return $idManager->getId($harmoni->request->get('slideshow_id'));
+	}
+	
+	/**
 	 * Build the content for this action
 	 * 
 	 * @return void

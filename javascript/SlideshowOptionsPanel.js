@@ -51,7 +51,7 @@ function SlideshowOptionsPanel ( exhibitionId, assetId, positionElement, toShow,
 		this.assetId = assetId;
 		this.toShow = toShow;
 		this.viewerUrl = viewerUrl;
-		this.defaultParams = {'asset_id': this.assetId};
+		this.defaultParams = {'slideshow_id': this.assetId};
 		this.options = this.contentElement.appendChild(document.createElement('table'));
 				
 		if (toShow.elementExists('view')) {

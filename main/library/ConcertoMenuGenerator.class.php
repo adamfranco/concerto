@@ -59,9 +59,9 @@ class ConcertoMenuGenerator
 		
 		// Collection browse links.
 		// Just show if we are not in a particular collection.
-		if (ereg("collection(s)?|asset|basket|tags", $module)) {			
+		if (ereg("collection(s)?|asset|basket|tags|exhibitions", $module)) {			
 			// Collection root
-			if (ereg("^(collection|asset|basket|tags)$", $module)
+			if (ereg("^(collection|asset|basket|tags|exhibitions)$", $module)
 				&& ($harmoni->request->get('collection_id') ||
 					$harmoni->request->get('asset_id'))) 
 			{
@@ -123,8 +123,8 @@ class ConcertoMenuGenerator
 		if ($module == 'exhibitions' && $action != 'browse') {			
 			if (RequestContext::value('slideshow_id'))
 				$assetId =& $idManager->getId(RequestContext::value('slideshow_id'));
-			else if (RequestContext::value('asset_id'))
-				$assetId =& $idManager->getId(RequestContext::value('asset_id'));
+// 			else if (RequestContext::value('asset_id'))
+// 				$assetId =& $idManager->getId(RequestContext::value('asset_id'));
 			else if (RequestContext::value('exhibition_id'))
 				$assetId =& $idManager->getId(RequestContext::value('exhibition_id'));
 			else
@@ -136,7 +136,8 @@ class ConcertoMenuGenerator
 			}
 		}
 		
-		
+		$harmoni->request->passthrough('collection_id');
+		$harmoni->request->passthrough('asset_id');
 		$slideShowHeading = new MenuItem(_("Open Slideshows"), 1);
 		foreach (array_keys($_SESSION) as $key) {
 			if (ereg("^add_slideshow_wizard_(.+)", $key, $matches)) {
@@ -162,6 +163,9 @@ class ConcertoMenuGenerator
 				$this->addSlideshowHierarchy($mainMenu, $slideshowAssetId, false);
 			}
 		}
+		
+		$harmoni->request->forget('collection_id');
+		$harmoni->request->forget('asset_id');
 		
 		
 	// :: Tagging ::

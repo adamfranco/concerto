@@ -97,6 +97,8 @@ class modify_slideshowAction
 		$harmoni =& Harmoni::Instance();
 		$harmoni->request->startNamespace("modify_slideshow");
 		$harmoni->request->passthrough("slideshow_id");
+		$harmoni->request->passthrough('collection_id');
+		$harmoni->request->passthrough('asset_id');
 
 		$actionRows =& $this->getActionRows();
 		

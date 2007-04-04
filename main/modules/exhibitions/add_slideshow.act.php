@@ -80,6 +80,8 @@ class add_slideshowAction
 	function buildContent () {
 		$harmoni =& Harmoni::instance();
 		$harmoni->request->passthrough("exhibition_id");
+		$harmoni->request->passthrough('collection_id');
+		$harmoni->request->passthrough('asset_id');
 		
 		$actionRows =& $this->getActionRows();
 		
