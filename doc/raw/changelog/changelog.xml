@@ -10,7 +10,7 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
-	<version number="2.4.0" date="The Future">
+	<version number="2.4.0" date="2007-04-05">
 		<new author='adam'>
 			OAI: Added Open Archives Initiative (OAI) provider support to Concerto.
 		</new>
