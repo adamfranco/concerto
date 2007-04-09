@@ -170,6 +170,10 @@ $tokenValid = 24*3600;
 $expirationdatetime = gmstrftime('%Y-%m-%dT%TZ', time()+$tokenValid); 
 $tokenDir = $config->getProperty('OAI_TOKEN_DIR');
 
+if (!file_exists($tokenDir)) {
+	mkdir($tokenDir);
+}
+
 // define all supported sets in your repository
 // $SETS = 	array (
 // 				array('setSpec'=>'phdthesis', 'setName'=>'PHD Thesis', 'setDescription'=>'') //,

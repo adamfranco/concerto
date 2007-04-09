@@ -18,8 +18,11 @@
 	
 	//Set up the database connection
 	$databaseManager =& Services::getService("DatabaseManager");
+	$dbHost = "localhost";
 	$dbName = "my_concerto_database";
-	$dbID = $databaseManager->addDatabase( new MySQLDatabase("localhost", $dbName,"test","test") );
+	$dbUser = "test";
+	$dbPass = "test";
+	$dbID = $databaseManager->addDatabase( new MySQLDatabase($dbHost, $dbName, $dbUser, $dbPass));
 	$databaseManager->pConnect($dbID);
 	
 	define("IMPORTER_CONNECTION", $dbID);
