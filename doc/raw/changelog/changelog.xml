@@ -10,6 +10,11 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto ChangeLog">
+	<version number="2.4.1" date="2007-04-10">
+		<fix author='adam'>
+			Fixed a few bugs that prevented Concerto from running in PHP 5.
+		</fix>
+	</version>
 	<version number="2.4.0" date="2007-04-05">
 		<new author='adam'>
 			OAI: Added Open Archives Initiative (OAI) provider support to Concerto.
