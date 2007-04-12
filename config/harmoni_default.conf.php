@@ -24,7 +24,7 @@
 	// inadvertant session fixation problems.
 	$harmoni->config->set("sessionUseOnlyCookies",true);
 	$harmoni->config->set("sessionCookiePath","/");
-	$harmoni->config->set("sessionCookieDomain","middlebury.edu");
+	$harmoni->config->set("sessionCookieDomain","");
 	
 	// tell harmoni to post-process all actions with this specified action.
 	// the action takes the result from previous actions and builds a display
