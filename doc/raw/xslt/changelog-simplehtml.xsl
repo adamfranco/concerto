@@ -118,13 +118,31 @@
 	</xsl:if>
 	<xsl:text> </xsl:text><xsl:value-of select="." />
 	<xsl:if test="@author">
-		<xsl:variable name="short" select="@author"/>
 		<xsl:text> (</xsl:text>
 		<em>
-			<xsl:value-of select="//authors/name[@short=$short]" />
+			<xsl:call-template name="authors">
+				<xsl:with-param name="str" select="@author"/>
+			</xsl:call-template>
 		</em>
 		<xsl:text>)</xsl:text>
 	</xsl:if>
+</xsl:template>
+
+<xsl:template name="authors">
+  <xsl:param name="str"/>
+  <xsl:choose>
+    <xsl:when test="contains($str,',')">
+    	<xsl:value-of select="//authors/name[@short=substring-before($str,',')]" />
+  	
+      <xsl:text>, </xsl:text>
+      <xsl:call-template name="authors">
+        <xsl:with-param name="str" select="substring-after($str,',')"/>
+      </xsl:call-template>
+    </xsl:when>
+    <xsl:otherwise>
+    	<xsl:value-of select="//authors/name[@short=$str]" />
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 </xsl:stylesheet>
