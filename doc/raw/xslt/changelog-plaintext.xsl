@@ -79,10 +79,10 @@ v. <xsl:value-of select="@number" /><xsl:if test="@date!=''"> (<xsl:value-of sel
 	<xsl:call-template name="addNewlines">
 		<xsl:with-param name="maxCharacters" select="76"/>
 		<xsl:with-param name="remainingString">
-			<xsl:value-of select="normalize-space(translate(.,'&#10;',''))" />
-	
+			<xsl:value-of select="normalize-space(translate(translate(.,'&#10;',''), '&#x0A;', ' '))" />
 		</xsl:with-param>
 	</xsl:call-template>
+	
 	<xsl:if test="@author">
 		<xsl:text>&#x0A;&#x09;&#x09;</xsl:text>
 		<xsl:text>(</xsl:text>
