@@ -15,6 +15,9 @@
 			Now using an empty default cookie domain to better work out of the box.
 		</fix>
 		<fix author='adam'>	
+			Periods in schema ids were breaking schema selection form fields.
+		</fix>
+		<fix author='adam'>	
 			Converting all short tags (&lt;?) to the full tags (&lt;?php) for 
 			compatibility with more PHP configurations.
 		</fix>
