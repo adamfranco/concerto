@@ -33,9 +33,9 @@ class modify_slideshowAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can create an asset here.
-		$harmoni =& Harmoni::Instance();
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$harmoni = Harmoni::Instance();
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 
 		$harmoni->request->startNamespace("modify_slideshow");
 
@@ -67,17 +67,17 @@ class modify_slideshowAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$harmoni =& Harmoni::Instance();
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
+		$harmoni = Harmoni::Instance();
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
 
-		$repository =& $repositoryManager->getRepository(
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
 
 		$harmoni->request->startNamespace("modify_slideshow");
 	
-		$asset =& $repository->getAsset(
+		$asset =$repository->getAsset(
 				$idManager->getId(RequestContext::value('slideshow_id')));
 
 		$harmoni->request->endNamespace();
@@ -94,16 +94,16 @@ class modify_slideshowAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$harmoni =& Harmoni::Instance();
+		$harmoni = Harmoni::Instance();
 		$harmoni->request->startNamespace("modify_slideshow");
 		$harmoni->request->passthrough("slideshow_id");
 		$harmoni->request->passthrough('collection_id');
 		$harmoni->request->passthrough('asset_id');
 
-		$actionRows =& $this->getActionRows();
+		$actionRows =$this->getActionRows();
 		
-// 		$idManager =& Services::getService("Id");
-// 		$slideshowAssetId =& $idManager->getId(
+// 		$idManager = Services::getService("Id");
+// 		$slideshowAssetId =$idManager->getId(
 // 			RequestContext::value('slideshow_id'));
 		
 		$cacheName = 'modify_slideshow_wizard_'.
@@ -121,26 +121,26 @@ class modify_slideshowAction
 	 * @access public
 	 * @since 4/28/05
 	 */
-	function &createWizard () {
-		$idManager =& Services::getService("Id");		
-		$setManager =& Services::getService("Sets");
-		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
+	function createWizard () {
+		$idManager = Services::getService("Id");		
+		$setManager = Services::getService("Sets");
+		$repositoryManager = Services::getService("Repository");
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
-		$slideshowAsset =& $repository->getAsset(
+		$slideshowAsset =$repository->getAsset(
 				$idManager->getId(RequestContext::value('slideshow_id')));
 		
 		// Instantiate the wizard, then add our steps.
 		// fetch current slideshow slides HERE!!!
-		$wizard =& SimpleStepWizard::withDefaultLayout();
+		$wizard = SimpleStepWizard::withDefaultLayout();
 		
 		// :: Name and Description ::
-		$step =& $wizard->addStep("namedescstep", new WizardStep());
+		$step =$wizard->addStep("namedescstep", new WizardStep());
 		$step->setDisplayName(_("Title &amp; Description"));
 
 		// Create the properties.
-		$displayNameProp =& $step->addComponent("display_name",
+		$displayNameProp =$step->addComponent("display_name",
 			new WTextField());
 		$displayNameProp->setValue($slideshowAsset->getDisplayName());
 		$displayNameProp->setErrorText("<nobr>".
@@ -149,7 +149,7 @@ class modify_slideshowAction
 	// 	$displayNameProp->setDefaultValue(_("Default Asset Name"));
 //		$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
 		
-		$descriptionProp =& $step->addComponent("description",
+		$descriptionProp =$step->addComponent("description",
 			WTextArea::withRowsAndColumns(5,30));
 		$descriptionProp->setValue($slideshowAsset->getDescription());
 	// 	$descriptionProp->setDefaultValue(_("Default Asset description."));
@@ -168,29 +168,29 @@ class modify_slideshowAction
 				
 		
 		// :: Slides ::
-		$slideStep =& $wizard->addStep("slidestep",new WizardStep());
+		$slideStep =$wizard->addStep("slidestep",new WizardStep());
 		$slideStep->setDisplayName(_("Slides"));
 		
-		$multField =& $slideStep->addComponent("slides", 
+		$multField =$slideStep->addComponent("slides", 
 						new SlideOrderedRepeatableComponentCollection());
 		$multField->setStartingNumber(0);
 		$multField->setRemoveLabel(_("Remove Slide"));
 
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"slideId", 
 			new AssetComponent());
 		$property->setParent($multField);
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"title", 
 			new WTextField());
 		$property->setSize(20);
 
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"caption", 
 			WTextArea::withRowsAndColumns(5, 30));
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"text_position", 
 			new WSelectList());
 		$property->setValue("right");
@@ -203,7 +203,7 @@ class modify_slideshowAction
 		$property->addOption("center", _("text centered (no-media)"));
 		
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"show_target_metadata", 
 			new WCheckBox());
 		$property->setChecked(false);
@@ -246,55 +246,55 @@ class modify_slideshowAction
 		ob_end_clean();
 		
 		// Add the current assets to the list.
-		$textPositionId =& $idManager->getId(
+		$textPositionId =$idManager->getId(
 			"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position");
-		$showMetadataId =& $idManager->getId(
+		$showMetadataId =$idManager->getId(
 			"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata");
-		$targetId =& $idManager->getId(
+		$targetId =$idManager->getId(
 			"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id");
 		
-		$slideIterator =& $slideshowAsset->getAssets();
-		$slideOrder =& $setManager->getPersistentSet($slideshowAsset->getId());
+		$slideIterator =$slideshowAsset->getAssets();
+		$slideOrder =$setManager->getPersistentSet($slideshowAsset->getId());
 		$orderedSlides = array();
 		$orderlessSlides = array();
 
 		while ($slideIterator->hasNext()) {
-			$slideAsset =& $slideIterator->next();
-			$slideId =& $slideAsset->getId();
+			$slideAsset =$slideIterator->next();
+			$slideId =$slideAsset->getId();
 /*
 			// DEBUG
-			$records =& $slideAsset->getRecordsByRecordStructure($idManager->getId("Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure"));
-			$myCrapRecord =& $records->next();
+			$records =$slideAsset->getRecordsByRecordStructure($idManager->getId("Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure"));
+			$myCrapRecord =$records->next();
 			require_once(POLYPHONY."/main/library/DataManagerGUI/SimpleRecordPrinter.class.php");
 			SimpleRecordPrinter::printRecord($myCrapRecord->_record);
 			// END
 */			
 			$collection = array();
-			$collection['slideId'] =& $slideId;//->getIdString();
+			$collection['slideId'] =$slideId;//->getIdString();
 			$collection['title'] = $slideAsset->getDisplayName();
 			$collection['caption'] = $slideAsset->getDescription();
-			$textPositionIterator =& $slideAsset->getPartValuesByPartStructure(
+			$textPositionIterator =$slideAsset->getPartValuesByPartStructure(
 				$textPositionId);
 			if ($textPositionIterator->hasNext()) {
-				$textPosition =& $textPositionIterator->next();
+				$textPosition =$textPositionIterator->next();
 				$collection['text_position'] = $textPosition->asString();
 			} else
 				$collection['text_position'] = "right";
-			$showMetadataIterator =& $slideAsset->getPartValuesByPartStructure(
+			$showMetadataIterator =$slideAsset->getPartValuesByPartStructure(
 				$showMetadataId);			
  			if ($showMetadataIterator->hasNext()) {
- 				$showMetadata =& $showMetadataIterator->next();
+ 				$showMetadata =$showMetadataIterator->next();
  				$collection['show_target_metadata'] =
  					$showMetadata->value();
  			} else
 				$collection['show_target_metadata'] = FALSE;
-			$assetIdIterator =& $slideAsset->getPartValuesByPartStructure(
+			$assetIdIterator =$slideAsset->getPartValuesByPartStructure(
 				$targetId);
 			if ($assetIdIterator->hasNext()) {
-				$id =& $assetIdIterator->next();
-				$rule =& NonzeroLengthStringValidatorRule::getRule();
+				$id =$assetIdIterator->next();
+				$rule = NonzeroLengthStringValidatorRule::getRule();
 				if ($rule->check($id->asString()))
-					$collection['_assetId'] =& new HarmoniId($id->asString());
+					$collection['_assetId'] = new HarmoniId($id->asString());
 			}
 			if ($slideOrder->isInSet($slideId))
 				$orderedSlides[$slideOrder->getPosition($slideId)] =
@@ -311,15 +311,15 @@ class modify_slideshowAction
 			$multField->addValueCollection($slide);		
 			
 		// :: Effective/Expiration Dates ::
-// 		$step =& $wizard->addStep("datestep", new WizardStep());
+// 		$step =$wizard->addStep("datestep", new WizardStep());
 // 		$step->setDisplayName(_("Effective Dates")." ("._("optional").")");
 // 		
 // 		// Create the properties.
-// 		$property =& $step->addComponent("effective_date", new WTextField());
+// 		$property =$step->addComponent("effective_date", new WTextField());
 // 	//	$property->setDefaultValue();
 // //		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
 // 	
-// 		$property =& $step->addComponent("expiration_date", new WTextField());
+// 		$property =$step->addComponent("expiration_date", new WTextField());
 // 	//	$property->setDefaultValue();
 // //		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
 // 		
@@ -350,21 +350,21 @@ class modify_slideshowAction
 	 * @since 4/28/05
 	 */
 	function saveWizard ( $cacheName ) {
-		$wizard =& $this->getWizard($cacheName);
+		$wizard =$this->getWizard($cacheName);
 		
 		// Make sure we have a valid Repository
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
-		$slideshowAsset =& $repository->getAsset(
+		$slideshowAsset =$repository->getAsset(
 				$idManager->getId(RequestContext::value('slideshow_id')));
 		
-		$properties =& $wizard->getAllValues();
+		$properties =$wizard->getAllValues();
 		
-		$status =& new StatusStars(_("Saving Slideshow"));
+		$status = new StatusStars(_("Saving Slideshow"));
 		$status->initializeStatistics(count($properties['slidestep']['slides']) + 2);
 		
 		// First, verify that we chose a parent that we can add children to.
@@ -372,8 +372,8 @@ class modify_slideshowAction
 				$idManager->getId("edu.middlebury.authorization.modify"), 
 				$slideshowAsset->getId()))
 		{
-			$slideshowAssetId =& $slideshowAsset->getId();
-			$this->_slideshowAssetId =& $slideshowAssetId;
+			$slideshowAssetId =$slideshowAsset->getId();
+			$this->_slideshowAssetId =$slideshowAssetId;
 			
 			// Update the Name and description
 			if ($properties['namedescstep']['display_name'])
@@ -399,25 +399,25 @@ class modify_slideshowAction
 				"edu.middlebury.concerto", 
 				"Slide", 
 				"Slides are components of Slide-Shows that contain captions and may reference media Assets.");
-			$slideRecordStructId =& $idManager->getId(
+			$slideRecordStructId =$idManager->getId(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure");
-			$targetIdPartStructId =& $idManager->getId(
+			$targetIdPartStructId =$idManager->getId(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id");
-			$textPositionPartStructId =& $idManager->getId(
+			$textPositionPartStructId =$idManager->getId(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position");
-			$displayMetadataPartStructId =& $idManager->getId(
+			$displayMetadataPartStructId =$idManager->getId(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata");
 
 				
-			$setManager =& Services::getService("Sets");
-			$pSlideOrder =& $setManager->getPersistentSet($slideshowAssetId);
-			$slideIterator =& $slideshowAsset->getAssets();
+			$setManager = Services::getService("Sets");
+			$pSlideOrder =$setManager->getPersistentSet($slideshowAssetId);
+			$slideIterator =$slideshowAsset->getAssets();
 
 			// ---- Add/Update Slides in new order (hopefully)		
 			$existingSlides = array();
 			while ($slideIterator->hasNext()) {
-				$currentSlide =& $slideIterator->next();
-				$id =& $currentSlide->getId();
+				$currentSlide =$slideIterator->next();
+				$id =$currentSlide->getId();
 				$existingSlides[] = $id->getIdString();
 			}
 
@@ -459,18 +459,18 @@ class modify_slideshowAction
 						$targetId = String::withValue('');	
 					
 					// ---- Create the asset ----
-					$slideAsset =& $repository->createAsset(
+					$slideAsset =$repository->createAsset(
 											$title, 
 											$caption, 
 											$slideAssetType);
-					$slideAssetId =& $slideAsset->getId();
+					$slideAssetId =$slideAsset->getId();
 					$slideshowAsset->addAsset($slideAssetId);
 					
 					// Add it to the order field
 					$pSlideOrder->addItem($slideAssetId);
 					
 					// ---- Set the additional info ----
-					$slideRecord =& $slideAsset->createRecord($slideRecordStructId);
+					$slideRecord =$slideAsset->createRecord($slideRecordStructId);
 					$slideRecord->createPart($textPositionPartStructId,
 						$textPosition);
 					$slideRecord->createPart($displayMetadataPartStructId,
@@ -478,39 +478,39 @@ class modify_slideshowAction
 					$slideRecord->createPart($targetIdPartStructId, $targetId);
 				} 
 				else if (in_array($slideProperties['slideId']->getIdString(), $existingSlides)) {
-					$slideAsset =& $repository->getAsset(
+					$slideAsset =$repository->getAsset(
 						$slideProperties['slideId']);
 					$slideAsset->updateDisplayName($slideProperties['title']);
 					$slideAsset->updateDescription(
 						$slideProperties['caption']);
-					$textPositionIterator =& 
+					$textPositionIterator = 
 						$slideAsset->getPartsByPartStructure(
 						$textPositionPartStructId);
 					if ($textPositionIterator->hasNext()) {
-						$part =& $textPositionIterator->next();
+						$part =$textPositionIterator->next();
 						$part->updateValue(new String(
 							$slideProperties['text_position']));
 					}
-					$showMetadataIterator =& 
+					$showMetadataIterator = 
 						$slideAsset->getPartsByPartStructure(
 						$displayMetadataPartStructId);			
 					if ($showMetadataIterator->hasNext()) {
-						$part =& $showMetadataIterator->next();
+						$part =$showMetadataIterator->next();
 						$part->updateValue(new Boolean(
 							$slideProperties['show_target_metadata']));
 					}
 					$pSlideOrder->addItem($slideProperties['slideId']);
 					
-					$records =& $slideAsset->getRecordsByRecordStructure(
+					$records =$slideAsset->getRecordsByRecordStructure(
 						$slideRecordStructId);
-					$slideRecord =& $records->next();
+					$slideRecord =$records->next();
 				}
 				
 				$status->updateStatistics();
 			}
 			// ==== Remove slide assets no longer in slideshow ----
 			foreach($existingSlides as $older) {
-				$old =& $idManager->getId($older);
+				$old =$idManager->getId($older);
 				if (!$pSlideOrder->isInSet($old)) {
 					$slideshowAsset->removeAsset($old, false);
 					$repository->deleteAsset($old);
@@ -521,14 +521,14 @@ class modify_slideshowAction
 			
 			// Log the success or failure
 			if (Services::serviceRunning("Logging")) {
-				$loggingManager =& Services::getService("Logging");
-				$log =& $loggingManager->getLogForWriting("Concerto");
-				$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+				$loggingManager = Services::getService("Logging");
+				$log =$loggingManager->getLogForWriting("Concerto");
+				$formatType = new Type("logging", "edu.middlebury", "AgentsAndNodes",
 								"A format in which the acting Agent[s] and the target nodes affected are specified.");
-				$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+				$priorityType = new Type("logging", "edu.middlebury", "Event_Notice",
 								"Normal events.");
 				
-				$item =& new AgentNodeEntryItem("Modify Node", "Slideshow Modified");
+				$item = new AgentNodeEntryItem("Modify Node", "Slideshow Modified");
 				$item->addNodeId($slideshowAssetId);
 				
 				$log->appendLogWithTypes($item,	$formatType, $priorityType);
@@ -551,22 +551,22 @@ class modify_slideshowAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
-		$harmoni =& Harmoni::instance();
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
+		$harmoni = Harmoni::instance();
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId(
 				"edu.middlebury.concerto.exhibition_repository"));
 
-		$asset =& $repository->getAsset(
+		$asset =$repository->getAsset(
 			$idManager->getId(RequestContext::value('slideshow_id')));
 		$harmoni->request->forget('slideshow_id');
 		$harmoni->request->endNamespace();
-		$parents =& $asset->getParentsByType(new HarmoniType("Asset Types",
+		$parents =$asset->getParentsByType(new HarmoniType("Asset Types",
 			"edu.middlebury.concerto", "Exhibition"));
-		$parent =& $parents->next();
-		$parentId =& $parent->getId();
-		$url =& $harmoni->request->mkURL("exhibitions",
+		$parent =$parents->next();
+		$parentId =$parent->getId();
+		$url =$harmoni->request->mkURL("exhibitions",
 			"browse_exhibition", array(
 			'exhibition_id' => $parentId->getIdString()));
 

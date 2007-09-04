@@ -53,7 +53,7 @@ class welcomeAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();
+		$actionRows =$this->getActionRows();
 		ob_start();
 		print "<p>";
 		print _("<strong>Concerto</strong> is a digital assets management tool developed at Middlebury College.");

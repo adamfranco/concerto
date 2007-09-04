@@ -34,8 +34,8 @@ class Update003_CollectionRootAction
 	 * @access public
 	 * @since 3/8/07
 	 */
-	function &getDateIntroduced () {
-		$date =& Date::withYearMonthDay(2007, 3, 6);
+	function getDateIntroduced () {
+		$date = Date::withYearMonthDay(2007, 3, 6);
 		return $date;
 	}
 	
@@ -83,7 +83,7 @@ class Update003_CollectionRootAction
 	 * @since 3/8/07
 	 */
 	function runUpdate () {
-		$dbc =& Services::getService('DatabaseManager');
+		$dbc = Services::getService('DatabaseManager');
 		
 		$dbc->beginTransaction();
 		
@@ -109,12 +109,12 @@ class Update003_CollectionRootAction
 		);
 		
 		foreach ($toUpdate as $unit) {
-			$query =& new UpdateQuery;
+			$query = new UpdateQuery;
 			$query->setTable($unit['table']);
 			$query->setColumns(array($unit['column']));
 			$query->setValues(array("'edu.middlebury.repositories_root'"));
 			$query->addWhere($unit['column']."='edu.middlebury.concerto.collections_root'");
-			$results =& $dbc->query($query, 0);
+			$results =$dbc->query($query, 0);
 			print "\n<br/>".$results->getNumberOfRows()." rows in ".$unit['table']." (column ".$unit['column'].") updated";
 		}
 		

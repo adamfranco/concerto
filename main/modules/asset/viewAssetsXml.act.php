@@ -64,7 +64,7 @@ class viewAssetsXmlAction
 	 * @since 5/4/06
 	 */
 	function setPassthrough () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		$harmoni->request->passthrough("assets");
 	}
 	
@@ -75,27 +75,27 @@ class viewAssetsXmlAction
 	 * @access public
 	 * @since 5/4/06
 	 */
-	function &getAssets () {
+	function getAssets () {
 		if (!isset($this->_assets)) {
-			$idManager =& Services::getService("Id");
-			$authZ =& Services::getService("AuthZ");
-			$repositoryManager =& Services::getService("Repository");
+			$idManager = Services::getService("Id");
+			$authZ = Services::getService("AuthZ");
+			$repositoryManager = Services::getService("Repository");
 			
 			$assetList = explode(",", RequestContext::value("assets"));
 			foreach ($assetList as $stringId) {
-				$assetId =& $idManager->getId($stringId);
+				$assetId =$idManager->getId($stringId);
 				
 				// Check that the user can access this asset			
 				if ($authZ->isUserAuthorized(
 						$idManager->getId("edu.middlebury.authorization.view"), 
 						$assetId))
 				{
-					$this->_assets[] =& $repositoryManager->getAsset($assetId);
+					$this->_assets[] =$repositoryManager->getAsset($assetId);
 				}
 			}
 		}
 		
-		$iterator =& new HarmoniIterator($this->_assets);
+		$iterator = new HarmoniIterator($this->_assets);
 		return $iterator;
 	}
 }

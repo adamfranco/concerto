@@ -34,8 +34,8 @@ class viewAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.view"), 
 					$this->getAssetId());
@@ -60,7 +60,7 @@ class viewAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$asset =& $this->getAsset();
+		$asset =$this->getAsset();
 		return _("Viewing Asset")." <em>".$asset->getDisplayName()."</em> ";
 	}
 	
@@ -72,32 +72,32 @@ class viewAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 		
-		$asset =& $this->getAsset();
-		$repositoryId =& $this->getRepositoryId();
+		$asset =$this->getAsset();
+		$repositoryId =$this->getRepositoryId();
 
 		// function links
 		ob_start();
 		AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
-		$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
+		$layout = new Block(ob_get_contents(), STANDARD_BLOCK);
 		ob_end_clean();
 		$actionRows->add($layout, "100%", null, LEFT, CENTER);
 		
 		// Columns for Description and thumbnail.
-		$xLayout =& new XLayout();
-		$contentCols =& new Container($xLayout, OTHER, 1);
+		$xLayout = new XLayout();
+		$contentCols = new Container($xLayout, OTHER, 1);
 		$actionRows->add($contentCols, "100%", null, LEFT, CENTER);
 		
 		// Description and dates
 		ob_start();
-		$assetId =& $asset->getId();			
+		$assetId =$asset->getId();			
 			
 		print "\n\t<dl>";
 		
 		if ($asset->getDescription()) {
-			$description =& HtmlString::withValue($asset->getDescription());
+			$description = HtmlString::withValue($asset->getDescription());
 			$description->clean();
 			print "\n\t\t<dt style='font-weight: bold;'>"._("Description:")."</dt>";
 			print "\n\t\t<dd>".$description->asString()."</dd>";
@@ -152,7 +152,7 @@ class viewAction
 		
 		
 		// Add the tagging manager script to the header
-		$outputHandler =& $harmoni->getOutputHandler();
+		$outputHandler =$harmoni->getOutputHandler();
 		$outputHandler->setHead($outputHandler->getHead()
 			."\n\t\t<script type='text/javascript' src='".POLYPHONY_PATH."javascript/Tagger.js'></script>"
 			."\n\t\t<link rel='stylesheet' type='text/css' href='".POLYPHONY_PATH."javascript/Tagger.css' />");
@@ -173,16 +173,16 @@ class viewAction
 		$printedRecordIds = array();
 		
 		// Get the set of RecordStructures so that we can print them in order.
-		$setManager =& Services::getService("Sets");
-		$structSet =& $setManager->getPersistentSet($repositoryId);		
+		$setManager = Services::getService("Sets");
+		$structSet =$setManager->getPersistentSet($repositoryId);		
 		// First, lets go through the info structures listed in the set and print out
 		// the info records for those structures in order.
 		while ($structSet->hasNext()) {
-			$structureId =& $structSet->next();
-			$records =& $asset->getRecordsByRecordStructure($structureId);
+			$structureId =$structSet->next();
+			$records =$asset->getRecordsByRecordStructure($structureId);
 			while ($records->hasNext()) {
-				$record =& $records->next();
-				$recordId =& $record->getId();
+				$record =$records->next();
+				$recordId =$record->getId();
 				$printedRecordIds[] = $recordId->getIdString();
 		
 				print "<hr />";
@@ -190,7 +190,7 @@ class viewAction
 			}	
 		}
 		
-		$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
+		$layout = new Block(ob_get_contents(), STANDARD_BLOCK);
 		ob_end_clean();
 		$actionRows->add($layout, "100%", null, LEFT, CENTER);
 		
@@ -202,13 +202,13 @@ class viewAction
 		// 	it is text, image, etc, or do otherwise with it if it is some other form
 		// 	of data.
 		//***********************************
-		$content =& $asset->getContent();
+		$content =$asset->getContent();
 		if ($string = $content->asString()) {
 			ob_start();
 			print "\n<textarea readonly='readonly' rows='30' cols='80'>";
 			print htmlspecialchars($string);
 			print "</textarea>";
-			$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
+			$layout = new Block(ob_get_contents(), STANDARD_BLOCK);
 			ob_end_clean();
 			$actionRows->add($layout, "100%", null, LEFT, CENTER);
 		}
@@ -220,29 +220,29 @@ class viewAction
 // Function Definitions
 //***********************************
 
-function printRecord(& $repositoryId, &$assetId, & $record) {	
-	$recordStructure =& $record->getRecordStructure();
-	$structureId =& $recordStructure->getId();
+function printRecord($repositoryId, $assetId, $record) {	
+	$recordStructure =$record->getRecordStructure();
+	$structureId =$recordStructure->getId();
 	
 	// Print out the fields parts for this structure
-	$setManager =& Services::getService("Sets");
-	$partStructureSet =& $setManager->getPersistentSet($structureId);
+	$setManager = Services::getService("Sets");
+	$partStructureSet =$setManager->getPersistentSet($structureId);
 	
 	$partStructureArray = array();
 	// Print out the ordered parts/fields
 	$partStructureSet->reset();
 	while ($partStructureSet->hasNext()) {
-		$partStructureId =& $partStructureSet->next();
-		$partStructureArray[] =& $recordStructure->getPartStructure($partStructureId);
+		$partStructureId =$partStructureSet->next();
+		$partStructureArray[] =$recordStructure->getPartStructure($partStructureId);
 	}
 	// Get the rest of the parts (the unordered ones);
-	$partStructureIterator =& $recordStructure->getPartStructures();
+	$partStructureIterator =$recordStructure->getPartStructures();
 	while ($partStructureIterator->hasNext()) {
-		$partStructure =& $partStructureIterator->next();
+		$partStructure =$partStructureIterator->next();
 		if (!$partStructureSet->isInSet($partStructure->getId()))
-			$partStructureArray[] =& $partStructure;
+			$partStructureArray[] =$partStructure;
 	}
 	
-	$moduleManager =& Services::getService("InOutModules");
+	$moduleManager = Services::getService("InOutModules");
 	print $moduleManager->generateDisplayForPartStructures($repositoryId, $assetId, $record, $partStructureArray);
 }

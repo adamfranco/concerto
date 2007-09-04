@@ -46,7 +46,7 @@ require_once(dirname(__FILE__)."/main/include/setup.inc.php");
  *********************************************************/
 if (defined('ENABLE_TIMERS') && ENABLE_TIMERS) {
 	require_once(HARMONI."/utilities/Timer.class.php");
-	$execTimer =& new Timer;
+	$execTimer = new Timer;
 	$execTimer->start();
 }
 
@@ -58,7 +58,7 @@ if (defined('ENABLE_TIMERS') && ENABLE_TIMERS) {
 	printf("%1.6f", $execTimer->printTime());
 	print "</pre></td></tr>\n</table>";
 	
-	$dbhandler =& Services::getService("DBHandler");
+	$dbhandler = Services::getService("DBHandler");
 	printpre("NumQueries: ".$dbhandler->getTotalNumberOfQueries());
 	
 // 	printpreArrayExcept($_SESSION, array('__temporarySets'));

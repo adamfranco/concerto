@@ -54,9 +54,9 @@ class Update002_VRACoreAction
 	 * @access public
 	 * @since 3/7/07
 	 */
-	function &getDestId () {
-		$idManager =& Services::getService('Id');
-		$dcId =& $idManager->getId('vra_core');
+	function getDestId () {
+		$idManager = Services::getService('Id');
+		$dcId =$idManager->getId('vra_core');
 		return $dcId;
 	}
 	

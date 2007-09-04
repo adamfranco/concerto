@@ -56,20 +56,20 @@ class browseAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 		
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
 		
-		$exhibitionRepositoryId =& $idManager->getId(
+		$exhibitionRepositoryId =$idManager->getId(
 				"edu.middlebury.concerto.exhibition_repository");
-		$repository =& $repositoryManager->getRepository($exhibitionRepositoryId);
+		$repository =$repositoryManager->getRepository($exhibitionRepositoryId);
 		
 		// If the Repository supports searching of root assets, just get those
 		$hasRootSearch = FALSE;
-		$rootSearchType =& new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", "");
-		$searchTypes =& $repository->getSearchTypes();
+		$rootSearchType = new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", "");
+		$searchTypes =$repository->getSearchTypes();
 		while ($searchTypes->hasNext()) {
 			if ($rootSearchType->isEqual( $searchTypes->next() )) {
 				$hasRootSearch = TRUE;
@@ -82,7 +82,7 @@ class browseAction
 		print  _("Some <em>Exhibitions</em> and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
 		print  "</p>";
 		
-		$authZ =& Services::getService("AuthZ");
+		$authZ = Services::getService("AuthZ");
 	//===== Create Link =====//
 		if ($authZ->isUserAuthorized(
 			$idManager->getId("edu.middlebury.authorization.add_children"), 
@@ -102,7 +102,7 @@ class browseAction
 			print  "\n</p>";
 		}
 		
-		$introText =& new Block(ob_get_contents(), STANDARD_BLOCK);
+		$introText = new Block(ob_get_contents(), STANDARD_BLOCK);
 		ob_end_clean();
 		$actionRows->add($introText, "100%", null, CENTER, CENTER);
 		
@@ -112,38 +112,38 @@ class browseAction
 		if ($hasRootSearch) {
 			$criteria = NULL;
 			
-			$searchProperties =& new HarmoniProperties(
+			$searchProperties = new HarmoniProperties(
 					Type::fromString("repository::harmoni::order"));
 			$searchProperties->addProperty("order", $arg = "DisplayName");
 			unset($arg);
 			$searchProperties->addProperty("direction", $arg = "ASC");
 			unset($arg);
 			
-			$assets =& $repository->getAssetsBySearch($criteria, $rootSearchType, $searchProperties);
+			$assets =$repository->getAssetsBySearch($criteria, $rootSearchType, $searchProperties);
 		} 
 		// Otherwise, just get all the assets
 		else {
-			$assets =& $repository->getAssets();
+			$assets =$repository->getAssets();
 		}
 		
 		//***********************************
 		// print the results
 		//***********************************
-		$resultPrinter =& new IteratorResultPrinter($assets, 1, 20, "printAssetShort", $harmoni);
-		$resultLayout =& $resultPrinter->getLayout("canView");
+		$resultPrinter = new IteratorResultPrinter($assets, 1, 20, "printAssetShort", $harmoni);
+		$resultLayout =$resultPrinter->getLayout("canView");
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 	}
 }
 
 
 // Callback function for printing Assets
-function printAssetShort(&$asset, &$harmoni) {
+function printAssetShort($asset, $harmoni) {
 	ob_start();
 	
-	$assetId =& $asset->getId();
+	$assetId =$asset->getId();
 	print  "\n\t<div style='font-weight: bold' title='"._("ID#").": ".
 			$assetId->getIdString()."'>".$asset->getDisplayName()."</div>";
-	$description =& HtmlString::withValue($asset->getDescription());
+	$description = HtmlString::withValue($asset->getDescription());
 	$description->trim(100);
 	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	
 	
@@ -159,15 +159,15 @@ function printAssetShort(&$asset, &$harmoni) {
 		print "\n\t</a>";
 	}
 	
-	$layout =& new Block(ob_get_contents(), EMPHASIZED_BLOCK);
+	$layout = new Block(ob_get_contents(), EMPHASIZED_BLOCK);
 	ob_end_clean();
 	return $layout;
 }
 
 // Callback function for checking authorizations
-function canView( & $asset ) {
-	$authZ =& Services::getService("AuthZ");
-	$idManager =& Services::getService("Id");
+function canView( $asset ) {
+	$authZ = Services::getService("AuthZ");
+	$idManager = Services::getService("Id");
 	
 	if ($authZ->isUserAuthorizedBelow($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
 	{

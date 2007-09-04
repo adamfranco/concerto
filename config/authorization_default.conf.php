@@ -14,7 +14,7 @@
  */
  
 // :: Set up the Authorization System ::
-	$configuration =& new ConfigurationProperties;
+	$configuration = new ConfigurationProperties;
 	$configuration->addProperty('database_index', $dbID);
 	$configuration->addProperty('database_name', $dbName);
 	Services::startManagerAsService("AuthorizationManager", $context, $configuration);

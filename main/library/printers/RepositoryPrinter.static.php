@@ -37,15 +37,15 @@ class RepositoryPrinter {
 	 * @access public
 	 * @date 8/6/04
 	 */
-	function printRepositoryFunctionLinks (& $harmoni, & $repository) {		
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
-		$repositoryId =& $repository->getId();
+	function printRepositoryFunctionLinks ($harmoni, $repository) {		
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
+		$repositoryId =$repository->getId();
 		
 		$links = array();
 		
 		$actionString = $harmoni->getCurrentAction();
-		$url =& $harmoni->request->mkURL();	
+		$url =$harmoni->request->mkURL();	
 		$url->setValue("collection_id", $repositoryId->getIdString());
 		
 		// Authorization Icon
@@ -121,7 +121,7 @@ class RepositoryPrinter {
 							RequestContext::name("type") => RequestContext::value("type"),
 							RequestContext::name("searchtype") => RequestContext::value("searchtype"));			
 			if (RequestContext::value("searchtype")) {
-				$searchModuleManager =& Services::getService("RepositorySearchModules");
+				$searchModuleManager = Services::getService("RepositorySearchModules");
 				foreach ($searchModuleManager->getCurrentValues(Type::fromString(RequestContext::value("searchtype"))) as $key => $value) {
 					$params[$key] = $value;
 				}
@@ -137,13 +137,13 @@ class RepositoryPrinter {
 		
 	//===== Edit Schemas =====//
 		// Check that the user can modify Schemas for this collection
-		$recStructFunctions =& $authZ->getFunctions(
+		$recStructFunctions =$authZ->getFunctions(
 								new Type (	"Authorization", 
 											"edu.middlebury.harmoni", 
 											"RecordStructures"));
 		$canEditStructures = false;
 		while ($recStructFunctions->hasNext()) {
-			$function =& $recStructFunctions->next();
+			$function =$recStructFunctions->next();
 			if ($authZ->isUserAuthorized($function->getId(), $repositoryId))
 				$canEditStructures = true;
 			if ($authZ->isUserAuthorized($function->getId(), 
@@ -176,14 +176,14 @@ class RepositoryPrinter {
 			$fileId = $idManager->getId("FILE");
 			$remoteFileId = $idManager->getId("REMOTE_FILE");
 			
-			$setManager =& Services::getService("Sets");
-			$set =& $setManager->getPersistentSet($repositoryId);
+			$setManager = Services::getService("Sets");
+			$set =$setManager->getPersistentSet($repositoryId);
 			$set->reset();
 			while ($set->hasNext()) {
-				$recStructId =& $set->next();
+				$recStructId =$set->next();
 				if (!$recStructId->isEqual($fileId) && !$recStructId->isEqual($remoteFileId)) {
 					ob_start();
-					$recStruct =& $repository->getRecordStructure($recStructId);
+					$recStruct =$repository->getRecordStructure($recStructId);
 						$harmoni->history->markReturnURL(
 								"concerto/schema/edit-return/".$recStructId->getIdString());
 						print "\n\t\t<option value='".$recStructId->getIdString()."'";

@@ -14,7 +14,7 @@
  */
  
 // :: Set up the ImageProcessor service for generating thumbnails ::
-	$configuration =& new ConfigurationProperties;
+	$configuration = new ConfigurationProperties;
 	$configuration->addProperty('thumbnail_format', $arg0 = "image/jpeg");
 	$configuration->addProperty('use_gd', $arg1 = FALSE);
 	$configuration->addProperty('gd_formats', $arg2 = array());

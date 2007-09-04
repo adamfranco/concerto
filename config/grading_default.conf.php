@@ -14,6 +14,6 @@
 */
 
 // :: Set up the CourseManagementManager ::
-$configuration =& new ConfigurationProperties;
+$configuration = new ConfigurationProperties;
 $configuration->addProperty('database_index', $dbID);
 Services::startManagerAsService("GradingManager", $context, $configuration);

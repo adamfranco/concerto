@@ -38,9 +38,9 @@ class exportexhibmdbAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {	
-		$dbHandler =& Services::getService("DBHandler");
-		$repositoryManager =& Services::getService("Repository");
-		$idManager =& Services::getService("Id");
+		$dbHandler = Services::getService("DBHandler");
+		$repositoryManager = Services::getService("Repository");
+		$idManager = Services::getService("Id");
 		
 print "lines 46 - 48 in exportexhibmdb.act.php need to be modified for database access";
 //		$mdbIndex = $dbHandler->addDatabase(
@@ -50,7 +50,7 @@ exit();
 		$dbHandler->connect(IMPORTER_CONNECTION);
 
 		
-		$exhibitionsQuery =& new SelectQuery;
+		$exhibitionsQuery = new SelectQuery;
 		$exhibitionsQuery->addTable("pressets");
 		$exhibitionsQuery->addColumn("id", "exhibitionId");
 		$exhibitionsQuery->addColumn("title", "exhibitionName");
@@ -58,14 +58,14 @@ exit();
 		$exhibitionsQuery->addWhere("presentations IS NOT NULL");
 		$exhibitionsQuery->addOrderBy("id");
 		
-		$exhibitionsResults =& $dbHandler->query($exhibitionsQuery, $mdbIndex);
+		$exhibitionsResults =$dbHandler->query($exhibitionsQuery, $mdbIndex);
 
 		while ($exhibitionsResults->hasMoreRows()) {
 			$exhibition = $exhibitionsResults->next();
 			
 			$this->openExhibition($exhibition);
 			
-			$slideshowsQuery =& new SelectQuery;
+			$slideshowsQuery = new SelectQuery;
 			$slideshowsQuery->addTable("preslists");
 			$slideshowsQuery->addColumn("id", "slideshowId");
 			$slideshowsQuery->addColumn("title", "slideshowName");
@@ -76,7 +76,7 @@ exit();
 				$exhibition['exhibitionId']);
 			$slideshowsQuery->addOrderBy("id");
 			
-			$slideshowsResults =& $dbHandler->query($slideshowsQuery,
+			$slideshowsResults =$dbHandler->query($slideshowsQuery,
 				$mdbIndex);
 
 			while ($slideshowsResults->hasNext()) {
@@ -86,7 +86,7 @@ exit();
 				
 				$order = explode(",", $slideshow['slideOrder']);
 				foreach ($order as $presmediaId) {
-					$slideQuery =& new SelectQuery;
+					$slideQuery = new SelectQuery;
 					$slideQuery->addTable("presmedia");
 					$slideQuery->addColumn("comment", "slideCaption");
 					$slideQuery->addColumn("media_id");
@@ -94,22 +94,22 @@ exit();
 						.$slideshow['slideshowId']);
 					$slideQuery->addWhere("id = ".$presmediaId);
 					
-					$slideResult =& $dbHandler->query($slideQuery, $mdbIndex);
+					$slideResult =$dbHandler->query($slideQuery, $mdbIndex);
 
 					if ($slideResult->getNumberOfRows() == 1) {
 						$slide = $slideResult->getCurrentRow();
 					
-						$mediaQuery =& new SelectQuery;
+						$mediaQuery = new SelectQuery;
 						$mediaQuery->addTable("media");
 						$mediaQuery->addColumn("id");
 						$mediaQuery->addColumn("fname");
 						$mediaQuery->addWhere("id = ".$slide['media_id']);
-						$mediaResult =& $dbHandler->query($mediaQuery, 
+						$mediaResult =$dbHandler->query($mediaQuery, 
 							$mdbIndex);
 						if ($mediaResult->getNumberOfRows() == 1) {
 							$media = $mediaResult->getCurrentRow();
 							
-							$idQuery =& new SelectQuery;
+							$idQuery = new SelectQuery;
 							$idQuery->addTable("dr_file");
 							$idQuery->addTable("dr_asset_record", INNER_JOIN,
 								"dr_file.id = dr_asset_record.FK_record");
@@ -119,7 +119,7 @@ exit();
 							$idQuery->addWhere("dr_file.filename = '".
 								rawurlencode($media['fname'])."'");
 							
-							$idResult =& $dbHandler->query($idQuery, 
+							$idResult =$dbHandler->query($idQuery, 
 								IMPORTER_CONNECTION);
 							if ($idResult->getNumberOfRows() == 1) {
 								$idRow = $idResult->getCurrentRow();
@@ -151,7 +151,7 @@ exit();
 		$exhibitionsResults->free();
 		unset($exhibitionsQuery);		
 
-		$centerPane =& $this->getActionRows();
+		$centerPane =$this->getActionRows();
 		ob_start();
 
 // 		if ($this->_importer->hasErrors()) {
@@ -177,7 +177,7 @@ exit();
 	 * @param array $slide
 	 * @since 8/9/05
 	 */
-	function openExhibition (&$exhibition) {
+	function openExhibition ($exhibition) {
 		$this->_destFolder = 'mdbExhib1_concExhib2';
 		if (!is_dir("/tmp/".$this->_destFolder))
 			mkdir("/tmp/".$this->_destFolder);
@@ -237,7 +237,7 @@ exit();
 	 * @param array $slide
 	 * @since 8/9/05
 	 */
-	function openSlideshow (&$slideshow) {
+	function openSlideshow ($slideshow) {
 		fwrite($this->_xmlFile, "\t\t\t<asset maintainOrder=\"TRUE\">\n".
 			"\t\t\t\t<name>".$slideshow['slideshowName']."</name>\n".
 			"\t\t\t\t<description><![CDATA[".$slideshow['slideshowDescription'].
@@ -264,7 +264,7 @@ exit();
 	 * @param array $slide
 	 * @since 8/9/05
 	 */
-	function addSlide (&$slide, &$asset_id) {
+	function addSlide ($slide, $asset_id) {
 	fwrite($this->_xmlFile, "\t\t\t\t<asset>\n".
 			"\t\t\t\t\t<name></name>\n".
 			"\t\t\t\t\t<description><![CDATA[".
@@ -303,7 +303,7 @@ exit();
 // 		if (isset($this->_importer))
 // 			unset($this->_importer);
 // 		
-// 		$this->_importer =& XMLImporter::withFile($array, 
+// 		$this->_importer = XMLImporter::withFile($array, 
 // 			"/home/cshubert/public_html/importer/importtest/metadata.xml",
 // 			"insert");
 // 

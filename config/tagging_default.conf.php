@@ -13,7 +13,7 @@
  * @version $Id$
  */
  
- 	$configuration =& new ConfigurationProperties;
+ 	$configuration = new ConfigurationProperties;
 	$configuration->addProperty('DatabaseIndex', $dbID);
 	$systems = array(
 		'concerto' => array(
@@ -43,7 +43,7 @@
  * @access public
  * @since 11/8/06
  */
-function concertoPrintTaggedItem ( &$item, $viewAction) {
+function concertoPrintTaggedItem ( $item, $viewAction) {
 	printTaggedItem($item, $viewAction);
 	
 	if ($item->getSystem() != ARBITRARY_URL) {
@@ -70,8 +70,8 @@ function getConcertoNodeUrl ( $item ) {
 //	$concertoBaseUrl = 'http://concerto.middlebury.edu/index.php?';
 	
 	
-	$node =& $item->getNode();
-	$nodeType =& $node->getType();
+	$node =$item->getNode();
+	$nodeType =$node->getType();
 	
 	$domainsToIgnore = array('authorization', 'Authorization', 'System', 'Agents');
 	
@@ -102,8 +102,8 @@ function getConcertoNodeThumbnailUrl ( $item ) {
 //	$concertoBaseUrl = 'http://concerto.middlebury.edu/index.php?';
 	
 	
-	$node =& $item->getNode();
-	$nodeType =& $node->getType();
+	$node =$item->getNode();
+	$nodeType =$node->getType();
 	
 	$domainsToIgnore = array('authorization', 'Authorization', 'System', 'Agents');
 	
@@ -135,8 +135,8 @@ function getSegueNodeUrl ( $item ) {
 	$segueBaseUrl = 'http://slug.middlebury.edu/~afranco/segue2/index.php?';
 	
 	
-	$node =& $item->getNode();
-	$nodeType =& $node->getType();
+	$node =$item->getNode();
+	$nodeType =$node->getType();
 		
 	// Repositories
 	if ($nodeType->getDomain() == 'segue') {

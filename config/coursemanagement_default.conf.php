@@ -21,7 +21,7 @@ $CREATE_TERMS =true;
 
 
 // :: Set up the CourseManagementManager ::
-$configuration =& new ConfigurationProperties;
+$configuration = new ConfigurationProperties;
 $configuration->addProperty('database_index', $dbID);
 
 $courseManagamentHierarchyId = "edu.middlebury.authorization.hierarchy";

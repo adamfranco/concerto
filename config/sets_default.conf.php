@@ -14,6 +14,6 @@
  */
  
 // :: Set up the Sets Manager ::
-	$configuration =& new ConfigurationProperties;
+	$configuration = new ConfigurationProperties;
 	$configuration->addProperty('database_index', $dbID);
 	Services::startManagerAsService("SetManager", $context, $configuration);

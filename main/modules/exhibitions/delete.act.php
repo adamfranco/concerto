@@ -34,8 +34,8 @@ class deleteAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can delete this exhibition
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.delete"), 
 					$idManager->getId(RequestContext::value('exhibition_id')));
@@ -60,12 +60,12 @@ class deleteAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
-		$asset =& $repository->getAsset(
+		$asset =$repository->getAsset(
 				$idManager->getId(RequestContext::value('exhibition_id')));
 		return _("Delete Exhibition")." <em>".$asset->getDisplayName()."</em> ";
 	}
@@ -78,28 +78,28 @@ class deleteAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 		
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
 		
-		$asset =& $repository->getAsset(
+		$asset =$repository->getAsset(
 			$idManager->getId(RequestContext::value('exhibition_id')));
 		
 		// Log the action
 		if (Services::serviceRunning("Logging")) {
-			$loggingManager =& Services::getService("Logging");
-			$log =& $loggingManager->getLogForWriting("Concerto");
-			$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+			$loggingManager = Services::getService("Logging");
+			$log =$loggingManager->getLogForWriting("Concerto");
+			$formatType = new Type("logging", "edu.middlebury", "AgentsAndNodes",
 							"A format in which the acting Agent[s] and the target nodes affected are specified.");
-			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+			$priorityType = new Type("logging", "edu.middlebury", "Event_Notice",
 							"Normal events.");
 			
-			$item =& new AgentNodeEntryItem("Delete Node", "Exhibition deleted:\n<br/>&nbsp; &nbsp; &nbsp;".$asset->getDisplayName());
+			$item = new AgentNodeEntryItem("Delete Node", "Exhibition deleted:\n<br/>&nbsp; &nbsp; &nbsp;".$asset->getDisplayName());
 			$item->addNodeId($asset->getId());
 						
 			$log->appendLogWithTypes($item,	$formatType, $priorityType);

@@ -35,14 +35,14 @@ class editAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
-		$recStructFunctions =& $authZ->getFunctions(
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
+		$recStructFunctions =$authZ->getFunctions(
 								new Type (	"Authorization", 
 											"edu.middlebury.harmoni", 
 											"RecordStructures"));
 		while ($recStructFunctions->hasNext()) {
-			$function =& $recStructFunctions->next();
+			$function =$recStructFunctions->next();
 			if ($authZ->isUserAuthorized(
 					$function->getId(), 
 					$this->getRepositoryId()))
@@ -73,11 +73,11 @@ class editAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$centerPane =& $this->getActionRows();
-		$repositoryId =& $this->getRepositoryId();
-		$recordStructureId =& $this->getRecordStructureId();
+		$centerPane =$this->getActionRows();
+		$repositoryId =$this->getRepositoryId();
+		$recordStructureId =$this->getRecordStructureId();
 		$cacheName = 'edit_schema_wizard_'.$recordStructureId->getIdString();
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		$harmoni->request->passthrough("collection_id");
 		$harmoni->request->passthrough("recordstructure_id");
 		
@@ -92,7 +92,7 @@ class editAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$recordStructure =& $this->getRecordStructure();
+		$recordStructure =$this->getRecordStructure();
 		return _("Edit the <em>").$recordStructure->getDisplayName()._("</em> Schema");
 	}
 		
@@ -104,14 +104,14 @@ class editAction
 	 * @access public
 	 * @since 4/28/05
 	 */
-	function &createWizard () {
-		$repository =& $this->getRepository();
-		$repositoryId =& $repository->getId();
-		$recordStructure =& $this->getRecordStructure();
-		$recordStructureId =& $recordStructure->getId();
+	function createWizard () {
+		$repository =$this->getRepository();
+		$repositoryId =$repository->getId();
+		$recordStructure =$this->getRecordStructure();
+		$recordStructureId =$recordStructure->getId();
 		
-		$authZManager =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZManager = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		
 		$canModify = false;
 		$canModifyAuthorityList = false;
@@ -140,14 +140,14 @@ class editAction
 		
 		
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withDefaultLayout();
+		$wizard = SimpleStepWizard::withDefaultLayout();
 		
 		// :: Step One ::
-		$stepOne =& $wizard->addStep("namedesc", new WizardStep());
+		$stepOne =$wizard->addStep("namedesc", new WizardStep());
 		$stepOne->setDisplayName(_("Name & Description"));
 		
 		// Create the properties.
-		$displayNameProp =& $stepOne->addComponent("display_name",
+		$displayNameProp =$stepOne->addComponent("display_name",
 			new WTextField());
 		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$displayNameProp->setErrorText(_("A value for this property is required."));
@@ -156,14 +156,14 @@ class editAction
 		if (!$canModify)
 			$displayNameProp->setEnabled(false, true);
 		
-		$descriptionProp =& $stepOne->addComponent("description",
+		$descriptionProp =$stepOne->addComponent("description",
 			WTextArea::withRowsAndColumns(5, 30));
 		$descriptionProp->setValue($recordStructure->getDescription());
 		// Disable if unauthorized
 		if (!$canModify)
 			$descriptionProp->setEnabled(false, true);
 		
-		$formatProp =& $stepOne->addComponent("format",
+		$formatProp =$stepOne->addComponent("format",
 			new WTextField());
 		$formatProp->setValue("Plain Text - UTF-8 encoding");
 		$formatProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
@@ -200,7 +200,7 @@ class editAction
 			
 		
 	// :: Elements ::
-		$elementStep =& $wizard->addStep("elementstep",new WizardStep());
+		$elementStep =$wizard->addStep("elementstep",new WizardStep());
 		$elementStep->setDisplayName(_("Fields"));
 		ob_start();
 		print "<h2>"._("Fields")."</h2>";
@@ -211,18 +211,18 @@ class editAction
 		ob_end_clean();
 		
 	// Existing Elements
-		$multField =& $elementStep->addComponent("elements", new WOrderedRepeatableComponentCollection());
+		$multField =$elementStep->addComponent("elements", new WOrderedRepeatableComponentCollection());
 		$multField->setAddLabel(_("Add New Field"));
 		$multField->setRemoveLabel(_("Remove Field"));
 		// Disable if unauthorized
 		if (!$canModify)
 			$multField->setEnabled(false, true);
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"id", 
 			new WHiddenField());
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"display_name", 
 			new WTextField());
 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
@@ -231,7 +231,7 @@ class editAction
 		if (!$canModify)
 			$property->setEnabled(false, true);
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"description", 
 			WTextArea::withRowsAndColumns(2, 40));
 		// Disable if unauthorized
@@ -240,20 +240,20 @@ class editAction
 		
 		
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"type", 
 			new WSelectList());
-		$defaultType =& new Type ("Repository", "edu.middlebury.harmoni", "shortstring");
+		$defaultType = new Type ("Repository", "edu.middlebury.harmoni", "shortstring");
 		$property->setValue(urlencode(HarmoniType::typeToString($defaultType, " :: ")));
 		
 		// We are going to assume that all RecordStructures have the same PartStructureTypes
 		// in this Repository. This will allow us to list PartStructureTypes before
 		// the RecordStructure is actually created.
-		$recordStructures =& $repository->getRecordStructures();
+		$recordStructures =$repository->getRecordStructures();
 		if (!$recordStructures->hasNext())
 			throwError(new Error("No RecordStructures available.", "Concerto"));
 		
-		$dmpType =& new Type("RecordStructures", "edu.middlebury.harmoni", "DataManagerPrimatives", "RecordStructures stored in the Harmoni DataManager.");
+		$dmpType = new Type("RecordStructures", "edu.middlebury.harmoni", "DataManagerPrimatives", "RecordStructures stored in the Harmoni DataManager.");
 		$orderedTypes = array(
 			"Repository :: edu.middlebury.harmoni :: shortstring"	
 				=> _("Short String ----- text with max-length of 256 characters"),
@@ -276,11 +276,11 @@ class editAction
 		while ($recordStructures->hasNext()) {
 			// we want just the datamanager structure types, so just 
 			// get the first structure that has Format "DataManagerPrimatives"
-			$tmpRecordStructure =& $recordStructures->next();
+			$tmpRecordStructure =$recordStructures->next();
 			if ($dmpType->isEqual($tmpRecordStructure->getType())) {
-				$types =& $tmpRecordStructure->getPartStructureTypes();
+				$types =$tmpRecordStructure->getPartStructureTypes();
 				while ($types->hasNext()) {
-					$type =& $types->next();
+					$type =$types->next();
 					$typeString = Type::typeToString($type, " :: ");
 					if (!array_key_exists($typeString, $orderedTypes))
 						$unorderedTypes[$typeString] = $typeString;
@@ -295,9 +295,9 @@ class editAction
 			$property->addOption(urlencode($typeString), $desc);
 		}
 		
-		$property =& $multField->addComponent("orig_type", new WHiddenField());
+		$property =$multField->addComponent("orig_type", new WHiddenField());
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"mandatory", 
 			new WCheckBox());
 		$property->setChecked(false);
@@ -306,7 +306,7 @@ class editAction
 		if (!$canModify)
 			$property->setEnabled(false, true);
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"repeatable", 
 			new WCheckBox());
 // 		$property->setChecked(false);
@@ -316,7 +316,7 @@ class editAction
 			$property->setEnabled(false, true);
 		
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"authoritative_values", 
 			WTextArea::withRowsAndColumns(10, 40));
 		// Disable if unauthorized
@@ -324,7 +324,7 @@ class editAction
 			$property->setEnabled(false, true);
 		
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"autoGenTags", 
 			new WCheckBox());
 // 		$property->setChecked(false);
@@ -396,18 +396,18 @@ class editAction
 		// Add the existing Elements/PartStructures
 		// First load the ordered PartStructures, then the rest
 		$i = 0;
-		$setManager =& Services::getService("Sets");
-		$set =& $setManager->getPersistentSet($recordStructure->getId());
+		$setManager = Services::getService("Sets");
+		$set =$setManager->getPersistentSet($recordStructure->getId());
 		$set->reset();
 		while ($set->hasNext()) {
-			$partStructure =& $recordStructure->getPartStructure($set->next());
+			$partStructure =$recordStructure->getPartStructure($set->next());
 			$this->addPartStructureCollection($multField, $partStructure);
 			$i++;
 		}
 			
-		$partStructures =& $recordStructure->getPartStructures();
+		$partStructures =$recordStructure->getPartStructures();
 		while ($partStructures->hasNext()) {
-			$partStructure =& $partStructures->next();
+			$partStructure =$partStructures->next();
 			if (!$set->isInSet($partStructure->getId())) {
 				$this->addPartStructureCollection($multField, $partStructure);
 				$i++;
@@ -425,35 +425,35 @@ class editAction
 	 * @access public
 	 * @since 4/24/06
 	 */
-	function addPartStructureCollection ( &$multField, &$partStructure ) {
+	function addPartStructureCollection ( $multField, $partStructure ) {
 		$collection = array();
-		$partStructureId =& $partStructure->getId();
+		$partStructureId =$partStructure->getId();
 		$collection['id'] = $partStructureId->getIdString();
 		$collection['display_name'] = $partStructure->getDisplayName();
 		$collection['description'] = $partStructure->getDescription();
-		$type =& $partStructure->getType();
+		$type =$partStructure->getType();
 		$collection['type'] = urlencode(HarmoniType::typeToString($type, " :: "));
 		$collection['orig_type'] = urlencode(HarmoniType::typeToString($type, " :: "));
 		$collection['mandatory'] = $partStructure->isMandatory();
 		$collection['repeatable'] = $partStructure->isRepeatable();
 // 		$collection['populatedbydr'] = $partStructure->isPopulatedByRepository();
 		
-		$authoritativeValues =& $partStructure->getAuthoritativeValues();
+		$authoritativeValues =$partStructure->getAuthoritativeValues();
 		$collection['authoritative_values'] = '';
 		while ($authoritativeValues->hasNext()) {
-			$value =& $authoritativeValues->next();
+			$value =$authoritativeValues->next();
 			$collection['authoritative_values'] .= preg_replace('/[\n\r]/', '', 
 				$value->asString());
 			$collection['authoritative_values'] .= "\n";
 		}
 		
-		$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+		$tagGenerator = StructuredMetaDataTagGenerator::instance();
 		$collection['autoGenTags'] = $tagGenerator->shouldGenerateTagsForPartStructure(
 			$partStructure->getRepositoryId(), $partStructureId);
 			
 		// Allow conversion of the type if the user is authorized to convert_rec_structs
-		$authZManager =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZManager = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		if (preg_match("/^Repository::.+$/i", $partStructureId->getIdString()) 
 					&& $authZManager->isUserAuthorized(
 						$idManager->getId("edu.middlebury.authorization.convert_rec_struct"), 
@@ -468,7 +468,7 @@ class editAction
 						$idManager->getId("edu.middlebury.authorization.modify"), 
 						$idManager->getId("edu.middlebury.authorization.root"))))
 		{
-			$newCollection =& $multField->addValueCollection($collection, true);
+			$newCollection =$multField->addValueCollection($collection, true);
 			
 			// Allow conversion of type
 			$newCollection['type']->addConfirm(_("Are you sure that you want to change the type of this field?\\n\\nConverting ShortStrings to Strings is usually safe, but other conversion may cause data truncation or data loss if there are records for this collection that contain values that cannot be mapped directly to the new data type. Please consult the following guide.\\n\\n-- Safe Conversions --\\nShortString => String \\nShortString => Blob\\nString => Blob  \\nDateTime => ShortString \\nDateTime => String \\nInteger => ShortString \\nInteger => String  \\nFloat => ShortString \\nFloat => String  \\nOKI Type => ShortString \\nOKI Type => String \\n\\n\\n-- Conversions that may be truncated --\\nString => ShortString \\n\\n\\n-- Conversions that may or may not work --\\nShortString => DateTime \\nShortString => Integer \\nShortString => Float \\nShortString => OKI Type \\nString => DateTime \\nString => Integer \\nString => Float \\nString => OKI Type \\nBlob => ShortString \\nBlob => String"));
@@ -480,7 +480,7 @@ class editAction
 			if ($partStructure->isRepeatable())
 				$newCollection['repeatable']->addConfirm(_('Removing the the \\\'isRepeatable\\\' flag for this field may cause any existing repeatable values to become inaccessable or corrupted. Only remove this flag if you are absolutely sure that there are NO Assets that have multiple values for this field.\n\nAre you sure that you want to continue?'));
 		} else {
-			$newCollection =& $multField->addValueCollection($collection, false);
+			$newCollection =$multField->addValueCollection($collection, false);
 			
 			$newCollection['type']->setEnabled(false, true);
 			
@@ -506,7 +506,7 @@ class editAction
 	 * @since 4/28/05
 	 */
 	function saveWizard ( $cacheName ) {
-		$wizard =& $this->getWizard($cacheName);
+		$wizard =$this->getWizard($cacheName);
 		// If all properties validate then go through the steps nessisary to
 		// save the data.
 		if ($wizard->validate()) {
@@ -514,8 +514,8 @@ class editAction
 // 			printpre($properties);
 // 			exit;
 			
-			$repository =& $this->getRepository();
-			$recordStructure =& $this->getRecordStructure();
+			$repository =$this->getRepository();
+			$recordStructure =$this->getRecordStructure();
 			
 			if ($properties['namedesc']['display_name'] != $recordStructure->getDisplayName())
 				$recordStructure->updateDisplayName($properties['namedesc']['display_name']);
@@ -524,24 +524,24 @@ class editAction
 			if ($properties['namedesc']['format'] != $recordStructure->getFormat())
 				$recordStructure->updateFormat($properties['namedesc']['format']);
 
-			$recordStructureId =& $recordStructure->getId();
-			$idManager =& Services::getService("Id");
-			$authZManager =& Services::getService("AuthZ");
+			$recordStructureId =$recordStructure->getId();
+			$idManager = Services::getService("Id");
+			$authZManager = Services::getService("AuthZ");
 			
 			// Create a set for the RecordStructure
-			$setManager =& Services::getService("Sets");
-			$set =& $setManager->getPersistentSet($recordStructureId);
+			$setManager = Services::getService("Sets");
+			$set =$setManager->getPersistentSet($recordStructureId);
 
 			// Update the existing part structures
 			$i = 0;
 			$regenTags = false;
 			$existingPartStructureIds = array();
 			foreach (array_keys($properties['elementstep']['elements']) as $index) {
-				$partStructProps =& $properties['elementstep']['elements'][$index];
+				$partStructProps =$properties['elementstep']['elements'][$index];
 				
 				if ($partStructProps['id']) {
-					$partStructId =& $idManager->getId($partStructProps['id']);				
-					$partStruct =& $recordStructure->getPartStructure($partStructId);	
+					$partStructId =$idManager->getId($partStructProps['id']);				
+					$partStruct =$recordStructure->getPartStructure($partStructId);	
 					
 					if ($partStructProps['display_name'] != $partStruct->getDisplayName())
 						$partStruct->updateDisplayName($partStructProps['display_name']);
@@ -554,7 +554,7 @@ class editAction
 					
 					
 					// Data Type conversion
-					$type =& HarmoniType::fromString(urldecode(
+					$type = HarmoniType::fromString(urldecode(
 						$partStructProps['type']), " :: ");
 					if (!$type->isEqual($partStruct->getType())
 						&& (preg_match("/^Repository::.+$/i", $partStructId->getIdString()) 
@@ -571,7 +571,7 @@ class editAction
 								$idManager->getId("edu.middlebury.authorization.modify"), 
 								$idManager->getId("edu.middlebury.authorization.root")))))
 					{
-						$partStruct =& $recordStructure->convertPartStructureToType(
+						$partStruct =$recordStructure->convertPartStructureToType(
 							$partStructId, $type, 
 							new StatusStars("Converting data type for PartStructure: ".$partStruct->getDisplayName()));
 						// Remove the old value from the set
@@ -579,13 +579,13 @@ class editAction
 							$set->removeItem($partStructId);
 						
 						// Update the id to reflect the id of the new part
-						$partStructId =& $partStruct->getId();
+						$partStructId =$partStruct->getId();
 					}
 					
 				} else {
-					$type =& HarmoniType::fromString(urldecode(
+					$type = HarmoniType::fromString(urldecode(
 						$partStructProps['type']), " :: ");
-					$partStruct =& $recordStructure->createPartStructure(
+					$partStruct =$recordStructure->createPartStructure(
 									$partStructProps['display_name'],
 									$partStructProps['description'],
 									$type,
@@ -594,7 +594,7 @@ class editAction
 									FALSE
 									);
 					
-					$partStructId =& $partStruct->getId();
+					$partStructId =$partStruct->getId();
 				}
 				
 				// Authoritative values
@@ -604,9 +604,9 @@ class editAction
 					array_walk($authoritativeStrings, "removeExcessWhitespace");
 
 					// Remove and missing values
-					$authoritativeValues =& $partStruct->getAuthoritativeValues();
+					$authoritativeValues =$partStruct->getAuthoritativeValues();
 					while ($authoritativeValues->hasNext()) {
-						$value =& $authoritativeValues->next();
+						$value =$authoritativeValues->next();
 						if (!in_array($value->asString(), $authoritativeStrings))
 							$partStruct->removeAuthoritativeValue($value);
 					}
@@ -619,7 +619,7 @@ class editAction
 				//}
 				
 				// Auto-generation of tags
-				$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+				$tagGenerator = StructuredMetaDataTagGenerator::instance();
 				if ($partStructProps['autoGenTags']) {
 					if (!$tagGenerator->shouldGenerateTagsForPartStructure($partStruct->getRepositoryId(), $partStructId)) {
 						$tagGenerator->addPartStructureIdForTagGeneration($partStruct->getRepositoryId(), $partStructId);
@@ -657,10 +657,10 @@ class editAction
 						$idManager->getId("edu.middlebury.authorization.modify"), 
 						$idManager->getId("edu.middlebury.authorization.root")))))
 			{
-				$partStructs =& $recordStructure->getPartStructures();
+				$partStructs =$recordStructure->getPartStructures();
 				while ($partStructs->hasNext()) {
-					$partStruct =& $partStructs->next();
-					$partStructId =& $partStruct->getId();
+					$partStruct =$partStructs->next();
+					$partStructId =$partStruct->getId();
 					if (!array_key_exists($partStructId->getIdString(), $existingPartStructureIds)) {
 // 						printpre("Deleting PartStructure: ".$partStruct->getDisplayName()." Id: ".$partStructId->getIdString());
 						$recordStructure->deletePartStructure($partStructId);
@@ -672,22 +672,22 @@ class editAction
 			}
 			
 			if ($regenTags) {
-				$systemAgentId =& $idManager->getId('system:concerto');
-				$tagGenerator =& StructuredMetaDataTagGenerator::instance();	
+				$systemAgentId =$idManager->getId('system:concerto');
+				$tagGenerator = StructuredMetaDataTagGenerator::instance();	
 				$tagGenerator->regenerateTagsForRepository($partStruct->getRepositoryId(), $systemAgentId,
 					'concerto');
 			}
 			
 			// Log the success or failure
 			if (Services::serviceRunning("Logging")) {
-				$loggingManager =& Services::getService("Logging");
-				$log =& $loggingManager->getLogForWriting("Concerto");
-				$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+				$loggingManager = Services::getService("Logging");
+				$log =$loggingManager->getLogForWriting("Concerto");
+				$formatType = new Type("logging", "edu.middlebury", "AgentsAndNodes",
 								"A format in which the acting Agent[s] and the target nodes affected are specified.");
-				$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+				$priorityType = new Type("logging", "edu.middlebury", "Event_Notice",
 								"Normal events.");
 				
-				$item =& new AgentNodeEntryItem("Modify Node", "RecordStructure created:\n<br/>&nbsp; &nbsp; &nbsp; ".$recordStructure->getDisplayName());
+				$item = new AgentNodeEntryItem("Modify Node", "RecordStructure created:\n<br/>&nbsp; &nbsp; &nbsp; ".$recordStructure->getDisplayName());
 				$item->addNodeId($repository->getId());
 				
 				$log->appendLogWithTypes($item,	$formatType, $priorityType);
@@ -707,8 +707,8 @@ class editAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
-		$harmoni =& Harmoni::instance();
-		$recordStructureId =& $this->getRecordStructureId();
+		$harmoni = Harmoni::instance();
+		$recordStructureId =$this->getRecordStructureId();
 		
 		return $harmoni->history->getReturnURL(
 				"concerto/schema/edit-return/".$recordStructureId->getIdString());
@@ -724,6 +724,6 @@ class editAction
  * @access public
  * @since 4/26/06
  */
-function removeExcessWhitespace (&$string) {
+function removeExcessWhitespace ($string) {
 	$string = trim($string);
 }

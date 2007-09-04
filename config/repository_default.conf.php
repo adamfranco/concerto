@@ -16,7 +16,7 @@
 // :: Set up the RepositoryManager ::
 	$repositoryHierarchyId = "edu.middlebury.authorization.hierarchy";
 	define('REPOSITORY_ROOT_ID', "edu.middlebury.repositories_root");
-	$configuration =& new ConfigurationProperties;
+	$configuration = new ConfigurationProperties;
 	$configuration->addProperty('database_index', $dbID);
 	$configuration->addProperty('hierarchy_id', $repositoryHierarchyId);
 	$configuration->addProperty('default_parent_id', $arg1 = REPOSITORY_ROOT_ID);

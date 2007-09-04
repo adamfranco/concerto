@@ -54,12 +54,12 @@ class searchAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 
 		// Get the Repository
-		$repositoryManager =& Services::getService("Repository");
-		$idManager =& Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$idManager = Services::getService("Id");
 		
 		ob_start();
 		
@@ -76,29 +76,29 @@ class searchAction
 		ob_start();
 		
 		// Get all the drs and all of their search types
-		$searchModules =& Services::getService("RepositorySearchModules");
+		$searchModules = Services::getService("RepositorySearchModules");
 		$searchArray = array();
 		
-		$repositories =& $repositoryManager->getRepositories();
+		$repositories =$repositoryManager->getRepositories();
 		while ($repositories->hasNext()) {
-			$repository =& $repositories->next();
-			$searchTypes =& $repository->getSearchTypes();
+			$repository =$repositories->next();
+			$searchTypes =$repository->getSearchTypes();
 			while ($searchTypes->hasNext()) {
-				$searchType =& $searchTypes->next();
+				$searchType =$searchTypes->next();
 				
 				$typeString = HarmoniType::typeToString($searchType);
 				
 				if (!isset($searchArray[$typeString]))
-					$searchArray[$typeString] =& $searchType;
+					$searchArray[$typeString] =$searchType;
 			}
 		}
 		
 		// print out the types
 		foreach (array_keys($searchArray) as $typeString) {
-			$searchType =& $searchArray[$typeString];
+			$searchType =$searchArray[$typeString];
 			print "\n<h3>".$typeString."</h3>";
 			
-			$harmoni =& Harmoni::instance();
+			$harmoni = Harmoni::instance();
 			print "\n".$searchModules->createSearchForm($repository, $searchType, 
 				$harmoni->request->quickURL("collections", "searchresults",
 					array("search_type" => urlencode($typeString))));

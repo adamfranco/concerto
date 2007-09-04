@@ -34,8 +34,8 @@ class Update004_AssetCreatorAction
 	 * @access public
 	 * @since 7/9/07
 	 */
-	function &getDateIntroduced () {
-		$date =& Date::withYearMonthDay(2007, 7, 9);
+	function getDateIntroduced () {
+		$date = Date::withYearMonthDay(2007, 7, 9);
 		return $date;
 	}
 	
@@ -69,11 +69,11 @@ class Update004_AssetCreatorAction
 	 * @since 7/9/07
 	 */
 	function isInPlace () {
-		$dbc =& Services::getService('DatabaseManager');
+		$dbc = Services::getService('DatabaseManager');
 		$query = new GenericSQLQuery();
 		$query->addSQLQuery("DESCRIBE `dr_asset_info`");
-		$result =& $dbc->query($query);
-		$result =& $result->returnAsSelectQueryResult();
+		$result =$dbc->query($query);
+		$result =$result->returnAsSelectQueryResult();
 		
 		$exists = false;
 		while($result->hasMoreRows()) {
@@ -96,7 +96,7 @@ class Update004_AssetCreatorAction
 	 * @since 7/9/07
 	 */
 	function runUpdate () {
-		$dbc =& Services::getService('DatabaseManager');
+		$dbc = Services::getService('DatabaseManager');
 		
 		$query = new GenericSQLQuery();
 		$query->addSQLQuery("ALTER TABLE `dr_asset_info` ADD `creator` VARCHAR( 75 ) AFTER `create_timestamp`");

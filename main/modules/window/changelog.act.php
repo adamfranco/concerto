@@ -33,7 +33,7 @@ class changelogAction
 	 * @access public
 	 * @since 12/13/06
 	 */
-	function &execute () {
+	function execute () {
 		
 		switch (RequestContext::value('package')) {
 			case 'harmoni':
@@ -83,7 +83,7 @@ class changelogAction
 	 * @since 12/13/06
 	 */
 	function generateMenu ($currentPackage) {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		
 		$packages = array(
 			'concerto' 	=> 'Concerto Changelog',

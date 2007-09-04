@@ -43,8 +43,8 @@ class rss_latest_slideshowsAction
 	function isExecutionAuthorized () {
 		if (RequestContext::value('exhibition_id')) {
 			// Check for authorization
-			$authZManager =& Services::getService("AuthZ");
-			$idManager =& Services::getService("IdManager");
+			$authZManager = Services::getService("AuthZ");
+			$idManager = Services::getService("IdManager");
 			if ($authZManager->isUserAuthorized(
 						$idManager->getId("edu.middlebury.authorization.view"),
 						$idManager->getId(RequestContext::value('exhibition_id'))))
@@ -82,17 +82,17 @@ class rss_latest_slideshowsAction
 	 * @since 8/10/06
 	 */
 	function buildFeed () {
-		$harmoni =& Harmoni::instance();
-		$repositoryManager =& Services::getService('Repository');
-		$authZManager =& Services::getService("AuthZ");
- 		$idManager =& Services::getService("IdManager");
+		$harmoni = Harmoni::instance();
+		$repositoryManager = Services::getService('Repository');
+		$authZManager = Services::getService("AuthZ");
+ 		$idManager = Services::getService("IdManager");
  		
- 		$repositoryId =& $idManager->getId("edu.middlebury.concerto.exhibition_repository");
- 		$repository =& $repositoryManager->getRepository($repositoryId);
+ 		$repositoryId =$idManager->getId("edu.middlebury.concerto.exhibition_repository");
+ 		$repository =$repositoryManager->getRepository($repositoryId);
  		
  		if (RequestContext::value('exhibition_id')) {
- 			$exhibitionAssetId =& $idManager->getId(RequestContext::value('exhibition_id'));
- 			$exhibitionAsset =& $repository->getAsset($exhibitionAssetId);
+ 			$exhibitionAssetId =$idManager->getId(RequestContext::value('exhibition_id'));
+ 			$exhibitionAsset =$repository->getAsset($exhibitionAssetId);
  		} else {
  			$exhibitionAssetId = null;
  			$exhibitionAsset = null;
@@ -116,19 +116,19 @@ class rss_latest_slideshowsAction
 	 	
 	 	$this->setTitle($title);
 		
-		$slideshowAssets =& $this->getAssets($repository);
+		$slideshowAssets =$this->getAssets($repository);
 		$i = 0;
-		$exhibitionAssetType =& new Type("Asset Types", "edu.middlebury.concerto", "Exhibition");
+		$exhibitionAssetType = new Type("Asset Types", "edu.middlebury.concerto", "Exhibition");
 		while ($slideshowAssets->hasNext() && $i < 20) {
-			$slideshowAsset =& $slideshowAssets->next();
-			$slideshowAssetId =& $slideshowAsset->getId();
+			$slideshowAsset =$slideshowAssets->next();
+			$slideshowAssetId =$slideshowAsset->getId();
 			
 			// Limit to only one exhibition if necessary
 			$include = true;
 			if (is_object($exhibitionAssetId)) {
-				$parents =& $slideshowAsset->getParents();
+				$parents =$slideshowAsset->getParents();
 				while ($parents->hasNext()) {
-					$parent =& $parents->next();
+					$parent =$parents->next();
 					if ($exhibitionAssetType->isEqual($parent->getAssetType())
 						&& !$exhibitionAssetId->isEqual($parent->getId()))
 					{
@@ -156,10 +156,10 @@ class rss_latest_slideshowsAction
 	 * @access public
 	 * @since 8/10/06
 	 */
-	function &getAssets (&$repository) {
-		$searchModuleManager =& Services::getService("RepositorySearchModules");		
+	function getAssets ($repository) {
+		$searchModuleManager = Services::getService("RepositorySearchModules");		
 		
-		$searchProperties =& new HarmoniProperties(
+		$searchProperties = new HarmoniProperties(
 					Type::fromString("repository::harmoni::order"));
 		if (RequestContext::value('order') == 'modification')
 			$searchProperties->addProperty("order", $arg0 = 'ModificationDate');
@@ -171,7 +171,7 @@ class rss_latest_slideshowsAction
 			new Type("Asset Types", "edu.middlebury.concerto", "Slideshow")));
 					
 		
-		$assets =& $repository->getAssetsBySearch(
+		$assets =$repository->getAssetsBySearch(
 				$criteria = '*',
 				new Type(	"Repository",
 							"edu.middlebury.harmoni",
@@ -190,12 +190,12 @@ class rss_latest_slideshowsAction
 	 * @access public
 	 * @since 8/8/06
 	 */
-	function &getAssetItem (&$asset) {
-		$harmoni =& Harmoni::instance();
-		$idManager =& Services::getService("IdManager");
-		$assetId =& $asset->getId();
+	function getAssetItem ($asset) {
+		$harmoni = Harmoni::instance();
+		$idManager = Services::getService("IdManager");
+		$assetId =$asset->getId();
 		
-		$item =& new RSSItem;
+		$item = new RSSItem;
 		
 		$item->setTitle($asset->getDisplayName());
 		$item->addCategory("Slideshow");
@@ -208,24 +208,24 @@ class rss_latest_slideshowsAction
 		/*********************************************************
 		 * Get number of slides and first thumbnail.
 		 *********************************************************/	
-		$slides =& $asset->getAssets();
+		$slides =$asset->getAssets();
 		$count = 0;
 		while ($slides->hasNext()) {
-			$slideAsset =& $slides->next();
+			$slideAsset =$slides->next();
 			$count++;
 			
 			if (!isset($firstMediaUrl)) {
-				$slideRecords =& $slideAsset->getRecordsByRecordStructure(
+				$slideRecords =$slideAsset->getRecordsByRecordStructure(
 					$idManager->getId(
 						"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure"));
 				if ($slideRecords->hasNext()) {
-					$slideRecord =& $slideRecords->next();
+					$slideRecord =$slideRecords->next();
 					// Media
-					$mediaIdStringObj =& $this->getFirstPartValueFromRecord(
+					$mediaIdStringObj =$this->getFirstPartValueFromRecord(
 							"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id",
 						$slideRecord);
 					if (strlen($mediaIdStringObj->asString())) {
-						$mediaId =& $idManager->getId($mediaIdStringObj->asString());
+						$mediaId =$idManager->getId($mediaIdStringObj->asString());
 						$firstMediaUrl = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($mediaId);
 					}
 				}
@@ -256,16 +256,16 @@ class rss_latest_slideshowsAction
 	 * @access public
 	 * @since 9/28/05
 	 */
-	function &getFirstPartValueFromRecord ( $partStructIdString, &$record ) {
-		$idManager =& Services::getService("Id");
+	function getFirstPartValueFromRecord ( $partStructIdString, $record ) {
+		$idManager = Services::getService("Id");
 		
-		$parts =& $record->getPartsByPartStructure(
+		$parts =$record->getPartsByPartStructure(
 			$idManager->getId($partStructIdString));
 		
 		if ($parts->hasNext()) {
-			$part =& $parts->next();
+			$part =$parts->next();
 			if (is_object($part->getValue()))
-				$value =& $part->getValue();
+				$value =$part->getValue();
 			else
 				$value = $part->getValue();
 		} else {

@@ -33,8 +33,8 @@ class browsetypeAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorizedBelow(
 					$idManager->getId("edu.middlebury.authorization.view"), 
 					$this->getRepositoryId());
@@ -59,7 +59,7 @@ class browsetypeAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$repository =& $this->getRepository();
+		$repository =$this->getRepository();
 		return _("Browse Assets in the")
 			." <em>".$repository->getDisplayName()."</em> "
 			._(" Collection");
@@ -73,52 +73,52 @@ class browsetypeAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();		
-		$repository =& $this->getRepository();
+		$actionRows =$this->getActionRows();		
+		$repository =$this->getRepository();
 
 		// The type
-		$type =& HarmoniType::fromString(urldecode(RequestContext::value('type')));
+		$type = HarmoniType::fromString(urldecode(RequestContext::value('type')));
 		
 		// function links
 		ob_start();
 		print _("Collection").": ";
 		RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
-		$layout =& new Block(ob_get_contents(), 2);
+		$layout = new Block(ob_get_contents(), 2);
 		ob_end_clean();
 		$actionRows->add($layout, null, null, CENTER, CENTER);
 		
 		// Get the assets to display
-		$assets =& $repository->getAssetsByType($type);
+		$assets =$repository->getAssetsByType($type);
 		
 		// print the results
-		$resultPrinter =& new IteratorResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
-		$resultLayout =& $resultPrinter->getLayout("canView");
+		$resultPrinter = new IteratorResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
+		$resultLayout =$resultPrinter->getLayout("canView");
 		$actionRows->add($resultLayout, null, null, CENTER, CENTER);
 	}
 }
 
 // Callback function for printing Assets
-function printAssetShort(& $asset, & $harmoni) {
+function printAssetShort($asset, $harmoni) {
 	ob_start();
 	
-	$assetId =& $asset->getId();
+	$assetId =$asset->getId();
 	print  "\n\t<strong>".$asset->getDisplayName()."</strong> - "._("ID#").": ".
 			$assetId->getIdString();
-	$description =& HtmlString::withValue($asset->getDescription());
+	$description = HtmlString::withValue($asset->getDescription());
 	$description->trim(25);
 	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	
 	
 	AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
 	
-	$layout =& new Block(ob_get_contents(), 4);
+	$layout = new Block(ob_get_contents(), 4);
 	ob_end_clean();
 	return $layout;
 }
 
 // Callback function for checking authorizations
-function canView( & $asset ) {
-	$authZ =& Services::getService("AuthZ");
-	$idManager =& Services::getService("Id");
+function canView( $asset ) {
+	$authZ = Services::getService("AuthZ");
+	$idManager = Services::getService("Id");
 	
 	if ($authZ->isUserAuthorizedBelow($idManager->getId("edu.middlebury.authorization.view"), $asset->getId())
 		|| $authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))

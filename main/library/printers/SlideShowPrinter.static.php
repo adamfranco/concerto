@@ -37,15 +37,15 @@ class SlideShowPrinter {
 	 * @access public
 	 * @date 8/6/04
 	 */
-	function printFunctionLinks (&$asset, $repositoryId = NULL) {
-		$harmoni =& Harmoni::instance();
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+	function printFunctionLinks ($asset, $repositoryId = NULL) {
+		$harmoni = Harmoni::instance();
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		
-		$assetId =& $asset->getId();
+		$assetId =$asset->getId();
 		if ($repositoryId === NULL) {
-			$repository =& $asset->getRepository();
-			$repositoryId =& $repository->getId();
+			$repository =$asset->getRepository();
+			$repositoryId =$repository->getId();
 		}
 		
 		$links = array();
@@ -79,14 +79,14 @@ class SlideShowPrinter {
 			
 			// Add the options panel script to the header
 			if (!defined('ASSET_PANEL_LOADED')) {
-				$outputHandler =& $harmoni->getOutputHandler();
+				$outputHandler =$harmoni->getOutputHandler();
 				$outputHandler->setHead($outputHandler->getHead()
 				."\n\t\t<script type='text/javascript' src='".MYPATH."/javascript/AssetOptionsPanel.js'></script>"
 				."\n\t\t<link rel='stylesheet' type='text/css' href='".MYPATH."/javascript/AssetOptionsPanel.css' />");
 				define('ASSET_PANEL_LOADED', true);
 			}
 			if (!defined('SLIDESHOW_PANEL_LOADED')) {
-				$outputHandler =& $harmoni->getOutputHandler();
+				$outputHandler =$harmoni->getOutputHandler();
 				$outputHandler->setHead($outputHandler->getHead()
 				."\n\t\t<script type='text/javascript' src='".MYPATH."/javascript/SlideshowOptionsPanel.js'></script>");
 				define('SLIDESHOW_PANEL_LOADED', true);
@@ -97,9 +97,9 @@ class SlideShowPrinter {
 			$viewerUrl .= urlencode($harmoni->request->quickURL("exhibitions", "slideshowOutlineXml", array("slideshow_id" => $assetId->getIdString())));
 // 			$viewerUrl .= '&amp;start='.$xmlStart;
 			
-			$parents =& $asset->getParents();
-			$exhibition =& $parents->next();
-			$exhibitionId =& $exhibition->getId();
+			$parents =$asset->getParents();
+			$exhibition =$parents->next();
+			$exhibitionId =$exhibition->getId();
 			
 			print "<a href='#' onclick=\"Javascript:SlideshowOptionsPanel.run('".$exhibitionId->getIdString()."', '".$assetId->getIdString()."', this, [";
 			$toShow = array();
@@ -206,11 +206,11 @@ class SlideShowPrinter {
 		
 		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $asset->getId())) {
 			if ($actionString != "exhibitions.browse_slideshow") {
-				$setManager =& Services::getService("Sets");
-				$parents =& $asset->getParents();
-				$exhibition =& $parents->next();
-				$exhibitionId =& $exhibition->getId();
-				$exhibitionSet =& $setManager->getPersistentSet($exhibitionId);
+				$setManager = Services::getService("Sets");
+				$parents =$asset->getParents();
+				$exhibition =$parents->next();
+				$exhibitionId =$exhibition->getId();
+				$exhibitionSet =$setManager->getPersistentSet($exhibitionId);
 				$position = $exhibitionSet->getPosition($assetId);
 				
 				$url = $harmoni->request->quickURL(

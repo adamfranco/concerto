@@ -32,9 +32,9 @@ class slideshowOutlineXmlAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can create an asset here.
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
-		$harmoni =& Harmoni::Instance();
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
+		$harmoni = Harmoni::Instance();
 // 		$harmoni->request->startNamespace("modify_slideshow");
 
 		$return = $authZ->isUserAuthorized(
@@ -90,7 +90,7 @@ END;
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$slideshowAsset =& $this->getAsset();
+		$slideshowAsset =$this->getAsset();
 		return _("View the")
 			." <em>".$slideshowAsset->getDisplayName()."</em> "
 			._(" Slideshow");
@@ -103,9 +103,9 @@ END;
 	 * @access public
 	 * @since 5/4/06
 	 */
-	function &getRepository () {
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");		
+	function getRepository () {
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");		
 		return $repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
@@ -118,10 +118,10 @@ END;
 	 * @access public
 	 * @since 5/4/06
 	 */
-	function &getAsset () {
-		$idManager =& Services::getService("Id");
-		$slideshowId =& $idManager->getId(RequestContext::value('slideshow_id'));
-		$repository =& $this->getRepository();
+	function getAsset () {
+		$idManager = Services::getService("Id");
+		$slideshowId =$idManager->getId(RequestContext::value('slideshow_id'));
+		$repository =$this->getRepository();
 		return $repository->getAsset($slideshowId);
 	}
 	
@@ -133,10 +133,10 @@ END;
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$harmoni =& Harmoni::instance();
-		$idManager =& Services::getService("Id");
+		$harmoni = Harmoni::instance();
+		$idManager = Services::getService("Id");
 	
-		$slideshowAsset =& $this->getAsset();
+		$slideshowAsset =$this->getAsset();
 		
 		/*********************************************************
 		 * First print the header, then the xml content, then exit before
@@ -161,20 +161,20 @@ END;
 		
 		print "\t<default_size>medium</default_size>\n";
 		
-		$setManager =& Services::getService("Sets");
-		$slideshowSet =& $setManager->getPersistentSet($slideshowAsset->getId());
-		$slideIterator =& $slideshowAsset->getAssets();
+		$setManager = Services::getService("Sets");
+		$slideshowSet =$setManager->getPersistentSet($slideshowAsset->getId());
+		$slideIterator =$slideshowAsset->getAssets();
 		$orderedSlides = array();
 		$unorderedSlides = array();
 		
 		while ($slideIterator->hasNext()) {
-			$slideAsset =& $slideIterator->next();
-			$slideAssetId =& $slideAsset->getId();
+			$slideAsset =$slideIterator->next();
+			$slideAssetId =$slideAsset->getId();
 			
 			if ($slideshowSet->isInSet($slideAssetId))
-				$orderedSlides[$slideshowSet->getPosition($slideAssetId)] =& $slideAsset;
+				$orderedSlides[$slideshowSet->getPosition($slideAssetId)] =$slideAsset;
 			else
-				$unorderedSlides[] =& $slideAsset;
+				$unorderedSlides[] =$slideAsset;
 		}
 		ksort($orderedSlides);
 		$slides = array_merge($orderedSlides, $unorderedSlides);
@@ -196,34 +196,34 @@ END;
 	 * @access public
 	 * @since 9/28/05
 	 */
-	function printSlide ( &$slideAsset ) {
-		$assetId =& $slideAsset->getId();
-		$harmoni =& Harmoni::instance();
-		$idManager =& Services::getService("Id");
+	function printSlide ( $slideAsset ) {
+		$assetId =$slideAsset->getId();
+		$harmoni = Harmoni::instance();
+		$idManager = Services::getService("Id");
 		
 		// Get our record and its data
-		$slideRecords =& $slideAsset->getRecordsByRecordStructure(
+		$slideRecords =$slideAsset->getRecordsByRecordStructure(
 			$idManager->getId("Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure"));
 		
 		if ($slideRecords->hasNext()) {
-			$slideRecord =& $slideRecords->next();
+			$slideRecord =$slideRecords->next();
 			
 			// Text-Position
-			$textPosition =& $this->getFirstPartValueFromRecord(
+			$textPosition =$this->getFirstPartValueFromRecord(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position",
 				$slideRecord);
 			
 			// Display Metadata
-			$displayMetadata =& $this->getFirstPartValueFromRecord(
+			$displayMetadata =$this->getFirstPartValueFromRecord(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata",
 				$slideRecord);
 			
 			// Media
-			$mediaIdStringObj =& $this->getFirstPartValueFromRecord(
+			$mediaIdStringObj =$this->getFirstPartValueFromRecord(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id",
 				$slideRecord);
 			if (strlen($mediaIdStringObj->asString()))
-				$mediaId =& $idManager->getId($mediaIdStringObj->asString());
+				$mediaId =$idManager->getId($mediaIdStringObj->asString());
 			else
 				$mediaId = null;
 		}

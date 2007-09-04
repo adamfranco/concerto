@@ -34,8 +34,8 @@ class browseAssetAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorizedBelow(
 					$idManager->getId("edu.middlebury.authorization.view"), 
 					$this->getAssetId());
@@ -60,7 +60,7 @@ class browseAssetAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$asset =& $this->getAsset();
+		$asset =$this->getAsset();
 		return _("Browsing")." <em>".$asset->getDisplayName()."</em> ";
 	}
 	
@@ -73,7 +73,7 @@ class browseAssetAction
 	 * @since 5/11/06
 	 */
 	function registerState () {
-		$this->_state =& $this->getState($this->getAssetId());
+		$this->_state =$this->getState($this->getAssetId());
 				
 		// unset our starting number if we have the new search terms
 		if (RequestContext::value('form_submitted')
@@ -99,11 +99,11 @@ class browseAssetAction
 	function buildContent () {
 		$this->init();
 		
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 		
-		$asset =& $this->getAsset();
-		$assetId =& $asset->getId();
+		$asset =$this->getAsset();
+		$assetId =$asset->getId();
 
 		// function links
 		ob_start();
@@ -120,7 +120,7 @@ class browseAssetAction
 		}
 		
 		if ($asset->getDescription()) {
-			$description =& HtmlString::withValue($asset->getDescription());
+			$description = HtmlString::withValue($asset->getDescription());
 			$description->clean();
 			print "\n\t\t<dt style='font-weight: bold;'>"._("Description:")."</dt>";
 			print "\n\t\t<dd>".$description->asString()."</dd>";
@@ -181,7 +181,7 @@ class browseAssetAction
 		}
 		
 		// Add the tagging manager script to the header
-		$outputHandler =& $harmoni->getOutputHandler();
+		$outputHandler =$harmoni->getOutputHandler();
 		$outputHandler->setHead($outputHandler->getHead()
 			."\n\t\t<script type='text/javascript' src='".POLYPHONY_PATH."javascript/Tagger.js'></script>"
 			."\n\t\t<link rel='stylesheet' type='text/css' href='".POLYPHONY_PATH."javascript/Tagger.css' />");
@@ -198,32 +198,32 @@ class browseAssetAction
 		ob_end_clean();
 		
 		
-		$searchBar =& new Container(new YLayout(), BLOCK, STANDARD_BLOCK);
+		$searchBar = new Container(new YLayout(), BLOCK, STANDARD_BLOCK);
 		$actionRows->add($searchBar, "100%", null, CENTER, CENTER);
 		
 		
 		//***********************************
 		// Get the assets to display
 		//***********************************
-		$assets =& $asset->getAssets();
+		$assets =$asset->getAssets();
 		
 		$tmpAssets = array();
 		while ($assets->hasNext()) {
-			$asset =& $assets->next();
+			$asset =$assets->next();
 			switch($_SESSION["asset_order"]) {
 				case 'DisplayName':
 					$assetKey = $asset->getDisplayName();					
 					break;
 				case 'Id':
-					$id =& $asset->getId();
+					$id =$asset->getId();
 					$assetKey = $id->getIdString();
 					break;
 				case 'ModificationDate':
-					$date =& $asset->getModificationDate();
+					$date =$asset->getModificationDate();
 					$assetKey = $date->asString();
 					break;
 				case 'CreationDate':
-					$date =& $asset->getCreationDate();
+					$date =$asset->getCreationDate();
 					$assetKey = $date->asString();
 					break;
 				default:
@@ -232,7 +232,7 @@ class browseAssetAction
 			$i = 0;
 			while (isset($tmpAssets[$assetKey."_".$i]))
 				$i++;
-			$tmpAssets[$assetKey."_".$i] =& $asset;
+			$tmpAssets[$assetKey."_".$i] =$asset;
 		}
 		
 		if ($_SESSION["asset_order_direction"] == 'ASC')
@@ -243,13 +243,13 @@ class browseAssetAction
 		//***********************************
 		// print the results
 		//***********************************
-		$resultPrinter =& new ArrayResultPrinter($tmpAssets, 
+		$resultPrinter = new ArrayResultPrinter($tmpAssets, 
 									$_SESSION["asset_columns"], 
 									$_SESSION["assets_per_page"], 
 									"printAssetShort", $this->getParams());
 		$resultPrinter->setStartingNumber($this->_state['startingNumber']);
 		
-		$resultLayout =& $resultPrinter->getLayout("canView");
+		$resultLayout =$resultPrinter->getLayout("canView");
 		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
 		$resultLayout->setPostHTML("</form>");
 		
@@ -260,7 +260,7 @@ class browseAssetAction
 		/*********************************************************
 		 * Display options
 		 *********************************************************/
-		$currentUrl =& $harmoni->request->mkURL();	
+		$currentUrl =$harmoni->request->mkURL();	
 		$searchBar->setPreHTML(
 			"\n<form action='".$currentUrl->write()."' method='post'>
 	<input type='hidden' name='".RequestContext::name('form_submitted')."' value='true'/>");

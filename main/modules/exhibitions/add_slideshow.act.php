@@ -33,8 +33,8 @@ class add_slideshowAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can create an asset here.
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		
 		return $authZ->isUserAuthorized(
 			$idManager->getId("edu.middlebury.authorization.add_children"),
@@ -60,12 +60,12 @@ class add_slideshowAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
-		$asset =& $repository->getAsset(
+		$asset =$repository->getAsset(
 				$idManager->getId(RequestContext::value('exhibition_id')));
 		return _("Add a SlideShow to the")." <em>".$asset->getDisplayName()."</em> "._("Exhibition");
 	}
@@ -78,15 +78,15 @@ class add_slideshowAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		$harmoni->request->passthrough("exhibition_id");
 		$harmoni->request->passthrough('collection_id');
 		$harmoni->request->passthrough('asset_id');
 		
-		$actionRows =& $this->getActionRows();
+		$actionRows =$this->getActionRows();
 		
-		$idManager =& Services::getService("Id");
-		$exhibitionAssetId =& $idManager->getId(RequestContext::value('exhibition_id'));
+		$idManager = Services::getService("Id");
+		$exhibitionAssetId =$idManager->getId(RequestContext::value('exhibition_id'));
 		
 		$cacheName = 'add_slideshow_wizard_'.$exhibitionAssetId->getIdString();
 		
@@ -101,31 +101,31 @@ class add_slideshowAction
 	 * @access public
 	 * @since 4/28/05
 	 */
-	function &createWizard () {
-		$harmoni =& Harmoni::instance();
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
+	function createWizard () {
+		$harmoni = Harmoni::instance();
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
-		$exhibitionAsset =& $repository->getAsset(
+		$exhibitionAsset =$repository->getAsset(
 				$idManager->getId(RequestContext::value('exhibition_id')));
 		
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withDefaultLayout();
+		$wizard = SimpleStepWizard::withDefaultLayout();
 		
 		// :: Name and Description ::
-		$step =& $wizard->addStep("namedescstep", new WizardStep());
+		$step =$wizard->addStep("namedescstep", new WizardStep());
 		$step->setDisplayName(_("Title &amp; Description"));
 		
 		// Create the properties.
-		$displayNameProp =& $step->addComponent("display_name", new WTextField());
+		$displayNameProp =$step->addComponent("display_name", new WTextField());
 		$displayNameProp->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 	// 	$displayNameProp->setDefaultValue(_("Default Asset Name"));
 //		$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
 		
-		$descriptionProp =& $step->addComponent("description", WTextArea::withRowsAndColumns(5,30));
+		$descriptionProp =$step->addComponent("description", WTextArea::withRowsAndColumns(5,30));
 	// 	$descriptionProp->setDefaultValue(_("Default Asset description."));
 		
 		// Create the step text
@@ -143,26 +143,26 @@ class add_slideshowAction
 		
 		
 		// :: Slides ::
-		$slideStep =& $wizard->addStep("slidestep",new WizardStep());
+		$slideStep =$wizard->addStep("slidestep",new WizardStep());
 		$slideStep->setDisplayName(_("Slides"));
 		
-		$multField =& $slideStep->addComponent("slides", 
+		$multField =$slideStep->addComponent("slides", 
 						new SlideOrderedRepeatableComponentCollection());
 		$multField->setStartingNumber(0);
 		$multField->setRemoveLabel(_("Remove Slide"));
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"title", 
 			new WTextField());
 		$property->setSize(20);
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"caption", 
 			WTextArea::withRowsAndColumns(5, 30));
 		
 		
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"text_position", 
 			new WSelectList());
 		$property->setValue("right");
@@ -175,7 +175,7 @@ class add_slideshowAction
 		$property->addOption("center", _("text centered (no-media)"));
 		
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"show_target_metadata", 
 			new WCheckBox());
 		$property->setChecked(false);
@@ -223,15 +223,15 @@ class add_slideshowAction
 		
 		
 		// :: Effective/Expiration Dates ::
-// 		$step =& $wizard->addStep("datestep", new WizardStep());
+// 		$step =$wizard->addStep("datestep", new WizardStep());
 // 		$step->setDisplayName(_("Effective Dates")." ("._("optional").")");
 // 		
 // 		// Create the properties.
-// 		$property =& $step->addComponent("effective_date", new WTextField());
+// 		$property =$step->addComponent("effective_date", new WTextField());
 // 	//	$property->setDefaultValue();
 // //		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
 // 	
-// 		$property =& $step->addComponent("expiration_date", new WTextField());
+// 		$property =$step->addComponent("expiration_date", new WTextField());
 // 	//	$property->setDefaultValue();
 // //		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
 // 		
@@ -262,21 +262,21 @@ class add_slideshowAction
 	 * @since 4/28/05
 	 */
 	function saveWizard ( $cacheName ) {
-		$wizard =& $this->getWizard($cacheName);
+		$wizard =$this->getWizard($cacheName);
 		
 		// Make sure we have a valid Repository
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
-		$exhibitionAsset =& $repository->getAsset(
+		$exhibitionAsset =$repository->getAsset(
 				$idManager->getId(RequestContext::value('exhibition_id')));
 		
 		$properties = $wizard->getAllValues();
 		
-		$status =& new StatusStars(_("Saving Slideshow"));
+		$status = new StatusStars(_("Saving Slideshow"));
 		$status->initializeStatistics(count($properties['slidestep']['slides']) + 2);
 		
 		// First, verify that we chose a parent that we can add children to.
@@ -291,13 +291,13 @@ class add_slideshowAction
 										"Slide-Shows are ordered collections of slides that contain captions and may reference media Assets.");
 			
 			
-			$slideshowAsset =& $repository->createAsset(
+			$slideshowAsset =$repository->createAsset(
 										$properties['namedescstep']['display_name'], 
 										$properties['namedescstep']['description'], 
 										$slideshowAssetType);
 										
-			$slideshowAssetId =& $slideshowAsset->getId();
-			$this->_slideshowAssetId =& $slideshowAssetId;
+			$slideshowAssetId =$slideshowAsset->getId();
+			$this->_slideshowAssetId =$slideshowAssetId;
 			
 			// Update the effective/expiration dates
 // 			if ($properties['datestep']['effective_date'])
@@ -315,17 +315,17 @@ class add_slideshowAction
 										"edu.middlebury.concerto", 
 										"Slide", 
 										"Slides are components of Slide-Shows that contain captions and may reference media Assets.");
-			$slideRecordStructId =& $idManager->getId(
+			$slideRecordStructId =$idManager->getId(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure");
-			$targetIdPartStructId =& $idManager->getId(
+			$targetIdPartStructId =$idManager->getId(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id");
-			$textPositionPartStructId =& $idManager->getId(
+			$textPositionPartStructId =$idManager->getId(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position");
-			$displayMetadataPartStructId =& $idManager->getId(
+			$displayMetadataPartStructId =$idManager->getId(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata");
 				
-			$setManager =& Services::getService("Sets");
-			$slideOrder =& $setManager->getPersistentSet($slideshowAssetId);
+			$setManager = Services::getService("Sets");
+			$slideOrder =$setManager->getPersistentSet($slideshowAssetId);
 			$status->updateStatistics();
 			
 			foreach ($properties['slidestep']['slides'] as $slideProperties) {
@@ -358,16 +358,16 @@ class add_slideshowAction
 
 				
 				// ---- Create the asset ----
-				$slideAsset =& $repository->createAsset(
+				$slideAsset =$repository->createAsset(
 										$title, 
 										$caption, 
 										$slideAssetType);
-				$slideAssetId =& $slideAsset->getId();
+				$slideAssetId =$slideAsset->getId();
 				$slideshowAsset->addAsset($slideAssetId);
 				$slideOrder->addItem($slideAssetId);
 				
 				// ---- Set the additional info ----
-				$slideRecord =& $slideAsset->createRecord($slideRecordStructId);
+				$slideRecord =$slideAsset->createRecord($slideRecordStructId);
 				$slideRecord->createPart($textPositionPartStructId, $textPosition);
 				$slideRecord->createPart($displayMetadataPartStructId, $displayMetadata);
 				$slideRecord->createPart($targetIdPartStructId, $targetId);
@@ -377,14 +377,14 @@ class add_slideshowAction
 			
 			// Log the success or failure
 			if (Services::serviceRunning("Logging")) {
-				$loggingManager =& Services::getService("Logging");
-				$log =& $loggingManager->getLogForWriting("Concerto");
-				$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+				$loggingManager = Services::getService("Logging");
+				$log =$loggingManager->getLogForWriting("Concerto");
+				$formatType = new Type("logging", "edu.middlebury", "AgentsAndNodes",
 								"A format in which the acting Agent[s] and the target nodes affected are specified.");
-				$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+				$priorityType = new Type("logging", "edu.middlebury", "Event_Notice",
 								"Normal events.");
 				
-				$item =& new AgentNodeEntryItem("Create Node", "Slideshow added");
+				$item = new AgentNodeEntryItem("Create Node", "Slideshow added");
 				$item->addNodeId($slideshowAssetId);
 				$item->addNodeId($exhibitionAsset->getId());
 				
@@ -410,8 +410,8 @@ class add_slideshowAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
-		$harmoni =& Harmoni::instance();
-		$url =& $harmoni->request->mkURL("exhibitions", "browse_exhibition");
+		$harmoni = Harmoni::instance();
+		$url =$harmoni->request->mkURL("exhibitions", "browse_exhibition");
 		return $url->write();
 	}
 }

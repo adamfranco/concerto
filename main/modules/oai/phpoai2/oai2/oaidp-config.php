@@ -42,8 +42,8 @@
 */
 
 require_once(dirname(__FILE__)."/../../OAI.class.php");
-$harmoni =& Harmoni::instance();
-$config =& $harmoni->getAttachedData('OAI_CONFIG');
+$harmoni = Harmoni::instance();
+$config =$harmoni->getAttachedData('OAI_CONFIG');
 
 // To install, test and debug use this	
 // If set to TRUE, will die and display query and database error message
@@ -213,15 +213,15 @@ function getOaiSetArray ($db) {
 		}
 	}
 	
-	$repositoryManager =& Services::getService('Repository');
-	$idManager =& Services::getService('Id');
+	$repositoryManager = Services::getService('Repository');
+	$idManager = Services::getService('Id');
 	
 	$sets = array();
 	while ($row = $res->fetchRow(DB_FETCHMODE_ASSOC)) {
 		$set = array();
 		$set['setSpec'] = $row['oai_set'];
-		$id =& $idManager->getId($row['oai_set']);
-		$repository =& $repositoryManager->getRepository($id);
+		$id =$idManager->getId($row['oai_set']);
+		$repository =$repositoryManager->getRepository($id);
 		$set['setName'] = $repository->getDisplayName();
 		$set['setDescription'] = $repository->getDescription();
 		$sets[] = $set;

@@ -14,7 +14,7 @@
  */
  
 // :: Set up the AgentManager ::
-	$configuration =& new ConfigurationProperties;
+	$configuration = new ConfigurationProperties;
 	// default agent Flavor is one that can be editted
 	$agentFlavor="HarmoniEditableAgent";
 	$agentHierarchyId = "edu.middlebury.authorization.hierarchy";

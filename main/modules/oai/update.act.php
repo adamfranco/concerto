@@ -42,8 +42,8 @@ class updateAction
 	 * @since 4/26/05
 	 */
 	function execute () {
-		$harmoni =& Harmoni::instance();
-		$config =& $harmoni->getAttachedData('OAI_CONFIG');
+		$harmoni = Harmoni::instance();
+		$config =$harmoni->getAttachedData('OAI_CONFIG');
 		
 		if (!defined('OAI_UPDATE_OUTPUT_HTML')) {
 			define("OAI_UPDATE_OUTPUT_HTML", TRUE);
@@ -55,7 +55,7 @@ class updateAction
 		$harvesterConfig = $config->getProperty('OAI_HARVESTER_CONFIG');
 		
 		if (!isset($_SESSION['oai_table_setup_complete'])) {
-			$dbc =& Services::getService("DatabaseManager");
+			$dbc = Services::getService("DatabaseManager");
 			$tables = $dbc->getTableList($config->getProperty('OAI_DBID'));
 			
 			foreach ($harvesterConfig as $configArray) {
@@ -65,7 +65,7 @@ class updateAction
 						dirname(__FILE__)."/phpoai2/doc/oai_records_mysql.sql");
 					$queryString = str_replace('oai_records', $table, $queryString);
 					
-					$query =& new GenericSQLQuery;
+					$query = new GenericSQLQuery;
 					$query->addSQLQuery(SQLUtils::parseSQLString($queryString));
 					
 					$dbc->query($query,	$config->getProperty('OAI_DBID'));
@@ -123,25 +123,25 @@ class updateAction
 		ArgumentValidator::validate($authGroupIdStrings, ArrayValidatorRuleWithRule::getRule(
 			StringValidatorRule::getRule()));
 		
-		$harmoni =& Harmoni::instance();
-		$config =& $harmoni->getAttachedData('OAI_CONFIG');
+		$harmoni = Harmoni::instance();
+		$config =$harmoni->getAttachedData('OAI_CONFIG');
 		
-		$repositoryManager =& Services::getService('Repository');
-		$authorizationManager =& Services::getService('AuthZ');
-		$idManager =& Services::getService("IdManager");
-		$dbc =& Services::getService("DatabaseManager");
+		$repositoryManager = Services::getService('Repository');
+		$authorizationManager = Services::getService('AuthZ');
+		$idManager = Services::getService("IdManager");
+		$dbc = Services::getService("DatabaseManager");
 		
 		$authGroupIds = array();
 		foreach ($authGroupIdStrings as $id) {
 			$authGroupIds[] = $idManager->getId($id);
 		}
 				
-		$baseCheckQuery =& new SelectQuery;
+		$baseCheckQuery = new SelectQuery;
 		$baseCheckQuery->addTable('oai_'.$table);
 		$baseCheckQuery->addColumn('datestamp');
 		$baseCheckQuery->addColumn('deleted');
 		
-		$baseUpdateQuery =& new UpdateQuery;
+		$baseUpdateQuery = new UpdateQuery;
 		$baseUpdateQuery->setTable('oai_'.$table);
 		
 		$baseUpdateColumns = array(
@@ -172,7 +172,7 @@ class updateAction
 			'dc_rights'
 		);
 		
-		$baseInsertQuery =& new InsertQuery;
+		$baseInsertQuery = new InsertQuery;
 		$baseInsertQuery->setTable('oai_'.$table);
 		$baseInsertColumns = array(
 			'datestamp',
@@ -204,19 +204,19 @@ class updateAction
 			'dc_rights'		
 		);
 		
-		$baseDeleteQuery =& new UpdateQuery;
+		$baseDeleteQuery = new UpdateQuery;
 		$baseDeleteQuery->setTable('oai_'.$table);
 		$baseDeleteQuery->addValue('deleted', 'true');
 		$baseDeleteQuery->addRawValue('datestamp', 'NOW()');
 		
-		$baseUndeleteQuery =& new UpdateQuery;
+		$baseUndeleteQuery = new UpdateQuery;
 		$baseUndeleteQuery->setTable('oai_'.$table);
 		$baseUndeleteQuery->addValue('deleted', 'false');
 		$baseUndeleteQuery->addRawValue('datestamp', 'NOW()');
 		
 		
 		$forceUpdate = false;
-		$repositories =& $repositoryManager->getRepositories();
+		$repositories =$repositoryManager->getRepositories();
 		
 		$r = 0;
 		if (count($allowedRepositoryIdStrings))
@@ -227,18 +227,18 @@ class updateAction
 		$numDeleted = 0;	
 		$message = _('Updating OAI records for repository (%1 of %2) : ');
 		$message = str_replace('%2', $numR, $message);
-		$instituteId =& $idManager->getId('edu.middlebury.agents.users');
-		$viewId =& $idManager->getId('edu.middlebury.authorization.view');
+		$instituteId =$idManager->getId('edu.middlebury.agents.users');
+		$viewId =$idManager->getId('edu.middlebury.authorization.view');
 		
 		require_once(HARMONI."/utilities/Timer.class.php");
-		$timer =& new Timer;
+		$timer = new Timer;
 		$timer->start();
 		$existingRepositoryIds = array();
 		
 		while ($repositories->hasNext()) {
 			$updatesInRepository = 0;
-			$repository =& $repositories->next();
-			$repositoryId =& $repository->getId();
+			$repository =$repositories->next();
+			$repositoryId =$repository->getId();
 			
 			// Only work with allowed repositories
 			if (count($allowedRepositoryIdStrings)
@@ -248,29 +248,29 @@ class updateAction
 			
 			$existingRepositoryIds[] = $repositoryId->getIdString();
 			
-			$assets =& $repository->getAssets();			
-			$status =& new CLIStatusStars(
+			$assets =$repository->getAssets();			
+			$status = new CLIStatusStars(
 				str_replace('%1', $r, $message).$repository->getDisplayName());
 			$status->initializeStatistics($assets->count());
 			
 			$existingAssetIds = array();
 			
 			while ($assets->hasNext()) {
-				$asset =& $assets->next();
-				$assetId =& $asset->getId();
+				$asset =$assets->next();
+				$assetId =$asset->getId();
 				$existingAssetIds[] = $assetId->getIdString();
-				$modificationDate =& $asset->getModificationDate();
+				$modificationDate =$asset->getModificationDate();
 				
-				$query =& $baseCheckQuery->copy();
+				$query =$baseCheckQuery->copy();
 				$query->addWhereEqual("oai_set", $repositoryId->getIdString());
 				$query->addWhereEqual("oai_identifier", $assetId->getIdString());
 				
-				$result =& $dbc->query($query, $config->getProperty('OAI_DBID'));
+				$result =$dbc->query($query, $config->getProperty('OAI_DBID'));
 				
 					
 				if (!$result->getNumberOfRows()) {
 // 					printpre("Doesn't exist:\t".$asset->getDisplayName()."");
-					$query =& $baseInsertQuery->copy();
+					$query =$baseInsertQuery->copy();
 					$query->addValue('oai_set', $repositoryId->getIdString());
 					$query->addValue('oai_identifier', $assetId->getIdString());
 				} else {
@@ -280,7 +280,7 @@ class updateAction
 						|| $forceUpdate)
 					{
 // 						printpre("\tUpdating:\t".$asset->getDisplayName());
-						$query =& $baseUpdateQuery->copy();
+						$query =$baseUpdateQuery->copy();
 						$query->addWhereEqual("oai_set", $repositoryId->getIdString());
 						$query->addWhereEqual("oai_identifier", $assetId->getIdString());
 					} 
@@ -327,9 +327,9 @@ class updateAction
 				} else {
 					if ($isCurrentlyDeleted && $isVisible) 
 					{
-						$query =& $baseUndeleteQuery->copy();
+						$query =$baseUndeleteQuery->copy();
 					} else if (!$isCurrentlyDeleted && !$isVisible) {
-						$query =& $baseDeleteQuery->copy();
+						$query =$baseDeleteQuery->copy();
 					} else {
 						$query = null;
 					}
@@ -347,13 +347,13 @@ class updateAction
 			}
 			
 			// Update any missing assets as deleted
-			$query =& $baseDeleteQuery->copy();
+			$query =$baseDeleteQuery->copy();
 			$query->addWhereEqual("oai_set", $repositoryId->getIdString());
 			if (count($existingAssetIds)) {
 				$query->addWhereEqual("deleted", "false");
 				$query->addWhereNotIn("oai_identifier", $existingAssetIds);
 			}			
-			$result =& $dbc->query($query, $config->getProperty('OAI_DBID'));
+			$result =$dbc->query($query, $config->getProperty('OAI_DBID'));
 			if ($result->getNumberOfRows()) {
 				$updatesInRepository = $updatesInRepository + $result->getNumberOfRows();
 				$numUpdates = $numUpdates + $result->getNumberOfRows();
@@ -371,11 +371,11 @@ class updateAction
 		}	
 		
 		// Update any missing repositories as deleted
-		$query =& $baseDeleteQuery->copy();
+		$query =$baseDeleteQuery->copy();
 		$query->addWhereEqual("deleted", "false");
 		if (count($existingRepositoryIds))
 			$query->addWhereNotIn("oai_set", $existingRepositoryIds);
-		$result =& $dbc->query($query, $config->getProperty('OAI_DBID'));
+		$result =$dbc->query($query, $config->getProperty('OAI_DBID'));
 		if ($result->getNumberOfRows()) {
 			$updatesInRepository = $updatesInRepository + $result->getNumberOfRows();
 			$numUpdates = $numUpdates + $result->getNumberOfRows();
@@ -396,12 +396,12 @@ class updateAction
 	 * @access public
 	 * @since 3/5/07
 	 */
-	function addDublinCoreValues (&$asset, &$query) {
-		$idManager =& Services::getService("Id");
-		$records =& $asset->getRecordsByRecordStructure($idManager->getId('dc'));
+	function addDublinCoreValues ($asset, $query) {
+		$idManager = Services::getService("Id");
+		$records =$asset->getRecordsByRecordStructure($idManager->getId('dc'));
 		// use the first Dublin Core record if availible
 		if ($records->hasNext()) {
-			$record =& $records->next();
+			$record =$records->next();
 			$ids = array(
 				'dc_creator' 		=> 'dc.creator',
 				'dc_subject'	 	=> 'dc.subject',
@@ -418,7 +418,7 @@ class updateAction
 				'dc_rights' 		=> 'dc.rights');
 			
 			foreach ($ids as $column => $partId) {
-				$parts =& $record->getPartsByPartStructure($idManager->getId($partId));
+				$parts =$record->getPartsByPartStructure($idManager->getId($partId));
 				if ($parts->hasNext())
 					$query->addValue($column, $this->getPartsString($parts));
 			}
@@ -426,10 +426,10 @@ class updateAction
 			return;
 		}
 		
-		$records =& $asset->getRecordsByRecordStructure($idManager->getId('vra_core'));
+		$records =$asset->getRecordsByRecordStructure($idManager->getId('vra_core'));
 		// otherwise use first VRA Core record
 		if ($records->hasNext()) {
-			$record =& $records->next();
+			$record =$records->next();
 			$ids = array(
 				'dc_creator' 		=> 'vra_core.creator',
 				'dc_subject'	 	=> 'vra_core.subject',
@@ -450,13 +450,13 @@ class updateAction
 			
 			foreach ($ids as $column => $partId) {
 				if (is_array($partId)) {
-					$parts =& new MultiIteratorIterator;
+					$parts = new MultiIteratorIterator;
 					foreach ($partId as $id) {
 						$parts->addIterator(
 							$record->getPartsByPartStructure($idManager->getId($id)));
 					}
 				} else {
-					$parts =& $record->getPartsByPartStructure($idManager->getId($partId));
+					$parts =$record->getPartsByPartStructure($idManager->getId($partId));
 				}
 				if ($parts->hasNext())
 					$query->addValue($column, $this->getPartsString($parts));
@@ -475,11 +475,11 @@ class updateAction
 	 * @access public
 	 * @since 3/8/07
 	 */
-	function getPartsString ( &$partIterator ) {
+	function getPartsString ( $partIterator ) {
 		$string = '';
 		while ($partIterator->hasNext()) {
-			$part =& $partIterator->next();
-			$value =& $part->getValue();
+			$part =$partIterator->next();
+			$value =$part->getValue();
 			$string .= $value->asString();
 			
 			if ($partIterator->hasNext()) {

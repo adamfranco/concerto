@@ -54,8 +54,8 @@ class typebrowseAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 		
 		ob_start();
 		
@@ -70,37 +70,37 @@ class typebrowseAction
 		$actionRows->add(new Block(ob_get_contents(), STANDARD_BLOCK), "100%", null, CENTER, CENTER);
 		ob_end_clean();
 		
-		$exhibitionRepositoryType =& new Type ('System Repositories', 
+		$exhibitionRepositoryType = new Type ('System Repositories', 
 											'edu.middlebury.concerto', 'Exhibitions');
 		
-		$repositoryManager =& Services::getService("Repository");
+		$repositoryManager = Services::getService("Repository");
 		
 		// Get all the types
-		$types =& $repositoryManager->getRepositoryTypes();
+		$types =$repositoryManager->getRepositoryTypes();
 		// put the drs into an array and order them.
 		$typeArray = array();
 		while($types->hasNext()) {
-			$type =& $types->next();
+			$type =$types->next();
 			
 			// include all but Exhibitions repository.
 			if (!$exhibitionRepositoryType->isEqual($type))
-				$typeArray[HarmoniType::typeToString($type)] =& $type;
+				$typeArray[HarmoniType::typeToString($type)] =$type;
 		}
 		ksort($typeArray);
 		
 		// print the Results
-		$resultPrinter =& new ArrayResultPrinter($typeArray, 2, 20, "printTypeShort");
+		$resultPrinter = new ArrayResultPrinter($typeArray, 2, 20, "printTypeShort");
 		$resultPrinter->addLinksStyleProperty(new MarginTopSP("10px"));
-		$resultLayout =& $resultPrinter->getLayout();
+		$resultLayout =$resultPrinter->getLayout();
 		$actionRows->add($resultLayout, null, null, CENTER, CENTER);
 	}
 }
 
 
 // Callback function for printing Repositories
-function printTypeShort(& $type) {
+function printTypeShort($type) {
 	ob_start();
-	$harmoni =& Harmoni::instance();
+	$harmoni = Harmoni::instance();
 	print "<a href='";
 	print $harmoni->request->quickURL('collections', 'browsetype', 
 			array('type' => urlencode(HarmoniType::typeToString($type))));
@@ -110,7 +110,7 @@ function printTypeShort(& $type) {
 	print "</strong>";
 	print "</a>";
 	
-	$block =& new Block(ob_get_contents(), STANDARD_BLOCK);
+	$block = new Block(ob_get_contents(), STANDARD_BLOCK);
 	ob_end_clean();
 	return $block;
 }

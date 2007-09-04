@@ -56,55 +56,55 @@ class browsetypeAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 		
 		ob_start();
 		CollectionsPrinter::printFunctionLinks();
-		$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
+		$layout = new Block(ob_get_contents(), STANDARD_BLOCK);
 		ob_end_clean();
 		$actionRows->add($layout, null, null, CENTER, CENTER);
 		
-		$type =& HarmoniType::fromString(urldecode(RequestContext::value('type')));
+		$type = HarmoniType::fromString(urldecode(RequestContext::value('type')));
 
-		$repositoryManager =& Services::getService("Repository");
+		$repositoryManager = Services::getService("Repository");
 		
 		
 		// Get the Repositories
-		$allRepositories =& $repositoryManager->getRepositoriesByType($type);
+		$allRepositories =$repositoryManager->getRepositoriesByType($type);
 		
 		// put the repositories into an array and order them.
 		// @todo, do authorization checking
 		$repositoryArray = array();
 		while($allRepositories->hasNext()) {
-			$repository =& $allRepositories->next();
-			$repositoryArray[$repository->getDisplayName()] =& $repository;
+			$repository =$allRepositories->next();
+			$repositoryArray[$repository->getDisplayName()] =$repository;
 		}
 		ksort($repositoryArray);
 		
 		
 		// print the Results
-		$resultPrinter =& new ArrayResultPrinter($repositoryArray, 2, 20, "printrepositoryShort", $harmoni);
+		$resultPrinter = new ArrayResultPrinter($repositoryArray, 2, 20, "printrepositoryShort", $harmoni);
 		$resultPrinter->addLinksStyleProperty(new MarginTopSP("10px"));
-		$resultLayout =& $resultPrinter->getLayout();
+		$resultLayout =$resultPrinter->getLayout();
 		$actionRows->add($resultLayout, null, null, CENTER, CENTER);
 	}
 }
 
 
 // Callback function for printing repositorys
-function printrepositoryShort(& $repository, $harmoni) {
+function printrepositoryShort($repository, $harmoni) {
 	ob_start();
 	
-	$repositoryId =& $repository->getId();
+	$repositoryId =$repository->getId();
 	print  "\n\t<strong>".$repository->getDisplayName()."</strong> - "._("ID#").": ".
 			$repositoryId->getIdString();
-	$description =& HtmlString::withValue($repository->getDescription());
+	$description = HtmlString::withValue($repository->getDescription());
 	$description->trim(100);
 	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	
 	RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
 	
-	$layout =& new Block(ob_get_contents(), EMPHASIZED_BLOCK);
+	$layout = new Block(ob_get_contents(), EMPHASIZED_BLOCK);
 	ob_end_clean();
 	return $layout;
 }

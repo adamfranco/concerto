@@ -37,7 +37,7 @@ class CollectionsPrinter {
 	 */
 	function printFunctionLinks () {
 		$links = array();
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		$actionString = $harmoni->getCurrentAction();
 	//===== NameBrowse Link =====//
 		if ($actionString != "collections.namebrowse" ) {

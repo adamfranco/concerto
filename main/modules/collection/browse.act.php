@@ -39,9 +39,9 @@ class browseAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
+		$authZ = Services::getService("AuthZ");
 
-		$idManager =& Services::getService("Id");
+		$idManager = Services::getService("Id");
 		if (!$this->getRepositoryId())
 			return false;
 		return $authZ->isUserAuthorizedBelow(
@@ -68,8 +68,8 @@ class browseAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$repository =& $this->getRepository();
-		$description =& HtmlString::fromString($repository->getDescription());
+		$repository =$this->getRepository();
+		$description = HtmlString::fromString($repository->getDescription());
 		$description->clean();
 		return $repository->getDisplayName()
 			."<div style='font-size: small; margin-left: 25px;'>".$description->asString()."</div> ";
@@ -117,7 +117,7 @@ class browseAction
 	 * @access public
 	 * @since 5/15/06
 	 */
-	function &getState (&$id) {
+	function getState ($id) {
 		if (!isset($_SESSION['browse_state']))
 			$_SESSION['browse_state'] = array();
 		if (!isset($_SESSION['browse_state'][$id->getIdString()]))
@@ -135,7 +135,7 @@ class browseAction
 	 * @since 5/11/06
 	 */
 	function registerState () {				
-		$this->_state =& $this->getState($this->getRepositoryId());
+		$this->_state =$this->getState($this->getRepositoryId());
 				
 		// top-level properties
 		$properties = array (
@@ -160,7 +160,7 @@ class browseAction
 										"Search with a string for keywords.");
 		
 		// Search Criteria
-		$searchModuleManager =& Services::getService("RepositorySearchModules");
+		$searchModuleManager = Services::getService("RepositorySearchModules");
 		if (RequestContext::value('form_submitted'))
 			$this->_state['currentSearchValues'] = $searchModuleManager->getCurrentValues(
 										$this->_state['searchtype']);
@@ -177,12 +177,12 @@ class browseAction
 				$this->_state["selectedTypes"] = array();
 			}
 			
-			$repository =& $this->getRepository();
-			$types =& $repository->getAssetTypes();
+			$repository =$this->getRepository();
+			$types =$repository->getAssetTypes();
 			while ($types->hasNext()) {
-				$type =& $types->next();
+				$type =$types->next();
 				if (RequestContext::value("type___".Type::typeToString($type)) == 'true') {
-					$this->_state["selectedTypes"][Type::typeToString($type)] =& $type;
+					$this->_state["selectedTypes"][Type::typeToString($type)] =$type;
 				} else if (RequestContext::value('form_submitted')) {
 					unset($this->_state["selectedTypes"][Type::typeToString($type)]);
 				}
@@ -214,7 +214,7 @@ class browseAction
 		$this->registerDisplayProperties();
 		$this->registerState();
 		
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		$harmoni->request->passthrough("collection_id");
 		$harmoni->request->passthrough("asset_id");
 	}
@@ -229,26 +229,26 @@ class browseAction
 	function buildContent () {
 		$this->init();
 		
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 		
-		$repository =& $this->getRepository();
+		$repository =$this->getRepository();
 						
 		// function links
 		ob_start();
 		print _("Collection").": ";
 		RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
-		$layout =& new Block(ob_get_contents(), STANDARD_BLOCK);
+		$layout = new Block(ob_get_contents(), STANDARD_BLOCK);
 		ob_end_clean();
 		$actionRows->add($layout, "100%", null, CENTER, CENTER);
 		
 		
-		$searchBar =& new Container(new YLayout(), BLOCK, STANDARD_BLOCK);
+		$searchBar = new Container(new YLayout(), BLOCK, STANDARD_BLOCK);
 		$actionRows->add($searchBar, "100%", null, CENTER, CENTER);
 		
 		
 		// Limit selection form
-		$currentUrl =& $harmoni->request->mkURL();	
+		$currentUrl =$harmoni->request->mkURL();	
 		$searchBar->setPreHTML(
 			"\n<form action='".$currentUrl->write()."' method='post'>
 	<input type='hidden' name='".RequestContext::name('form_submitted')."' value='true'/>");
@@ -257,13 +257,13 @@ class browseAction
 		ob_start();	
 		// search fields
 		print "\n<div style='margin-bottom: 10px;'>";
-		$searchModuleManager =& Services::getService("RepositorySearchModules");
+		$searchModuleManager = Services::getService("RepositorySearchModules");
 // 		print _("Search").": ";		
 		print "\n\t<select name='".RequestContext::name("searchtype")."'";
 		print " onchange='this.form.submit();'>";
-			$types =& $repository->getSearchTypes();
+			$types =$repository->getSearchTypes();
 			while ($types->hasNext()) {
-				$type =& $types->next();				
+				$type =$types->next();				
 				print "\n\t\t<option value='".Type::typeToString($type)."'";
 				if ($this->_state['searchtype']->isEqual($type)) {
 					print " selected='selected'";
@@ -301,11 +301,11 @@ class browseAction
 			print "\n\t<table border='0'>";
 			print "\n\t\t<tr>";
 			$i = 0;
-			$types =& $repository->getAssetTypes();
+			$types =$repository->getAssetTypes();
 			$selectedTypes = array();
 			while ($types->hasNext()) {
 				print "\n\t\t\t<td>";
-				$type =& $types->next();
+				$type =$types->next();
 				print "\n\t\t\t\t<input type='checkbox'";
 				print " name='".RequestContext::name("type___".Type::typeToString($type))."'";
 				print " value='true'";
@@ -323,7 +323,7 @@ class browseAction
 		
 		print "\n\t</div>";
 		
-		$repositoryId =& $repository->getId();
+		$repositoryId =$repository->getId();
 		$loadListUrl = str_replace('&amp;', '&', 
 							$harmoni->request->quickUrl('collection', 'typeList', 
 								array('collection_id', $repositoryId->getIdString())));
@@ -471,14 +471,14 @@ END;
 		//***********************************
 		// print the results
 		//***********************************
-		$resultPrinter =& new IteratorResultPrinter($this->getAssets(),
+		$resultPrinter = new IteratorResultPrinter($this->getAssets(),
 									$_SESSION["asset_columns"], 
 									$_SESSION["assets_per_page"], 
 									"printAssetShort", $this->getParams());
 									
 		$resultPrinter->setStartingNumber($this->_state['startingNumber']);
 		
-		$resultLayout =& $resultPrinter->getLayout("canView");
+		$resultLayout =$resultPrinter->getLayout("canView");
 		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
 		$resultLayout->setPostHTML("</form>");
 		
@@ -505,7 +505,7 @@ END;
 		$params[RequestContext::name("type")] = RequestContext::value("type");
 		$params[RequestContext::name("searchtype")] = RequestContext::value("searchtype");
 		if (isset($this->_state['searchtype'])) {
-			$searchModuleManager =& Services::getService("RepositorySearchModules");
+			$searchModuleManager = Services::getService("RepositorySearchModules");
 			foreach ($searchModuleManager->getCurrentValues($this->_state['searchtype']) as $key => $value) {
 				$params[$key] = $value;
 			}
@@ -527,11 +527,11 @@ END;
 	 * @access public
 	 * @since 5/15/06
 	 */
-	function &getAssets () {
-		$repository =& $this->getRepository();
-		$searchModuleManager =& Services::getService("RepositorySearchModules");		
+	function getAssets () {
+		$repository =$this->getRepository();
+		$searchModuleManager = Services::getService("RepositorySearchModules");		
 		
-		$searchProperties =& new HarmoniProperties(
+		$searchProperties = new HarmoniProperties(
 					Type::fromString("repository::harmoni::order"));
 		$searchProperties->addProperty("order", $_SESSION["asset_order"]);
 		$searchProperties->addProperty("direction", $_SESSION['asset_order_direction']);
@@ -546,25 +546,25 @@ END;
 		{				
 			$criteria = $searchModuleManager->getSearchCriteria($repository, $this->_state['searchtype']);
 			
-			$assets =& $repository->getAssetsBySearch(
+			$assets =$repository->getAssetsBySearch(
 				$criteria,
 				$this->_state['searchtype'],
 				$searchProperties);
 		} else if ($this->_state["limit_by_type"] == 'true' && isset($this->_state['selectedTypes']) && count($this->_state['selectedTypes'])) {
-			$assets =& new MultiIteratorIterator($null = null);
+			$assets = new MultiIteratorIterator($null = null);
 			foreach (array_keys($this->_state['selectedTypes']) as $key) {
 				$assets->addIterator($repository->getAssetsByType($this->_state['selectedTypes'][$key]));
 			}
 		} else if ($this->hasRootSearch()) {
 			$criteria = NULL;
-			$assets =& $repository->getAssetsBySearch(
+			$assets =$repository->getAssetsBySearch(
 				$criteria, 
 				new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", ""), 
 				$searchProperties);
 		} 
 		// Otherwise, just get all the assets
 		else {
-			$assets =& $repository->getAssets();
+			$assets =$repository->getAssets();
 		}
 		
 		return $assets;
@@ -578,10 +578,10 @@ END;
 	 * @since 5/15/06
 	 */
 	function hasRootSearch () {
-		$repository =& $this->getRepository();
+		$repository =$this->getRepository();
 		// If the Repository supports searching of root assets, just get those
-		$rootSearchType =& new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", "");
-		$searchTypes =& $repository->getSearchTypes();
+		$rootSearchType = new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", "");
+		$searchTypes =$repository->getSearchTypes();
 		while ($searchTypes->hasNext()) {
 			if ($rootSearchType->isEqual( $searchTypes->next() ))
 				return true;
@@ -598,7 +598,7 @@ END;
 	 * @access public
 	 * @since 5/11/06
 	 */
-	function &getDisplayOptions ( &$resultPrinter, $allowReordering = TRUE) {
+	function getDisplayOptions ( $resultPrinter, $allowReordering = TRUE) {
 		// view options
 		ob_start();
 		print "\n<div style='text-align: left'>";
@@ -733,7 +733,7 @@ END;
 		print "\n\t</div>";
 		print "</div>";
 		
-		$block =& new UnstyledBlock(ob_get_clean());
+		$block = new UnstyledBlock(ob_get_clean());
 		return $block;
 	}
 	
@@ -762,17 +762,17 @@ END;
 
 
 // Callback function for printing Assets
-function printAssetShort(& $asset, $params, $num) {
-	$harmoni =& Harmoni::instance();
-	$container =& new Container(new YLayout, BLOCK, EMPHASIZED_BLOCK);
-	$fillContainerSC =& new StyleCollection("*.fillcontainer", "fillcontainer", "Fill Container", "Elements with this style will fill their container.");
+function printAssetShort($asset, $params, $num) {
+	$harmoni = Harmoni::instance();
+	$container = new Container(new YLayout, BLOCK, EMPHASIZED_BLOCK);
+	$fillContainerSC = new StyleCollection("*.fillcontainer", "fillcontainer", "Fill Container", "Elements with this style will fill their container.");
 	$fillContainerSC->addSP(new MinHeightSP("88%"));
 	$container->addStyle($fillContainerSC);
 	
-	$centered =& new StyleCollection("*.centered", "centered", "Centered", "Centered Text");
+	$centered = new StyleCollection("*.centered", "centered", "Centered", "Centered Text");
 	$centered->addSP(new TextAlignSP("center"));	
 	
-	$assetId =& $asset->getId();
+	$assetId =$asset->getId();
 	
 	if ($_SESSION["show_thumbnail"] == 'true') {
 		$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($asset);
@@ -807,7 +807,7 @@ function printAssetShort(& $asset, $params, $num) {
 		print "\n\t\t<img src='$thumbnailURL' class='thumbnail $thumbClass' alt='Thumbnail Image' style='max-height: $thumbSize; max-width: $thumbSize;' />";
 		print "\n\t</a>";
 		print "\n</div>";
-		$component =& new UnstyledBlock(ob_get_contents());
+		$component = new UnstyledBlock(ob_get_contents());
 		$component->addStyle($centered);
 		ob_end_clean();
 		$container->add($component, "100%", null, CENTER, CENTER);
@@ -820,7 +820,7 @@ function printAssetShort(& $asset, $params, $num) {
 	if ($_SESSION["show_id"] == 'true')
 		print "\n\t<div>"._("ID#").": ".$assetId->getIdString()."</div>";
 	if ($_SESSION["show_description"] == 'true') {
-		$description =& HtmlString::withValue($asset->getDescription());
+		$description = HtmlString::withValue($asset->getDescription());
 		$description->trim(16);
 		$descriptionShort = preg_replace('/\.\.\.$/', 
 			"<a onclick=\""
@@ -847,14 +847,14 @@ function printAssetShort(& $asset, $params, $num) {
 		print "\n\t</div>";
 	}
 	
-	$component =& new UnstyledBlock(ob_get_contents());
+	$component = new UnstyledBlock(ob_get_contents());
 	ob_end_clean();
 	$container->add($component, "100%", null, LEFT, TOP);
 	
 	// Bottom controls
 	if ($_SESSION["show_controls"] == 'true') {
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		ob_start();
 		print "\n<div style='margin-top: 5px; font-size: small; white-space: nowrap;'>";
 	
@@ -893,9 +893,9 @@ function printAssetShort(& $asset, $params, $num) {
 }
 
 // Callback function for checking authorizations
-function canView( & $asset ) {
-	$authZ =& Services::getService("AuthZ");
-	$idManager =& Services::getService("Id");
+function canView( $asset ) {
+	$authZ = Services::getService("AuthZ");
+	$idManager = Services::getService("Id");
 	
 	if ($authZ->isUserAuthorizedBelow($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
 	{

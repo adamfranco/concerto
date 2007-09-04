@@ -53,8 +53,8 @@ class mainAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 		
 		$actionRows->add(new Heading(_("Agents &amp; Groups"), 2));
 		
@@ -74,7 +74,7 @@ class mainAction
 		print "</a></li>";
 		print "\n</ul>";
 		
-		$introText =& new Block(ob_get_contents(),2);
+		$introText = new Block(ob_get_contents(),2);
 		$actionRows->add($introText, "100%", null, CENTER, CENTER);
 		ob_end_clean();
 		
@@ -92,7 +92,7 @@ class mainAction
 		print "</a></li>";
 		print "\n</ul>";
 		
-		$introText =& new Block(ob_get_contents(),2);
+		$introText = new Block(ob_get_contents(),2);
 		$actionRows->add($introText, "100%", null, CENTER, CENTER);
 		ob_end_clean();
 		
@@ -104,12 +104,12 @@ class mainAction
 		
 		ob_start();
 		print "\n<ul>";
-		$authN =& Services::getService("AuthN");
-		$authNTypesIterator =& $authN->getAuthenticationTypes();
+		$authN = Services::getService("AuthN");
+		$authNTypesIterator =$authN->getAuthenticationTypes();
 		if($authNTypesIterator->hasNext()){
-			$authNType1 =& $authNTypesIterator->next();
+			$authNType1 =$authNTypesIterator->next();
 			//hopefully the first one is the right one to choose.
-			$id =& $authN->getUserId($authNType1);
+			$id =$authN->getUserId($authNType1);
 			print "\n\t<li><a href='".$harmoni->request->quickURL("agents","edit_agent_details", array("agentId"=>$id->getIdString()))."'>";
 			print _("My Profile");
 			print "</a></li>";		
@@ -168,7 +168,7 @@ class mainAction
 		print "</a></li>";
 		print "\n</ul>";*/
 		
-		$introText =& new Block(ob_get_contents(),2);
+		$introText = new Block(ob_get_contents(),2);
 		$actionRows->add($introText, "100%", null, CENTER, CENTER);
 		ob_end_clean();
 		
@@ -187,12 +187,12 @@ class mainAction
 
 	
 		
-		$guiBlock =& new Block(ob_get_contents(),2);
+		$guiBlock = new Block(ob_get_contents(),2);
 		$actionRows->add($guiBlock, "100%", null, CENTER, CENTER);
 		ob_end_clean();
 		
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");		
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");		
 		if ($authZ->isUserAuthorized(
 			$idManager->getId("edu.middlebury.authorization.view"),
 			$idManager->getId("edu.middlebury.authorization.root"))) {
@@ -235,7 +235,7 @@ class mainAction
 			
 			print "\n</ul>";
 			
-			$introText =& new Block(ob_get_contents(), 2);
+			$introText = new Block(ob_get_contents(), 2);
 			$actionRows->add($introText, "100%", null, CENTER, CENTER);
 			ob_end_clean();
 		}
@@ -249,7 +249,7 @@ class mainAction
 		print "</a></li>";
 		print "\n</ul>";
 		
-		$introText =& new Block(ob_get_contents(),2);
+		$introText = new Block(ob_get_contents(),2);
 		$actionRows->add($introText, "100%", null, CENTER, CENTER);
 		ob_end_clean();
 	}

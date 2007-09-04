@@ -33,8 +33,8 @@ class editAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.modify"), 
 					$this->getRepositoryId());
@@ -59,10 +59,10 @@ class editAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$centerPane =& $this->getActionRows();
-		$repositoryId =& $this->getRepositoryId();
+		$centerPane =$this->getActionRows();
+		$repositoryId =$this->getRepositoryId();
 		$cacheName = 'edit_collection_wizard_'.$repositoryId->getIdString();
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		$harmoni->request->passthrough("collection_id");
 		
 		$this->runWizard ( $cacheName, $centerPane );
@@ -87,29 +87,29 @@ class editAction
 	 * @access public
 	 * @since 4/28/05
 	 */
-	function &createWizard () {
-		$repository =& $this->getRepository();
-		$repositoryId =& $this->getRepositoryId();
-		$harmoni =& Harmoni::instance();
+	function createWizard () {
+		$repository =$this->getRepository();
+		$repositoryId =$this->getRepositoryId();
+		$harmoni = Harmoni::instance();
 		
-		$idManager =& Services::getService("Id");
-		$authZManager =& Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
+		$authZManager = Services::getService("AuthZ");
 		
-		$returnUrl =& $harmoni->request->mkURLWithPassthrough();
+		$returnUrl =$harmoni->request->mkURLWithPassthrough();
 		$returnUrl->setValue("wizardSkipToStep", "schema");
 
 	
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withDefaultLayout();
+		$wizard = SimpleStepWizard::withDefaultLayout();
 		
 		// :: Step One ::
-		$stepOne =& $wizard->addStep("namedesc", new WizardStep());
+		$stepOne =$wizard->addStep("namedesc", new WizardStep());
 		$stepOne->setDisplayName(_("Name &amp; Description"));
 		
 		// Create the step text
 		ob_start();
 		
-		$displayNameProp =& $stepOne->addComponent("display_name", new WTextField());
+		$displayNameProp =$stepOne->addComponent("display_name", new WTextField());
 		$displayNameProp->setValue($repository->getDisplayName());
 		$displayNameProp->setErrorText(_("A value for this field is required."));
 		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
@@ -120,7 +120,7 @@ class editAction
 		
 		
 		$fieldname = RequestContext::name('description');
-		$descriptionProp =& $stepOne->addComponent("description", WTextArea::withRowsAndColumns(10,80));
+		$descriptionProp =$stepOne->addComponent("description", WTextArea::withRowsAndColumns(10,80));
 		$descriptionProp->setValue($repository->getDescription());
 		print "\n<h2>"._("Description")."</h2>";
 		print "\n"._("The Description for this <em>Collection</em>: ");
@@ -131,13 +131,13 @@ class editAction
 		
 		
 		// :: Schema Selection ::
-		$selectStep =& $wizard->addStep("schema", new WizardStep());
+		$selectStep =$wizard->addStep("schema", new WizardStep());
 		$selectStep->setDisplayName(_("Schema Selection"));
 		
 		// get an iterator of all RecordStructures
-		$recordStructures =& $repository->getRecordStructures();
-		$setManager =& Services::getService("Sets");
-		$set =& $setManager->getPersistentSet($repositoryId);
+		$recordStructures =$repository->getRecordStructures();
+		$setManager = Services::getService("Sets");
+		$set =$setManager->getPersistentSet($repositoryId);
 		
 		ob_start();
 		print "<h2>"._("Select Cataloging Schemas")."</h2>";
@@ -148,7 +148,7 @@ class editAction
 			$repositoryId))
 		{
 			$fieldname = RequestContext::name('create_schema');
-			$button =& $selectStep->addComponent("_create_schema", 
+			$button =$selectStep->addComponent("_create_schema", 
 				WSaveButton::withLabel(_("Save Changes and Create a New Schema")));
 			print "\n<p>"._("If none of the schemas listed below fit your needs, please click the button below to save your changes and create a new schema.")."</p>";
 			print "\n[[_create_schema]]";
@@ -165,15 +165,15 @@ class editAction
 		// Get the number of info structures
 		$numRecordStructures = 0;
 		while ($recordStructures->hasNext()) {
-			$recordStructure =& $recordStructures->next();
+			$recordStructure =$recordStructures->next();
 			$numRecordStructures++;
 		}
 		
-		$assetContentStructureId =& $idManager->getId("edu.middlebury.harmoni.repository.asset_content");
-		$recordStructures =& $repository->getRecordStructures();
+		$assetContentStructureId =$idManager->getId("edu.middlebury.harmoni.repository.asset_content");
+		$recordStructures =$repository->getRecordStructures();
 		while ($recordStructures->hasNext()) {
-			$recordStructure =& $recordStructures->next();
-			$recordStructureId =& $recordStructure->getId();
+			$recordStructure =$recordStructures->next();
+			$recordStructureId =$recordStructure->getId();
 			
 			// Don't list the asset Content structure.
 			if ($recordStructureId->isEqual($assetContentStructureId))
@@ -182,7 +182,7 @@ class editAction
 			// Create the properties.
 			// 'in set' property
 			$fieldname = "schema_".str_replace(".","__",$recordStructureId->getIdString());
-			$property =& $selectStep->addComponent($fieldname, new WCheckBox());
+			$property =$selectStep->addComponent($fieldname, new WCheckBox());
 			if ($set->isInSet($recordStructureId))
 				$property->setChecked(true);
 			else
@@ -193,7 +193,7 @@ class editAction
 			
 			// Order property
 			$orderFieldName = $fieldname."_position";
-			$property =& $selectStep->addComponent($orderFieldName, new WSelectList());
+			$property =$selectStep->addComponent($orderFieldName, new WSelectList());
 			if ($set->isInSet($recordStructureId))
 				$property->setValue(strval($set->getPosition($recordStructureId)+1));
 			else
@@ -202,7 +202,7 @@ class editAction
 			print "\n<tr><td valign='top'>";
 			print "\n\t[[$fieldname]]";
 //			print "\n\t<strong>".a."</strong>";
-			$description =& HtmlString::withValue($recordStructure->getDescription());
+			$description = HtmlString::withValue($recordStructure->getDescription());
 			$description->trim(100);	// trim to 100 words
 			print "\n</td><td valign='top'>\n\t<div style='font-style: italic'>".$description->asString()."</div>";
 			
@@ -252,8 +252,8 @@ class editAction
 			}
 			
 			// Schema Copy
-			$authZManager =& Services::getService("AuthZ");
-			$idManager =& Services::getService("Id");
+			$authZManager = Services::getService("AuthZ");
+			$idManager = Services::getService("Id");
 			if (method_exists($recordStructure, 'createPartStructure')
 				&& 	((preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
 						&& $authZManager->isUserAuthorized(
@@ -264,7 +264,7 @@ class editAction
 							$idManager->getId("edu.middlebury.authorization.root"))))
 			{
 			
-				$button =& $selectStep->addComponent(
+				$button =$selectStep->addComponent(
 					"duplicate_schema__".str_replace('.', '_', $recordStructureId->getIdString()), 
 					WSaveButton::withLabel(_("Duplicate Schema Only")));
 				$button->addConfirm(_("Are you sure that you wish to duplicate this Schema?"));
@@ -274,7 +274,7 @@ class editAction
 							$idManager->getId("edu.middlebury.authorization.modify"), 
 							$repositoryId))
 				{
-					$button =& $selectStep->addComponent(
+					$button =$selectStep->addComponent(
 						"duplicate_copy_records__".str_replace('.', '_', $recordStructureId->getIdString()), 
 						WSaveButton::withLabel(_("Duplicate Schema and Records")));
 					$button->addConfirm(_("Are you sure that you wish to duplicate this Schema\\nand all Records that use it?"));
@@ -288,8 +288,8 @@ class editAction
 			}
 			
 			// Schema Delete
-			$authZManager =& Services::getService("AuthZ");
-			$idManager =& Services::getService("Id");
+			$authZManager = Services::getService("AuthZ");
+			$idManager = Services::getService("Id");
 			if (method_exists($recordStructure, 'createPartStructure')
 				&& 	((preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
 						&& $authZManager->isUserAuthorized(
@@ -300,7 +300,7 @@ class editAction
 							$idManager->getId("edu.middlebury.authorization.root"))))
 			{
 			
-				$button =& $selectStep->addComponent(
+				$button =$selectStep->addComponent(
 					"_delete_schema__".str_replace('.', '_', $recordStructureId->getIdString()), 
 					WSaveButton::withLabel(_("Delete")));
 				$button->addConfirm(_("Are you sure that you wish to delete this Schema\\nand Records in all Assets in this Collection that use it?"));
@@ -341,18 +341,18 @@ class editAction
 	 * @since 4/28/05
 	 */
 	function saveWizard ( $cacheName ) {
-		$wizard =& $this->getWizard($cacheName);
+		$wizard =$this->getWizard($cacheName);
 		
 		// If all properties validate then go through the steps nessisary to
 		// save the data.
 		if ($wizard->validate()) {
-			$properties =& $wizard->getAllValues();
+			$properties =$wizard->getAllValues();
 	// 		print "Now Saving: ";
 	//		printpre($properties);
 			
 			// Save the Repository
-			$id =& $this->getRepositoryId();
-			$repository =& $this->getRepository();
+			$id =$this->getRepositoryId();
+			$repository =$this->getRepository();
 			
 			$repository->updateDisplayName($properties['namedesc']['display_name']);
 			$repository->updateDescription($properties['namedesc']['description']);
@@ -361,11 +361,11 @@ class editAction
 		// Save the Schema settings.
 			
 			// Get the set for this Repository
-			$setManager =& Services::getService("Sets");
-			$set =& $setManager->getPersistentSet($id);
+			$setManager = Services::getService("Sets");
+			$set =$setManager->getPersistentSet($id);
 			
 			// get an iterator of all RecordStructures
-			$recordStructures =& $repository->getRecordStructures();
+			$recordStructures =$repository->getRecordStructures();
 			
 			// Store up the positions for later setting after all of the ids have
 			// been added to the set and we can do checking to make sure that 
@@ -376,8 +376,8 @@ class editAction
 			
 			// Go through each RecordStructure
 			while ($recordStructures->hasNext()) {
-				$recordStructure =& $recordStructures->next();
-				$recordStructureId =& $recordStructure->getId();
+				$recordStructure =$recordStructures->next();
+				$recordStructureId =$recordStructure->getId();
 				
 				// If the box is checked, make sure that the ID is in the set
 				$fieldName = "schema_".str_replace(".","__",$recordStructureId->getIdString());
@@ -415,7 +415,7 @@ class editAction
 			if ($numStructures != $set->count()) {
 				$set->reset();
 				while($set->hasNext()) {
-					$id =& $set->next();
+					$id =$set->next();
 					if (!in_array($id->getIdString(), $existingStructures))
 						$set->removeItem($id);
 				}
@@ -423,14 +423,14 @@ class editAction
 			
 			// Log the success or failure
 			if (Services::serviceRunning("Logging")) {
-				$loggingManager =& Services::getService("Logging");
-				$log =& $loggingManager->getLogForWriting("Concerto");
-				$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+				$loggingManager = Services::getService("Logging");
+				$log =$loggingManager->getLogForWriting("Concerto");
+				$formatType = new Type("logging", "edu.middlebury", "AgentsAndNodes",
 								"A format in which the acting Agent[s] and the target nodes affected are specified.");
-				$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+				$priorityType = new Type("logging", "edu.middlebury", "Event_Notice",
 								"Normal events.");
 				
-				$item =& new AgentNodeEntryItem("Modify Node", "Repository modified");
+				$item = new AgentNodeEntryItem("Modify Node", "Repository modified");
 				$item->addNodeId($repository->getId());
 				
 				$log->appendLogWithTypes($item,	$formatType, $priorityType);
@@ -439,20 +439,20 @@ class editAction
 			// Move to Schema creation if that button is pressed.
 			if ($properties['schema']['_create_schema']) {
 				$this->closeWizard($cacheName);
-				$harmoni =& Harmoni::instance();
+				$harmoni = Harmoni::instance();
 				RequestContext::locationHeader($harmoni->request->quickURL("schema", "create", array(
 						"collection_id" => $id->getIdString())));
 				exit(0);
 			}
 			
 			// Move to Schema deletion if that button is pressed.
-			$recordStructures =& $repository->getRecordStructures();
+			$recordStructures =$repository->getRecordStructures();
 			while ($recordStructures->hasNext()) {
-				$recordStructure =& $recordStructures->next();
-				$recordStructureId =& $recordStructure->getId();
+				$recordStructure =$recordStructures->next();
+				$recordStructureId =$recordStructure->getId();
 				if ($properties['schema']['_delete_schema__'.str_replace('.', '_', $recordStructureId->getIdString())]) {
 					$this->closeWizard($cacheName);
-					$harmoni =& Harmoni::instance();
+					$harmoni = Harmoni::instance();
 					RequestContext::locationHeader($harmoni->request->quickURL(
 							"schema", "delete", array(
 							"collection_id" => $id->getIdString(),
@@ -461,7 +461,7 @@ class editAction
 				}
 				if ($properties['schema']['duplicate_schema__'.str_replace('.', '_', $recordStructureId->getIdString())]) {
 					$this->closeWizard($cacheName);
-					$harmoni =& Harmoni::instance();
+					$harmoni = Harmoni::instance();
 					RequestContext::locationHeader($harmoni->request->quickURL(
 							"schema", "duplicate", array(
 							"collection_id" => $id->getIdString(),
@@ -471,7 +471,7 @@ class editAction
 				}
 				if ($properties['schema']['duplicate_copy_records__'.str_replace('.', '_', $recordStructureId->getIdString())]) {
 					$this->closeWizard($cacheName);
-					$harmoni =& Harmoni::instance();
+					$harmoni = Harmoni::instance();
 					RequestContext::locationHeader($harmoni->request->quickURL(
 							"schema", "duplicate", array(
 							"collection_id" => $id->getIdString(),
@@ -495,7 +495,7 @@ class editAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		return $harmoni->history->getReturnURL("concerto/collection/edit-return");
 	}
 }

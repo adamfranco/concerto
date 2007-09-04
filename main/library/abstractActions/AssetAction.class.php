@@ -32,14 +32,14 @@ class AssetAction
 	 * @access public
 	 * @since 4/26/05
 	 */
-	function &getAssetId () {
-		$harmoni =& Harmoni::instance();
+	function getAssetId () {
+		$harmoni = Harmoni::instance();
 		if (!$harmoni->request->get('asset_id')) {
 			$false = false;
 			return $false;
 		}
 			
-		$idManager =& Services::getService("Id");
+		$idManager = Services::getService("Id");
 		return $idManager->getId($harmoni->request->get('asset_id'));
 	}
 	
@@ -50,15 +50,15 @@ class AssetAction
 	 * @access public
 	 * @since 4/26/05
 	 */
-	function &getAsset () {
-		$assetId =& $this->getAssetId();
+	function getAsset () {
+		$assetId =$this->getAssetId();
 		if (!$assetId) {
 			$false = false;
 			return $false;
 		}
 			
 		// Get the Repository
-		$repository =& $this->getRepository();
+		$repository =$this->getRepository();
 		return $repository->getAsset($this->getAssetId());
 	}
 	
@@ -69,22 +69,22 @@ class AssetAction
 	 * @access public
 	 * @since 4/26/05
 	 */
-	function &getRepositoryId () {
-		$harmoni =& Harmoni::instance();
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
+	function getRepositoryId () {
+		$harmoni = Harmoni::instance();
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
 		
-		$repositoryId =& parent::getRepositoryId();
+		$repositoryId = parent::getRepositoryId();
 		if ($repositoryId) {
 			return $repositoryId;
 		} else {
-			$assetId =& $this->getAssetId();
+			$assetId =$this->getAssetId();
 			if (!$assetId) {
 				$false = false;
 				return $false;
 			}
-			$asset =& $repositoryManager->getAsset($assetId);
-			$repository =& $asset->getRepository();
+			$asset =$repositoryManager->getAsset($assetId);
+			$repository =$asset->getRepository();
 			return $repository->getId();
 		}
 	}

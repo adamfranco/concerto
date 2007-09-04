@@ -16,7 +16,7 @@
 // Specify the include path for the PEAR libraries
 ini_set('include_path', ini_get('include_path').':/usr/local/lib/php/PEAR');
 
-$config =& new ConfigurationProperties;
+$config = new ConfigurationProperties;
 $config->addProperty('ENABLE_OAI', $arg0 = false);
 
 $config->addProperty('OAI_REPOSITORY_NAME', $arg1 = 'Concerto at Example University');
@@ -50,6 +50,6 @@ $harvesterConfig = array(
 );
 $config->addProperty('OAI_HARVESTER_CONFIG', $harvesterConfig);
 
-$harmoni =& Harmoni::instance();
+$harmoni = Harmoni::instance();
 $harmoni->attachData('OAI_CONFIG', $config);
 unset($config, $arg0, $arg1, $arg2, $arg3, $arg4, $harvesterConfig);

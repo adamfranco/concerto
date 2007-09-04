@@ -38,9 +38,9 @@ class typeListAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
+		$authZ = Services::getService("AuthZ");
 
-		$idManager =& Services::getService("Id");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorizedBelow(
 					$idManager->getId("edu.middlebury.authorization.view"), 
 					$this->getRepositoryId());
@@ -66,7 +66,7 @@ class typeListAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$repository =& $this->getRepository();
+		$repository =$this->getRepository();
 		return _("Browse Assets in the")
 			." <em>".$repository->getDisplayName()."</em> "
 			._(" Collection");
@@ -80,15 +80,15 @@ class typeListAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$repository =& $this->getRepository();
+		$repository =$this->getRepository();
 			
 		print "\n\t<table border='0'>";
 		print "\n\t\t<tr>";
 		$i = 0;
-		$types =& $repository->getAssetTypes();
+		$types =$repository->getAssetTypes();
 		while ($types->hasNext()) {
 			print "\n\t\t\t<td>";
-			$type =& $types->next();
+			$type =$types->next();
 			print "\n\t\t\t\t<input type='checkbox'";
 			print " name='".RequestContext::name("type___".Type::typeToString($type))."'";
 			print " value='true'";

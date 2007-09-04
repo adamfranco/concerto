@@ -45,12 +45,12 @@ if (isset($_REQUEST["reset_concerto"])
 	else
 		require_once (MYDIR.'/config/database_default.conf.php');
 	
-	$dbc =& Services::getService("DatabaseManager");
+	$dbc = Services::getService("DatabaseManager");
 	$tableList = $dbc->getTableList($dbID);
 	if (count($tableList)) {
 		$queryString = "DROP TABLE `".implode("`, `", $tableList)."`;";
 		print $queryString;
-		$query =& new GenericSQLQuery($queryString);
+		$query = new GenericSQLQuery($queryString);
 		$dbc->query($query, $dbID);
 	}
 }

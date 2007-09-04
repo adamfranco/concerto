@@ -32,9 +32,9 @@ class RecordStructureAction
 	 * @access public
 	 * @since 4/26/05
 	 */
-	function &getRecordStructureId () {
-		$harmoni =& Harmoni::instance();
-		$idManager =& Services::getService("Id");
+	function getRecordStructureId () {
+		$harmoni = Harmoni::instance();
+		$idManager = Services::getService("Id");
 		return $idManager->getId($harmoni->request->get('recordstructure_id'));
 	}
 	
@@ -45,9 +45,9 @@ class RecordStructureAction
 	 * @access public
 	 * @since 4/26/05
 	 */
-	function &getRecordStructure () {
+	function getRecordStructure () {
 		// Get the Repository
-		$repository =& $this->getRepository();
+		$repository =$this->getRepository();
 		return $repository->getRecordStructure($this->getRecordStructureId());
 	}
 	

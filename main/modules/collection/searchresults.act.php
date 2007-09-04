@@ -32,8 +32,8 @@ class searchresultsAction
 	 */
 	function isAuthorizedToExecute () {		
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorizedBelow(
 					$idManager->getId("edu.middlebury.authorization.view"), 
 					$this->getRepositoryId());
@@ -58,7 +58,7 @@ class searchresultsAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$repository =& $this->getRepository();
+		$repository =$this->getRepository();
 		return _("Search Assets in the")
 			." <em>".$repository->getDisplayName()."</em> "
 			._(" Collection");
@@ -72,25 +72,25 @@ class searchresultsAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 		
-		$repository =& $this->getRepository();
+		$repository =$this->getRepository();
 
 
 		// get the search type.
-		$searchType =& HarmoniType::fromString(urldecode(
+		$searchType = HarmoniType::fromString(urldecode(
 			RequestContext::value('search_type')));
 		
 		// Get the Search criteria
-		$searchModules =& Services::getService("RepositorySearchModules");
-		$searchCriteria =& $searchModules->getSearchCriteria($repository, $searchType);
+		$searchModules = Services::getService("RepositorySearchModules");
+		$searchCriteria =$searchModules->getSearchCriteria($repository, $searchType);
 		
 		// function links
 		ob_start();
 		print _("Collection").": ";
 		RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
-		$layout =& new Block(ob_get_contents(), 2);
+		$layout = new Block(ob_get_contents(), 2);
 		ob_end_clean();
 		$actionRows->add($layout, null, null, CENTER, CENTER);
 		
@@ -99,29 +99,29 @@ class searchresultsAction
 		print  _("Some <em>Collections</em>, <em>Exhibitions</em>, <em>Assets</em>, and <em>Slide-Shows</em> may be restricted to certain users or groups of users. Log in above to ensure your greatest access to all parts of the system.");
 		print  "</p>";
 		
-		$introText =& new Block(ob_get_contents(), 2);
+		$introText = new Block(ob_get_contents(), 2);
 		ob_end_clean();
 		$actionRows->add($introText, null, null, CENTER, CENTER);
 		
 		//***********************************
 		// Get the assets to display
 		//***********************************
-		$assets =& $repository->getAssetsBySearch($searchCriteria, $searchType, $searchProperties = NULL);
+		$assets =$repository->getAssetsBySearch($searchCriteria, $searchType, $searchProperties = NULL);
 		
 		//***********************************
 		// print the results
 		//***********************************
-		$resultPrinter =& new IteratorResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
-		$resultLayout =& $resultPrinter->getLayout();
+		$resultPrinter = new IteratorResultPrinter($assets, 2, 6, "printAssetShort", $harmoni);
+		$resultLayout =$resultPrinter->getLayout();
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 	}
 }
 
 // Callback function for printing Assets
-function printAssetShort(& $asset, &$harmoni) {
+function printAssetShort($asset, $harmoni) {
 	ob_start();
 	
-	$assetId =& $asset->getId();
+	$assetId =$asset->getId();
 	print  "\n\t<strong>".$asset->getDisplayName()."</strong> - "._("ID#").": ".
 			$assetId->getIdString();
 	print  "\n\t<br /><em>".$asset->getDescription()."</em>";	
@@ -129,7 +129,7 @@ function printAssetShort(& $asset, &$harmoni) {
 	
 	AssetPrinter::printAssetFunctionLinks($harmoni, $asset);
 	
-	$layout =& new Block(ob_get_contents(), 4);
+	$layout = new Block(ob_get_contents(), 4);
 	ob_end_clean();
 	return $layout;
 }

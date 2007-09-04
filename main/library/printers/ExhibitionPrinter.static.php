@@ -37,15 +37,15 @@ class ExhibitionPrinter {
 	 * @access public
 	 * @date 8/6/04
 	 */
-	function printFunctionLinks (&$asset, $repositoryId = NULL) {
-		$harmoni =& Harmoni::instance();
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+	function printFunctionLinks ($asset, $repositoryId = NULL) {
+		$harmoni = Harmoni::instance();
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		
-		$assetId =& $asset->getId();
+		$assetId =$asset->getId();
 		if ($repositoryId === NULL) {
-			$repository =& $asset->getRepository();
-			$repositoryId =& $repository->getId();
+			$repository =$asset->getRepository();
+			$repositoryId =$repository->getId();
 		}
 		
 		$links = array();

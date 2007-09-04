@@ -35,7 +35,7 @@ class displayAction
 	 * @access public
 	 * @since 4/25/05
 	 */
-	function &execute ( &$harmoni ) {
+	function execute ( $harmoni ) {
 		/**
 		 * @package concerto.display
 		 * 
@@ -58,18 +58,18 @@ class displayAction
 		
 		require_once(HARMONI."GUIManager/StyleProperties/FloatSP.class.php");
 				
-		$xLayout =& new XLayout();
-		$yLayout =& new YLayout();
+		$xLayout = new XLayout();
+		$yLayout = new YLayout();
 		
 		
-		$mainScreen =& new Container($yLayout, BLOCK, 1);
+		$mainScreen = new Container($yLayout, BLOCK, 1);
 		
 	// :: Top Row ::
 		// The top row for the logo and status bar.
-		$headRow =& new Container($xLayout, HEADER, 1);
+		$headRow = new Container($xLayout, HEADER, 1);
 		
 		// The logo
-		$logo =& new Component("\n<a href='".MYPATH."/'> <img src='".LOGO_URL."' 
+		$logo = new Component("\n<a href='".MYPATH."/'> <img src='".LOGO_URL."' 
 							style='border: 0px;' alt='"._("Concerto Logo'"). "/> </a>", BLANK, 1);
 		$headRow->add($logo, null, null, LEFT, TOP);
 		
@@ -79,7 +79,7 @@ class displayAction
 	$harmoni->request->startNamespace("polyphony");
 	$languageText .= "\n\t<div style='text-align: center'>\n\t<select name='".$harmoni->request->getName("language")."'>";
 	$harmoni->request->endNamespace();
-		$langLoc =& Services::getService('Lang');
+		$langLoc = Services::getService('Lang');
 		$currentCode = $langLoc->getLanguage();
 		$languages = $langLoc->getLanguages();
 		ksort($languages);
@@ -92,24 +92,24 @@ class displayAction
 		$languageText .= "\n\t<input type='submit' />";
 		$languageText .= "\n\t</div>\n</form>";
 		
-		$languageBar =& new Component($languageText, BLANK, 1);
+		$languageBar = new Component($languageText, BLANK, 1);
 		$headRow->add($languageBar, null, null, LEFT,TOP);
 		
 		// Pretty Login Box
-		$loginRow =& new Container($yLayout, OTHER, 1);
+		$loginRow = new Container($yLayout, OTHER, 1);
 		$headRow->add($loginRow, null, null, RIGHT, TOP);
 		
 		ob_start();
-		$authN =& Services::getService("AuthN");
-		$agentM =& Services::getService("Agent");
-		$idM =& Services::getService("Id");
-		$authTypes =& $authN->getAuthenticationTypes();
+		$authN = Services::getService("AuthN");
+		$agentM = Services::getService("Agent");
+		$idM = Services::getService("Id");
+		$authTypes =$authN->getAuthenticationTypes();
 		$users = '';
 		while ($authTypes->hasNext()) {
-			$authType =& $authTypes->next();
-			$id =& $authN->getUserId($authType);
+			$authType =$authTypes->next();
+			$id =$authN->getUserId($authType);
 			if (!$id->isEqual($idM->getId('edu.middlebury.agents.anonymous'))) {
-				$agent =& $agentM->getAgent($id);
+				$agent =$agentM->getAgent($id);
 				$exists = false;
 				foreach (explode("+", $users) as $user) {
 					if ($agent->getDisplayName() == $user)
@@ -177,16 +177,16 @@ class displayAction
 		$mainScreen->add($headRow, "100%", null, LEFT, TOP);
 		
 	// :: Center Pane ::
-		$centerPane =& $mainScreen->add(new Container($xLayout, OTHER, 1), "100%", null, LEFT, TOP);		
+		$centerPane =$mainScreen->add(new Container($xLayout, OTHER, 1), "100%", null, LEFT, TOP);		
 				
 		// use the result from previous actions
 		if ($harmoni->printedResult) {
-			$contentDestination =& new Container($yLayout, OTHER, 1);
+			$contentDestination = new Container($yLayout, OTHER, 1);
 			$centerPane->add($contentDestination, null, null, LEFT, TOP);
 			$contentDestination->add(new Block($harmoni->printedResult, 1), null, null, TOP, CENTER);
 			$harmoni->printedResult = '';
 		} else {
-			$contentDestination =& $centerPane;
+			$contentDestination =$centerPane;
 		}
 		
 		// use the result from previous actions
@@ -196,13 +196,13 @@ class displayAction
 			$contentDestination->add(new Block($harmoni->result, STANDARD_BLOCK), null, null, CENTER, TOP);
 		
 		// Menu Column
-		$menuColumn =& $centerPane->add(new Container($yLayout, OTHER, 1), "140px", null, LEFT, TOP);
+		$menuColumn =$centerPane->add(new Container($yLayout, OTHER, 1), "140px", null, LEFT, TOP);
 		// Main menu
-		$menuGenerator =& new ConcertoMenuGenerator;
+		$menuGenerator = new ConcertoMenuGenerator;
 		$menuColumn->add($menuGenerator->generateMainMenu(), "140px", null, LEFT, TOP);
 		
 		// RSS Links
-		$outputHandler =& $harmoni->getOutputHandler();
+		$outputHandler =$harmoni->getOutputHandler();
 		if (ereg("^(collection|asset)\.browse(Asset)?$", $harmoni->getCurrentAction()) 	
 			&& RequestContext::value('collection_id'))
 		{
@@ -331,7 +331,7 @@ class displayAction
 		}
 */		
 		// Basket
-		$basket =& Basket::instance();
+		$basket = Basket::instance();
 		if (ereg("^(collection|asset)\.browse(Asset)?$", $harmoni->getCurrentAction()))
 			$menuColumn->add(AssetPrinter::getMultiEditOptionsBlock(), "100%", null, LEFT, TOP);
 		$menuColumn->add($basket->getSmallBasketBlock(EMPHASIZED_BLOCK), "100%", null, LEFT, TOP);
@@ -353,7 +353,7 @@ class displayAction
 		}
 		
 	// :: Footer ::
-		$footer =& new Container (new XLayout, FOOTER, 1);
+		$footer = new Container (new XLayout, FOOTER, 1);
 		
 		$helpText = "<a target='_blank' href='";
 		$helpText .= $harmoni->request->quickURL("help", "browse_help");
@@ -361,11 +361,11 @@ class displayAction
 		$footer->add(new UnstyledBlock($helpText), "50%", null, LEFT, BOTTOM);
 		
 		if (!isset($_SESSION['ConcertoVersion'])) {
-			$document =& new DOMIT_Document();
+			$document = new DOMIT_Document();
 			// attempt to load (parse) the xml file
 			if ($document->loadXML(MYDIR."/doc/raw/changelog/changelog.xml")) {
-				$versionElems =& $document->getElementsByTagName("version");
-				$latest =& $versionElems->item(0);
+				$versionElems =$document->getElementsByTagName("version");
+				$latest =$versionElems->item(0);
 				$_SESSION['ConcertoVersion'] = $latest->getAttribute('number');
 				if (preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $latest->getAttribute('date'), $matches))
 					$_SESSION['ConcertoCopyrightYear'] = $matches[1];
@@ -395,18 +395,18 @@ class displayAction
 	 * @access public
 	 * @since 11/14/06
 	 */
-	function &getCurrentRepository () {
+	function getCurrentRepository () {
 		if (!isset($this->_currentRepository)) {
-			$idManager =& Services::getService('Id');
+			$idManager = Services::getService('Id');
 			if (RequestContext::value('collection_id')) {
-				$id =& $idManager->getId(RequestContext::value('collection_id'));
-				$repositoryManager =& Services::getService('Repository');
-				$this->_currentRepository =& $repositoryManager->getRepository($id);
+				$id =$idManager->getId(RequestContext::value('collection_id'));
+				$repositoryManager = Services::getService('Repository');
+				$this->_currentRepository =$repositoryManager->getRepository($id);
 			} else if (RequestContext::value('asset_id')) {
-				$repositoryManager =& Services::getService('Repository');
-				$asset =& $repositoryManager->getAsset(
+				$repositoryManager = Services::getService('Repository');
+				$asset =$repositoryManager->getAsset(
 					$idManager->getId(RequestContext::value('asset_id')));
-				$this->_currentRepository =& $asset->getRepository();
+				$this->_currentRepository =$asset->getRepository();
 			} else {
 				$this->_currentRepository = null;
 			}

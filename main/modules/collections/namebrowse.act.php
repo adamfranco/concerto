@@ -55,8 +55,8 @@ class namebrowseAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 		
 		ob_start();
 		
@@ -73,10 +73,10 @@ class namebrowseAction
 		
 		
 		// Get the Repositoriess
-		$repositoryManager =& Services::getService("Repository");
-		$allRepositories =& $repositoryManager->getRepositories();
+		$repositoryManager = Services::getService("Repository");
+		$allRepositories =$repositoryManager->getRepositories();
 		
-		$exhibitionRepositoryType =& new Type ('System Repositories', 
+		$exhibitionRepositoryType = new Type ('System Repositories', 
 											'edu.middlebury.concerto', 'Exhibitions');
 		
 		// put the drs into an array and order them.
@@ -84,52 +84,52 @@ class namebrowseAction
 		$repositoryArray = array();
 		$repositoryTitles = array();
 		while($allRepositories->hasNext()) {
-			$repository =& $allRepositories->next();
+			$repository =$allRepositories->next();
 
 			// include all but Exhibitions repository.
 			if (!$exhibitionRepositoryType->isEqual($repository->getType())) {
-				$id =& $repository->getId();
+				$id =$repository->getId();
 				$repositoryTitles[$id->getIdString()] = $repository->getDisplayName();
-				$repositoryArray[$id->getIdString()] =& $repository;
+				$repositoryArray[$id->getIdString()] =$repository;
 			}
 		}
 		array_multisort($repositoryTitles, SORT_ASC, SORT_STRING, $repositoryArray);
 		
 		// print the Results
-		$resultPrinter =& new ArrayResultPrinter($repositoryArray, 1, 20, "printRepositoryShort", $harmoni);
+		$resultPrinter = new ArrayResultPrinter($repositoryArray, 1, 20, "printRepositoryShort", $harmoni);
 		$resultPrinter->addLinksStyleProperty(new MarginTopSP("10px"));
-		$resultLayout =& $resultPrinter->getLayout('canView');
+		$resultLayout =$resultPrinter->getLayout('canView');
 		$actionRows->add($resultLayout, "100%", null, LEFT, CENTER);
 	}
 }
 
 
 // Callback function for printing Repositories
-function printRepositoryShort(& $repository) {
-	$harmoni =& Harmoni::instance();
+function printRepositoryShort($repository) {
+	$harmoni = Harmoni::instance();
 	ob_start();
 	
-	$repositoryId =& $repository->getId();
+	$repositoryId =$repository->getId();
 	print  "\n\t<div style='font-weight: bold' title='"._("ID#").": ".
 			$repositoryId->getIdString()."'>".$repository->getDisplayName()."</div>";
-	$description =& HtmlString::withValue($repository->getDescription());
+	$description = HtmlString::withValue($repository->getDescription());
 	$description->trim(500);
 	print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";	
 	
 
 	RepositoryPrinter::printRepositoryFunctionLinks($harmoni, $repository);
-	$xLayout =& new XLayout();
-	$layout =& new Container($xLayout, BLANK, 1);
-	$layout2 =& new Block(ob_get_contents(), EMPHASIZED_BLOCK);
+	$xLayout = new XLayout();
+	$layout = new Container($xLayout, BLANK, 1);
+	$layout2 = new Block(ob_get_contents(), EMPHASIZED_BLOCK);
 	$layout->add($layout2, null, null, CENTER, CENTER);
 	ob_end_clean();
 	return $layout;
 }
 
 // Callback function for checking authorizations
-function canView( &$item ) {
-	$authZ =& Services::getService("AuthZ");
-	$idManager =& Services::getService("Id");
+function canView( $item ) {
+	$authZ = Services::getService("AuthZ");
+	$idManager = Services::getService("Id");
 	
 	if ($authZ->isUserAuthorizedBelow($idManager->getId("edu.middlebury.authorization.view"), $item->getId()))
 	{

@@ -11,6 +11,13 @@
 
 <changelog name="Concerto ChangeLog">
 	<version number="2.4.2" date="The Future">
+		<change author='adam'>
+			Removing ampersands for compatability with other PHP5 code.
+			The BBEdit-grep string used for the find and replace was:
+					(function )&amp;|(=\s?)&amp;([^a-z#])|([^&amp;])&amp;\s?(\$)
+			replaced with
+					\1\2\3\4\5
+		</change>
 		<fix author='adam'>	
 			Now using an empty default cookie domain to better work out of the box.
 		</fix>

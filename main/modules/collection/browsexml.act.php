@@ -33,8 +33,8 @@ class browsexmlAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorizedBelow(
 					$idManager->getId("edu.middlebury.authorization.view"), 
 					$this->getRepositoryId());
@@ -59,7 +59,7 @@ class browsexmlAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$repository =& $this->getRepository();
+		$repository =$this->getRepository();
 		return _("Browse Assets in the")
 			." <em>".$repository->getDisplayName()."</em> "
 			._(" Collection");
@@ -73,17 +73,17 @@ class browsexmlAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 		
-		$repository =& $this->getRepository();
+		$repository =$this->getRepository();
 				
 		$harmoni->request->passthrough("collection_id");
 		
 		// If the Repository supports searching of root assets, just get those
 		$hasRootSearch = FALSE;
-		$rootSearchType =& new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", "");
-		$searchTypes =& $repository->getSearchTypes();
+		$rootSearchType = new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", "");
+		$searchTypes =$repository->getSearchTypes();
 		while ($searchTypes->hasNext()) {
 			if ($rootSearchType->isEqual( $searchTypes->next() )) {
 				$hasRootSearch = TRUE;
@@ -110,7 +110,7 @@ END;
 		//***********************************
 		// Get the assets to display
 		//***********************************
-		$searchProperties =& new HarmoniProperties(
+		$searchProperties = new HarmoniProperties(
 					Type::fromString("repository::harmoni::order"));
 		if (!($order = RequestContext::value("order")))
 			$order = 'DisplayName';
@@ -119,20 +119,20 @@ END;
 		switch (RequestContext::value("limit_by")) {
 			case 'type':
 				if (RequestContext::value("type")) {
-					$assets =& $repository->getAssetsByType(Type::fromString(RequestContext::value("type")));
+					$assets =$repository->getAssetsByType(Type::fromString(RequestContext::value("type")));
 					break;
 				}
 				
 			case 'search':
-				$searchModuleManager =& Services::getService("RepositorySearchModules");
-				$selectedSearchType =& Type::fromString(RequestContext::value("searchtype"));
+				$searchModuleManager = Services::getService("RepositorySearchModules");
+				$selectedSearchType = Type::fromString(RequestContext::value("searchtype"));
 				
 				if (RequestContext::value("searchtype") 
 					&& $searchModuleManager->getSearchCriteria($repository, $selectedSearchType)) 
 				{
 					$criteria = $searchModuleManager->getSearchCriteria($repository, $selectedSearchType);
 					
-					$assets =& $repository->getAssetsBySearch(
+					$assets =$repository->getAssetsBySearch(
 						$criteria,
 						$selectedSearchType,
 						$searchProperties);
@@ -142,23 +142,23 @@ END;
 			default:
 				if ($hasRootSearch) {
 					$criteria = NULL;
-					$assets =& $repository->getAssetsBySearch(
+					$assets =$repository->getAssetsBySearch(
 						$criteria, 
 						$rootSearchType, 
 						$searchProperties);
 				} 
 				// Otherwise, just get all the assets
 				else {
-					$assets =& $repository->getAssets();
+					$assets =$repository->getAssets();
 				}
 		}
 		
 		
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		
 		while ($assets->hasNext()) {
-			$asset =& $assets->next();
+			$asset =$assets->next();
 			if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
 			{
 				$this->printAssetXML($asset);
@@ -179,12 +179,12 @@ END;
 	 * @access public
 	 * @since 10/14/05
 	 */
-	function printAssetXML( &$asset) {
+	function printAssetXML( $asset) {
 		
-		$assetId =& $asset->getId();
-		$repository =& $asset->getRepository();
-		$repositoryId =& $repository->getId();
-		$idManager =& Services::getService("Id");
+		$assetId =$asset->getId();
+		$repository =$asset->getRepository();
+		$repositoryId =$repository->getId();
+		$idManager = Services::getService("Id");
 		
 		
 		// ------------------------------------------
@@ -206,15 +206,15 @@ END;
 		print "</text-position>\n";
 		
 		
-		$fileRecords =& $asset->getRecordsByRecordStructure(
+		$fileRecords =$asset->getRecordsByRecordStructure(
 			$idManager->getId("FILE"));
 		
 		/*********************************************************
 		 * Files
 		 *********************************************************/
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		$harmoni->request->startNamespace("polyphony-repository");
-		$imgProcessor =& Services::getService("ImageProcessor");
+		$imgProcessor = Services::getService("ImageProcessor");
 
 		while ($fileRecords->hasNext())
 			$this->printFileRecord($fileRecords->next(), $repositoryId, $assetId);

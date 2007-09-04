@@ -32,8 +32,8 @@ class createAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.modify"), 
 					$this->getRepositoryId());
@@ -58,10 +58,10 @@ class createAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$centerPane =& $this->getActionRows();
-		$repositoryId =& $this->getRepositoryId();
+		$centerPane =$this->getActionRows();
+		$repositoryId =$this->getRepositoryId();
 		$cacheName = 'create_schema_wizard_'.$repositoryId->getIdString();
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		$harmoni->request->passthrough("collection_id");
 		
 		$this->runWizard ( $cacheName, $centerPane );
@@ -86,26 +86,26 @@ class createAction
 	 * @access public
 	 * @since 4/28/05
 	 */
-	function &createWizard () {
-		$repository =& $this->getRepository();
+	function createWizard () {
+		$repository =$this->getRepository();
 	
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withDefaultLayout();
+		$wizard = SimpleStepWizard::withDefaultLayout();
 		
 		// :: Step One ::
-		$stepOne =& $wizard->addStep("namedesc", new WizardStep());
+		$stepOne =$wizard->addStep("namedesc", new WizardStep());
 		$stepOne->setDisplayName(_("Name & Description"));
 		
 		// Create the properties.
-		$displayNameProp =& $stepOne->addComponent("display_name",
+		$displayNameProp =$stepOne->addComponent("display_name",
 			new WTextField());
 		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$displayNameProp->setErrorText(_("A value for this field is required."));
 		
-		$descriptionProp =& $stepOne->addComponent("description",
+		$descriptionProp =$stepOne->addComponent("description",
 			WTextArea::withRowsAndColumns(5, 30));
 		
-		$formatProp =& $stepOne->addComponent("format",
+		$formatProp =$stepOne->addComponent("format",
 			new WTextField());
 		$formatProp->setValue("Plain Text - UTF-8 encoding");
 		$formatProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
@@ -137,41 +137,41 @@ class createAction
 			
 		
 		// :: Add Elements ::
-		$elementStep =& $wizard->addStep("elementstep",new WizardStep());
+		$elementStep =$wizard->addStep("elementstep",new WizardStep());
 		$elementStep->setDisplayName(_("Fields"));
 		
-		$multField =& $elementStep->addComponent("elements", new WOrderedRepeatableComponentCollection());
+		$multField =$elementStep->addComponent("elements", new WOrderedRepeatableComponentCollection());
 		$multField->setAddLabel(_("Add New Field"));
 		$multField->setRemoveLabel(_("Remove Field"));
 		
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"display_name", 
 			new WTextField());
 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setErrorText(_("A value for this property is required."));
 		$property->setSize(20);
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"description", 
 			WTextArea::withRowsAndColumns(2, 30));
 		
 		
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"type", 
 			new WSelectList());
-		$defaultType =& new Type ("Repository", "edu.middlebury.harmoni", "shortstring");
+		$defaultType = new Type ("Repository", "edu.middlebury.harmoni", "shortstring");
 		$property->setValue(urlencode(HarmoniType::typeToString($defaultType, " :: ")));
 		
 		// We are going to assume that all RecordStructures have the same PartStructureTypes
 		// in this Repository. This will allow us to list PartStructureTypes before
 		// the RecordStructure is actually created.
-		$recordStructures =& $repository->getRecordStructures();
+		$recordStructures =$repository->getRecordStructures();
 		if (!$recordStructures->hasNext())
 			throwError(new Error("No RecordStructures available.", "Concerto"));
 			
-		$dmpType =& new Type("RecordStructures", "edu.middlebury.harmoni", "DataManagerPrimatives", "RecordStructures stored in the Harmoni DataManager.");
+		$dmpType = new Type("RecordStructures", "edu.middlebury.harmoni", "DataManagerPrimatives", "RecordStructures stored in the Harmoni DataManager.");
 		$orderedTypes = array(
 			"Repository :: edu.middlebury.harmoni :: shortstring"	
 				=> _("Short String ----- text with max-length of 256 characters"),
@@ -194,11 +194,11 @@ class createAction
 		while ($recordStructures->hasNext()) {
 			// we want just the datamanager structure types, so just 
 			// get the first structure that has Format "DataManagerPrimatives"
-			$tmpRecordStructure =& $recordStructures->next();
+			$tmpRecordStructure =$recordStructures->next();
 			if ($dmpType->isEqual($tmpRecordStructure->getType())) {
-				$types =& $tmpRecordStructure->getPartStructureTypes();
+				$types =$tmpRecordStructure->getPartStructureTypes();
 				while ($types->hasNext()) {
-					$type =& $types->next();
+					$type =$types->next();
 					$typeString = Type::typeToString($type, " :: ");
 					if (!array_key_exists($typeString, $orderedTypes))
 						$unorderedTypes[$typeString] = $typeString;
@@ -214,26 +214,26 @@ class createAction
 		}
 		
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"mandatory", 
 			new WCheckBox());
 		$property->setChecked(false);
 		$property->setLabel(_("yes"));
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"repeatable", 
 			new WCheckBox());
 // 		$property->setChecked(false);
 		$property->setLabel(_("yes"));
 		
-// 		$property =& $multField->addComponent(
+// 		$property =$multField->addComponent(
 // 			"populatedbydr", 
 // 			new WCheckBox());
 // 		$property->setChecked(false);
 // 		$property->setLabel(_("yes"));
 		
 		
-		$property =& $multField->addComponent(
+		$property =$multField->addComponent(
 			"authoritative_values", 
 			WTextArea::withRowsAndColumns(10, 40));
 		
@@ -314,7 +314,7 @@ class createAction
 	 * @since 4/28/05
 	 */
 	function saveWizard ( $cacheName ) {
-		$wizard =& $this->getWizard($cacheName);
+		$wizard =$this->getWizard($cacheName);
 		// If all properties validate then go through the steps nessisary to
 		// save the data.
 		if ($wizard->validate()) {
@@ -323,16 +323,16 @@ class createAction
 			$repository = $this->getRepository();
 			
 			// Create the info Structure
-			$recordStructure =& $repository->createRecordStructure($properties['namedesc']['display_name'], 
+			$recordStructure =$repository->createRecordStructure($properties['namedesc']['display_name'], 
 									$properties['namedesc']['description'], 
 									$properties['namedesc']['format'],
 									$properties['namedesc']['display_name']);
 			Debug::printAll();
-			$recordStructureId =& $recordStructure->getId();
+			$recordStructureId =$recordStructure->getId();
 			
 			// Create a set for the RecordStructure
-			$setManager =& Services::getService("Sets");
-			$set =& $setManager->getPersistentSet($recordStructureId);
+			$setManager = Services::getService("Sets");
+			$set =$setManager->getPersistentSet($recordStructureId);
 
 			// Store up the positions for later setting after all of the ids have
 			// been added to the set and we can do checking to make sure that 
@@ -340,11 +340,11 @@ class createAction
 			$positions = array();
 			
 			// Create the PartStructures
-			$partStructureProperties =& $properties['elementstep']['elements'];
+			$partStructureProperties =$properties['elementstep']['elements'];
 			foreach (array_keys($partStructureProperties) as $index) {
-				$type =& HarmoniType::fromString(urldecode(
+				$type = HarmoniType::fromString(urldecode(
 					$partStructureProperties[$index]['type']), " :: ");
-				$partStructure =& $recordStructure->createPartStructure(
+				$partStructure =$recordStructure->createPartStructure(
 								$partStructureProperties[$index]['display_name'],
 								$partStructureProperties[$index]['description'],
 								$type,
@@ -360,9 +360,9 @@ class createAction
 					array_walk($authoritativeStrings, "removeExcessWhitespace");
 					
 					// Remove and missing values
-					$authoritativeValues =& $partStructure->getAuthoritativeValues();
+					$authoritativeValues =$partStructure->getAuthoritativeValues();
 					while ($authoritativeValues->hasNext()) {
-						$value =& $authoritativeValues->next();
+						$value =$authoritativeValues->next();
 						if (!in_array($value->asString(), $authoritativeStrings))
 							$partStructure->removeAuthoritativeValue($value);
 					}
@@ -374,7 +374,7 @@ class createAction
 					}
 				}
 				
-				$partStructureId =& $partStructure->getId();
+				$partStructureId =$partStructure->getId();
 				// Add the PartStructureId to the set
 				if (!$set->isInSet($partStructureId))
 					$set->addItem($partStructureId);
@@ -382,14 +382,14 @@ class createAction
 			
 			// Log the success or failure
 			if (Services::serviceRunning("Logging")) {
-				$loggingManager =& Services::getService("Logging");
-				$log =& $loggingManager->getLogForWriting("Concerto");
-				$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+				$loggingManager = Services::getService("Logging");
+				$log =$loggingManager->getLogForWriting("Concerto");
+				$formatType = new Type("logging", "edu.middlebury", "AgentsAndNodes",
 								"A format in which the acting Agent[s] and the target nodes affected are specified.");
-				$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+				$priorityType = new Type("logging", "edu.middlebury", "Event_Notice",
 								"Normal events.");
 				
-				$item =& new AgentNodeEntryItem("Modify Node", "RecordStructure created:\n<br/>&nbsp; &nbsp; &nbsp; ".$recordStructure->getDisplayName());
+				$item = new AgentNodeEntryItem("Modify Node", "RecordStructure created:\n<br/>&nbsp; &nbsp; &nbsp; ".$recordStructure->getDisplayName());
 				$item->addNodeId($repository->getId());
 				
 				$log->appendLogWithTypes($item,	$formatType, $priorityType);
@@ -410,7 +410,7 @@ class createAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		return $harmoni->request->quickURL("collection", "edit",
 			array("wizardSkipToStep" => "schema"));
 	}

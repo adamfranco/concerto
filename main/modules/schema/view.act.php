@@ -32,8 +32,8 @@ class viewAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.view"), 
 					$this->getRepositoryId());
@@ -69,18 +69,18 @@ class viewAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$centerPane =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
-		$recordStructureId =& $this->getRecordStructureId();
-		$recordStructure =& $this->getRecordStructure();
-		$setManager =& Services::getService("Sets");
-		$set =& $setManager->getPersistentSet($recordStructureId);
+		$centerPane =$this->getActionRows();
+		$harmoni = Harmoni::instance();
+		$recordStructureId =$this->getRecordStructureId();
+		$recordStructure =$this->getRecordStructure();
+		$setManager = Services::getService("Sets");
+		$set =$setManager->getPersistentSet($recordStructureId);
 
 		ob_start();
 		
 		// Prepare the return URL so that we can get back to where we were.
 		print "\n<a href='";
-		$repositoryId =& $this->getRepositoryId();
+		$repositoryId =$this->getRepositoryId();
 		print $harmoni->history->getReturnURL(
 			"concerto/collection/edit/".$repositoryId->getIdString());
 		print "'><-- "._("Return")."</a>";
@@ -88,8 +88,8 @@ class viewAction
 		$harmoni->history->markReturnURL(
 				"concerto/schema/edit-return/".$recordStructureId->getIdString());
 		
-		$authZManager =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZManager = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		// Schema Edit
 		if (method_exists($recordStructure, 'createPartStructure')
 			&& 	(preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
@@ -130,19 +130,19 @@ class viewAction
 // 		print "\n<th style='text-align: center'>"._("IsPopulatedByRepository?")."</th>";
 		print "\n<th style='text-align: center'>"._("Authoritative Values")."</th>";
 		print "\n</tr>";
-		$partStructures =& $recordStructure->getPartStructures();
+		$partStructures =$recordStructure->getPartStructures();
 		$partStructureArray = array();
 		while ($partStructures->hasNext()) {
-			$partStructure =& $partStructures->next();
+			$partStructure =$partStructures->next();
 			if ($set->isInSet($partStructure->getId()))
-				$partStructureArray[$set->getPosition($partStructure->getId())] =& $partStructure;
+				$partStructureArray[$set->getPosition($partStructure->getId())] =$partStructure;
 			else
-				$partStructureArray[] =& $partStructure;
+				$partStructureArray[] =$partStructure;
 		}
 		
 		ksort($partStructureArray);
 		foreach (array_keys($partStructureArray) as $key) {
-			$partStructure =& $partStructureArray[$key];
+			$partStructure =$partStructureArray[$key];
 			print "\n<tr>";
 			print "\n<td style='vertical-align: top;'>".($key+1)."</td>";
 			print "\n<td style='vertical-align: top;'><strong>".$partStructure->getDisplayName()."</strong></td>";
@@ -151,14 +151,14 @@ class viewAction
 			print "\n<td style='vertical-align: top; text-align: center'>".(($partStructure->isRepeatable())?"<strong>"._("Yes")."</strong>":_("No"))."</td>";
 // 			print "\n<td style='text-align: center'>".(($partStructure->isPopulatedByRepository())?"<strong>"._("Yes")."</strong>":_("No"))."</td>";
 			print "\n<td style='vertical-align: top; text-align: left;'>";
-			$authoritativeValues =& $partStructure->getAuthoritativeValues();
+			$authoritativeValues =$partStructure->getAuthoritativeValues();
 			if ($authoritativeValues->hasNext()) {
 				print "\n\t<ul style='margin: 0px; padding-left: 20px; max-height: 200px; overflow: auto;";
 				if ($authoritativeValues->count() > 12)
 					print " height: 200px;";	// IE Doesn't understand max-height
 				print "'>";
 				while ($authoritativeValues->hasNext()) {
-					$value =& $authoritativeValues->next();
+					$value =$authoritativeValues->next();
 					print "\n\t\t<li>".$value->asString()."</li>";
 				}
 				print "\n\t</ul>";

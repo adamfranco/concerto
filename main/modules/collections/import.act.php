@@ -32,9 +32,9 @@ class importAction extends MainWindowAction {
 	 * @since 6/08/05
 	 */
 	function isAuthorizedToExecute () {
-		$harmoni =& Harmoni::instance();
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$harmoni = Harmoni::instance();
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		
 		$harmoni->request->startNamespace('import');
 
@@ -71,15 +71,15 @@ class importAction extends MainWindowAction {
 	}
 
 	function buildContent () {
-		$harmoni =& Harmoni::instance();
-		$centerPane =& $this->getActionRows();
+		$harmoni = Harmoni::instance();
+		$centerPane =$this->getActionRows();
 
-		$authN =& Services::getService("AuthN");
-		$authTypes =& $authN->getAuthenticationTypes();
+		$authN = Services::getService("AuthN");
+		$authTypes =$authN->getAuthenticationTypes();
 		$uniqueString = "";
 		while($authTypes->hasNext()) {
-			$authType =& $authTypes->next();
-			$id =& $authN->getUserId($authType);
+			$authType =$authTypes->next();
+			$id =$authN->getUserId($authType);
 			$uniqueString .= "_".$id->getIdString();
 		}
 
@@ -97,8 +97,8 @@ class importAction extends MainWindowAction {
  	 * @since 7/18/05
 	 */
 	
-	function &createWizard () {
-		$wizard =& SimpleWizard::withText(
+	function createWizard () {
+		$wizard = SimpleWizard::withText(
 			"<table border='0' style='margin-top:20px' >\n" .
 			"\n<tr><td><h3>"._("File type:")."</h3></td></tr>".
 			"\n<tr><td>"._("The type of file to be imported: ")."</td>".
@@ -119,26 +119,26 @@ class importAction extends MainWindowAction {
 			"[[_save]]".
 			"</td></tr></table>");
 				
-		$select =& $wizard->addComponent("file_type", new WSelectList());
+		$select =$wizard->addComponent("file_type", new WSelectList());
 //		$select->addOption("Tab-Delimited", "Tab-Delimited");
 		$select->addOption("XML", "XML");
 //		$select->addOption("Exif", "Exif");
 //		$select->setValue("Tab-Delimited");
 		
-		$archive =& $wizard->addComponent("is_archived", 
+		$archive =$wizard->addComponent("is_archived", 
 			WCheckBox::withLabel("is Archived"));
 
-		$type =& $wizard->addComponent("import_type", new WSelectList());
+		$type =$wizard->addComponent("import_type", new WSelectList());
 //		$type->addOption("update", "update");  
 // need exceptions for nodes not existing
 		$type->addOption("insert", "insert");
 		//$type->addOption("replace", "replace");
 		
-		$fileField =& $wizard->addComponent("filename", new WFileUploadField());
+		$fileField =$wizard->addComponent("filename", new WFileUploadField());
 				
-		$save =& $wizard->addComponent("_save", 
+		$save =$wizard->addComponent("_save", 
 			WSaveButton::withLabel("Import"));
-		$cancel =& $wizard->addComponent("_cancel", new WCancelButton());
+		$cancel =$wizard->addComponent("_cancel", new WCancelButton());
 		//$fileField->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 		//$fileField->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		return $wizard;
@@ -174,13 +174,13 @@ class importAction extends MainWindowAction {
 	 * @since 7/27/05
 	 */
 	function saveWizard($cacheName) {
-		$harmoni =& Harmoni::instance();
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$wizard =& $this->getWizard($cacheName);
+		$harmoni = Harmoni::instance();
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$wizard =$this->getWizard($cacheName);
 		$properties = $wizard->getAllValues();
 
-		$centerPane =& $this->getActionRows();
+		$centerPane =$this->getActionRows();
 		ob_start();
 		
 		$path = $properties['filename']['tmp_name'];
@@ -216,7 +216,7 @@ class importAction extends MainWindowAction {
 		if ($properties['file_type'] == "XML") {
 		//	define an empty importer for decompression
 			if ($properties['is_archived'] == TRUE) {
-				$importer =& new XMLImporter($array);
+				$importer = new XMLImporter($array);
 				$directory = $importer->decompress($newName);
 								
 				// something happened so tell the end user
@@ -230,7 +230,7 @@ class importAction extends MainWindowAction {
 				
 				while ($file = readdir($dir)) // each folder is a collection
 					if (is_dir($directory."/".$file) && $file != "." && $file != "..") {
-						$importer =& XMLRepositoryImporter::withFile(
+						$importer = XMLRepositoryImporter::withFile(
 							$array,
 							$directory."/".$file."/metadata.xml", 
 							$properties['import_type']);
@@ -248,7 +248,7 @@ class importAction extends MainWindowAction {
 					shell_exec(' rm -R '.$directory);
 			}
 			else {// not compressed, only one xml file
-				$importer =& XMLRepositoryImporter::withFile($array, $newName,
+				$importer = XMLRepositoryImporter::withFile($array, $newName,
 					$properties['import_type']);
 				$importer->parseAndImport("asset");
 				// something happened so tell the end user
@@ -281,7 +281,7 @@ class importAction extends MainWindowAction {
 	 * @since 6/08/05
 	 */
 	function getReturnUrl () {
-		$harmoni =& Harmoni::instance();		
+		$harmoni = Harmoni::instance();		
 		return $harmoni->request->quickURL("collections", "namebrowse");
 	}	
 }

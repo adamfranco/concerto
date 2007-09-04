@@ -32,8 +32,8 @@ class browserecordxmlAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorizedBelow(
 					$idManager->getId("edu.middlebury.authorization.view"), 
 					$this->getAssetId());
@@ -83,7 +83,7 @@ END;
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$asset =& $this->getAsset();
+		$asset =$this->getAsset();
 		return _("Browsing Asset")." <em>".$asset->getDisplayName()."</em> ";
 	}
 	
@@ -95,13 +95,13 @@ END;
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$harmoni =& Harmoni::instance();
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$harmoni = Harmoni::instance();
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		
-		$repository =& $this->getRepository();
-		$parentAsset =& $this->getAsset();
-		$parentAssetId =& $parentAsset->getId();
+		$repository =$this->getRepository();
+		$parentAsset =$this->getAsset();
+		$parentAssetId =$parentAsset->getId();
 				
 		$harmoni->request->passthrough("collection_id");
 		$harmoni->request->passthrough("asset_id");	
@@ -129,10 +129,10 @@ END;
 		//***********************************
 		// Get the child assets to display
 		//***********************************
-		$assets =& $parentAsset->getAssets();
+		$assets =$parentAsset->getAssets();
 		
 		while ($assets->hasNext()) {
-			$asset =& $assets->next();
+			$asset =$assets->next();
 			if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
 			{
 				$this->printAssetXML($asset);
@@ -153,13 +153,13 @@ END;
 	 * @access public
 	 * @since 10/14/05
 	 */
-	function printAssetXML( &$asset, $recordId) {
-		$harmoni =& Harmoni::instance();
+	function printAssetXML( $asset, $recordId) {
+		$harmoni = Harmoni::instance();
 		
-		$assetId =& $asset->getId();
-		$repository =& $asset->getRepository();
-		$repositoryId =& $repository->getId();
-		$idManager =& Services::getService("Id");
+		$assetId =$asset->getId();
+		$repository =$asset->getRepository();
+		$repositoryId =$repository->getId();
+		$idManager = Services::getService("Id");
 		
 		
 		// ------------------------------------------
@@ -180,15 +180,15 @@ END;
 			print "none";
 		print "</text-position>\n";
 		
-		$fileRecords =& $asset->getRecordsByRecordStructure(
+		$fileRecords =$asset->getRecordsByRecordStructure(
 			$idManager->getId("FILE"));
 		
 		/*********************************************************
 		 * Files
 		 *********************************************************/
 		while ($fileRecords->hasNext()) {
-			$fileRecord =& $fileRecords->next();
-			$fileRecordId =& $fileRecord->getId();
+			$fileRecord =$fileRecords->next();
+			$fileRecordId =$fileRecord->getId();
 			if ($fileRecordId->isEqual($recordId))
 				$this->printFileRecord($fileRecord, $repositoryId, $assetId);
 		}

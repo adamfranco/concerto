@@ -46,8 +46,8 @@ class OAI {
 	function getCurrentHarvesterConfig () {
 		global $errors;
 		
-		$harmoni =& Harmoni::instance();
-		$config =& $harmoni->getAttachedData('OAI_CONFIG');
+		$harmoni = Harmoni::instance();
+		$config =$harmoni->getAttachedData('OAI_CONFIG');
 		if ($config->getProperty('ENABLE_OAI')) {
 			$harvesterConfig = $config->getProperty('OAI_HARVESTER_CONFIG');
 			foreach ($harvesterConfig as $configArray) {

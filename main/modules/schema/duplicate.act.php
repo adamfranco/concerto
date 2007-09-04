@@ -36,10 +36,10 @@ class duplicateAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can delete this exhibition
-		$authZManager =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
-		$recordStructure =& $this->getRecordStructure();
-		$recordStructureId =& $this->getRecordStructureId();
+		$authZManager = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
+		$recordStructure =$this->getRecordStructure();
+		$recordStructureId =$this->getRecordStructureId();
 		
 		if (method_exists($recordStructure, 'createPartStructure')
 			&& 	((preg_match("/^Repository::.+$/i", $recordStructureId->getIdString())
@@ -86,7 +86,7 @@ class duplicateAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$recordStructure =& $this->getRecordStructure();
+		$recordStructure =$this->getRecordStructure();
 		return _("Duplicating Schema")." <em>".$recordStructure->getDisplayName()."</em> ";
 	}
 	
@@ -98,18 +98,18 @@ class duplicateAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 		
-		$idManager =& Services::getService("Id");
+		$idManager = Services::getService("Id");
 		
-		$recordStructureId =& $this->getRecordStructureId();
-		$recordStructure =& $this->getRecordStructure();
+		$recordStructureId =$this->getRecordStructureId();
+		$recordStructure =$this->getRecordStructure();
 		$recordStructureIdString = $recordStructureId->getIdString();
-		$repositoryId =& $this->getRepositoryId();
-		$repository =& $this->getRepository();
+		$repositoryId =$this->getRepositoryId();
+		$repository =$this->getRepository();
 		
-		$newRecordStructure =& $repository->duplicateRecordStructure(
+		$newRecordStructure =$repository->duplicateRecordStructure(
 			$recordStructureId,
 			((RequestContext::value('copy_records') == 'true')?true:false),
 			null,
@@ -118,21 +118,21 @@ class duplicateAction
 		
 		// Log the action
 		if (Services::serviceRunning("Logging")) {
-			$loggingManager =& Services::getService("Logging");
-			$log =& $loggingManager->getLogForWriting("Concerto");
-			$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+			$loggingManager = Services::getService("Logging");
+			$log =$loggingManager->getLogForWriting("Concerto");
+			$formatType = new Type("logging", "edu.middlebury", "AgentsAndNodes",
 							"A format in which the acting Agent[s] and the target nodes affected are specified.");
-			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+			$priorityType = new Type("logging", "edu.middlebury", "Event_Notice",
 							"Normal events.");
 			
-			$item =& new AgentNodeEntryItem("Duplicate RecordStructure", "RecordStructure copied from: \n<br/>&nbsp; &nbsp; &nbsp;".$recordStructure->getDisplayName()."\n<br/>to:\n<br/>&nbsp; &nbsp; &nbsp;".$newRecordStructure->getDisplayName());
+			$item = new AgentNodeEntryItem("Duplicate RecordStructure", "RecordStructure copied from: \n<br/>&nbsp; &nbsp; &nbsp;".$recordStructure->getDisplayName()."\n<br/>to:\n<br/>&nbsp; &nbsp; &nbsp;".$newRecordStructure->getDisplayName());
 			$item->addNodeId($repositoryId);
 			
 			$log->appendLogWithTypes($item,	$formatType, $priorityType);
 		}
 		
-		$setManager =& Services::getService("Sets");
-		$set =& $setManager->getPersistentSet($repositoryId);
+		$setManager = Services::getService("Sets");
+		$set =$setManager->getPersistentSet($repositoryId);
 		if ($set->isInSet($recordStructureId))
 			$set->addItem($newRecordStructure->getId());
 		

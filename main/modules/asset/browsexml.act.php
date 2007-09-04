@@ -32,8 +32,8 @@ class browsexmlAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorizedBelow(
 					$idManager->getId("edu.middlebury.authorization.view"), 
 					$this->getAssetId());
@@ -58,7 +58,7 @@ class browsexmlAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$asset =& $this->getAsset();
+		$asset =$this->getAsset();
 		return _("Browsing Asset")." <em>".$asset->getDisplayName()."</em> ";
 	}
 	
@@ -70,7 +70,7 @@ class browsexmlAction
 	 * @since 5/4/06
 	 */
 	function getTitle () {
-		$asset =& $this->getAsset();
+		$asset =$this->getAsset();
 		return $asset->getDisplayName();
 	}
 	
@@ -82,7 +82,7 @@ class browsexmlAction
 	 * @since 5/4/06
 	 */
 	function setPassthrough () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		$harmoni->request->passthrough("collection_id");
 		$harmoni->request->passthrough("asset_id");
 	}
@@ -94,17 +94,17 @@ class browsexmlAction
 	 * @access public
 	 * @since 5/4/06
 	 */
-	function &getAssets () {
-		$parentAsset =& $this->getAsset();
+	function getAssets () {
+		$parentAsset =$this->getAsset();
 		
 		$assets = array();
-		$assets[] =& $parentAsset;
+		$assets[] =$parentAsset;
 		
-		$childAssets =& $parentAsset->getAssets();
+		$childAssets =$parentAsset->getAssets();
 		while ($childAssets->hasNext())
-			$assets[] =& $childAssets->next();
+			$assets[] =$childAssets->next();
 		
-		$iterator =& new HarmoniIterator($assets);
+		$iterator = new HarmoniIterator($assets);
 		return $iterator;
 	}
 }

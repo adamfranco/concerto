@@ -56,8 +56,8 @@ class rss_all_latestAction
 	 * @since 8/8/06
 	 */
 	function buildFeed () {
-		$harmoni =& Harmoni::instance();
-		$repositoryManager =& Services::getService('Repository');
+		$harmoni = Harmoni::instance();
+		$repositoryManager = Services::getService('Repository');
  		
  		if (RequestContext::value('order') == 'modification') {
  			$this->setTitle(_("All of Concerto")." - "._("Recently Changed Assets"));
@@ -69,7 +69,7 @@ class rss_all_latestAction
 	 	
  		$this->setLink($harmoni->request->quickURL('collections', 'namebrowse'));
 		
-		$assets =& $this->getAssets();
+		$assets =$this->getAssets();
 		$i = 0;
 		while ($assets->hasNext() && $i < $this->_numInFeed) {
 			$this->addItem($this->getAssetItem($assets->next()));
@@ -84,38 +84,38 @@ class rss_all_latestAction
 	 * @access public
 	 * @since 8/8/06
 	 */
-	function &getAssets () {
-		$authZManager =& Services::getService("AuthZ");
- 		$idManager =& Services::getService("IdManager");
+	function getAssets () {
+		$authZManager = Services::getService("AuthZ");
+ 		$idManager = Services::getService("IdManager");
 		
 		$assetsByDate = array();
 		
-		$repositoryManager =& Services::getService('Repository');
-		$repositories =& $repositoryManager->getRepositories();
-		$exhibitionRepositoryType =& new Type ('System Repositories', 
+		$repositoryManager = Services::getService('Repository');
+		$repositories =$repositoryManager->getRepositories();
+		$exhibitionRepositoryType = new Type ('System Repositories', 
 											'edu.middlebury.concerto', 'Exhibitions');
 		while($repositories->hasNext()) {
-			$repository =& $repositories->next();
+			$repository =$repositories->next();
 			
 			if (!$exhibitionRepositoryType->isEqual($repository->getType())
 				&& $authZManager->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.view"),
 					$repository->getId()))
 			{
-				$assets =& parent::getAssets($repository);
+				$assets = parent::getAssets($repository);
 				$i = 0;
 				while ($assets->hasNext() && $i < $this->_numInFeed) {
-					$asset =& $assets->next();
-					$assetId =& $asset->getId();
+					$asset =$assets->next();
+					$assetId =$asset->getId();
 					if (RequestContext::value('order') == 'modification')
-						$date =& $asset->getModificationDate();
+						$date =$asset->getModificationDate();
 					else
-						$date =& $asset->getCreationDate();
+						$date =$asset->getCreationDate();
 					
 					$j = 0;
 					while (isset($assetsByDate[$date->asString()." ".$j]))
 						$j++;
-					$assetsByDate[$date->asString()." ".$j] =& $asset;
+					$assetsByDate[$date->asString()." ".$j] =$asset;
 					$i++;
 				}
 			}
@@ -123,7 +123,7 @@ class rss_all_latestAction
 		
 		krsort($assetsByDate);
 		
-		$iterator =& new HarmoniIterator($assetsByDate);
+		$iterator = new HarmoniIterator($assetsByDate);
 		return $iterator;
 	}
 	
@@ -135,9 +135,9 @@ class rss_all_latestAction
 	 * @access public
 	 * @since 8/9/06
 	 */
-	function &getAssetItem (&$asset) {
-		$item =& parent::getAssetItem($asset);
-		$repository =& $asset->getRepository();
+	function getAssetItem ($asset) {
+		$item = parent::getAssetItem($asset);
+		$repository =$asset->getRepository();
 		$item->setDescription(str_replace('<dl>', "<dl>"
 				."\n\t\t<dt style='font-weight: bold'>"._("Collection: ")."</dt>"
 				."\n\t\t<dd>".$repository->getDisplayName()."</dd>",

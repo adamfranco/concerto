@@ -43,5 +43,5 @@
 	
 	$harmoni->setPostProcessAction("window.display", $postProcessIgnoreList);
 	
-	$context =& new OsidContext;
+	$context = new OsidContext;
 	$context->assignContext('harmoni', $harmoni);

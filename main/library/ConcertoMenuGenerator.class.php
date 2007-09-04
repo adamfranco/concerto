@@ -35,23 +35,23 @@ class ConcertoMenuGenerator
 	 *		"module.action" .
 	 * @return object MenuLayout
 	 */
-	function &generateMainMenu() {
+	function generateMainMenu() {
 		
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		
 		list($module, $action) = explode(".", $harmoni->request->getRequestedModuleAction());
 		
-		$mainMenu =& new Menu(new YLayout(), 1);
+		$mainMenu = new Menu(new YLayout(), 1);
 
 	// :: Home ::
-		$mainMenu_item1 =& new MenuItemLink(
+		$mainMenu_item1 = new MenuItemLink(
 			_("Home"), 
 			$harmoni->request->quickURL("home", "welcome"), 
 			($module == "home" && $action == "welcome")?TRUE:FALSE, 1);
 		$mainMenu->add($mainMenu_item1, "100%", null, LEFT, CENTER);
 
 
-		$mainMenu_item2 =& new MenuItemLink(
+		$mainMenu_item2 = new MenuItemLink(
 			_("Collections"),
 			$harmoni->request->quickURL("collections", "namebrowse"), 
 			($module == "collections")?TRUE:FALSE,1);
@@ -66,10 +66,10 @@ class ConcertoMenuGenerator
 					$harmoni->request->get('asset_id'))) 
 			{
 				// Repository Link
-				$repository =& $this->getRepository();
+				$repository =$this->getRepository();
 				if ($repository) {
 					$linkTitle = $repository->getDisplayName();
-					$repositoryId =& $repository->getId();
+					$repositoryId =$repository->getId();
 				} else {
 					$linkTitle = _("Collection");
 					$repositoryId = null;
@@ -85,15 +85,15 @@ class ConcertoMenuGenerator
 					"100%", null, LEFT, CENTER);
 					
 				// Asset Link
-				$asset =& $this->getAsset();
+				$asset =$this->getAsset();
 				if ($asset) {
 					$assets = array();
-					$assets[] =& $asset;
+					$assets[] =$asset;
 					$this->addFirstParents($asset, $assets);
 					
 					$j = 0;
 					for ($i = count($assets) - 1; $i >= 0 ; $i--) {
-						$assetId =& $assets[$i]->getId();
+						$assetId =$assets[$i]->getId();
 						$mainMenu->add(
 							new MenuItemLink(
 								$assets[$i]->getDisplayName(),
@@ -108,7 +108,7 @@ class ConcertoMenuGenerator
 			}
 		}
 		
-		$mainMenu_item6 =& new MenuItemLink(
+		$mainMenu_item6 = new MenuItemLink(
 			_("Exhibitions"),
 			$harmoni->request->quickURL("exhibitions", "browse"), 
 			($module == 'exhibitions' && $action == 'browse')?TRUE:FALSE,1);
@@ -117,16 +117,16 @@ class ConcertoMenuGenerator
 		
 		// Exhibition browse links.
 		// Just show if we are not in a particular collection.
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
 		
 		if ($module == 'exhibitions' && $action != 'browse') {			
 			if (RequestContext::value('slideshow_id'))
-				$assetId =& $idManager->getId(RequestContext::value('slideshow_id'));
+				$assetId =$idManager->getId(RequestContext::value('slideshow_id'));
 // 			else if (RequestContext::value('asset_id'))
-// 				$assetId =& $idManager->getId(RequestContext::value('asset_id'));
+// 				$assetId =$idManager->getId(RequestContext::value('asset_id'));
 			else if (RequestContext::value('exhibition_id'))
-				$assetId =& $idManager->getId(RequestContext::value('exhibition_id'));
+				$assetId =$idManager->getId(RequestContext::value('exhibition_id'));
 			else
 				$assetId = false;
 				
@@ -147,7 +147,7 @@ class ConcertoMenuGenerator
 				}
 				$exhibitionAssetId = $idManager->getId($matches[1]);
 				$this->addSlideshowHierarchy($mainMenu, $exhibitionAssetId, false);
-				$item =& new MenuItemLink(
+				$item = new MenuItemLink(
 						_("New SlideShow"),
 						$harmoni->request->quickURL("exhibitions", "add_slideshow", 
 							array("exhibition_id" => $exhibitionAssetId->getIdString())), 
@@ -159,7 +159,7 @@ class ConcertoMenuGenerator
 					$mainMenu->add($slideShowHeading, "100%", null, LEFT, CENTER);
 					unset($slideShowHeading);
 				}
-				$slideshowAssetId =& $idManager->getId($matches[1]);
+				$slideshowAssetId =$idManager->getId($matches[1]);
 				$this->addSlideshowHierarchy($mainMenu, $slideshowAssetId, false);
 			}
 		}
@@ -169,16 +169,16 @@ class ConcertoMenuGenerator
 		
 		
 	// :: Tagging ::
-		$mainMenu_item1 =& new MenuItemLink(
+		$mainMenu_item1 = new MenuItemLink(
 			_("Tags"), 
 			$harmoni->request->quickURL("tags", "all"), 
 			($module == "tags" && $action == "all")?TRUE:FALSE, 1);
 		$mainMenu->add($mainMenu_item1, "100%", null, LEFT, CENTER);
 		
-		$tagManager =& Services::getService("Tagging");
+		$tagManager = Services::getService("Tagging");
 		if ($currentUserIdString = $tagManager->getCurrentUserIdString()) {
 			$harmoni->request->startNamespace("polyphony-tags");
-			$mainMenu_item1 =& new MenuItemLink(
+			$mainMenu_item1 = new MenuItemLink(
 				_("Your Tags"), 
 				$harmoni->request->quickURL("tags", "user", array('agent_id' => $currentUserIdString)), 
 				($module == "tags" && $action == "user" && RequestContext::value('agent_id') == $currentUserIdString)?TRUE:FALSE, 1);
@@ -197,11 +197,11 @@ class ConcertoMenuGenerator
 	 * @access public
 	 * @since 5/15/06
 	 */
-	function addFirstParents ( &$asset, &$assetArray ) {
-		$parents =& $asset->getParents();
+	function addFirstParents ( $asset, $assetArray ) {
+		$parents =$asset->getParents();
 		if ($parents->hasNext()) {
-			$parent =& $parents->next();
-			$assetArray[] =& $parent;
+			$parent =$parents->next();
+			$assetArray[] =$parent;
 			$this->addFirstParents($parent, $assetArray);
 		}
 	}
@@ -215,20 +215,20 @@ class ConcertoMenuGenerator
 	 * @access public
 	 * @since 5/22/06
 	 */
-	function addSlideshowHierarchy (&$mainMenu, &$assetId, $viewMode = true) {
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$harmoni =& Harmoni::instance();
+	function addSlideshowHierarchy ($mainMenu, $assetId, $viewMode = true) {
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$harmoni = Harmoni::instance();
 		list($module, $action) = explode(".", $harmoni->request->getRequestedModuleAction());
 
-		$exhibitionRepositoryId =& $idManager->getId(
+		$exhibitionRepositoryId =$idManager->getId(
 				"edu.middlebury.concerto.exhibition_repository");
-		$exhibitionRepository =& $repositoryManager->getRepository($exhibitionRepositoryId);
+		$exhibitionRepository =$repositoryManager->getRepository($exhibitionRepositoryId);
 		
-		$asset =& $exhibitionRepository->getAsset($assetId);
+		$asset =$exhibitionRepository->getAsset($assetId);
 
 		$assets = array();
-		$assets[] =& $asset;
+		$assets[] =$asset;
 		$this->addFirstParents($asset, $assets);
 		
 		$slideshowType = new HarmoniType("Asset Types", 
@@ -246,7 +246,7 @@ class ConcertoMenuGenerator
 					
 		$j = 0;
 		for ($i = count($assets) - 1; $i >= 0 ; $i--) {
-			$currentAssetId =& $assets[$i]->getId();
+			$currentAssetId =$assets[$i]->getId();
 			if ($slideshowType->isEqual($assets[$i]->getAssetType()) || $altSlideshowType->isEqual($assets[$i]->getAssetType())) {
 				if ($viewMode) {
 					$mainMenu->add(

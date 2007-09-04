@@ -49,8 +49,8 @@ class editAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.modify"), 
 					$this->_assets[0]->getId());
@@ -75,15 +75,15 @@ class editAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function &getAssetPropertiesStep () {
+	function getAssetPropertiesStep () {
 		/*********************************************************
 	 *  :: Asset Properties ::
 	 *********************************************************/
-		$step =& new WizardStep();
+		$step = new WizardStep();
 		$step->setDisplayName(_("Basic Properties"));
 		
 	// Display Name
-		$property =& $step->addComponent("display_name", new WTextField);
+		$property =$step->addComponent("display_name", new WTextField);
 // 		$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 // 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setSize(40);
@@ -91,27 +91,27 @@ class editAction
 		$property->setValue($this->_assets[0]->getDisplayName());
 		
 	// Description	
-		$property =& $step->addComponent("description", new WTextArea);
+		$property =$step->addComponent("description", new WTextArea);
 		$property->setRows(3);
 		$property->setColumns(40);
 		
 		$property->setValue($this->_assets[0]->getDescription());
 				
 	// Effective Date
-// 		$property =& $step->addComponent("effective_date", new WTextField);
+// 		$property =$step->addComponent("effective_date", new WTextField);
 // 		$property->setSize(40);
 // 		if(is_object($this->_assets[0]->getEffectiveDate())) {
-// 			$date =& $this->_assets[0]->getEffectiveDate();
-// 			$date =& $date->asDate();
+// 			$date =$this->_assets[0]->getEffectiveDate();
+// 			$date =$date->asDate();
 // 			$property->setValue($date->yyyymmddString());
 // 		}	
 	
 	// Expiration Date
-// 		$property =& $step->addComponent("expiration_date", new WTextField);
+// 		$property =$step->addComponent("expiration_date", new WTextField);
 // 		$property->setSize(40);
 // 		if (is_object($this->_assets[0]->getExpirationDate())) {
-// 			$date =& $this->_assets[0]->getExpirationDate();
-// 			$date =& $date->asDate();
+// 			$date =$this->_assets[0]->getExpirationDate();
+// 			$date =$date->asDate();
 // 			$property->setValue($date->yyyymmddString());
 // 		}
 		
@@ -129,7 +129,7 @@ class editAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function updateAssetProperties ( &$results, &$asset ) {
+	function updateAssetProperties ( $results, $asset ) {
 		// DisplayName
 		$asset->updateDisplayName($results['display_name']);
 		
@@ -137,11 +137,11 @@ class editAction
 		$asset->updateDescription($results['description']);
 		
 		// Effective Date
-// 		$newEffDate =& DateAndTime::fromString($results['effective_date']);
+// 		$newEffDate = DateAndTime::fromString($results['effective_date']);
 // 		$asset->updateEffectiveDate($newEffDate);
 		
 		// Expiration Date
-// 		$newExpDate =& DateAndTime::fromString($results['expiration_date']);
+// 		$newExpDate = DateAndTime::fromString($results['expiration_date']);
 // 		$asset->updateExpirationDate($newExpDate);
 	}
 	
@@ -153,14 +153,14 @@ class editAction
 	 * @since 10/26/05
 	 */
 	function getAssetContentStep () {
-		$step =& new WizardStep();
+		$step = new WizardStep();
 		$step->setDisplayName(_("Content")." ("._("optional").")");
 		
-		$property =& $step->addComponent("content", new WTextArea);
+		$property =$step->addComponent("content", new WTextArea);
 		$property->setRows(20);
 		$property->setColumns(70);
 		
-		$content =& $this->_assets[0]->getContent();
+		$content =$this->_assets[0]->getContent();
 		$property->setValue($content->asString());
 		
 		// Create the step text
@@ -184,10 +184,10 @@ class editAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function updateAssetContent ( &$results, &$asset ) {
+	function updateAssetContent ( $results, $asset ) {
 		// Content 
-		$content =& $asset->getContent();
-		$newContent =& Blob::withValue($results);
+		$content =$asset->getContent();
+		$newContent = Blob::withValue($results);
 		if (is_object($content) && !$content->isEqualTo($newContent))
 			$asset->updateContent($newContent);
 	}
@@ -200,13 +200,13 @@ class editAction
 	 * @access public
 	 * @since 10/31/05
 	 */
-	function &getFileRecordsStep () {
-		$idManager =& Services::getService("Id");
-		$repository =& $this->getRepository();
-		$recStructId =& $idManager->getId("FILE");
-		$recStruct =& $repository->getRecordStructure($recStructId);
+	function getFileRecordsStep () {
+		$idManager = Services::getService("Id");
+		$repository =$this->getRepository();
+		$recStructId =$idManager->getId("FILE");
+		$recStruct =$repository->getRecordStructure($recStructId);
 		
-		$step =& new WizardStep();
+		$step = new WizardStep();
 		$step->setDisplayName($recStruct->getDisplayName());
 		
 		ob_start();
@@ -214,7 +214,7 @@ class editAction
 		print "\n[[files]]";
 		$step->setContent(ob_get_clean());
 		
-		$repeatableComponent =& $step->addComponent("files", 
+		$repeatableComponent =$step->addComponent("files", 
 			new WRepeatableComponentCollection);
 		$repeatableComponent->setStartingNumber(0);
 		$repeatableComponent->setAddLabel(_("Add New File"));
@@ -223,55 +223,55 @@ class editAction
 		
 		ob_start();
 		
-		$component =& $repeatableComponent->addComponent("record_id", new WHiddenField());
+		$component =$repeatableComponent->addComponent("record_id", new WHiddenField());
 		
-		$component =& $repeatableComponent->addComponent("file_upload", new WFileUploadField());		
+		$component =$repeatableComponent->addComponent("file_upload", new WFileUploadField());		
 		
-		$vComponent =& $repeatableComponent->addComponent("file_name", new WVerifiedChangeInput());
+		$vComponent =$repeatableComponent->addComponent("file_name", new WVerifiedChangeInput());
 		$vComponent->setChecked(FALSE);
-		$component =& $vComponent->setInputComponent(new WTextField);
+		$component =$vComponent->setInputComponent(new WTextField);
 		
-		$component =& $repeatableComponent->addComponent("file_size", new WTextField());
+		$component =$repeatableComponent->addComponent("file_size", new WTextField());
 		$component->setEnabled(FALSE, TRUE);
 		
 		
-		$vComponent =& $repeatableComponent->addComponent("mime_type", new WVerifiedChangeInput());
+		$vComponent =$repeatableComponent->addComponent("mime_type", new WVerifiedChangeInput());
 		$vComponent->setChecked(FALSE);
-		$component =& $vComponent->setInputComponent(new WTextField);
+		$component =$vComponent->setInputComponent(new WTextField);
 		
 		
 		// Dimensions 
-		$dimensionComponent =& new WTextField();
+		$dimensionComponent = new WTextField();
 		$dimensionComponent->setSize(8);
 		$dimensionComponent->setStyle("text-align: right");
 		$dimensionComponent->setErrorRule(new WECOptionalRegex("^([0-9]+px)?$"));
 		$dimensionComponent->setErrorText(_("Must be a positive integer followed by 'px'."));
 		$dimensionComponent->addOnChange("validateWizard(this.form);");
 		
-		$vComponent =& $repeatableComponent->addComponent("height", new WVerifiedChangeInput());
+		$vComponent =$repeatableComponent->addComponent("height", new WVerifiedChangeInput());
 		$vComponent->setChecked(FALSE);
-		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
+		$component =$vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
-		$vComponent =& $repeatableComponent->addComponent("width", new WVerifiedChangeInput());
+		$vComponent =$repeatableComponent->addComponent("width", new WVerifiedChangeInput());
 		$vComponent->setChecked(FALSE);
-		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
+		$component =$vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
 		
 		// Thumnail Upload
-		$component =& $repeatableComponent->addComponent("thumbnail_upload", new WFileUploadField());
+		$component =$repeatableComponent->addComponent("thumbnail_upload", new WFileUploadField());
 		
-		$vComponent =& $repeatableComponent->addComponent("thumbnail_mime_type", new WVerifiedChangeInput());
+		$vComponent =$repeatableComponent->addComponent("thumbnail_mime_type", new WVerifiedChangeInput());
 		$vComponent->setChecked(FALSE);
-		$component =& $vComponent->setInputComponent(new WTextField);
+		$component =$vComponent->setInputComponent(new WTextField);
 		
 		// Thumbnail dimensions
-		$vComponent =& $repeatableComponent->addComponent("thumbnail_height", new WVerifiedChangeInput());
+		$vComponent =$repeatableComponent->addComponent("thumbnail_height", new WVerifiedChangeInput());
 		$vComponent->setChecked(FALSE);
-		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
+		$component =$vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
-		$vComponent =& $repeatableComponent->addComponent("thumbnail_width", new WVerifiedChangeInput());
+		$vComponent =$repeatableComponent->addComponent("thumbnail_width", new WVerifiedChangeInput());
 		$vComponent->setChecked(FALSE);
-		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
+		$component =$vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
 		print "\n<p>"._("Upload a new file and/or change the properties below.")."</p>";
 		print "\n[[file_upload]]";
@@ -381,22 +381,22 @@ class editAction
 		ob_end_clean();
 		
 		
-		$records =& $this->_assets[0]->getRecordsByRecordStructure($recStructId);
+		$records =$this->_assets[0]->getRecordsByRecordStructure($recStructId);
 		while ($records->hasNext()) {
-			$record =& $records->next();
+			$record =$records->next();
 			
-			$partIterator =& $record->getParts();
+			$partIterator =$record->getParts();
 			$parts = array();
 			while($partIterator->hasNext()) {
-				$part =& $partIterator->next();
-				$partStructure =& $part->getPartStructure();
-				$partStructureId =& $partStructure->getId();
-				$parts[$partStructureId->getIdString()] =& $part;
+				$part =$partIterator->next();
+				$partStructure =$part->getPartStructure();
+				$partStructureId =$partStructure->getId();
+				$parts[$partStructureId->getIdString()] =$part;
 			}
 			
 			$collection = array();
 			
-			$recordId =& $record->getId();
+			$recordId =$record->getId();
 			$collection['record_id'] = $recordId->getIdString();
 			
 			$collection['file_upload'] = array(
@@ -405,7 +405,7 @@ class editAction
 			
 			$collection['file_name'] = $parts['FILE_NAME']->getValue();
 	
-			$size =& ByteSize::withValue($parts['FILE_SIZE']->getValue());
+			$size = ByteSize::withValue($parts['FILE_SIZE']->getValue());
 			$collection['file_size'] = $size->asString();
 	
 			$collection['mime_type'] = $parts['MIME_TYPE']->getValue();
@@ -441,13 +441,13 @@ class editAction
 	 * @access public
 	 * @since 10/31/05
 	 */
-	function &getRemoteFileRecordsStep () {
-		$idManager =& Services::getService("Id");
-		$repository =& $this->getRepository();
-		$recStructId =& $idManager->getId("REMOTE_FILE");
-		$recStruct =& $repository->getRecordStructure($recStructId);
+	function getRemoteFileRecordsStep () {
+		$idManager = Services::getService("Id");
+		$repository =$this->getRepository();
+		$recStructId =$idManager->getId("REMOTE_FILE");
+		$recStruct =$repository->getRecordStructure($recStructId);
 		
-		$step =& new WizardStep();
+		$step = new WizardStep();
 		$step->setDisplayName($recStruct->getDisplayName());
 		
 		ob_start();
@@ -455,7 +455,7 @@ class editAction
 		print "\n[[files]]";
 		$step->setContent(ob_get_clean());
 		
-		$repeatableComponent =& $step->addComponent("files", 
+		$repeatableComponent =$step->addComponent("files", 
 			new WRepeatableComponentCollection);
 		$repeatableComponent->setStartingNumber(0);
 		$repeatableComponent->setAddLabel(_("Add New File"));
@@ -464,57 +464,57 @@ class editAction
 		
 		ob_start();
 		
-		$component =& $repeatableComponent->addComponent("record_id", new WHiddenField());
+		$component =$repeatableComponent->addComponent("record_id", new WHiddenField());
 		
-		$component =& $repeatableComponent->addComponent("file_url", new WTextField());	
+		$component =$repeatableComponent->addComponent("file_url", new WTextField());	
 		$component->setSize(50);
 		
-		$vComponent =& $repeatableComponent->addComponent("file_name", new WVerifiedChangeInput());
+		$vComponent =$repeatableComponent->addComponent("file_name", new WVerifiedChangeInput());
 		$vComponent->setChecked(FALSE);
-		$component =& $vComponent->setInputComponent(new WTextField);
+		$component =$vComponent->setInputComponent(new WTextField);
 		
-		$vComponent =& $repeatableComponent->addComponent("file_size", new WVerifiedChangeInput());
+		$vComponent =$repeatableComponent->addComponent("file_size", new WVerifiedChangeInput());
 		$vComponent->setChecked(FALSE);
-		$component =& $vComponent->setInputComponent(new WTextField);
+		$component =$vComponent->setInputComponent(new WTextField);
 		
 		
-		$vComponent =& $repeatableComponent->addComponent("mime_type", new WVerifiedChangeInput());
+		$vComponent =$repeatableComponent->addComponent("mime_type", new WVerifiedChangeInput());
 		$vComponent->setChecked(FALSE);
-		$component =& $vComponent->setInputComponent(new WTextField);
+		$component =$vComponent->setInputComponent(new WTextField);
 		
 		
 		// Dimensions 
-		$dimensionComponent =& new WTextField();
+		$dimensionComponent = new WTextField();
 		$dimensionComponent->setSize(8);
 		$dimensionComponent->setStyle("text-align: right");
 		$dimensionComponent->setErrorRule(new WECOptionalRegex("^([0-9]+px)?$"));
 		$dimensionComponent->setErrorText(_("Must be a positive integer followed by 'px'."));
 		$dimensionComponent->addOnChange("validateWizard(this.form);");
 		
-		$vComponent =& $repeatableComponent->addComponent("height", new WVerifiedChangeInput());
+		$vComponent =$repeatableComponent->addComponent("height", new WVerifiedChangeInput());
 		$vComponent->setChecked(FALSE);
-		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
+		$component =$vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
-		$vComponent =& $repeatableComponent->addComponent("width", new WVerifiedChangeInput());
+		$vComponent =$repeatableComponent->addComponent("width", new WVerifiedChangeInput());
 		$vComponent->setChecked(FALSE);
-		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
+		$component =$vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
 		
 		// Thumnail Upload
-		$component =& $repeatableComponent->addComponent("thumbnail_upload", new WFileUploadField());
+		$component =$repeatableComponent->addComponent("thumbnail_upload", new WFileUploadField());
 		
-		$vComponent =& $repeatableComponent->addComponent("thumbnail_mime_type", new WVerifiedChangeInput());
+		$vComponent =$repeatableComponent->addComponent("thumbnail_mime_type", new WVerifiedChangeInput());
 		$vComponent->setChecked(FALSE);
-		$component =& $vComponent->setInputComponent(new WTextField);
+		$component =$vComponent->setInputComponent(new WTextField);
 		
 		// Thumbnail dimensions
-		$vComponent =& $repeatableComponent->addComponent("thumbnail_height", new WVerifiedChangeInput());
+		$vComponent =$repeatableComponent->addComponent("thumbnail_height", new WVerifiedChangeInput());
 		$vComponent->setChecked(FALSE);
-		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
+		$component =$vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
-		$vComponent =& $repeatableComponent->addComponent("thumbnail_width", new WVerifiedChangeInput());
+		$vComponent =$repeatableComponent->addComponent("thumbnail_width", new WVerifiedChangeInput());
 		$vComponent->setChecked(FALSE);
-		$component =& $vComponent->setInputComponent($dimensionComponent->shallowCopy());
+		$component =$vComponent->setInputComponent($dimensionComponent->shallowCopy());
 		
 		print "\n<p>"._("Url:")." ";
 		print "\n[[file_url]]</p>";
@@ -624,29 +624,29 @@ class editAction
 		ob_end_clean();
 		
 		
-		$records =& $this->_assets[0]->getRecordsByRecordStructure($recStructId);
+		$records =$this->_assets[0]->getRecordsByRecordStructure($recStructId);
 		while ($records->hasNext()) {
-			$record =& $records->next();
+			$record =$records->next();
 			
-			$partIterator =& $record->getParts();
+			$partIterator =$record->getParts();
 			$parts = array();
 			while($partIterator->hasNext()) {
-				$part =& $partIterator->next();
-				$partStructure =& $part->getPartStructure();
-				$partStructureId =& $partStructure->getId();
-				$parts[$partStructureId->getIdString()] =& $part;
+				$part =$partIterator->next();
+				$partStructure =$part->getPartStructure();
+				$partStructureId =$partStructure->getId();
+				$parts[$partStructureId->getIdString()] =$part;
 			}
 			
 			$collection = array();
 			
-			$recordId =& $record->getId();
+			$recordId =$record->getId();
 			$collection['record_id'] = $recordId->getIdString();
 			
 			$collection['file_url'] = $parts['FILE_URL']->getValue();
 			
 			$collection['file_name'] = $parts['FILE_NAME']->getValue();
 	
-			$size =& ByteSize::withValue($parts['FILE_SIZE']->getValue());
+			$size = ByteSize::withValue($parts['FILE_SIZE']->getValue());
 			$collection['file_size'] = $size->asString();
 	
 			$collection['mime_type'] = $parts['MIME_TYPE']->getValue();
@@ -685,22 +685,22 @@ class editAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function updateFileRecords ( &$results, &$initialState, &$asset, $structIdString = 'FILE' ) {
+	function updateFileRecords ( $results, $initialState, $asset, $structIdString = 'FILE' ) {
 		printpre("<hr>updateFileRecords:$structIdString:".$asset->getDisplayName());
 		
-		$idManager =& Services::getService("Id");
-		$recStructId =& $idManager->getId($structIdString);
+		$idManager = Services::getService("Id");
+		$recStructId =$idManager->getId($structIdString);
 		$exisistingRecords = array();
 		
 		foreach (array_keys($results) as $i) {
-			$recordResults =& $results[$i];
+			$recordResults =$results[$i];
 			
 			if (isset($recordResults['record_id'])) {
-				$recordId =& $idManager->getId($recordResults['record_id']);
-				$record =& $asset->getRecord($recordId);
+				$recordId =$idManager->getId($recordResults['record_id']);
+				$record =$asset->getRecord($recordId);
 			} else {
-				$record =& $asset->createRecord($recStructId);
-				$recordId =& $record->getId();
+				$record =$asset->createRecord($recStructId);
+				$recordId =$record->getId();
 			}
 			
 			$exisistingRecords[] = $recordId->getIdString();
@@ -710,10 +710,10 @@ class editAction
 		}
 		
 		// Delete any records that were removed.
-		$records =& $asset->getRecordsByRecordStructure($recStructId);
+		$records =$asset->getRecordsByRecordStructure($recStructId);
 		while ($records->hasNext()) {
-			$record =& $records->next();
-			$recordId =& $record->getId();
+			$record =$records->next();
+			$recordId =$record->getId();
 			if (!in_array($recordId->getIdString(), $exisistingRecords))
 				$asset->deleteRecord($recordId);
 		}
@@ -729,18 +729,18 @@ class editAction
 	 * @access public
 	 * @since 10/31/05
 	 */
-	function updateFileRecord ( &$results, &$initialState, &$record, $structIdString = 'FILE') {
-		$recordId =& $record->getId();
+	function updateFileRecord ( $results, $initialState, $record, $structIdString = 'FILE') {
+		$recordId =$record->getId();
 		printpre("<hr>updateFileRecord: ".$recordId->getIdString());
 		
 		// Get all the parts
-		$partIterator =& $record->getParts();
+		$partIterator =$record->getParts();
 		$parts = array();
 		while($partIterator->hasNext()) {
-			$part =& $partIterator->next();
-			$partStructure =& $part->getPartStructure();
-			$partStructureId =& $partStructure->getId();
-			$parts[$partStructureId->getIdString()] =& $part;
+			$part =$partIterator->next();
+			$partStructure =$part->getPartStructure();
+			$partStructureId =$partStructure->getId();
+			$parts[$partStructureId->getIdString()] =$part;
 		}
 		
 		if ($structIdString == 'REMOTE_FILE') {
@@ -761,7 +761,7 @@ class editAction
 			// application/octet-stream type, see if we can figure out the
 			// type.
 			if (!$mimeType || $mimeType == 'application/octet-stream') {
-				$mime =& Services::getService("MIME");
+				$mime = Services::getService("MIME");
 				$mimeType = $mime->getMimeTypeForFileName($name);
 			}
 			
@@ -774,7 +774,7 @@ class editAction
 				&& $results['file_upload']['name'])
 			|| ($results['file_url'] &&  $results['file_url'] != $initialState['file_url'])) 
 		{
-			$imageProcessor =& Services::getService("ImageProcessor");
+			$imageProcessor = Services::getService("ImageProcessor");
 					
 			// If our image format is supported by the image processor,
 			// generate a thumbnail.
@@ -875,7 +875,7 @@ class editAction
 	 * @access public
 	 * @since 12/6/06
 	 */
-	function storeUploadedFile (&$results, &$parts) {
+	function storeUploadedFile ($results, $parts) {
 		// if a new File was uploaded, store it.
 		if ($results['file_upload']['tmp_name'] 
 			&& $results['file_upload']['name']) 
@@ -887,7 +887,7 @@ class editAction
 			// application/octet-stream type, see if we can figure out the
 			// type.
 			if (!$mimeType || $mimeType == 'application/octet-stream') {
-				$mime =& Services::getService("MIME");
+				$mime = Services::getService("MIME");
 				$mimeType = $mime->getMimeTypeForFileName($name);
 			}
 			
@@ -910,7 +910,7 @@ class editAction
 	 * @access public
 	 * @since 12/6/06
 	 */
-	function storeFileUrl (&$results, &$parts) {
+	function storeFileUrl ($results, $parts) {
 		// if a new File was uploaded, store it.
 		if ($results['file_url']) {
 			if ($results['file_name']['checked'] == '1' && $results['file_name']['value'])
@@ -924,7 +924,7 @@ class editAction
 				// If we weren't passed a mime type or were passed the generic
 				// application/octet-stream type, see if we can figure out the
 				// type.
-				$mime =& Services::getService("MIME");
+				$mime = Services::getService("MIME");
 				$mimeType = $mime->getMimeTypeForFileName($name);
 			}		
 			
@@ -951,18 +951,18 @@ class editAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function &getRecordStructureStep ( &$recStruct ) {
-		$step =& new WizardStep();
+	function getRecordStructureStep ( $recStruct ) {
+		$step = new WizardStep();
 		$step->setDisplayName($recStruct->getDisplayName());
 		
-		$allRecordsComponent =& $step->addComponent("records", new WRepeatableComponentCollection());
+		$allRecordsComponent =$step->addComponent("records", new WRepeatableComponentCollection());
 		$allRecordsComponent->setStartingNumber(0);
 		$allRecordsComponent->setAddLabel(_("Add New Record"));
 		$allRecordsComponent->setRemoveLabel(_("Remove Record"));
 		$this->addPartStructureComponents($allRecordsComponent, $recStruct);
 		
-		$records =& $this->getRecordsForRecordStructure($recStruct);
-		$values =& $this->getValuesForRecords($records);
+		$records =$this->getRecordsForRecordStructure($recStruct);
+		$values =$this->getValuesForRecords($records);
 		
 		for ($i = 0; $i < count($values); $i++) {
 			$allRecordsComponent->addValueCollection($values[$i]);
@@ -984,7 +984,7 @@ class editAction
 	 * @access public
 	 * @since 10/27/05
 	 */
-	function addPartStructureComponents ( &$parentComponent, &$recStruct ) {
+	function addPartStructureComponents ( $parentComponent, $recStruct ) {
 	
 		$parentComponent->addComponent('record_id', new WHiddenField);
 		
@@ -993,20 +993,20 @@ class editAction
 		
 		$partStructText = array();
 		$unorderedPartStructText = array();
-		$setManager =& Services::getService("Sets");
-		$set =& $setManager->getPersistentSet($recStruct->getId());
+		$setManager = Services::getService("Sets");
+		$set =$setManager->getPersistentSet($recStruct->getId());
 		
-		$partStructs =& $recStruct->getPartStructures();
+		$partStructs =$recStruct->getPartStructures();
 		while ($partStructs->hasNext()) {
 			ob_start();
-			$partStruct =& $partStructs->next();
-			$partStructId =& $partStruct->getId();
+			$partStruct =$partStructs->next();
+			$partStructId =$partStruct->getId();
 		
 		// PartStructure
 			if (!$partStruct->isRepeatable()) {
-				$component =& $this->getComponentForPartStruct($partStruct);
+				$component =$this->getComponentForPartStruct($partStruct);
 			} else {
-				$component =& $this->getRepeatablePartStructComponent($partStruct);				
+				$component =$this->getRepeatablePartStructComponent($partStruct);				
 			}
 			
 			$parentComponent->addComponent(
@@ -1057,15 +1057,15 @@ class editAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function &getRepeatablePartStructComponent ( &$partStruct ) {
+	function getRepeatablePartStructComponent ( $partStruct ) {
 		
 	// Make a component for each of values
-		$repeatableProperty =& new WRepeatableComponentCollection();
+		$repeatableProperty = new WRepeatableComponentCollection();
 		$repeatableProperty->setStartingNumber(0);
 		$repeatableProperty->setAddLabel(_("Add New ").$partStruct->getDisplayName());
 		$repeatableProperty->setRemoveLabel(_("Remove ").$partStruct->getDisplayName());
 				
-		$property =& $repeatableProperty->addComponent('partvalue',
+		$property =$repeatableProperty->addComponent('partvalue',
 				$this->getComponentForPartStruct($partStruct));
 		
 		ob_start();
@@ -1086,24 +1086,24 @@ class editAction
 	 * @access public
 	 * @since 10/27/05
 	 */
-	function &getValuesForRecords ( &$records ) {
+	function getValuesForRecords ( $records ) {
 		$collections = array();
 		for ($i = 0; $i < count($records); $i++) {
 			$collections[$i] = array();
-			$record =& $records[$i];
-			$recordId =& $record->getId();
+			$record =$records[$i];
+			$recordId =$record->getId();
 			$collections[$i]['record_id'] = $recordId->getIdString();
 			
-			$recordStruct =& $record->getRecordStructure();
-			$partStructs =& $recordStruct->getPartStructures();
+			$recordStruct =$record->getRecordStructure();
+			$partStructs =$recordStruct->getPartStructures();
 			while ($partStructs->hasNext()) {
-				$partStruct =& $partStructs->next();
-				$partStructId =& $partStruct->getId();
+				$partStruct =$partStructs->next();
+				$partStructId =$partStruct->getId();
 				$partStructIdString = preg_replace("/[^a-zA-Z0-9:_\-]/", "_", $partStructId->getIdString());
 				
-				$partIterator =& $record->getPartsByPartStructure($partStructId);
+				$partIterator =$record->getPartsByPartStructure($partStructId);
 				if ($partIterator->hasNext())
-					$collections[$i][$partStructIdString] =& $this->getValuesForParts($partStruct, $partIterator);				
+					$collections[$i][$partStructIdString] =$this->getValuesForParts($partStruct, $partIterator);				
 			}
 		}
 		return $collections;
@@ -1117,19 +1117,19 @@ class editAction
 	 * @access public
 	 * @since 10/27/05
 	 */
-	function &getValuesForParts ( &$partStruct, &$parts ) {		
+	function getValuesForParts ( $partStruct, $parts ) {		
 		if ($partStruct->isRepeatable()) {
 			$collections = array();
 			$i =0;
 			while ($parts->hasNext()) {
-				$part =& $parts->next();
+				$part =$parts->next();
 				$collections[$i] = array();
-				$collections[$i]['partvalue'] =& $part->getValue();
+				$collections[$i]['partvalue'] =$part->getValue();
 				$i++;
 			}
 			return $collections;
 		} else {
-			$part =& $parts->next();
+			$part =$parts->next();
 			return $part->getValue();
 		}
 	}
@@ -1146,25 +1146,25 @@ class editAction
 	 * @access public
 	 * @since 10/24/05
 	 */
-	function updateAssetRecords (&$results, &$initialState, &$recStructId, &$asset) {
+	function updateAssetRecords ($results, $initialState, $recStructId, $asset) {
 		printpre("<hr>updateAssetRecords:".$asset->getDisplayName());
 		
 		$recStructIdString = preg_replace("/[^a-zA-Z0-9:_\-]/", "_", $recStructId->getIdString());
-		$idManager =& Services::getService("Id");
+		$idManager = Services::getService("Id");
 		$exisistingRecords = array();
 		
 		// Create an array of new tag values;
-		$assetId =& $asset->getId();
+		$assetId =$asset->getId();
 		$this->_newStructuredTagValues[$assetId->getIdString()] = array();
 		
 		foreach (array_keys($results[$recStructIdString]['records']) as $i) {
-			$recordResults =& $results[$recStructIdString]['records'][$i];
+			$recordResults =$results[$recStructIdString]['records'][$i];
 			if ($recordResults['record_id']) {
-				$recordId =& $idManager->getId($recordResults['record_id']);
-				$record =& $asset->getRecord($recordId);
+				$recordId =$idManager->getId($recordResults['record_id']);
+				$record =$asset->getRecord($recordId);
 			} else {
-				$record =& $asset->createRecord($recStructId);
-				$recordId =& $record->getId();
+				$record =$asset->createRecord($recStructId);
+				$recordId =$record->getId();
 			}
 			
 			$exisistingRecords[] = $recordId->getIdString();
@@ -1174,10 +1174,10 @@ class editAction
 		}
 		
 		// Delete any records that were removed.
-		$records =& $asset->getRecordsByRecordStructure($recStructId);
+		$records =$asset->getRecordsByRecordStructure($recStructId);
 		while ($records->hasNext()) {
-			$record =& $records->next();
-			$recordId =& $record->getId();
+			$record =$records->next();
+			$recordId =$record->getId();
 			if (!in_array($recordId->getIdString(), $exisistingRecords))
 				$asset->deleteRecord($recordId);
 		}
@@ -1194,8 +1194,8 @@ class editAction
 	 * @access public
 	 * @since 10/24/05
 	 */
-	function updateSingleValuedPart (&$partResults, &$partInitialState, 
-		&$partStruct, &$record, $assetId) 
+	function updateSingleValuedPart ($partResults, $partInitialState, 
+		$partStruct, $record, $assetId) 
 	{	
 // 		print "<hr/>";
 // 		print "PartResults: ";
@@ -1205,12 +1205,12 @@ class editAction
 		
 		$partStructId = $partStruct->getId();
 		
-		$value =& $partResults;
+		$value =$partResults;
 		
 		if (is_object($value)) {
-			$authZManager =& Services::getService("AuthZ");
-			$idManager =& Services::getService("Id");
-			$authoritativeValues =& $partStruct->getAuthoritativeValues();
+			$authZManager = Services::getService("AuthZ");
+			$idManager = Services::getService("Id");
+			$authoritativeValues =$partStruct->getAuthoritativeValues();
 				if ($authZManager->isUserAuthorized(
 						$idManager->getId("edu.middlebury.authorization.modify_authority_list"),
 						$this->getRepositoryId())
@@ -1222,17 +1222,17 @@ class editAction
 			}
 			
 			if ($value->isNotEqualTo($partInitialState)) {
-				$parts =& $record->getPartsByPartStructure($partStructId);
+				$parts =$record->getPartsByPartStructure($partStructId);
 				if ($parts->hasNext()) {
-					$part =& $parts->next();
+					$part =$parts->next();
 					$part->updateValue($value);
 				} else {
-					$part =& $record->createPart($partStructId, $value);
+					$part =$record->createPart($partStructId, $value);
 				}
 			}
 			
 			// Add this value to the Structured Tags list for this asset.
-			$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+			$tagGenerator = StructuredMetaDataTagGenerator::instance();
 			if ($tagGenerator->shouldGenerateTagsForPartStructure(
 					$partStruct->getRepositoryId(), $partStructId))
 			{
@@ -1243,9 +1243,9 @@ class editAction
 		// or deleted the one that was there.
 		// Remove any existing parts.
 		else {
-			$parts =& $record->getPartsByPartStructure($partStructId);
+			$parts =$record->getPartsByPartStructure($partStructId);
 			while ($parts->hasNext()) {
-				$part =& $parts->next();
+				$part =$parts->next();
 				$record->deletePart($part->getId());
 			}
 		}
@@ -1267,8 +1267,8 @@ class editAction
 	 * @access public
 	 * @since 10/24/05
 	 */
-	function updateRepeatablePart (&$partResults, &$partInitialState, 
-		&$partStruct, &$record, &$assetId) 
+	function updateRepeatablePart ($partResults, $partInitialState, 
+		$partStruct, $record, $assetId) 
 	{
 		$partStructId = $partStruct->getId();
 		$partValsHandled = array();
@@ -1276,10 +1276,10 @@ class editAction
 // 		printpre("<hr/>");
 // 		printpre($partResults);
 		
-		$parts =& $record->getPartsByPartStructure($partStructId);
+		$parts =$record->getPartsByPartStructure($partStructId);
 		while ($parts->hasNext()) {
-			$part =& $parts->next();
-			$partVal =& $part->getValue();
+			$part =$parts->next();
+			$partVal =$part->getValue();
 			$partStrVal = $partVal->asString();
 			
 			// Check for existance in the results.
@@ -1290,7 +1290,7 @@ class editAction
 				$record->deletePart($part->getId());
 				$partValsHandled[] = $partStrVal;
 				
-				$partId =& $part->getId();
+				$partId =$part->getId();
 				printpre("\tDeleting Part: Id: ".$partId->getIdString()." Value: ".$partStrVal);
 				
 				continue;
@@ -1299,11 +1299,11 @@ class editAction
 			// If the value is in the wizard results, do nothing
 			$partValsHandled[] = $partStrVal;
 			
-			$partId =& $part->getId();
+			$partId =$part->getId();
 			printpre("\tIgnoring Part: Id: ".$partId->getIdString()." Value: ".$partStrVal);
 			
 			// Add this value to the Structured Tags list for this asset.
-			$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+			$tagGenerator = StructuredMetaDataTagGenerator::instance();
 			if ($tagGenerator->shouldGenerateTagsForPartStructure(
 					$partStruct->getRepositoryId(), $partStructId))
 			{
@@ -1316,14 +1316,14 @@ class editAction
 		// Go through all of the Wizard result values. If any of them haven't
 		// been handled and need to be, add them.
 		foreach ($partResults as $key => $valueArray) {
-			$value =& $valueArray['partvalue'];
+			$value =$valueArray['partvalue'];
 			
 			if (is_object($value)) {
 				$valueStr = $value->asString();
 				
-				$authZManager =& Services::getService("AuthZ");
-				$idManager =& Services::getService("Id");
-				$authoritativeValues =& $partStruct->getAuthoritativeValues();
+				$authZManager = Services::getService("AuthZ");
+				$idManager = Services::getService("Id");
+				$authoritativeValues =$partStruct->getAuthoritativeValues();
 				if ($authZManager->isUserAuthorized(
 						$idManager->getId("edu.middlebury.authorization.modify_authority_list"),
 						$this->getRepositoryId())
@@ -1335,13 +1335,13 @@ class editAction
 				}
 				
 				if (!in_array($valueStr, $partValsHandled)) {
-					$part =& $record->createPart($partStructId, $value);
+					$part =$record->createPart($partStructId, $value);
 					
-					$partId =& $part->getId();
+					$partId =$part->getId();
 					printpre("\tAdding Part: Id: ".$partId->getIdString()." Value: ".$valueStr);
 					
 					// Add this value to the Structured Tags list for this asset.
-					$tagGenerator =& StructuredMetaDataTagGenerator::instance();
+					$tagGenerator = StructuredMetaDataTagGenerator::instance();
 					if ($tagGenerator->shouldGenerateTagsForPartStructure(
 							$partStruct->getRepositoryId(), $partStructId))
 					{
@@ -1359,13 +1359,13 @@ class editAction
 	 * @access public
 	 * @since 12/15/05
 	 */
-	function &getParentStep () {
+	function getParentStep () {
 		// :: Parent ::
-		$step =& new WizardStep();
+		$step = new WizardStep();
 		$step->setDisplayName(_("Parent")." ("._("optional").")");
 		
 		// Create the properties.
-		$property =& $step->addComponent("parent", new WSelectList());
+		$property =$step->addComponent("parent", new WSelectList());
 		
 		// Create the step text
 		ob_start();
@@ -1376,15 +1376,15 @@ class editAction
 		$step->setContent(ob_get_clean());
 		
 		
-		$harmoni =& Harmoni::instance();
-		$authZManager =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$harmoni = Harmoni::instance();
+		$authZManager = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		
 		// Check for authorization to remove the existing parent.
-		$parents =& $this->_assets[0]->getParents();
+		$parents =$this->_assets[0]->getParents();
 		if ($parents->hasNext()) {
-			$parent =& $parents->next();
-			$parentId =& $parent->getId();
+			$parent =$parents->next();
+			$parentId =$parent->getId();
 			
 			// If we aren't authorized to change the parent, just use it as the only option.
 			if ($authZManager->isUserAuthorized(
@@ -1405,10 +1405,10 @@ class editAction
 		
 		$skip = array();
 		foreach ($this->_assets as $asset) {
-			$assetId =& $asset->getId();
+			$assetId =$asset->getId();
 			$skip[] = $assetId->getIdString();
 		}
-		$rootAssets =& $this->getRootAssets();
+		$rootAssets =$this->getRootAssets();
 		while ($rootAssets->hasNext()) {
 			$this->addAssetOption($property, $rootAssets->next(), $skip);
 		}

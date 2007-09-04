@@ -31,7 +31,7 @@ class SlideOrderedRepeatableComponentCollection
     function SlideOrderedRepeatableComponentCollection() {
     	parent::WOrderedRepeatableComponentCollection();
     	$this->_addButton->setLabel(_("Add a Text-Slide"));
-    	$this->_addFromBasketButton =& WEventButton::withLabel(dgettext("polyphony", "Create Slides from Selection"));
+    	$this->_addFromBasketButton = WEventButton::withLabel(dgettext("polyphony", "Create Slides from Selection"));
     	$this->_addFromBasketButton->setParent($this);
     }
 	
@@ -40,10 +40,10 @@ class SlideOrderedRepeatableComponentCollection
 	 * @access private
 	 * @return void
 	 */
-	function &_addElement () {
-		$newArray =& parent::_addElement();
+	function _addElement () {
+		$newArray = parent::_addElement();
 		
-		$newArray['_assetId'] =& new AssetComponent;
+		$newArray['_assetId'] = new AssetComponent;
 		$newArray['_assetId']->setParent($this);
 		
 		return $newArray;
@@ -59,18 +59,18 @@ class SlideOrderedRepeatableComponentCollection
 	 * @return boolean - TRUE if everything is OK
 	 */
 	function update ($fieldName) {
-		$idManager =& Services::getService("Id");
+		$idManager = Services::getService("Id");
 		$ok = parent::update($fieldName);
 		
 		// then, check if any "buttons" or anything were pressed to add/remove elements
 		$this->_addFromBasketButton->update($fieldName."_addfrombasket");
 		if ($this->_addFromBasketButton->getAllValues()) {
-			$basket =& Basket::instance();
+			$basket = Basket::instance();
 			$basket->reset();
 			while ($basket->hasNext()) {
-				$assetId =& $basket->next();
-				$element =& $this->_addElement();
-				$element['_assetId'] =& new AssetComponent;
+				$assetId =$basket->next();
+				$element =$this->_addElement();
+				$element['_assetId'] = new AssetComponent;
 				$element['_assetId']->setParent($this);
 				$element['_assetId']->setValue($assetId);
 			}
@@ -106,7 +106,7 @@ class SlideOrderedRepeatableComponentCollection
 		
 		$this->_orderedSet->reset();
 		while ($this->_orderedSet->hasNext()) {
-			$collectionId =& $this->_orderedSet->next();
+			$collectionId =$this->_orderedSet->next();
 			$key = $collectionId->getIdString();
 			
 			$this->_collections[$key]["_remove"]->setEnabled($includeRemove);

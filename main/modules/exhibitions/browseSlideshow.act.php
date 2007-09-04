@@ -43,14 +43,14 @@ class browseSlideshowAction
 	 * @access public
 	 * @since 4/26/05
 	 */
-	function &getAssetId () {
-		$harmoni =& Harmoni::instance();
+	function getAssetId () {
+		$harmoni = Harmoni::instance();
 		if (!$harmoni->request->get('slideshow_id')) {
 			$false = false;
 			return $false;
 		}
 			
-		$idManager =& Services::getService("Id");
+		$idManager = Services::getService("Id");
 		return $idManager->getId($harmoni->request->get('slideshow_id'));
 	}
 	
@@ -66,14 +66,14 @@ class browseSlideshowAction
 		$this->registerDisplayProperties();
 		$this->registerState();
 		
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 		
 		$harmoni->request->passthrough("collection_id");
 		$harmoni->request->passthrough("asset_id");
 		
-		$asset =& $this->getAsset();
-		$assetId =& $asset->getId();
+		$asset =$this->getAsset();
+		$assetId =$asset->getId();
 
 		// function links
 		ob_start();
@@ -81,33 +81,33 @@ class browseSlideshowAction
 		$actionRows->add(new Block(ob_get_clean(), STANDARD_BLOCK), null, null, CENTER, CENTER);
 		
 		ob_start();
-		$description =& HtmlString::withValue($asset->getDescription());
+		$description = HtmlString::withValue($asset->getDescription());
 		$description->clean();
 		print  "\n\t<div style='font-size: smaller;'>".$description->asString()."</div>";
 
 		$actionRows->add(new Block(ob_get_clean(), STANDARD_BLOCK), "100%", null, LEFT, CENTER);
 		
 		
-		$searchBar =& new Container(new YLayout(), BLOCK, STANDARD_BLOCK);
+		$searchBar = new Container(new YLayout(), BLOCK, STANDARD_BLOCK);
 		$actionRows->add($searchBar, "100%", null, CENTER, CENTER);
 		
 		//***********************************
 		// Get the assets to display
 		//***********************************
-		$setManager =& Services::getService("Sets");
-		$slideshowSet =& $setManager->getPersistentSet($asset->getId());
-		$slideIterator =& $asset->getAssets();
+		$setManager = Services::getService("Sets");
+		$slideshowSet =$setManager->getPersistentSet($asset->getId());
+		$slideIterator =$asset->getAssets();
 		$orderedSlides = array();
 		$unorderedSlides = array();
 		
 		while ($slideIterator->hasNext()) {
-			$slideAsset =& $slideIterator->next();
-			$slideAssetId =& $slideAsset->getId();
+			$slideAsset =$slideIterator->next();
+			$slideAssetId =$slideAsset->getId();
 			
 			if ($slideshowSet->isInSet($slideAssetId))
-				$orderedSlides[$slideshowSet->getPosition($slideAssetId)] =& $slideAsset;
+				$orderedSlides[$slideshowSet->getPosition($slideAssetId)] =$slideAsset;
 			else
-				$unorderedSlides[] =& $slideAsset;
+				$unorderedSlides[] =$slideAsset;
 		}
 		ksort($orderedSlides);
 		$slides = array_merge($orderedSlides, $unorderedSlides);
@@ -117,14 +117,14 @@ class browseSlideshowAction
 		//***********************************
 		// print the results
 		//***********************************
-		$resultPrinter =& new ArrayResultPrinter($slides, 
+		$resultPrinter = new ArrayResultPrinter($slides, 
 									$_SESSION["asset_columns"], 
 									$_SESSION["assets_per_page"], 
 									"printSlideShort", $this->getParams(), $assetId->getIdString());
 		$resultPrinter->setStartingNumber($this->_state['startingNumber']);
 		$resultPrinter->addLinksStyleProperty(new MarginTopSP("10px"));
 		
-		$resultLayout =& $resultPrinter->getLayout("canView");
+		$resultLayout =$resultPrinter->getLayout("canView");
 		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
 		$resultLayout->setPostHTML("</form>");
 		
@@ -135,7 +135,7 @@ class browseSlideshowAction
 		/*********************************************************
 		 * Display options
 		 *********************************************************/
-		$currentUrl =& $harmoni->request->mkURL();	
+		$currentUrl =$harmoni->request->mkURL();	
 		$searchBar->setPreHTML(
 			"\n<form action='".$currentUrl->write()."' method='post'>
 	<input type='hidden' name='".RequestContext::name('form_submitted')."' value='true'/>");
@@ -149,43 +149,43 @@ class browseSlideshowAction
 }
 
 // Callback function for printing Slides
-function printSlideShort(&$asset, $params, $slideshowIdString, $num) {
-	$harmoni =& Harmoni::instance();
-	$container =& new Container(new YLayout, BLOCK, EMPHASIZED_BLOCK);
-	$fillContainerSC =& new StyleCollection("*.fillcontainer", "fillcontainer", "Fill Container", "Elements with this style will fill their container.");
+function printSlideShort($asset, $params, $slideshowIdString, $num) {
+	$harmoni = Harmoni::instance();
+	$container = new Container(new YLayout, BLOCK, EMPHASIZED_BLOCK);
+	$fillContainerSC = new StyleCollection("*.fillcontainer", "fillcontainer", "Fill Container", "Elements with this style will fill their container.");
 	$fillContainerSC->addSP(new MinHeightSP("88%"));
 	$container->addStyle($fillContainerSC);
 	
-	$centered =& new StyleCollection("*.centered", "centered", "Centered", "Centered Text");
+	$centered = new StyleCollection("*.centered", "centered", "Centered", "Centered Text");
 	$centered->addSP(new TextAlignSP("center"));	
 		
-	$idManager =& Services::getService("Id");
-	$repositoryManager =& Services::getService("Repository");
-	$authZ =& Services::getService("AuthZ");
+	$idManager = Services::getService("Id");
+	$repositoryManager = Services::getService("Repository");
+	$authZ = Services::getService("AuthZ");
 	
 	// Get our record and its data
-	$slideRecords =& $asset->getRecordsByRecordStructure(
+	$slideRecords =$asset->getRecordsByRecordStructure(
 		$idManager->getId("Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure"));
 	
 	if ($slideRecords->hasNext()) {
-		$slideRecord =& $slideRecords->next();
+		$slideRecord =$slideRecords->next();
 		
 		// Text-Position
-		$textPosition =& getFirstPartValueFromRecord(
+		$textPosition = getFirstPartValueFromRecord(
 			"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position",
 			$slideRecord);
 		
 		// Display Metadata
-		$displayMetadata =& getFirstPartValueFromRecord(
+		$displayMetadata = getFirstPartValueFromRecord(
 			"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata",
 			$slideRecord);
 		
 		// Media
-		$mediaIdStringObj =& getFirstPartValueFromRecord(
+		$mediaIdStringObj = getFirstPartValueFromRecord(
 			"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id",
 			$slideRecord);
 		if (strlen($mediaIdStringObj->asString()))
-			$mediaId =& $idManager->getId($mediaIdStringObj->asString());
+			$mediaId =$idManager->getId($mediaIdStringObj->asString());
 		else
 			$mediaId = null;
 	}
@@ -211,10 +211,10 @@ function printSlideShort(&$asset, $params, $slideshowIdString, $num) {
 			$mediaId)
 		&& $_SESSION["show_thumbnail"] == 'true')		
 	{		
-		$mediaAsset =& $repositoryManager->getAsset($mediaId);
-		$mediaAssetId =& $mediaAsset->getId();
-		$mediaAssetRepository =& $mediaAsset->getRepository();
-		$mediaAssetRepositoryId =& $mediaAssetRepository->getId();
+		$mediaAsset =$repositoryManager->getAsset($mediaId);
+		$mediaAssetId =$mediaAsset->getId();
+		$mediaAssetRepository =$mediaAsset->getRepository();
+		$mediaAssetRepositoryId =$mediaAssetRepository->getId();
 				
 		$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($mediaAsset);
 		if ($thumbnailURL !== FALSE) {
@@ -227,13 +227,13 @@ function printSlideShort(&$asset, $params, $slideshowIdString, $num) {
 			print "\n\t\t<img src='$thumbnailURL' alt='Thumbnail Image' style='max-height: $thumbSize; max-width: $thumbSize;' class='thumbnail_image' />";
 			print "\n\t</a>";
 			print "\n</div>";
-			$component =& new UnstyledBlock(ob_get_clean());
+			$component = new UnstyledBlock(ob_get_clean());
 			$component->addStyle($centered);
 			$container->add($component, "100%", null, CENTER, CENTER);
 		}
 		
 		// other files
-		$fileRecords =& $mediaAsset->getRecordsByRecordStructure(
+		$fileRecords =$mediaAsset->getRecordsByRecordStructure(
 			$idManager->getId("FILE"));
 	}
 	
@@ -241,7 +241,7 @@ function printSlideShort(&$asset, $params, $slideshowIdString, $num) {
 		$numFiles = 0;
 		if (isset($fileRecords)) {
 			while ($fileRecords->hasNext()) {
-				$record =& $fileRecords->next();
+				$record =$fileRecords->next();
 				$numFiles++;
 			}
 		}
@@ -253,7 +253,7 @@ function printSlideShort(&$asset, $params, $slideshowIdString, $num) {
 			print " (".($numFiles-1)." "._("more files").")";
 		print "\n\t</a>";
 		print "\n</div>";
-		$component =& new UnstyledBlock(ob_get_clean());
+		$component = new UnstyledBlock(ob_get_clean());
 		$component->addStyle($centered);
 		$container->add($component, "100%", null, CENTER, CENTER);
 	
@@ -264,7 +264,7 @@ function printSlideShort(&$asset, $params, $slideshowIdString, $num) {
 	
 	// Caption
 	if ($_SESSION["show_description"] == 'true') {
-		$description =& HtmlString::withValue($asset->getDescription());
+		$description = HtmlString::withValue($asset->getDescription());
 		$description->clean();
 		if (isset($thumbnailURL))
 			print  "\n\t<div style='font-size: smaller; height: 100px; overflow: auto;'>";
@@ -278,7 +278,7 @@ function printSlideShort(&$asset, $params, $slideshowIdString, $num) {
 				$mediaId)) 
 		{
 			print "\t\t\t<hr/>\n";
-			$mediaAsset =& $repositoryManager->getAsset($mediaId);
+			$mediaAsset =$repositoryManager->getAsset($mediaId);
 			printTargetAsset($mediaAsset);
 		}
 		
@@ -288,7 +288,7 @@ function printSlideShort(&$asset, $params, $slideshowIdString, $num) {
 				$mediaId))
 		{
 			print "\t\t\t<div style='font-size: large; font-weight: bold; border: 2px dotted; padding: 5px;'>";
-			$harmoni =& Harmoni::instance();
+			$harmoni = Harmoni::instance();
 			print "\n\t\t\t\t<p>";
 			print _("You are not authorized to view the media for this slide.");
 			print "</p>\n\t\t\t\t<p>";
@@ -326,16 +326,16 @@ function printSlideShort(&$asset, $params, $slideshowIdString, $num) {
  * @access public
  * @since 9/28/05
  */
-function &getFirstPartValueFromRecord ( $partStructIdString, &$record ) {
-	$idManager =& Services::getService("Id");
+function getFirstPartValueFromRecord ( $partStructIdString, $record ) {
+	$idManager = Services::getService("Id");
 	
-	$parts =& $record->getPartsByPartStructure(
+	$parts =$record->getPartsByPartStructure(
 		$idManager->getId($partStructIdString));
 	
 	if ($parts->hasNext()) {
-		$part =& $parts->next();
+		$part =$parts->next();
 		if (is_object($part->getValue()))
-			$value =& $part->getValue();
+			$value =$part->getValue();
 		else
 			$value = $part->getValue();
 	} else {
@@ -353,11 +353,11 @@ function &getFirstPartValueFromRecord ( $partStructIdString, &$record ) {
  * @access public
  * @since 9/28/05
  */
-function printTargetAsset ( &$asset ) {
+function printTargetAsset ( $asset ) {
 	/*********************************************************
 	 * Asset Info
 	 *********************************************************/
-	$assetId =& $asset->getId();
+	$assetId =$asset->getId();
 	print "\n\t<dl>";		
 	if ($asset->getDisplayName()) {
 		print "\n\t\t<dt style='font-weight: bold;'>"._("Title:")."</dt>";
@@ -365,7 +365,7 @@ function printTargetAsset ( &$asset ) {
 	}
 	
 	if ($asset->getDescription()) {
-		$description =& HtmlString::withValue($asset->getDescription());
+		$description = HtmlString::withValue($asset->getDescription());
 		$description->clean();
 		print "\n\t\t<dt style='font-weight: bold;'>"._("Description:")."</dt>";
 		print "\n\t\t<dd>".$description->asString()."</dd>";
@@ -414,7 +414,7 @@ function printTargetAsset ( &$asset ) {
 	/*********************************************************
 	 * Expanding to child assets
 	 *********************************************************/
-	$children =& $asset->getAssets();
+	$children =$asset->getAssets();
 	if ($children->hasNext()) {
 		printChildViewerLink($asset);
 	}
@@ -425,21 +425,21 @@ function printTargetAsset ( &$asset ) {
 	$printedRecordIds = array();
 	
 	// Get the set of RecordStructures so that we can print them in order.
-	$setManager =& Services::getService("Sets");
-	$idManager =& Services::getService("Id");
-	$repository =& $asset->getRepository();
-	$structSet =& $setManager->getPersistentSet($repository->getId());
+	$setManager = Services::getService("Sets");
+	$idManager = Services::getService("Id");
+	$repository =$asset->getRepository();
+	$structSet =$setManager->getPersistentSet($repository->getId());
 	
 	// First, lets go through the info structures listed in the set and print out
 	// the info records for those structures in order.
 	$structSet->reset();
 	while ($structSet->hasNext()) {
-		$structureId =& $structSet->next();
+		$structureId =$structSet->next();
 		if (!$structureId->isEqual($idManager->getId("FILE"))) {
-			$records =& $asset->getRecordsByRecordStructure($structureId);
+			$records =$asset->getRecordsByRecordStructure($structureId);
 			while ($records->hasNext()) {
-				$record =& $records->next();
-				$recordId =& $record->getId();
+				$record =$records->next();
+				$recordId =$record->getId();
 				$printedRecordIds[] = $recordId->getIdString();
 		
 				print "\t<div style='padding: 5px; border-top: 1px solid;'>\n";
@@ -469,33 +469,33 @@ function printTargetAsset ( &$asset ) {
  * @access public
  * @since 9/28/05
  */
-function printRecord ( &$repositoryId, &$assetId, &$record ) {
-	$recordStructure =& $record->getRecordStructure();
-	$structureId =& $recordStructure->getId();
+function printRecord ( $repositoryId, $assetId, $record ) {
+	$recordStructure =$record->getRecordStructure();
+	$structureId =$recordStructure->getId();
 	
 	print "\t\t<div style='font-weight: bold; font-style: italic; font-size: large;'>";
 	print $recordStructure->getDisplayName().":</div>\n";
 	
 	// Print out the fields parts for this structure
-	$setManager =& Services::getService("Sets");
-	$partStructureSet =& $setManager->getPersistentSet($structureId);
+	$setManager = Services::getService("Sets");
+	$partStructureSet =$setManager->getPersistentSet($structureId);
 	
 	$partStructureArray = array();
 	// Print out the ordered parts/fields
 	$partStructureSet->reset();
 	while ($partStructureSet->hasNext()) {
-		$partStructureId =& $partStructureSet->next();
-		$partStructureArray[] =& $recordStructure->getPartStructure($partStructureId);
+		$partStructureId =$partStructureSet->next();
+		$partStructureArray[] =$recordStructure->getPartStructure($partStructureId);
 	}
 	// Get the rest of the parts (the unordered ones);
-	$partStructureIterator =& $recordStructure->getPartStructures();
+	$partStructureIterator =$recordStructure->getPartStructures();
 	while ($partStructureIterator->hasNext()) {
-		$partStructure =& $partStructureIterator->next();
+		$partStructure =$partStructureIterator->next();
 		if (!$partStructureSet->isInSet($partStructure->getId()))
-			$partStructureArray[] =& $partStructure;
+			$partStructureArray[] =$partStructure;
 	}
 	
-	$moduleManager =& Services::getService("InOutModules");
+	$moduleManager = Services::getService("InOutModules");
 	print $moduleManager->generateDisplayForPartStructures($repositoryId, $assetId, $record, $partStructureArray);
 }
 
@@ -507,12 +507,12 @@ function printRecord ( &$repositoryId, &$assetId, &$record ) {
  * @access public
  * @since 5/4/06
  */
-function printChildViewerLink ( &$asset ) {
-	$harmoni =& Harmoni::instance();
+function printChildViewerLink ( $asset ) {
+	$harmoni = Harmoni::instance();
 	
-	$assetId =& $asset->getId();
-	$repository =& $asset->getRepository();
-	$repositoryId =& $repository->getId();
+	$assetId =$asset->getId();
+	$repository =$asset->getRepository();
+	$repositoryId =$repository->getId();
 	
 	print "\t<br />\n";
 	print "\t<input type='button'";

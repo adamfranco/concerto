@@ -50,8 +50,8 @@ class multieditAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		foreach( array_keys($this->_assets) as $key) {
 			if (!$authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.modify"), 
@@ -82,16 +82,16 @@ class multieditAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function &getAssetPropertiesStep () {
+	function getAssetPropertiesStep () {
 		/*********************************************************
 	 *  :: Asset Properties ::
 	 *********************************************************/
-		$step =& new WizardStep();
+		$step = new WizardStep();
 		$step->setDisplayName(_("Basic Properties"));
 		
 	// Display Name
-		$vProperty =& $step->addComponent("display_name", new WVerifiedChangeInput);
-		$property =& $vProperty->setInputComponent(new WTextField);
+		$vProperty =$step->addComponent("display_name", new WVerifiedChangeInput);
+		$property =$vProperty->setInputComponent(new WTextField);
 // 		$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 // 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setSize(40);
@@ -113,8 +113,8 @@ class multieditAction
 	 	}
 
 	// Description	
-		$vProperty =& $step->addComponent("description", new WVerifiedChangeInput);
-		$property =& $vProperty->setInputComponent(new WTextArea);
+		$vProperty =$step->addComponent("description", new WVerifiedChangeInput);
+		$property =$vProperty->setInputComponent(new WTextArea);
 		$property->setRows(3);
 		$property->setColumns(40);
 		
@@ -135,12 +135,12 @@ class multieditAction
 	 	}
 				
 	// Effective Date
-// 		$vProperty =& $step->addComponent("effective_date", new WVerifiedChangeInput);
-// 		$property =& $vProperty->setInputComponent(new WTextField);
+// 		$vProperty =$step->addComponent("effective_date", new WVerifiedChangeInput);
+// 		$property =$vProperty->setInputComponent(new WTextField);
 // 		$property->setSize(40);
 // 		
 // 		if (is_object($this->_assets[0]->getEffectiveDate()))
-// 			$date =& $this->_assets[0]->getEffectiveDate();
+// 			$date =$this->_assets[0]->getEffectiveDate();
 // 		else
 // 			$date = null;
 // 		
@@ -157,7 +157,7 @@ class multieditAction
 // 			$property->setStartingDisplayText($this->_multExistString);
 // 			$vProperty->setChecked(false);
 // 		} else if ($date) {
-// 	 		$date =& $date->asDate();
+// 	 		$date =$date->asDate();
 // 			$property->setValue($date->yyyymmddString());
 // 	 		$vProperty->setChecked(true);
 // 	 	} else {
@@ -165,12 +165,12 @@ class multieditAction
 // 	 	}
 	
 	// Expiration Date
-// 		$vProperty =& $step->addComponent("expiration_date", new WVerifiedChangeInput);
-// 		$property =& $vProperty->setInputComponent(new WTextField);
+// 		$vProperty =$step->addComponent("expiration_date", new WVerifiedChangeInput);
+// 		$property =$vProperty->setInputComponent(new WTextField);
 // 		$property->setSize(40);
 // 				
 // 		if (is_object($this->_assets[0]->getExpirationDate()))
-// 			$date =& $this->_assets[0]->getExpirationDate();
+// 			$date =$this->_assets[0]->getExpirationDate();
 // 		else
 // 			$date = null;
 // 		$multipleExist = FALSE;
@@ -186,7 +186,7 @@ class multieditAction
 // 			$property->setStartingDisplayText($this->_multExistString);
 // 			$vProperty->setChecked(false);
 // 		} else if ($date) {
-// 	 		$date =& $date->asDate();
+// 	 		$date =$date->asDate();
 // 			$property->setValue($date->yyyymmddString());
 // 			$vProperty->setChecked(true);
 // 	 	} else {
@@ -207,7 +207,7 @@ class multieditAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function updateAssetProperties ( &$results, &$asset ) {
+	function updateAssetProperties ( $results, $asset ) {
 		// DisplayName
 		if ($results['display_name']['checked'] == '1'
 			&& $asset->getDisplayName() != $results['assetproperties']['display_name']['value']) 
@@ -225,7 +225,7 @@ class multieditAction
 		// Effective Date
 // 		if ($results['effective_date']['checked'] == '1') {
 // 			$effDate = $asset->getEffectiveDate();
-// 			$newEffDate =& DateAndTime::fromString($results['effective_date']['value']);
+// 			$newEffDate = DateAndTime::fromString($results['effective_date']['value']);
 // 			if (is_object($effDate) && !$effDate->isEqualTo($newEffDate))
 // 				$asset->updateEffectiveDate($newEffDate);
 // 		}
@@ -233,7 +233,7 @@ class multieditAction
 		// Expiration Date
 // 		if ($results['expiration_date']['checked'] == '1') {
 // 			$expDate = $asset->getEffectiveDate();
-// 			$newExpDate =& DateAndTime::fromString($results['expiration_date']['value']);
+// 			$newExpDate = DateAndTime::fromString($results['expiration_date']['value']);
 // 			if (is_object($expDate) && !$expDate->isEqualTo($newExpDate))
 // 				$asset->updateEffectiveDate($newExpDate);
 // 		}
@@ -247,15 +247,15 @@ class multieditAction
 	 * @since 10/26/05
 	 */
 	function getAssetContentStep () {
-		$step =& new WizardStep();
+		$step = new WizardStep();
 		$step->setDisplayName(_("Content")." ("._("optional").")");
 		
-		$vProperty =& $step->addComponent("content", new WVerifiedChangeInput);
-		$property =& $vProperty->setInputComponent(new WTextArea);
+		$vProperty =$step->addComponent("content", new WVerifiedChangeInput);
+		$property =$vProperty->setInputComponent(new WTextArea);
 		$property->setRows(20);
 		$property->setColumns(70);
 		
-		$content =& $this->_assets[0]->getContent();
+		$content =$this->_assets[0]->getContent();
 		$multipleExist = FALSE;
 		for ($i = 1; $i < count($this->_assets); $i++) {
 			if ($content->isEqualTo($this->_assets[$i]->getContent())) {
@@ -292,11 +292,11 @@ class multieditAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function updateAssetContent ( &$results, &$asset ) {
+	function updateAssetContent ( $results, $asset ) {
 		// Content 
 		if ($results['checked'] == '1') {
-			$content =& $asset->getContent();
-			$newContent =& Blob::withValue($results['value']);
+			$content =$asset->getContent();
+			$newContent = Blob::withValue($results['value']);
 			if (is_object($content) && !$content->isEqualTo($newContent))
 				$asset->updateContent($newContent);
 		}
@@ -310,26 +310,26 @@ class multieditAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function &getRecordStructureStep ( &$recStruct ) {
-		$step =& new WizardStep();
+	function getRecordStructureStep ( $recStruct ) {
+		$step = new WizardStep();
 		$step->setDisplayName($recStruct->getDisplayName());
 		
 		$this->addPartStructureComponents($step, $recStruct);
 		
-		$records =& $this->getRecordsForRecordStructure($recStruct);
-		$partStructs =& $recStruct->getPartStructures();
+		$records =$this->getRecordsForRecordStructure($recStruct);
+		$partStructs =$recStruct->getPartStructures();
 		while ($partStructs->hasNext()) {
-			$partStruct =& $partStructs->next();
-			$partstructId =& $partStruct->getId();
+			$partStruct =$partStructs->next();
+			$partstructId =$partStruct->getId();
 			$partStructIdString = preg_replace("/[^a-zA-Z0-9:_\-]/", "_", $partstructId->getIdString());
 			
-			$partComponent =& $step->getChild($partStructIdString);
+			$partComponent =$step->getChild($partStructIdString);
 			
 			if ($partStruct->isRepeatable()) {
 				$partComponent->setValue(
 					$this->getRepeatbleValuesForPartsFromRecords($partStruct, $records));
 			} else {
-				$partInfo =& $this->getSingleValuedInfoForPartsFromRecords($partStruct, $records);
+				$partInfo =$this->getSingleValuedInfoForPartsFromRecords($partStruct, $records);
 				if ($partInfo['multiple-exist']) {
 					$partComponent->setStartingDisplayText($this->_multExistString);
 					$partComponent->setChecked(false);
@@ -353,8 +353,8 @@ class multieditAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function &getSingleValuedPartStructComponent ( &$partStruct ) {
-		$property =& new WVerifiedChangeInput;
+	function getSingleValuedPartStructComponent ( $partStruct ) {
+		$property = new WVerifiedChangeInput;
 		$property->setInputComponent(
 			$this->getComponentForPartStruct($partStruct));
 // 		$property->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
@@ -373,18 +373,18 @@ class multieditAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function &getRepeatablePartStructComponent ( &$partStruct ) {
+	function getRepeatablePartStructComponent ( $partStruct ) {
 		
 	// Make a component for each of values
-		$repeatableProperty =& new WNewOnlyEditableRepeatableComponentCollection();
+		$repeatableProperty = new WNewOnlyEditableRepeatableComponentCollection();
 		$repeatableProperty->setStartingNumber(0);
 		$repeatableProperty->setAddLabel(_("Add New ").$partStruct->getDisplayName());
 		$repeatableProperty->setRemoveLabel(_("Remove ").$partStruct->getDisplayName());
 				
-		$property =& $repeatableProperty->addComponent('partvalue',
+		$property =$repeatableProperty->addComponent('partvalue',
 				new WVerifiedChangeInput);
 		
-		$property =& $property->setInputComponent(
+		$property =$property->setInputComponent(
 			$this->getComponentForPartStruct($partStruct));
 		
 		ob_start();
@@ -407,21 +407,21 @@ class multieditAction
 	 * @access public
 	 * @since 10/27/05
 	 */
-	function &getRepeatbleValuesForPartsFromRecords( &$partStruct, &$records) {
-		$recStruct =& $partStruct->getRecordStructure();
+	function getRepeatbleValuesForPartsFromRecords( $partStruct, $records) {
+		$recStruct =$partStruct->getRecordStructure();
 		
 	// Build lists of all values.
 		$values = array();
 		$valueCounts = array();
 		$numRecords = 0;
 		for ($i = 0; $i < count($records); $i++) {
-			$record =& $records[$i];
+			$record =$records[$i];
 			$numRecords++;
-			$parts =& $record->getPartsByPartStructure($partStruct->getId());
+			$parts =$record->getPartsByPartStructure($partStruct->getId());
 			
 			while ($parts->hasNext()) {
-				$part =& $parts->next();
-				$value =& $part->getValue();
+				$part =$parts->next();
+				$value =$part->getValue();
 				
 				$valueKeyIfExists = false;
 				for ($j = 0; $j < count($values); $j++) {
@@ -434,7 +434,7 @@ class multieditAction
 				if ($valueKeyIfExists === false)
 					$valueKeyIfExists = count($values);
 				
-				$values[$valueKeyIfExists] =& $value;
+				$values[$valueKeyIfExists] =$value;
 				if (isset($valueCounts[$valueKeyIfExists]))
 					$valueCounts[$valueKeyIfExists]++;
 				else
@@ -468,8 +468,8 @@ class multieditAction
 	 * @access public
 	 * @since 10/27/05
 	 */
-	function &getSingleValuedInfoForPartsFromRecords( &$partStruct, &$records) {
-		$recStruct =& $partStruct->getRecordStructure();
+	function getSingleValuedInfoForPartsFromRecords( $partStruct, $records) {
+		$recStruct =$partStruct->getRecordStructure();
 		
 	// Build lists of all values.
 	// Part Values
@@ -477,8 +477,8 @@ class multieditAction
 		$hasNullParts = FALSE;
 		$multipleExist = FALSE;
 		for ($i = 0; $i < count($records); $i++) {
-			$record =& $records[$i];
-			$parts =& $record->getPartsByPartStructure($partStruct->getId());
+			$record =$records[$i];
+			$parts =$record->getPartsByPartStructure($partStruct->getId());
 			
 			if (!$parts->hasNext()) {
 				$hasNullParts = TRUE;
@@ -500,12 +500,12 @@ class multieditAction
 			// Initialize our value or make sure that all are null.
 			if ($value === NULL) {
 				// If we have a value, initialize to it
-				$part =& $parts->next();
-				$value =& $part->getValue();
+				$part =$parts->next();
+				$value =$part->getValue();
 			}
 			
 			while ($parts->hasNext()) {
-				$part =& $parts->next();
+				$part =$parts->next();
 				if (!$value->isEqualTo($part->getValue())) {
 					$multipleExist = TRUE;
 					break;
@@ -518,7 +518,7 @@ class multieditAction
 		
 		$results = array();
 		$results['multiple-exist'] = $multipleExist;
-		$results['value'] =& $value;
+		$results['value'] =$value;
 		return $results;
 	}
 	
@@ -529,14 +529,14 @@ class multieditAction
 	 * @access public
 	 * @since 12/15/05
 	 */
-	function &getParentStep () {
+	function getParentStep () {
 		// :: Parent ::
-		$step =& new WizardStep();
+		$step = new WizardStep();
 		$step->setDisplayName(_("Parent")." ("._("optional").")");
 		
 		// Create the properties.
-		$vProperty =& $step->addComponent("parent", new WVerifiedChangeInput);
-		$property =& $vProperty->setInputComponent(new WSelectList);
+		$vProperty =$step->addComponent("parent", new WVerifiedChangeInput);
+		$property =$vProperty->setInputComponent(new WSelectList);
 		
 		// Create the step text
 		ob_start();
@@ -547,9 +547,9 @@ class multieditAction
 		$step->setContent(ob_get_clean());
 				
 		
-		$harmoni =& Harmoni::instance();
-		$authZManager =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$harmoni = Harmoni::instance();
+		$authZManager = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		
 		$multipleValuesExist = false;
 		$commonParentId = null;
@@ -559,15 +559,15 @@ class multieditAction
 			$assetId = $this->_assets[$i]->getId();
 			$excluded[] = $assetId->getIdString();
 			
-			$parents =& $this->_assets[$i]->getParents();
+			$parents =$this->_assets[$i]->getParents();
 			if ($parents->hasNext()) {
-				$parent =& $parents->next();
-				$parentId =& $parent->getId();
+				$parent =$parents->next();
+				$parentId =$parent->getId();
 				
 				// If we are at the first asset and there is a parent, use it and continue
 				if ($i == 0) {
-					$commonParentId =& $parentId;
-					$commonParent =& $parent;
+					$commonParentId =$parentId;
+					$commonParent =$parent;
 					continue;
 				}
 				
@@ -591,10 +591,10 @@ class multieditAction
 				}
 			}
 			
-			$descendentInfo =& $this->_assets[$i]->getDescendentInfo();
+			$descendentInfo =$this->_assets[$i]->getDescendentInfo();
 			while ($descendentInfo->hasNext()) {
-				$info =& $descendentInfo->next();
-				$childId =& $info->getNodeId();
+				$info =$descendentInfo->next();
+				$childId =$info->getNodeId();
 				if (!in_array($childId->getIdString(), $excluded))
 					$excluded[] = $childId->getIdString();
 			}
@@ -635,7 +635,7 @@ class multieditAction
 		
 		$property->_startingDisplay = "";
 	
-		$rootAssets =& $this->getRootAssets();
+		$rootAssets =$this->getRootAssets();
 		while ($rootAssets->hasNext()) {
 			$this->addAssetOption($property, $rootAssets->next(), $excluded);
 		}

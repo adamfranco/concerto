@@ -36,10 +36,10 @@ class expmdbAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {	
-		$dbHandler =& Services::getService("DBHandler");
-		$repositoryManager =& Services::getService("Repository");
-		$setManager =& Services::getService("Sets");
-		$idManager =& Services::getService("Id");
+		$dbHandler = Services::getService("DBHandler");
+		$repositoryManager = Services::getService("Repository");
+		$setManager = Services::getService("Sets");
+		$idManager = Services::getService("Id");
 
 print "lines 46 - 48 in expmdb.act.php need to be modified for database access";
 	// ===== ET (GOOD) MEDIADB DATABASE CONNECTION ===== //
@@ -53,7 +53,7 @@ exit();
 		$dbHandler->connect(IMPORTER_CONNECTION);
 
 	// ===== TMP TABLE FOR ID MATCHING ===== //
-		$createTableQuery =& new GenericSQLQuery;
+		$createTableQuery = new GenericSQLQuery;
 		$createTableQuery->addSQLQuery(
 			"Create table if not exists temp_id_matrix ( 
 			media_id int not null ,
@@ -61,14 +61,14 @@ exit();
 
 		$dbHandler->query($createTableQuery, $mdbIndex);
 	// ===== COLLECTIONS QUERY ===== //
-		$collectionsQuery =& new SelectQuery();
+		$collectionsQuery = new SelectQuery();
 		$collectionsQuery->addTable("mediasets");
 		$collectionsQuery->addColumn("mediasets.id", "id");
 		$collectionsQuery->addColumn("mediasets.title", "name");
 		$collectionsQuery->addColumn("mediasets.fieldlist", "fieldlist");
 		$collectionsQuery->addColumn("mediasets.keywords", "description");
 
-		$collections =& $dbHandler->query($collectionsQuery, $mdbIndex);
+		$collections =$dbHandler->query($collectionsQuery, $mdbIndex);
 		$this->_folder = 'mdb1_conc2';
 
 		if (!is_dir("/tmp/".$this->_folder))
@@ -85,12 +85,12 @@ exit();
 		while ($collections->hasMoreRows()) {
 			$collection = $collections->next();
 		// ===== ASSETS QUERY ===== //
-			$assetsQuery =& new SelectQuery();
+			$assetsQuery = new SelectQuery();
 			$assetsQuery->addTable("media");
 			$assetsQuery->addColumn("*");
 			$assetsQuery->addWhere("id_set = ".$collection['id']);
 			
-			$assets =& $dbHandler->query($assetsQuery, $mdbIndex);
+			$assets =$dbHandler->query($assetsQuery, $mdbIndex);
 		// ===== MAKE SURE THE COLLECTION HAS ASSETS ===== //
 			if ($assets->getNumberOfRows() > 0) {
 			// ===== NEW XML FOR THE COLLECTION ITSELF ===== //
@@ -118,7 +118,7 @@ exit();
 		fclose($this->_allXML);
 	}
 	
-	function openCollectionXML(&$collection) {
+	function openCollectionXML($collection) {
 		if (!is_dir("/tmp/".$this->_folder."/".$collection['id']))
 			mkdir("/tmp/".$this->_folder."/".$collection['id']);
 		$this->_currentXML = fopen("/tmp/".$this->_folder."/".
@@ -127,7 +127,7 @@ exit();
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<repository>\n");
 	}
 	
-	function exportCollection(&$collection) {
+	function exportCollection($collection) {
 	// ===== ADD THIS COLLECTION TO THE FULL IMPORT ===== //
 		fwrite($this->_allXML, "\t<repositoryfile>".$collection['id'].
 			"/metadata.xml</repositoryfile>\n");
@@ -168,8 +168,8 @@ exit();
 		}
 	}
 	
-	function exportAssets(&$assets, $rSArray, $id) {
-		$mimeManager =& Services::getService("MIME");
+	function exportAssets($assets, $rSArray, $id) {
+		$mimeManager = Services::getService("MIME");
 		while($assets->hasMoreRows()) {
 			$asset = $assets->next();
 			
@@ -213,7 +213,7 @@ $id."/".rawurlencode($asset['fname'])."</filepathpart>\n".
 		fclose($this->_currentXML);
 	}
 	
-	function prepareRS(&$collection) {
+	function prepareRS($collection) {
 		$fieldsArray = unserialize($collection['fieldlist']);
 		$newArray = array();
 		$dc = 0;
@@ -381,7 +381,7 @@ $id."/".rawurlencode($asset['fname'])."</filepathpart>\n".
 	</recordstructure>");
 	}
 	
-	function dcAssetRecord(&$asset) {
+	function dcAssetRecord($asset) {
 		fwrite($this->_currentXML,
 "\t\t<record xml:id=\"dc\">\n");
 		foreach ($this->_dcArray as $part) {

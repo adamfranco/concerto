@@ -21,7 +21,7 @@
 // // :: GUIManager setup ::
 // 	define("LOGO_URL", MYPATH."/themes/SimpleTheme/images/logo.gif");
 // 	
-// 	$configuration =& new ConfigurationProperties;
+// 	$configuration = new ConfigurationProperties;
 // 	$configuration->addProperty('database_index', $dbID);
 // 	$configuration->addProperty('database_name', $dbName);
 // 	$configuration->addProperty('default_theme', new SimpleTheme);
@@ -39,7 +39,7 @@
 // // :: GUIManager setup ::
 // 	define("LOGO_URL", MYPATH."/themes/SimpleThemeWhite/images/logo.gif");
 // 	
-// 	$configuration =& new ConfigurationProperties;
+// 	$configuration = new ConfigurationProperties;
 // 	$configuration->addProperty('database_index', $dbID);
 // 	$configuration->addProperty('database_name', $dbName);
 // 	$configuration->addProperty('default_theme', new SimpleThemeWhite);
@@ -59,7 +59,7 @@
 	
 	define("LOGO_URL", MYPATH."/themes/SimpleThemeBlack/images/logo.gif");
 	
-	$configuration =& new ConfigurationProperties;
+	$configuration = new ConfigurationProperties;
 	$configuration->addProperty('database_index', $dbID);
 	$configuration->addProperty('database_name', $dbName);
     $configuration->addProperty('default_theme', new SimpleThemeBlack);

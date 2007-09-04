@@ -33,9 +33,9 @@ class importAction extends MainWindowAction {
 	 * @since 6/08/05
 	 */
 	function isAuthorizedToExecute () {
-		$harmoni =& Harmoni::instance();
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$harmoni = Harmoni::instance();
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		
 		$harmoni->request->startNamespace('import');
 
@@ -57,15 +57,15 @@ class importAction extends MainWindowAction {
 	 * @since 6/08/05
 	 */
 	function getUnauthorizedMessage () {
-		$harmoni =& Harmoni::Instance();
-		$idManager =& Services::getService("Id");
-		$rm =& Services::getService("Repository");
+		$harmoni = Harmoni::Instance();
+		$idManager = Services::getService("Id");
+		$rm = Services::getService("Repository");
 		
 		$harmoni->request->startNamespace("import");
 		
-		$repository =& $rm->getRepository($idManager->getId(
+		$repository =$rm->getRepository($idManager->getId(
 			$harmoni->request->get("collection_id")));
-		$asset =& $repository->getAsset($idManager->getId(
+		$asset =$repository->getAsset($idManager->getId(
 			$harmoni->request->get("asset_id")));
 		
 		$harmoni->request->endNamespace();
@@ -83,14 +83,14 @@ class importAction extends MainWindowAction {
 	 * @since 6/08/05
 	 */
 	function getHeadingText () {
-		$harmoni =& Harmoni::Instance();
-		$idManager =& Services::getService("Id");
-		$rm =& Services::getService("Repository");
+		$harmoni = Harmoni::Instance();
+		$idManager = Services::getService("Id");
+		$rm = Services::getService("Repository");
 
 		$harmoni->request->startNamespace("import");
-		$repository =& $rm->getRepository($idManager->getId(
+		$repository =$rm->getRepository($idManager->getId(
 			$harmoni->request->get("collection_id")));
-		$asset =& $repository->getAsset($idManager->getId(
+		$asset =$repository->getAsset($idManager->getId(
 			$harmoni->request->get("asset_id")));
 		
 		$harmoni->request->endNamespace();
@@ -101,19 +101,19 @@ class importAction extends MainWindowAction {
 	}
 
 	function buildContent () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		$harmoni->request->startNamespace("import");
 		$harmoni->request->passthrough("collection_id");
 		$harmoni->request->passthrough("asset_id");
 		
-		$centerPane =& $this->getActionRows();
+		$centerPane =$this->getActionRows();
 
-		$authN =& Services::getService("AuthN");
-		$authTypes =& $authN->getAuthenticationTypes();
+		$authN = Services::getService("AuthN");
+		$authTypes =$authN->getAuthenticationTypes();
 		$uniqueString = "";
 		while($authTypes->hasNext()) {
-			$authType =& $authTypes->next();
-			$id =& $authN->getUserId($authType);
+			$authType =$authTypes->next();
+			$id =$authN->getUserId($authType);
 			$uniqueString .= "_".$id->getIdString();
 		}
 
@@ -131,9 +131,9 @@ class importAction extends MainWindowAction {
  	 * @since 7/18/05
 	 */
 	
-	function &createWizard () {
-		//$repository =& $this->getRepository();
-		$wizard =& SimpleWizard::withText(
+	function createWizard () {
+		//$repository =$this->getRepository();
+		$wizard = SimpleWizard::withText(
 			"\n<h3>"._("File type")."</h3>".
 			"\n"._("The type of file to be imported: ").
 			"\n<br />[[file_type]]".
@@ -153,26 +153,26 @@ class importAction extends MainWindowAction {
 			"</td></tr></table>");
 		
 		// :: Name and Description ::
-		//$step =& $wizard->addStep("fileupload", new WizardStep());
+		//$step =$wizard->addStep("fileupload", new WizardStep());
 		//$step->setDisplayName(_("Archive Type and File Upload"));
 		
-		$select =& $wizard->addComponent("file_type", new WSelectList());
+		$select =$wizard->addComponent("file_type", new WSelectList());
 //		$select->addOption("Tab-Delimited", "Tab-Delimited");
 		$select->addOption("XML", "XML");
 //		$select->addOption("Exif", "Exif");
 //		$select->setValue("Tab-Delimited");
 		
-		$type =& $wizard->addComponent("import_type", new WSelectList());
+		$type =$wizard->addComponent("import_type", new WSelectList());
 //		$type->addOption("update", "update");  
 // need exceptions for nodes not existing
 		$type->addOption("insert", "insert");
 		//$type->addOption("replace", "replace");
 		
-		$fileField =& $wizard->addComponent("filename", new WFileUploadField());
+		$fileField =$wizard->addComponent("filename", new WFileUploadField());
 				
-		$save =& $wizard->addComponent("_save", 
+		$save =$wizard->addComponent("_save", 
 			WSaveButton::withLabel("Import"));
-		$cancel =& $wizard->addComponent("_cancel", new WCancelButton());
+		$cancel =$wizard->addComponent("_cancel", new WCancelButton());
 		//$fileField->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 		//$fileField->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		return $wizard;
@@ -210,13 +210,13 @@ class importAction extends MainWindowAction {
 	
 	
 	function saveWizard($cacheName) {
-		$harmoni =& Harmoni::instance();
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$wizard =& $this->getWizard($cacheName);
-		$properties =& $wizard->getAllValues();
+		$harmoni = Harmoni::instance();
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$wizard =$this->getWizard($cacheName);
+		$properties =$wizard->getAllValues();
 
-		$centerPane =& $this->getActionRows();
+		$centerPane =$this->getActionRows();
 		ob_start();
 		
 		$path = $properties['filename']['tmp_name'];
@@ -230,15 +230,15 @@ class importAction extends MainWindowAction {
 		$newName = $this->moveArchive($path, $filename);
 		
 		if ($properties['file_type'] == "XML") {
-			$repository =& $repositoryManager->getRepository($idManager->getId(
+			$repository =$repositoryManager->getRepository($idManager->getId(
 				$harmoni->request->get('collection_id')));
 			
-			$matrixMaker =& new XMLRepositoryImporter();
+			$matrixMaker = new XMLRepositoryImporter();
 			$matrixMaker->doIdMatrix();
 			
 			// recordstructures into idmatrix
 			
-			$importer =& XMLAssetImporter::withObject(
+			$importer = XMLAssetImporter::withObject(
 				$repository->getAsset($idManager->getId(
 				$harmoni->request->get("asset_id"))),
 				$newName,
@@ -263,14 +263,14 @@ class importAction extends MainWindowAction {
 	 * @since 6/08/05
 	 */
 	function getReturnUrl () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		
 		$collection_id = $harmoni->request->get("collection_id");
 		$asset_id = $harmoni->request->get("asset_id");
 		$harmoni->request->forget("collection_id");
 		$harmoni->request->forget("asset_id");
 		$harmoni->request->endNamespace();
-		$url =& $harmoni->request->mkURL("asset", "view",
+		$url =$harmoni->request->mkURL("asset", "view",
 			array("collection_id" => $collection_id,
 			"asset_id" => $asset_id));
 		$harmoni->request->startNamespace("import");

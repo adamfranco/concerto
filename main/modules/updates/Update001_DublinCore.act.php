@@ -33,8 +33,8 @@ class Update001_DublinCoreAction
 	 * @access public
 	 * @since 3/5/07
 	 */
-	function &getDateIntroduced () {
-		$date =& Date::withYearMonthDay(2007, 3, 6);
+	function getDateIntroduced () {
+		$date = Date::withYearMonthDay(2007, 3, 6);
 		return $date;
 	}
 	
@@ -68,14 +68,14 @@ class Update001_DublinCoreAction
 	 * @since 3/5/07
 	 */
 	function isInPlace () {
-		$repositoryManager =& Services::getService('Repository');
-		$dcId =& $this->getDestId();
-		$repositories =& $repositoryManager->getRepositories();
+		$repositoryManager = Services::getService('Repository');
+		$dcId =$this->getDestId();
+		$repositories =$repositoryManager->getRepositories();
 		if ($repositories->hasNext()) {
-			$repository =& $repositories->next();
-			$recStructs =& $repository->getRecordStructures();
+			$repository =$repositories->next();
+			$recStructs =$repository->getRecordStructures();
 			while ($recStructs->hasNext()) {
-				$recStruct =& $recStructs->next();
+				$recStruct =$recStructs->next();
 				if ($dcId->isEqual($recStruct->getId()))
 					return true;
 			}
@@ -94,16 +94,16 @@ class Update001_DublinCoreAction
 	 * @since 3/7/07
 	 */
 	function runUpdate () {
-		$repositoryManager =& Services::getService('Repository');
-		$dcId =& $this->getDestId();
-		$repositories =& $repositoryManager->getRepositories();
+		$repositoryManager = Services::getService('Repository');
+		$dcId =$this->getDestId();
+		$repositories =$repositoryManager->getRepositories();
 		if ($repositories->hasNext()) {
-			$repository =& $repositories->next();
-			$recStructs =& $repository->getRecordStructures();
+			$repository =$repositories->next();
+			$recStructs =$repository->getRecordStructures();
 			while ($recStructs->hasNext()) {
-				$recStruct =& $recStructs->next();
+				$recStruct =$recStructs->next();
 				if ($recStruct->getDisplayName() == $this->getSourceName()) {
-					$sourceId =& $recStruct->getId();
+					$sourceId =$recStruct->getId();
 					return $this->convertRecordStructureIds($sourceId, $dcId);
 				}
 			}
@@ -126,23 +126,23 @@ class Update001_DublinCoreAction
 	 * @access public
 	 * @since 3/7/07
 	 */
-	function convertRecordStructureIds ( &$sourceId, &$destId ) {
+	function convertRecordStructureIds ( $sourceId, $destId ) {
 		$sourceIdString = $sourceId->getIdString();
 		$destIdString = $destId->getIdString();
 		
 		printpre("Converting from id '".$sourceIdString."' to '".$destIdString."'.");
 		
 		$fieldMapping = $this->getFieldMapping();
-		$dbc =& Services::getService('DatabaseManager');
+		$dbc = Services::getService('DatabaseManager');
 		
 		$dbc->beginTransaction();
 		
-		$query =& new SelectQuery;
+		$query = new SelectQuery;
 		$query->addColumn('id');
 		$query->addColumn('name');
 		$query->addTable('dm_schema_field');
 		$query->addWhere("fk_schema='".addslashes($sourceIdString)."'");
-		$results =& $dbc->query($query, 0);
+		$results =$dbc->query($query, 0);
 		
 		while ($results->hasNext()) {
 			$row = $results->next();
@@ -152,12 +152,12 @@ class Update001_DublinCoreAction
 		
 		
 		// Update the dm_schema table
-		$query =& new UpdateQuery;
+		$query = new UpdateQuery;
 		$query->setTable('dm_schema');
 		$query->setColumns(array('id'));
 		$query->setValues(array("'".addslashes($destIdString)."'"));
 		$query->addWhere("id='".addslashes($sourceIdString)."'");
-		$results =& $dbc->query($query, 0);
+		$results =$dbc->query($query, 0);
 		print "\n<br/>".$results->getNumberOfRows()." "._("rows in dm_schema updated");
 		
 		// Check to ensure that all mappings are valid
@@ -171,7 +171,7 @@ class Update001_DublinCoreAction
 		
 		// Update the dm_schema_field table
 		foreach ($fieldMapping as $mapping) {
-			$query =& new UpdateQuery;
+			$query = new UpdateQuery;
 			$query->setTable('dm_schema_field');
 			$query->setColumns(array(
 				'id', 
@@ -182,63 +182,63 @@ class Update001_DublinCoreAction
 				"'".addslashes($destIdString)."'"
 			));
 			$query->addWhere("id='".addslashes($mapping['source_id'])."'");
-			$results =& $dbc->query($query, 0);
+			$results =$dbc->query($query, 0);
 			print "\n<br/>".$results->getNumberOfRows()." "._("rows in dm_schema_field updated");
 		}
 		
 		// Update the dm_record table
-		$query =& new UpdateQuery;
+		$query = new UpdateQuery;
 		$query->setTable('dm_record');
 		$query->setColumns(array('fk_schema'));
 		$query->setValues(array("'".addslashes($destIdString)."'"));
 		$query->addWhere("fk_schema='".addslashes($sourceIdString)."'");
-		$results =& $dbc->query($query, 0);
+		$results =$dbc->query($query, 0);
 		print "\n<br/>".$results->getNumberOfRows()." "._("rows in dm_record updated");
 		
 		// Update the dm_record_field table
 		foreach ($fieldMapping as $mapping) {
-			$query =& new UpdateQuery;
+			$query = new UpdateQuery;
 			$query->setTable('dm_record_field');
 			$query->setColumns(array('fk_schema_field'));
 			$query->setValues(array("'".addslashes($mapping['dest_id'])."'"));
 			$query->addWhere("fk_schema_field='".addslashes($mapping['source_id'])."'");
-			$results =& $dbc->query($query, 0);
+			$results =$dbc->query($query, 0);
 			print "\n<br/>".$results->getNumberOfRows()." "._("rows in dm_record_field updated");
 		}
 		
 		// Update the sets table
-		$query =& new UpdateQuery;
+		$query = new UpdateQuery;
 		$query->setTable('sets');
 		$query->setColumns(array('id'));
 		$query->setValues(array("'".addslashes($destIdString)."'"));
 		$query->addWhere("id='".addslashes($sourceIdString)."'");
-		$results =& $dbc->query($query, 0);
+		$results =$dbc->query($query, 0);
 		print "\n<br/>".$results->getNumberOfRows()." "._("rows in sets updated");
 		
-		$query =& new UpdateQuery;
+		$query = new UpdateQuery;
 		$query->setTable('sets');
 		$query->setColumns(array('item_id'));
 		$query->setValues(array("'".addslashes($destIdString)."'"));
 		$query->addWhere("item_id='".addslashes($sourceIdString)."'");
-		$results =& $dbc->query($query, 0);
+		$results =$dbc->query($query, 0);
 		print "\n<br/>".$results->getNumberOfRows()." "._("rows in sets updated");
 		
 		// Update the dm_record_field table
 		foreach ($fieldMapping as $mapping) {
-			$query =& new UpdateQuery;
+			$query = new UpdateQuery;
 			$query->setTable('sets');
 			$query->setColumns(array('id'));
 			$query->setValues(array("'".addslashes($mapping['dest_id'])."'"));
 			$query->addWhere("id='".addslashes($mapping['source_id'])."'");
-			$results =& $dbc->query($query, 0);
+			$results =$dbc->query($query, 0);
 			print "\n<br/>".$results->getNumberOfRows()." "._("rows in sets updated");
 			
-			$query =& new UpdateQuery;
+			$query = new UpdateQuery;
 			$query->setTable('sets');
 			$query->setColumns(array('item_id'));
 			$query->setValues(array("'".addslashes($mapping['dest_id'])."'"));
 			$query->addWhere("item_id='".addslashes($mapping['source_id'])."'");
-			$results =& $dbc->query($query, 0);
+			$results =$dbc->query($query, 0);
 			print "\n<br/>".$results->getNumberOfRows()." "._("rows in sets updated");
 		}
 		
@@ -254,9 +254,9 @@ class Update001_DublinCoreAction
 	 * @access public
 	 * @since 3/7/07
 	 */
-	function &getDestId () {
-		$idManager =& Services::getService('Id');
-		$dcId =& $idManager->getId('dc');
+	function getDestId () {
+		$idManager = Services::getService('Id');
+		$dcId =$idManager->getId('dc');
 		return $dcId;
 	}
 	

@@ -44,9 +44,9 @@ class providerAction
 	 */
 	function execute () {	
 		if (!isset($_SESSION['oai_table_setup_complete'])) {
-			$dbc =& Services::getService("DatabaseManager");
-			$harmoni =& Harmoni::instance();
-			$config =& $harmoni->getAttachedData('OAI_CONFIG');
+			$dbc = Services::getService("DatabaseManager");
+			$harmoni = Harmoni::instance();
+			$config =$harmoni->getAttachedData('OAI_CONFIG');
 			$tables = $dbc->getTableList($config->getProperty('OAI_DBID'));
 			$harvesterConfig = $config->getProperty('OAI_HARVESTER_CONFIG');
 			
@@ -57,7 +57,7 @@ class providerAction
 						dirname(__FILE__)."/phpoai2/doc/oai_records_mysql.sql");
 					$queryString = str_replace('oai_records', $table, $queryString);
 					
-					$query =& new GenericSQLQuery;
+					$query = new GenericSQLQuery;
 					$query->addSQLQuery(SQLUtils::parseSQLString($queryString));
 					
 					$dbc->query($query,	$config->getProperty('OAI_DBID'));

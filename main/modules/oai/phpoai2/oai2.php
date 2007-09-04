@@ -70,7 +70,7 @@ if (!php_is_at_least('4.1.0')) {
 // 	$errors .= oai_error('badRequestMethod', $_SERVER['REQUEST_METHOD']);
 // }
 
-$harmoni =& Harmoni::instance();
+$harmoni = Harmoni::instance();
 $argKeys = $harmoni->request->getKeys();
 $args = array();
 foreach ($argKeys as $key) {

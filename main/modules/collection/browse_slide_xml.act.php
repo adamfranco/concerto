@@ -33,8 +33,8 @@ class browse_slide_xmlAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.view"), 
 					$this->getAssetId());
@@ -81,7 +81,7 @@ END;
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$repository =& $this->getRepository();
+		$repository =$this->getRepository();
 		return _("Browse Assets in the")
 			." <em>".$repository->getDisplayName()."</em> "
 			._(" Collection");
@@ -95,14 +95,14 @@ END;
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		
 		$harmoni->request->passthrough("collection_id");
 		$harmoni->request->passthrough("asset_id");	
-		$asset =& $this->getAsset();
+		$asset =$this->getAsset();
 		
 		/*********************************************************
 		 * First print the header, then the xml content, then exit before
@@ -134,12 +134,12 @@ END;
 	 * @access public
 	 * @since 10/14/05
 	 */
-	function printAssetXML( &$asset) {
+	function printAssetXML( $asset) {
 		
-		$assetId =& $asset->getId();
-		$repository =& $asset->getRepository();
-		$repositoryId =& $repository->getId();
-		$idManager =& Services::getService("Id");
+		$assetId =$asset->getId();
+		$repository =$asset->getRepository();
+		$repositoryId =$repository->getId();
+		$idManager = Services::getService("Id");
 		
 		
 		// ------------------------------------------
@@ -160,7 +160,7 @@ END;
 			print "right";
 		print "</text-position>\n";
 		
-		$fileRecords =& new MultiIteratorIterator();
+		$fileRecords = new MultiIteratorIterator();
 		$fileRecords->addIterator($asset->getRecordsByRecordStructure(
 			$idManager->getId("FILE")));
 		$fileRecords->addIterator($asset->getRecordsByRecordStructure(
@@ -169,9 +169,9 @@ END;
 		/*********************************************************
 		 * Files
 		 *********************************************************/
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		$harmoni->request->startNamespace("polyphony-repository");
-		$imgProcessor =& Services::getService("ImageProcessor");
+		$imgProcessor = Services::getService("ImageProcessor");
 		while ($fileRecords->hasNext()) {
 			$this->printFileRecord($fileRecords->next(), $repositoryId, $assetId);
 			
@@ -192,11 +192,11 @@ END;
 	 * @access public
 	 * @since 5/4/06
 	 */
-	function printFileRecord (&$fileRecord, &$repositoryId, &$assetId) {
-		$fileRecordId =& $fileRecord->getId();
+	function printFileRecord ($fileRecord, $repositoryId, $assetId) {
+		$fileRecordId =$fileRecord->getId();
 		
-		$imgProcessor =& Services::getService("ImageProcessor");
-		$harmoni =& Harmoni::instance();
+		$imgProcessor = Services::getService("ImageProcessor");
+		$harmoni = Harmoni::instance();
 		$harmoni->request->startNamespace("polyphony-repository");
 		
 		$dimensions = $this->getFirstPartValueFromRecord(
@@ -414,16 +414,16 @@ END;
 	 * @access public
 	 * @since 9/28/05
 	 */
-	function &getFirstPartValueFromRecord ( $partStructIdString, &$record ) {
-		$idManager =& Services::getService("Id");
+	function getFirstPartValueFromRecord ( $partStructIdString, $record ) {
+		$idManager = Services::getService("Id");
 		
-		$parts =& $record->getPartsByPartStructure(
+		$parts =$record->getPartsByPartStructure(
 			$idManager->getId($partStructIdString));
 		
 		if ($parts->hasNext()) {
-			$part =& $parts->next();
+			$part =$parts->next();
 			if (is_object($part->getValue()))
-				$value =& $part->getValue();
+				$value =$part->getValue();
 			else
 				$value = $part->getValue();
 		} else {
@@ -441,8 +441,8 @@ END;
 	 * @access public
 	 * @since 9/28/05
 	 */
-	function printAsset ( &$asset ) {
-		$assetId =& $asset->getId();
+	function printAsset ( $asset ) {
+		$assetId =$asset->getId();
 		/*********************************************************
 		 * Description
 		 *********************************************************/
@@ -455,7 +455,7 @@ END;
 		/*********************************************************
 		 * Expanding to child assets
 		 *********************************************************/
-		$children =& $asset->getAssets();
+		$children =$asset->getAssets();
 		if ($children->hasNext()) {
 			$this->printChildViewerLink($asset);
 		}
@@ -466,23 +466,23 @@ END;
 		$printedRecordIds = array();
 		
 		// Get the set of RecordStructures so that we can print them in order.
-		$setManager =& Services::getService("Sets");
-		$idManager =& Services::getService("Id");
-		$repository =& $asset->getRepository();
-		$structSet =& $setManager->getPersistentSet($repository->getId());
+		$setManager = Services::getService("Sets");
+		$idManager = Services::getService("Id");
+		$repository =$asset->getRepository();
+		$structSet =$setManager->getPersistentSet($repository->getId());
 		
 		// First, lets go through the info structures listed in the set and print out
 		// the info records for those structures in order.
 		$structSet->reset();
 		while ($structSet->hasNext()) {
-			$structureId =& $structSet->next();
+			$structureId =$structSet->next();
 			if (!$structureId->isEqual($idManager->getId("FILE"))
 				&& !$structureId->isEqual($idManager->getId("REMOTE_FILE"))) 
 			{
-				$records =& $asset->getRecordsByRecordStructure($structureId);
+				$records =$asset->getRecordsByRecordStructure($structureId);
 				while ($records->hasNext()) {
-					$record =& $records->next();
-					$recordId =& $record->getId();
+					$record =$records->next();
+					$recordId =$record->getId();
 					$printedRecordIds[] = $recordId->getIdString();
 			
 					print "\t<div style='padding: 5px; border-top: 1px solid;'>\n";
@@ -554,33 +554,33 @@ END;
 	 * @access public
 	 * @since 9/28/05
 	 */
-	function printRecord ( &$repositoryId, &$assetId, &$record ) {
-		$recordStructure =& $record->getRecordStructure();
-		$structureId =& $recordStructure->getId();
+	function printRecord ( $repositoryId, $assetId, $record ) {
+		$recordStructure =$record->getRecordStructure();
+		$structureId =$recordStructure->getId();
 		
 		print "\t\t<div style='font-weight: bold; font-style: italic; font-size: large;'>";
 		print $recordStructure->getDisplayName().":</div>\n";
 		
 		// Print out the fields parts for this structure
-		$setManager =& Services::getService("Sets");
-		$partStructureSet =& $setManager->getPersistentSet($structureId);
+		$setManager = Services::getService("Sets");
+		$partStructureSet =$setManager->getPersistentSet($structureId);
 		
 		$partStructureArray = array();
 		// Print out the ordered parts/fields
 		$partStructureSet->reset();
 		while ($partStructureSet->hasNext()) {
-			$partStructureId =& $partStructureSet->next();
-			$partStructureArray[] =& $recordStructure->getPartStructure($partStructureId);
+			$partStructureId =$partStructureSet->next();
+			$partStructureArray[] =$recordStructure->getPartStructure($partStructureId);
 		}
 		// Get the rest of the parts (the unordered ones);
-		$partStructureIterator =& $recordStructure->getPartStructures();
+		$partStructureIterator =$recordStructure->getPartStructures();
 		while ($partStructureIterator->hasNext()) {
-			$partStructure =& $partStructureIterator->next();
+			$partStructure =$partStructureIterator->next();
 			if (!$partStructureSet->isInSet($partStructure->getId()))
-				$partStructureArray[] =& $partStructure;
+				$partStructureArray[] =$partStructure;
 		}
 		
-		$moduleManager =& Services::getService("InOutModules");
+		$moduleManager = Services::getService("InOutModules");
 		print $moduleManager->generateDisplayForPartStructures($repositoryId, $assetId, $record, $partStructureArray);
 	}
 	
@@ -592,12 +592,12 @@ END;
 	 * @access public
 	 * @since 5/4/06
 	 */
-	function printChildViewerLink ( &$asset ) {
-		$harmoni =& Harmoni::instance();
+	function printChildViewerLink ( $asset ) {
+		$harmoni = Harmoni::instance();
 		
-		$assetId =& $asset->getId();
-		$repository =& $asset->getRepository();
-		$repositoryId =& $repository->getId();
+		$assetId =$asset->getId();
+		$repository =$asset->getRepository();
+		$repositoryId =$repository->getId();
 		
 		print "\t<div>\n";
 		print "\t<input type='button'";

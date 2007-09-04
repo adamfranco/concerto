@@ -14,5 +14,5 @@
  */
  
 // :: Set up the MIME service for sniffing mime types ::
-	$configuration =& new ConfigurationProperties;
+	$configuration = new ConfigurationProperties;
 	Services::startManagerAsService("MIMEManager", $context, $configuration);

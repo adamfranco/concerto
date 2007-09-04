@@ -34,7 +34,7 @@ class AssetComponent
 	 * @access public
 	 * @return void
 	 */
-	function setValue ( &$id ) {
+	function setValue ( $id ) {
 		ArgumentValidator::validate($id, ExtendsValidatorRule::getRule("Id"), true);
 		$this->_id = $id;
 	}
@@ -73,9 +73,9 @@ class AssetComponent
 		ob_start();
 		
 		if (is_object($this->_id)) {
-			$repositoryManager =& Services::getService('Repository');
+			$repositoryManager = Services::getService('Repository');
 			if ($repositoryManager->getAsset($this->_id)) {
-				$asset =& $repositoryManager->getAsset($this->_id);
+				$asset =$repositoryManager->getAsset($this->_id);
 				
 				
 				print "\n<table border='0'>";

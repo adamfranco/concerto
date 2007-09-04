@@ -32,8 +32,8 @@ class importAction extends MainWindowAction {
 	 * @since 6/08/05
 	 */
 	function isAuthorizedToExecute () {
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 
 		return $authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.add_children"),
@@ -63,15 +63,15 @@ class importAction extends MainWindowAction {
 	}
 
 	function buildContent () {
-		$harmoni =& Harmoni::instance();
-		$centerPane =& $this->getActionRows();
+		$harmoni = Harmoni::instance();
+		$centerPane =$this->getActionRows();
 		
-		$authN =& Services::getService("AuthN");
-		$authTypes =& $authN->getAuthenticationTypes();
+		$authN = Services::getService("AuthN");
+		$authTypes =$authN->getAuthenticationTypes();
 		$uniqueString = "";
 		while($authTypes->hasNext()) {
-			$authType =& $authTypes->next();
-			$id =& $authN->getUserId($authType);
+			$authType =$authTypes->next();
+			$id =$authN->getUserId($authType);
 			$uniqueString .= "_".$id->getIdString();
 		}
 
@@ -87,8 +87,8 @@ class importAction extends MainWindowAction {
  	 * @since 7/18/05
 	 */
 	
-	function &createWizard () {
-		$wizard =& SimpleWizard::withText(
+	function createWizard () {
+		$wizard = SimpleWizard::withText(
 			"<table border='0' style='margin-top:20px' >\n" .
 			"\n<tr><td><h3>"._("File type:")."</h3></td></tr>".
 			"\n<tr><td>"._("The type of file to be imported: ")."</td>".
@@ -110,29 +110,29 @@ class importAction extends MainWindowAction {
 			"</td></tr></table>");
 		
 		// :: Name and Description ::
-		//$step =& $wizard->addStep("fileupload", new WizardStep());
+		//$step =$wizard->addStep("fileupload", new WizardStep());
 		//$step->setDisplayName(_("Archive Type and File Upload"));
 		
-		$select =& $wizard->addComponent("file_type", new WSelectList());
+		$select =$wizard->addComponent("file_type", new WSelectList());
 //		$select->addOption("Tab-Delimited", "Tab-Delimited");
 		$select->addOption("XML", "XML");
 //		$select->addOption("Exif", "Exif");
 //		$select->setValue("Tab-Delimited");
 		
-		$archive =& $wizard->addComponent("is_archived", 
+		$archive =$wizard->addComponent("is_archived", 
 			WCheckBox::withLabel("is Archived"));
 		
-		$type =& $wizard->addComponent("import_type", new WSelectList());
+		$type =$wizard->addComponent("import_type", new WSelectList());
 //		$type->addOption("update", "update");  
 // need exceptions for nodes not existing
 		$type->addOption("insert", "insert");
 		//$type->addOption("replace", "replace");
 		
-		$fileField =& $wizard->addComponent("filename", new WFileUploadField());
+		$fileField =$wizard->addComponent("filename", new WFileUploadField());
 				
-		$save =& $wizard->addComponent("_save", 
+		$save =$wizard->addComponent("_save", 
 			WSaveButton::withLabel("Import"));
-		$cancel =& $wizard->addComponent("_cancel", new WCancelButton());
+		$cancel =$wizard->addComponent("_cancel", new WCancelButton());
 		//$fileField->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 		//$fileField->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		return $wizard;
@@ -170,11 +170,11 @@ class importAction extends MainWindowAction {
 	
 	
 	function saveWizard($cacheName) {
-		$harmoni =& Harmoni::instance();
-		$wizard =& $this->getWizard($cacheName);
+		$harmoni = Harmoni::instance();
+		$wizard =$this->getWizard($cacheName);
 		$properties = $wizard->getAllValues();
 
-		$centerPane =& $this->getActionRows();
+		$centerPane =$this->getActionRows();
 		ob_start();
 		
 		$path = $properties['filename']['tmp_name'];
@@ -200,15 +200,15 @@ class importAction extends MainWindowAction {
 
 		
 		if ($properties['file_type'] == "XML") {
-			$importer =& new XMLImporter($array);
+			$importer = new XMLImporter($array);
 		if ($properties['is_archived'] == TRUE) {
 				$directory = $importer->decompress($newName);
-				$importer =& XMLImporter::withFile($array, 
+				$importer = XMLImporter::withFile($array, 
 					$directory."/metadata.xml", 
 					$properties['import_type']);
 			}
 			else
-				$importer =& XMLImporter::withFile($array, $newName,
+				$importer = XMLImporter::withFile($array, $newName,
 					$properties['import_type']);
 					
 			$importer->parseAndImportBelow("asset", 75);
@@ -235,7 +235,7 @@ class importAction extends MainWindowAction {
 	 * @since 6/08/05
 	 */
 	function getReturnUrl () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		return $harmoni->request->quickURL("admin", "main");
 	}
 	

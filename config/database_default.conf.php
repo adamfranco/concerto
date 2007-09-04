@@ -13,11 +13,11 @@
  * @version $Id$
  */
  
- 	$configuration =& new ConfigurationProperties;
+ 	$configuration = new ConfigurationProperties;
 	Services::startManagerAsService("DatabaseManager", $context, $configuration);
 	
 	//Set up the database connection
-	$databaseManager =& Services::getService("DatabaseManager");
+	$databaseManager = Services::getService("DatabaseManager");
 	$dbHost = "localhost";
 	$dbName = "my_concerto_database";
 	$dbUser = "test";

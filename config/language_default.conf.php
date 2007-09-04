@@ -14,7 +14,7 @@
  */
  
 // :: Set up language directories ::
-	$configuration =& new ConfigurationProperties;
+	$configuration = new ConfigurationProperties;
 	$configuration->addProperty('default_language', $arg0 = 'en_US');
 	$configuration->addProperty('applications', $arg1 = array (
 		'concerto' => MYDIR.'/main/languages',

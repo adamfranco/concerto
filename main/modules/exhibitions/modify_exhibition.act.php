@@ -31,13 +31,13 @@ class modify_exhibitionAction
 	 * @since 4/26/05
 	 */
 	function isAuthorizedToExecute () {
-		$harmoni =& Harmoni::instance();
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$harmoni = Harmoni::instance();
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		
 		$harmoni->request->startNamespace('modify_exhibition');
 		$harmoni->request->passthrough('exhibition_id');
-		$exhibitionId =& $idManager->getId(RequestContext::value('exhibition_id'));
+		$exhibitionId =$idManager->getId(RequestContext::value('exhibition_id'));
 		$harmoni->request->endNamespace();
 		
 		// Check that the user can create an asset here.
@@ -65,7 +65,7 @@ class modify_exhibitionAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$centerPane =& $this->getActionRows();
+		$centerPane =$this->getActionRows();
 		$cacheName = 'modify_exhibition_wizard';
 		
 		$this->runWizard ( $cacheName, $centerPane );
@@ -79,16 +79,16 @@ class modify_exhibitionAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
 
-		$harmoni =& Harmoni::Instance();
+		$harmoni = Harmoni::Instance();
 		$harmoni->request->startNamespace("modify_exhibition");
 	
-		$asset =& $repository->getAsset(
+		$asset =$repository->getAsset(
 				$idManager->getId(RequestContext::value('exhibition_id')));
 
 		$harmoni->request->endNamespace();
@@ -105,35 +105,35 @@ class modify_exhibitionAction
 	 * @access public
 	 * @since 4/28/05
 	 */
-	function &createWizard () {
-		$harmoni =& Harmoni::instance();
+	function createWizard () {
+		$harmoni = Harmoni::instance();
 		$harmoni->request->startNamespace('modify_exhibition');
 		$harmoni->request->passthrough('exhibition_id');
 		
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
 		
-		$exhibitionRepositoryId =& $idManager->getId(
+		$exhibitionRepositoryId =$idManager->getId(
 				"edu.middlebury.concerto.exhibition_repository");
-		$repository =& $repositoryManager->getRepository($exhibitionRepositoryId);
-		$asset =& $repository->getAsset(
+		$repository =$repositoryManager->getRepository($exhibitionRepositoryId);
+		$asset =$repository->getAsset(
 					$idManager->getId(RequestContext::value('exhibition_id')));
 
 		
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withDefaultLayout();
+		$wizard = SimpleStepWizard::withDefaultLayout();
 		
 		// :: Name and Description ::
-		$step =& $wizard->addStep("namedescstep", new WizardStep());
+		$step =$wizard->addStep("namedescstep", new WizardStep());
 		$step->setDisplayName(_("Name &amp; Description"));
 		
 		// Create the properties.
-		$displayNameProp =& $step->addComponent("display_name", new WTextField());
+		$displayNameProp =$step->addComponent("display_name", new WTextField());
 		$displayNameProp->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$displayNameProp->setValue($asset->getDisplayName());
 		
-		$descriptionProp =& $step->addComponent("description", WTextArea::withRowsAndColumns(5,30));
+		$descriptionProp =$step->addComponent("description", WTextArea::withRowsAndColumns(5,30));
 		$descriptionProp->setValue($asset->getDescription());
 				
 		// Create the step text
@@ -149,17 +149,17 @@ class modify_exhibitionAction
 		ob_end_clean();
 		
 		// :: Effective/Expiration Dates ::
-		$step =& $wizard->addStep("datestep", new WizardStep());
+		$step =$wizard->addStep("datestep", new WizardStep());
 		$step->setDisplayName(_("Effective Dates")." ("._("optional").")");
 		
 		// Create the properties.
-		$property =& $step->addComponent("effective_date", new WTextField());
-		$date =& $asset->getEffectiveDate();
+		$property =$step->addComponent("effective_date", new WTextField());
+		$date =$asset->getEffectiveDate();
 		if (is_object($date))
 			$property->setValue($date->asString());
 		
-		$property =& $step->addComponent("expiration_date", new WTextField());
-		$date =& $asset->getExpirationDate();
+		$property =$step->addComponent("expiration_date", new WTextField());
+		$date =$asset->getExpirationDate();
 		if (is_object($date))
 			$property->setValue($date->asString());
 		
@@ -190,24 +190,24 @@ class modify_exhibitionAction
 	 * @since 4/28/05
 	 */
 	function saveWizard ( $cacheName ) {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		$harmoni->request->startNamespace('modify_exhibition');
 		$harmoni->request->passthrough('exhibition_id');
 		
-		$wizard =& $this->getWizard($cacheName);
+		$wizard =$this->getWizard($cacheName);
 		
 		// Make sure we have a valid Repository
-		$idManager =& Services::getService("Id");
-		$authZ =& Services::getService("AuthZ");
-		$repositoryManager =& Services::getService("Repository");
+		$idManager = Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$repositoryManager = Services::getService("Repository");
 		
-		$exhibitionRepositoryId =& $idManager->getId(
+		$exhibitionRepositoryId =$idManager->getId(
 				"edu.middlebury.concerto.exhibition_repository");
-		$repository =& $repositoryManager->getRepository($exhibitionRepositoryId);
+		$repository =$repositoryManager->getRepository($exhibitionRepositoryId);
 		$asset = $repository->getAsset(
 					$idManager->getId(RequestContext::value('exhibition_id')));
 		
-		$properties =& $wizard->getAllValues();
+		$properties =$wizard->getAllValues();
 		
 		$assetType = new Type("Asset Types",
 							"edu.middlebury.concerto",
@@ -218,8 +218,8 @@ class modify_exhibitionAction
 		$asset->updateDisplayName($properties['namedescstep']['display_name']);
 		$asset->updateDescription($properties['namedescstep']['description']);
 									
-		$assetId =& $asset->getId();
-		$this->_assetId =& $assetId;
+		$assetId =$asset->getId();
+		$this->_assetId =$assetId;
 		
 		// Update the effective/expiration dates
 		if ($properties['datestep']['effective_date'])
@@ -231,14 +231,14 @@ class modify_exhibitionAction
 		
 		// Log the success or failure
 		if (Services::serviceRunning("Logging")) {
-			$loggingManager =& Services::getService("Logging");
-			$log =& $loggingManager->getLogForWriting("Concerto");
-			$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+			$loggingManager = Services::getService("Logging");
+			$log =$loggingManager->getLogForWriting("Concerto");
+			$formatType = new Type("logging", "edu.middlebury", "AgentsAndNodes",
 							"A format in which the acting Agent[s] and the target nodes affected are specified.");
-			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+			$priorityType = new Type("logging", "edu.middlebury", "Event_Notice",
 							"Normal events.");
 			
-			$item =& new AgentNodeEntryItem("Modify Node", "Exhibition Modified");
+			$item = new AgentNodeEntryItem("Modify Node", "Exhibition Modified");
 			$item->addNodeId($asset->getId());
 			
 			$log->appendLogWithTypes($item,	$formatType, $priorityType);
@@ -256,7 +256,7 @@ class modify_exhibitionAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		return $harmoni->request->quickURL("exhibitions", "browse");
 	}
 }

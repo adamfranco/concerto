@@ -33,8 +33,8 @@ class delete_slideshowAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can delete this exhibition
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.delete"), 
 					$idManager->getId(RequestContext::value('slideshow_id')));
@@ -59,12 +59,12 @@ class delete_slideshowAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
-		$asset =& $repository->getAsset(
+		$asset =$repository->getAsset(
 				$idManager->getId(RequestContext::value('slideshow_id')));
 		return _("Delete Slideshow")." <em>".$asset->getDisplayName()."</em> ";
 	}
@@ -77,34 +77,34 @@ class delete_slideshowAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 		
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
 		
-		$asset =& $repository->getAsset(
+		$asset =$repository->getAsset(
 			$idManager->getId(RequestContext::value('slideshow_id')));
 		
 		// Remove it from its set.
-		$exhibitionId =& $idManager->getId(RequestContext::value('exhibition_id'));		
-		$setManager =& Services::getService("Sets");
-		$exhibitionSet =& $setManager->getPersistentSet($exhibitionId);
+		$exhibitionId =$idManager->getId(RequestContext::value('exhibition_id'));		
+		$setManager = Services::getService("Sets");
+		$exhibitionSet =$setManager->getPersistentSet($exhibitionId);
 		$exhibitionSet->removeItem($asset->getId());
 		
 		// Log the action
 		if (Services::serviceRunning("Logging")) {
-			$loggingManager =& Services::getService("Logging");
-			$log =& $loggingManager->getLogForWriting("Concerto");
-			$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+			$loggingManager = Services::getService("Logging");
+			$log =$loggingManager->getLogForWriting("Concerto");
+			$formatType = new Type("logging", "edu.middlebury", "AgentsAndNodes",
 							"A format in which the acting Agent[s] and the target nodes affected are specified.");
-			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+			$priorityType = new Type("logging", "edu.middlebury", "Event_Notice",
 							"Normal events.");
 			
-			$item =& new AgentNodeEntryItem("Delete Node", "Slideshow deleted:\n<br/>&nbsp; &nbsp; &nbsp;".$asset->getDisplayName());
+			$item = new AgentNodeEntryItem("Delete Node", "Slideshow deleted:\n<br/>&nbsp; &nbsp; &nbsp;".$asset->getDisplayName());
 			$item->addNodeId($asset->getId());
 			$item->addNodeId($idManager->getId(RequestContext::value('exhibition_id')));
 			

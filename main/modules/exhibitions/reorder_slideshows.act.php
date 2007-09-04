@@ -36,8 +36,8 @@ class reorder_slideshowsAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can delete this exhibition
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.modify"), 
 					$idManager->getId(RequestContext::value('exhibition_id')));
@@ -62,12 +62,12 @@ class reorder_slideshowsAction
 	 * @since 8/15/06
 	 */
 	function getHeadingText () {
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
-		$asset =& $repository->getAsset(
+		$asset =$repository->getAsset(
 				$idManager->getId(RequestContext::value('exhibition_id')));
 		return _("Re-Order Slideshows in")." <em>".$asset->getDisplayName()."</em> ";
 	}
@@ -80,22 +80,22 @@ class reorder_slideshowsAction
 	 * @since 8/15/06
 	 */
 	function buildContent () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
 		
-		$exhibitionId =& $idManager->getId(RequestContext::value('exhibition_id'));
-		$exhibition =& $repository->getAsset($exhibitionId);
+		$exhibitionId =$idManager->getId(RequestContext::value('exhibition_id'));
+		$exhibition =$repository->getAsset($exhibitionId);
 		
-		$slideshowId =& $idManager->getId(RequestContext::value('slideshow_id'));
-		$slideshowAsset =& $repository->getAsset($slideshowId);
+		$slideshowId =$idManager->getId(RequestContext::value('slideshow_id'));
+		$slideshowAsset =$repository->getAsset($slideshowId);
 		
-		$setManager =& Services::getService("Sets");
-		$exhibitionSet =& $setManager->getPersistentSet($exhibitionId);
+		$setManager = Services::getService("Sets");
+		$exhibitionSet =$setManager->getPersistentSet($exhibitionId);
 		$oldPosition = $exhibitionSet->getPosition($slideshowId);
 		$newPosition = RequestContext::value('new_position');
 		
@@ -103,14 +103,14 @@ class reorder_slideshowsAction
 		if ($newPosition < 0 || $newPosition >= $exhibitionSet->count()) {
 			// Log the error
 			if (Services::serviceRunning("Logging")) {
-				$loggingManager =& Services::getService("Logging");
-				$log =& $loggingManager->getLogForWriting("Concerto");
-				$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+				$loggingManager = Services::getService("Logging");
+				$log =$loggingManager->getLogForWriting("Concerto");
+				$formatType = new Type("logging", "edu.middlebury", "AgentsAndNodes",
 								"A format in which the acting Agent[s] and the target nodes affected are specified.");
-				$priorityType =& new Type("logging", "edu.middlebury", "Error",
+				$priorityType = new Type("logging", "edu.middlebury", "Error",
 								"Errors.");
 				
-				$item =& new AgentNodeEntryItem("Reorder Slideshows Failed", "Out of range error: Slideshow in the ".$exhibition->getDisplayName()." exhibition could not be moved from position $oldPosition to $newPosition (".$exhibitionSet->count()." items in the set).");
+				$item = new AgentNodeEntryItem("Reorder Slideshows Failed", "Out of range error: Slideshow in the ".$exhibition->getDisplayName()." exhibition could not be moved from position $oldPosition to $newPosition (".$exhibitionSet->count()." items in the set).");
 				$item->addNodeId($exhibition->getId());
 							
 				$log->appendLogWithTypes($item,	$formatType, $priorityType);
@@ -122,14 +122,14 @@ class reorder_slideshowsAction
 			
 			// Log the action
 			if (Services::serviceRunning("Logging")) {
-				$loggingManager =& Services::getService("Logging");
-				$log =& $loggingManager->getLogForWriting("Concerto");
-				$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+				$loggingManager = Services::getService("Logging");
+				$log =$loggingManager->getLogForWriting("Concerto");
+				$formatType = new Type("logging", "edu.middlebury", "AgentsAndNodes",
 								"A format in which the acting Agent[s] and the target nodes affected are specified.");
-				$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+				$priorityType = new Type("logging", "edu.middlebury", "Event_Notice",
 								"Normal events.");
 				
-				$item =& new AgentNodeEntryItem("Reorder Slideshows", "Slideshows in the ".$exhibition->getDisplayName()." exhibition have been reorderd.");
+				$item = new AgentNodeEntryItem("Reorder Slideshows", "Slideshows in the ".$exhibition->getDisplayName()." exhibition have been reorderd.");
 				$item->addNodeId($exhibition->getId());
 							
 				$log->appendLogWithTypes($item,	$formatType, $priorityType);
@@ -137,16 +137,16 @@ class reorder_slideshowsAction
 			
 			// Remove any missing slideshows
 			$slideshowsIdStrings = array();
-			$slideshows =& $exhibition->getAssets();
+			$slideshows =$exhibition->getAssets();
 			while ($slideshows->hasNext()) {
-				$slideshow =& $slideshows->next();
-				$slideshowId =& $slideshow->getId();
+				$slideshow =$slideshows->next();
+				$slideshowId =$slideshow->getId();
 				$slideshowsIdStrings[] = $slideshowId->getIdString();
 			}
 			$itemsToRemove = array();
 			$exhibitionSet->reset();
 			while ($exhibitionSet->hasNext()) {
-				$itemId =& $exhibitionSet->next();
+				$itemId =$exhibitionSet->next();
 				if (!in_array($itemId->getIdString(), $slideshowsIdStrings))
 					$itemsToRemove[] = $itemId;
 			}

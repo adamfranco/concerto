@@ -34,9 +34,9 @@ class exportAction
 	 * @since 9/27/05
 	 */
 	function isAuthorizedToExecute () {
-		$harmoni =& Harmoni::instance();
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$harmoni = Harmoni::instance();
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 
 		$harmoni->request->startNamespace('export');
 
@@ -68,13 +68,13 @@ class exportAction
 	 * @since 9/28/05
 	 */
 	function getHeadingText () {
-		$harmoni =& Harmoni::Instance();
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
+		$harmoni = Harmoni::Instance();
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
 		
 		$harmoni->request->startNamespace('export');
 
-		$repository =& $repositoryManager->getRepository(
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId($harmoni->request->get("collection_id")));
 		
 		$harmoni->request->endNamespace();
@@ -90,11 +90,11 @@ class exportAction
 	 * @since 9/27/05
 	 */
 	function buildContent () {
-		$harmoni =& Harmoni::Instance();
+		$harmoni = Harmoni::Instance();
 		$harmoni->request->startNamespace('export');
 		$harmoni->request->passthrough('collection_id');
 
-		$centerPane =& $this->getActionRows();
+		$centerPane =$this->getActionRows();
 
 		$cacheName = 'export_collection_wizard_'.
 			$harmoni->request->get('collection_id');
@@ -111,17 +111,17 @@ class exportAction
 	 * @access public
 	 * @since 9/28/05
 	 */
-	function &createWizard () {
-		$harmoni =& Harmoni::Instance();
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
+	function createWizard () {
+		$harmoni = Harmoni::Instance();
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
 		
 
-		$repository =& $repositoryManager->getRepository(
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId($harmoni->request->get("collection_id")));
 				
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleWizard::withText(
+		$wizard = SimpleWizard::withText(
 			"\n<h3>"._("Click <em>Export</em> to Export the <em>").
 			$repository->getDisplayName().
 			_("</em> Collection out of <em>Concerto</em>")."</h3>".
@@ -144,19 +144,19 @@ class exportAction
 
 		
 		// Create the properties.
-		$fileNameProp =& $wizard->addComponent("filepath", new WTextField());
+		$fileNameProp =$wizard->addComponent("filepath", new WTextField());
 //		$fileNameProp->setErrorText("<nobr>"._("The archive name must not have an extension")."</nobr>");
 // 		$fileNameProp->setErrorRule(new WECRegex("\."));
 		
- 		$type =& $wizard->addComponent("compression", new WSelectList());
+ 		$type =$wizard->addComponent("compression", new WSelectList());
  		$type->setValue(".tar.gz");
  		$type->addOption(".tar.gz", _("gzip"));
 //  		$type->addOption(".zip", _("zip"));
 //  		$type->addOption(".bz2", _("bz2"));
 
-		$save =& $wizard->addComponent("_save", 
+		$save =$wizard->addComponent("_save", 
 			WSaveButton::withLabel("Export"));
-		$cancel =& $wizard->addComponent("_cancel", new WCancelButton());
+		$cancel =$wizard->addComponent("_cancel", new WCancelButton());
 
 		return $wizard;
 	}
@@ -172,17 +172,17 @@ class exportAction
 	 * @since 4/28/05
 	 */
 	function saveWizard ( $cacheName ) {
-		$harmoni =& Harmoni::Instance();
-		$idManager =& Services::getService("Id");
+		$harmoni = Harmoni::Instance();
+		$idManager = Services::getService("Id");
 
-		$wizard =& $this->getWizard($cacheName);
+		$wizard =$this->getWizard($cacheName);
 				
 		$properties = $wizard->getAllValues();
 		
-		$repositoryId =& $idManager->getId(
+		$repositoryId =$idManager->getId(
 			RequestContext::value('collection_id'));
 		
-		$exporter =& XMLRepositoryExporter::withCompression(
+		$exporter = XMLRepositoryExporter::withCompression(
 			$properties['compression']);
 
 		$dir = $exporter->export($repositoryId);
@@ -214,7 +214,7 @@ class exportAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 				
 		$return = $harmoni->request->quickURL("collections", "namebrowse");
 		

@@ -32,8 +32,8 @@ class createAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.add_children"), 
 					$idManager->getId(REPOSITORY_ROOT_ID));
@@ -58,7 +58,7 @@ class createAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$centerPane =& $this->getActionRows();
+		$centerPane =$this->getActionRows();
 		$cacheName = 'create_collection_wizard';
 		
 		$this->runWizard ( $cacheName, $centerPane );
@@ -83,20 +83,20 @@ class createAction
 	 * @access public
 	 * @since 4/28/05
 	 */
-	function &createWizard () {
+	function createWizard () {
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withDefaultLayout();
+		$wizard = SimpleStepWizard::withDefaultLayout();
 		
 		// :: Step One ::
-		$stepOne =& $wizard->addStep("namedesc", new WizardStep());
+		$stepOne =$wizard->addStep("namedesc", new WizardStep());
 		$stepOne->setDisplayName(_("Name & Description"));
 		
 		// Create the properties.
-		$displayNameProp =& $stepOne->addComponent("display_name", new WTextField());
+		$displayNameProp =$stepOne->addComponent("display_name", new WTextField());
 		$displayNameProp->setErrorText(_("A value for this field is required."));
 		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		
-		$descriptionProp =& $stepOne->addComponent("description", WTextArea::withRowsAndColumns(10, 80));
+		$descriptionProp =$stepOne->addComponent("description", WTextArea::withRowsAndColumns(10, 80));
 		
 		// Create the step text
 		ob_start();
@@ -112,25 +112,25 @@ class createAction
 		ob_end_clean();
 		
 		// :: Step Two ::
-		$stepTwo =& $wizard->addStep("type", new WizardStep());
+		$stepTwo =$wizard->addStep("type", new WizardStep());
 		$stepTwo->setDisplayName(_("Type"));
 		// Create the properties.
-		$property =& $stepTwo->addComponent("type_domain", new WTextField());
+		$property =$stepTwo->addComponent("type_domain", new WTextField());
 		$property->setValue(_("Collections"));
 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setErrorText(_("A value for this field is required."));
 		
-		$property =& $stepTwo->addComponent("type_authority", new WTextField());
+		$property =$stepTwo->addComponent("type_authority", new WTextField());
 		$property->setValue(_("Concerto"));
 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setErrorText(_("A value for this field is required."));
 		
-		$property =& $stepTwo->addComponent("type_keyword", new WTextField());
+		$property =$stepTwo->addComponent("type_keyword", new WTextField());
 		$property->setValue(_("Generic Collection"));
 		$property->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		$property->setErrorText(_("A value for this field is required."));
 		
-		$property =& $stepTwo->addComponent("type_description", WTextArea::withRowsAndColumns(3, 50));
+		$property =$stepTwo->addComponent("type_description", WTextArea::withRowsAndColumns(3, 50));
 		$property->setValue(_("This is a <em>Collection</em> of unspecified type."));
 		
 		// create the text
@@ -185,7 +185,7 @@ class createAction
 	 * @since 4/28/05
 	 */
 	function saveWizard ( $cacheName ) {
-		$wizard =& $this->getWizard($cacheName);
+		$wizard =$this->getWizard($cacheName);
 	
 		// If all properties validate then go through the steps nessisary to
 		// save the data.
@@ -193,34 +193,34 @@ class createAction
 			$properties = $wizard->getAllValues();
 			
 			// Create the repository and get its id.
-			$repositoryManager =& Services::getService("Repository");
-			$type =& new HarmoniType($properties['type']['type_domain'],
+			$repositoryManager = Services::getService("Repository");
+			$type = new HarmoniType($properties['type']['type_domain'],
 									$properties['type']['type_authority'],
 									$properties['type']['type_keyword'],
 									$properties['type']['type_description']);
-			$repository =& $repositoryManager->createRepository(
+			$repository =$repositoryManager->createRepository(
 								$properties['namedesc']['display_name'],
 								$properties['namedesc']['description'], $type);
 			
-			$this->repositoryId =& $repository->getId();
+			$this->repositoryId =$repository->getId();
 			
 			// Add the File Record Structure Id as a default Schema
-			$setManager =& Services::getService("Sets");
-			$idManager =& Services::getService("Id");
-			$set =& $setManager->getPersistentSet($this->repositoryId);
+			$setManager = Services::getService("Sets");
+			$idManager = Services::getService("Id");
+			$set =$setManager->getPersistentSet($this->repositoryId);
 			$set->addItem($idManager->getId('FILE'));
 			
 			
 			// Log the success or failure
 			if (Services::serviceRunning("Logging")) {
-				$loggingManager =& Services::getService("Logging");
-				$log =& $loggingManager->getLogForWriting("Concerto");
-				$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+				$loggingManager = Services::getService("Logging");
+				$log =$loggingManager->getLogForWriting("Concerto");
+				$formatType = new Type("logging", "edu.middlebury", "AgentsAndNodes",
 								"A format in which the acting Agent[s] and the target nodes affected are specified.");
-				$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+				$priorityType = new Type("logging", "edu.middlebury", "Event_Notice",
 								"Normal events.");
 				
-				$item =& new AgentNodeEntryItem("Create Node", "Repository added");
+				$item = new AgentNodeEntryItem("Create Node", "Repository added");
 				$item->addNodeId($repository->getId());
 				
 				$log->appendLogWithTypes($item,	$formatType, $priorityType);
@@ -239,7 +239,7 @@ class createAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		
 		if ($this->repositoryId)
 			return $harmoni->request->quickURL("collection", "edit", array(

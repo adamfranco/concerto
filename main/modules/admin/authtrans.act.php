@@ -36,10 +36,10 @@ class authtransAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {	
-		$dbHandler =& Services::getService("DBHandler");
-		$rm =& Services::getService("Repository");
-		$agentM =& Services::getService("Agent");
-		$idManager =& Services::getService("Id");
+		$dbHandler = Services::getService("DBHandler");
+		$rm = Services::getService("Repository");
+		$agentM = Services::getService("Agent");
+		$idManager = Services::getService("Id");
 
 
 print "lines 46 - 49 in authtrans.act.php need to be modified for database access";
@@ -48,19 +48,19 @@ print "lines 46 - 49 in authtrans.act.php need to be modified for database acces
 //		$dbHandler->connect($mdbIndex);
 exit();
 
-		$searchTypes =& $agentM->getAgentSearchTypes();
-		$searchType =& $searchTypes->next();
+		$searchTypes =$agentM->getAgentSearchTypes();
+		$searchType =$searchTypes->next();
 		
-		$centerPane =& $this->getActionRows();
+		$centerPane =$this->getActionRows();
 		ob_start();
 		
-		$unamesQuery =& new SelectQuery;
+		$unamesQuery = new SelectQuery;
 		$unamesQuery->addTable("users");
 		$unamesQuery->addColumn("uname");
 		$unamesQuery->addColumn("email");
 		$unamesQuery->addOrderBy("uname");
 		
-		$unamesResults =& $dbHandler->query($unamesQuery, $mdbIndex);
+		$unamesResults =$dbHandler->query($unamesQuery, $mdbIndex);
 
 		$unameToId = array(); // key on mdb uname value to c_beta id
 
@@ -68,16 +68,16 @@ exit();
 			$unamePair = $unamesResults->next();
 			
 			if (!is_null($unamePair['email'])) {
-				$agents =& $agentM->getAgentsBySearch($unamePair['email'],
+				$agents =$agentM->getAgentsBySearch($unamePair['email'],
 					$searchType);
 				if ($agents->hasNext())
-					$agent =& $agents->next();
-				$unameToId[$unamePair['uname']] =& $agent->getId();
+					$agent =$agents->next();
+				$unameToId[$unamePair['uname']] =$agent->getId();
 			}
 		}
 	// ===== at this point we have unames and ids
 	
-		$mediasetsQuery =& new SelectQuery;
+		$mediasetsQuery = new SelectQuery;
 		$mediasetsQuery->addTable("mediasets");
 		$mediasetsQuery->addColumn("title");
 		$mediasetsQuery->addColumn("editors");
@@ -85,12 +85,12 @@ exit();
 		$mediasetsQuery->addColumn("search");
 		$mediasetsQuery->addOrderBy("title");
 		
-		$mediasetsResults =& $dbHandler->query($mediasetsQuery, $mdbIndex);
+		$mediasetsResults =$dbHandler->query($mediasetsQuery, $mdbIndex);
 		
-		$repositories =& $rm->getRepositories();
+		$repositories =$rm->getRepositories();
 		$reps = array();
 		while ($repositories->hasNext()) {
-			$rep =& $repositories->next();
+			$rep =$repositories->next();
 			
 			$reps[$rep->getDisplayName()] = array('id' => $rep->getId());
 		}
@@ -135,7 +135,7 @@ exit();
 		}
 	// ===== at this point reps has presenters and editors for each mediaset
 
-		$pressetsQuery =& new SelectQuery;
+		$pressetsQuery = new SelectQuery;
 		$pressetsQuery->addTable("pressets");
 		$pressetsQuery->addColumn("title");
 		$pressetsQuery->addColumn("presenters");
@@ -143,15 +143,15 @@ exit();
 		$pressetsQuery->addColumn("view");
 		$pressetsQuery->addOrderBy("title");
 		
-		$pressetsResults =& $dbHandler->query($pressetsQuery, $mdbIndex);
+		$pressetsResults =$dbHandler->query($pressetsQuery, $mdbIndex);
 
-		$erep =& $rm->getRepository(
+		$erep =$rm->getRepository(
 			$idManager->getId("edu.middlebury.concerto.exhibition_repository"));
 
-		$exhibitions =& $erep->getAssets();
+		$exhibitions =$erep->getAssets();
 		$exhibits = array();
 		while ($exhibitions->hasNext()) {
-			$exhibit =& $exhibitions->next();
+			$exhibit =$exhibitions->next();
 			
 			$exhibits[$exhibit->getDisplayName()] = array('id' => $exhibit->getId());
 		}
@@ -163,10 +163,10 @@ exit();
 				$presenters = unserialize($pressetInfo['presenters']);
 
 				if (!is_null($pressetInfo['owner'])) {
-					$owners =& $agentM->getAgentsBySearch(
+					$owners =$agentM->getAgentsBySearch(
 						$pressetInfo['owner'], $searchType);
 					if ($owners->count() == 1) {
-						$owner =& $owners->next();
+						$owner =$owners->next();
 						$exhibits[$pressetInfo['title']]['owner'] = 
 							$owner->getId();
 					}
@@ -199,7 +199,7 @@ exit();
 		$uIdToAuths = array(); // key on c_beta uId's value to assoc array
 
 // ===== GIVE THE AUTHORIZATIONS
-		$authZ =& Services::getService("AuthZ");
+		$authZ = Services::getService("AuthZ");
 
 		$viewFunctions = array(
 			$idManager->getId('edu.middlebury.authorization.access'),
@@ -218,7 +218,7 @@ exit();
 
 
 		foreach ($reps as $repAuths) {
-			$repId =& $repAuths['id'];
+			$repId =$repAuths['id'];
 			if (isset($repAuths['editors'])) {
 				foreach ($repAuths['editors'] as $editorId) {
 					foreach ($viewFunctions as $vfnId) {
@@ -256,7 +256,7 @@ exit();
 				}
 			}
 			if (isset($repAuths['search'])) {
-				$grpId =& $idManager->getId($repAuths['search']);
+				$grpId =$idManager->getId($repAuths['search']);
 				foreach ($viewFunctions as $vfnId) {
 						$this->addAuth($grpId, $vfnId, $repId, $uIdToAuths);
 // 					$authZ->createAuthorization(
@@ -269,7 +269,7 @@ exit();
 	// ===== all authorizations for collections should be set
 			
 		foreach ($exhibits as $exAuths) {
-			$exId =& $exAuths['id'];
+			$exId =$exAuths['id'];
 			if (isset($exAuths['presenters'])) {
 				foreach ($exAuths['presenters'] as $editorId) {
 					foreach ($viewFunctions as $vfnId) {
@@ -336,7 +336,7 @@ exit();
 		return true;
 	}
 	
-	function addAuth (&$uid, &$fid, &$qid, &$uIdToAuths) {
+	function addAuth ($uid, $fid, $qid, $uIdToAuths) {
 		if (!isset($uIdToAuths[$uid->getIdString()]))
 			$uIdToAuths[$uid->getIdString()] = array();
 		if (!isset($uIdToAuths[$uid->getIdString()][$fid->getIdString()]))

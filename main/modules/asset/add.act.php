@@ -32,8 +32,8 @@ class addAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can create an asset here.
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		 
 		return $authZ->isUserAuthorized(
 			$idManager->getId("edu.middlebury.authorization.add_children"),
@@ -59,11 +59,11 @@ class addAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		$harmoni->request->passthrough("collection_id");
 		
-		$centerPane =& $this->getActionRows();
-		$repositoryId =& $this->getRepositoryId();
+		$centerPane =$this->getActionRows();
+		$repositoryId =$this->getRepositoryId();
 		$cacheName = 'add_asset_wizard_'.$repositoryId->getIdString();
 		
 		$this->runWizard ( $cacheName, $centerPane );
@@ -77,7 +77,7 @@ class addAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$repository =& $this->getRepository();
+		$repository =$this->getRepository();
 	
 		return _("Add Asset to the ")."<em>".$repository->getDisplayName()."</em> "._("Collection");
 	}
@@ -90,24 +90,24 @@ class addAction
 	 * @access public
 	 * @since 4/28/05
 	 */
-	function &createWizard () {
-		$repository =& $this->getRepository();
+	function createWizard () {
+		$repository =$this->getRepository();
 		
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withDefaultLayout();
+		$wizard = SimpleStepWizard::withDefaultLayout();
 		
 		// :: Name and Description ::
-		$step =& $wizard->addStep("namedescstep", new WizardStep());
+		$step =$wizard->addStep("namedescstep", new WizardStep());
 		$step->setDisplayName(_("Name &amp; Description"));
 		
 		// Create the properties.
-		$displayNameProp =& $step->addComponent("display_name", new WTextField());
+		$displayNameProp =$step->addComponent("display_name", new WTextField());
 // 		$displayNameProp->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 // 		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 	// 	$displayNameProp->setDefaultValue(_("Default Asset Name"));
 //		$displayNameProp->setErrorString(" <span style='color: #f00'>* "._("The name must not start with a space.")."</span>");
 		
-		$descriptionProp =& $step->addComponent("description", WTextArea::withRowsAndColumns(5,30));
+		$descriptionProp =$step->addComponent("description", WTextArea::withRowsAndColumns(5,30));
 	// 	$descriptionProp->setDefaultValue(_("Default Asset description."));
 		
 		// Create the step text
@@ -125,24 +125,24 @@ class addAction
 		
 	
 		// :: Type Step ::
-		$step =& $wizard->addStep("typestep", new WizardStep());
+		$step =$wizard->addStep("typestep", new WizardStep());
 		$step->setDisplayName(_("Type"." ("._("optional").")"));
 		// Create the properties.
-		$selectProperty =& $step->addComponent("type", new WSelectOrNew());
+		$selectProperty =$step->addComponent("type", new WSelectOrNew());
 		
 		// Default Types
 		$defaultTypes = array();
-		$defaultTypes[] =& new Type("Asset Types", "edu.middlebury", "Generic Asset", 
+		$defaultTypes[] = new Type("Asset Types", "edu.middlebury", "Generic Asset", 
 						"This is an <em>Asset</em> of unspecified type.");
-		$defaultTypes[] =& new Type("Asset Types", "edu.middlebury", "Image", 
+		$defaultTypes[] = new Type("Asset Types", "edu.middlebury", "Image", 
 						"Assets of this type represent an image.");
-		$defaultTypes[] =& new Type("Asset Types", "edu.middlebury", "Document", 
+		$defaultTypes[] = new Type("Asset Types", "edu.middlebury", "Document", 
 						"Assets of this type represent an non-image document.");
-		$defaultTypes[] =& new Type("Asset Types", "edu.middlebury", "Audio", 
+		$defaultTypes[] = new Type("Asset Types", "edu.middlebury", "Audio", 
 						"Assets of this type represent an audio recording.");
-		$defaultTypes[] =& new Type("Asset Types", "edu.middlebury", "Video", 
+		$defaultTypes[] = new Type("Asset Types", "edu.middlebury", "Video", 
 						"Assets of this type represent an video recording.");
-		$defaultTypes[] =& new Type("Asset Types", "edu.middlebury", "Container", 
+		$defaultTypes[] = new Type("Asset Types", "edu.middlebury", "Container", 
 						"Assets of this type primarily serve as containers to hold other Assets, possibly for organizational purposes. Similar to a 'folder' or 'directory' on a filesystem.");
 						
 		foreach ($defaultTypes as $type) {
@@ -152,26 +152,26 @@ class addAction
 		}
 		
 		// Types in the repository
-		$assetTypes =& $repository->getAssetTypes();
+		$assetTypes =$repository->getAssetTypes();
 		while ($assetTypes->hasNext()) {
-			$assetType =& $assetTypes->next();
+			$assetType =$assetTypes->next();
 			$typeKey = urlencode(Type::typeToString($assetType));
 			$selectProperty->addOption($typeKey, Type::typeToString($assetType));
 		}
 		
 		$selectProperty->setValue(urlencode(Type::typeToString($defaultTypes[0])));
 		
-		$newTypeProperty =& $selectProperty->setNewComponent(new WComponentCollection);
-		$property =& $newTypeProperty->addComponent("type_domain", new WTextField());
+		$newTypeProperty =$selectProperty->setNewComponent(new WComponentCollection);
+		$property =$newTypeProperty->addComponent("type_domain", new WTextField());
 		$property->setStartingDisplayText(_("e.g. Asset Types"));
 		
-		$property =& $newTypeProperty->addComponent("type_authority", new WTextField());
+		$property =$newTypeProperty->addComponent("type_authority", new WTextField());
 		$property->setStartingDisplayText(_("e.g. Concerto"));
 		
-		$property =& $newTypeProperty->addComponent("type_keyword", new WTextField());
+		$property =$newTypeProperty->addComponent("type_keyword", new WTextField());
 		$property->setStartingDisplayText(_("e.g. Generic Asset"));
 		
-		$property =& $newTypeProperty->addComponent("type_description", WTextArea::withRowsAndColumns(5,30));
+		$property =$newTypeProperty->addComponent("type_description", WTextArea::withRowsAndColumns(5,30));
 		$property->setStartingDisplayText(_("e.g. This is an <em>Asset</em> of unspecified type."));
 		
 		// create the text for the new type property.
@@ -216,10 +216,10 @@ class addAction
 		
 // 		
 // 		// :: Content ::
-// 		$step =& $wizard->addStep("contentstep", new WizardStep());
+// 		$step =$wizard->addStep("contentstep", new WizardStep());
 // 		$step->setDisplayName(_("Content")." ("._("optional").")");
 // 		
-// 		$property =& $step->addComponent("content", WTextArea::withRowsAndColumns(20,50));
+// 		$property =$step->addComponent("content", WTextArea::withRowsAndColumns(20,50));
 // 		
 // 		// Create the step text
 // 		ob_start();
@@ -231,15 +231,15 @@ class addAction
 // 		ob_end_clean();
 		
 		// :: Effective/Expiration Dates ::
-// 		$step =& $wizard->addStep("datestep", new WizardStep());
+// 		$step =$wizard->addStep("datestep", new WizardStep());
 // 		$step->setDisplayName(_("Effective Dates")." ("._("optional").")");
 // 		
 // 		// Create the properties.
-// 		$property =& $step->addComponent("effective_date", new WTextField());
+// 		$property =$step->addComponent("effective_date", new WTextField());
 // 	//	$property->setDefaultValue();
 // //		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
 // 	
-// 		$property =& $step->addComponent("expiration_date", new WTextField());
+// 		$property =$step->addComponent("expiration_date", new WTextField());
 // 	//	$property->setDefaultValue();
 // //		$property->setErrorString(" <span style='color: #f00'>* "._("The date must be of the form YYYYMMDD, YYYYMM, or YYYY.")."</span>");
 // 		
@@ -258,16 +258,16 @@ class addAction
 		
 		
 		// :: Parent ::
-		$step =& $wizard->addStep("parentstep", new WizardStep());
+		$step =$wizard->addStep("parentstep", new WizardStep());
 		$step->setDisplayName(_("Parent")." ("._("optional").")");
 		
 		// Create the properties.
-		$property =& $step->addComponent("parent", new WSelectList());
-		$harmoni =& Harmoni::instance();
+		$property =$step->addComponent("parent", new WSelectList());
+		$harmoni = Harmoni::instance();
 		
 		$property->addOption("NONE", _("None"));
 		
-		$rootAssets =& $this->getRootAssets();
+		$rootAssets =$this->getRootAssets();
 		while ($rootAssets->hasNext()) {
 			$this->addAssetOption($property, $rootAssets->next());
 		}
@@ -296,17 +296,17 @@ class addAction
 	 * @access public
 	 * @since 4/2/07
 	 */
-	function &getRootAssets () {
-		$repository =& $this->getRepository();
+	function getRootAssets () {
+		$repository =$this->getRepository();
 		
 		$criteria = NULL;
-		$searchProperties =& new HarmoniProperties(
+		$searchProperties = new HarmoniProperties(
 					Type::fromString("repository::harmoni::order"));
 		$searchProperties->addProperty("order", $orderBy = 'DisplayName');
 		$searchProperties->addProperty("direction", $direction = 'ASC');
 		unset($orderBy, $direction);
 		
-		$assets =& $repository->getAssetsBySearch(
+		$assets =$repository->getAssetsBySearch(
 			$criteria, 
 			new HarmoniType("Repository","edu.middlebury.harmoni","RootAssets", ""), 
 			$searchProperties);
@@ -323,10 +323,10 @@ class addAction
 	 * @access public
 	 * @since 4/2/07
 	 */
-	function addAssetOption (&$field, &$asset, $skip = array(), $depth = 0) {
-		$assetId =& $asset->getId();
-		$authZManager =& Services::getService('AuthZ');
-		$idManager =& Services::getService('Id');
+	function addAssetOption ($field, $asset, $skip = array(), $depth = 0) {
+		$assetId =$asset->getId();
+		$authZManager = Services::getService('AuthZ');
+		$idManager = Services::getService('Id');
 		
 		if (in_array($assetId->getIdString(), $skip))
 			return;
@@ -348,7 +348,7 @@ class addAction
 			$field->addDisabledOption($assetId->getIdString(), ob_get_clean());
 		}
 		
-		$children =& $asset->getAssets();
+		$children =$asset->getAssets();
 		while ($children->hasNext()) {
 			$this->addAssetOption($field, $children->next(), $skip, $depth + 1);
 		}
@@ -365,22 +365,22 @@ class addAction
 	 * @since 4/28/05
 	 */
 	function saveWizard ( $cacheName ) {
-		$wizard =& $this->getWizard($cacheName);
+		$wizard =$this->getWizard($cacheName);
 		
 		if (!$wizard->validate()) return false;
 		
 		// Make sure we have a valid Repository
-		$idManager =& Services::getService("Id");
-		$authZ =& Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
 	
-		$repository =& $this->getRepository();
+		$repository =$this->getRepository();
 		
 		$properties = $wizard->getAllValues();
 		
 		// First, verify that we chose a parent that we can add children to.
 		if (!$properties['parentstep']['parent'] 
 			|| $properties['parentstep']['parent'] == 'NONE'
-			|| ($parentId =& $idManager->getId($properties['parentstep']['parent'])
+			|| ($parentId =$idManager->getId($properties['parentstep']['parent'])
 				&& $authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.add_children"), $parentId)))
 		{
 			
@@ -414,14 +414,14 @@ class addAction
 						"This is an <em>Asset</em> of unspecified type.");
 			}
 			
-			$asset =& $repository->createAsset($properties['namedescstep']['display_name'], 
+			$asset =$repository->createAsset($properties['namedescstep']['display_name'], 
 										$properties['namedescstep']['description'], 
 										$assetType);
 										
-			$assetId =& $asset->getId();
-			$this->_assetId =& $assetId;
+			$assetId =$asset->getId();
+			$this->_assetId =$assetId;
 			
-			$content =& Blob::withValue($properties['contentstep']['content']);
+			$content = Blob::withValue($properties['contentstep']['content']);
 			$asset->updateContent($content);
 			
 			// Update the effective/expiration dates
@@ -436,21 +436,21 @@ class addAction
 			if ($properties['parentstep']['parent'] 
 				&& $properties['parentstep']['parent'] != 'NONE') 
 			{
-				$parentId =& $idManager->getId($properties['parentstep']['parent']);
-				$parentAsset =& $repository->getAsset($parentId);
+				$parentId =$idManager->getId($properties['parentstep']['parent']);
+				$parentAsset =$repository->getAsset($parentId);
 				$parentAsset->addAsset($assetId);
 			}
 			
 			// Log the success or failure
 			if (Services::serviceRunning("Logging")) {
-				$loggingManager =& Services::getService("Logging");
-				$log =& $loggingManager->getLogForWriting("Concerto");
-				$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+				$loggingManager = Services::getService("Logging");
+				$log =$loggingManager->getLogForWriting("Concerto");
+				$formatType = new Type("logging", "edu.middlebury", "AgentsAndNodes",
 								"A format in which the acting Agent[s] and the target nodes affected are specified.");
-				$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+				$priorityType = new Type("logging", "edu.middlebury", "Event_Notice",
 								"Normal events.");
 				
-				$item =& new AgentNodeEntryItem("Create Node", "Asset added");
+				$item = new AgentNodeEntryItem("Create Node", "Asset added");
 				$item->addNodeId($assetId);
 				$item->addNodeId($repository->getId());
 				
@@ -475,8 +475,8 @@ class addAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
-		$harmoni =& Harmoni::instance();
-		$repositoryId =& $this->getRepositoryId();
+		$harmoni = Harmoni::instance();
+		$repositoryId =$this->getRepositoryId();
 		if ($this->_assetId) 
 			return $harmoni->request->quickURL("asset", "edit", array(
 				"collection_id" => $repositoryId->getIdString(),

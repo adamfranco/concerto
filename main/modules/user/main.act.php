@@ -55,23 +55,23 @@ class mainAction
 	 * @since 10/24/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 
 		$actionRows->add(new Heading(_("Authentication"), 2));
 		
 		// Current AuthN Table
 		ob_start();
-		$authNManager =& Services::getService("AuthN");
-		$agentManager =& Services::getService("Agent");
-		$authTypes =& $authNManager->getAuthenticationTypes();
+		$authNManager = Services::getService("AuthN");
+		$agentManager = Services::getService("Agent");
+		$authTypes =$authNManager->getAuthenticationTypes();
 		print "\n<table border='2' align='left'>";
 		print "\n\t<tr><th colspan='3'><center>";
 		print _("Current Authentications: ");
 		print "</center>\n\t</th></tr>";
 		
 		while($authTypes->hasNext()) {
-			$authType =& $authTypes->next();
+			$authType =$authTypes->next();
 			$typeString = HarmoniType::typeToString($authType);
 			print "\n\t<tr>";
 			print "\n\t\t<td><small>";
@@ -80,8 +80,8 @@ class mainAction
 			print "</a>";
 			print "\n\t\t</small></td>";
 			print "\n\t\t<td><small>";
-			$userId =& $authNManager->getUserId($authType);
-			$userAgent =& $agentManager->getAgent($userId);
+			$userId =$authNManager->getUserId($authType);
+			$userAgent =$agentManager->getAgent($userId);
 			print '<a title=\''._("Agent Id").': '.$userId->getIdString().'\' onclick=\'Javascript:alert("'._("Agent Id").':\n\t'.$userId->getIdString().'");\'>';
 			print $userAgent->getDisplayName();
 			print "</a>";
@@ -112,7 +112,7 @@ class mainAction
 		}
 		print "\n</table>";
 
-		$statusBar =& new Block(ob_get_contents(),2);
+		$statusBar = new Block(ob_get_contents(),2);
 		$actionRows->add($statusBar,null,null,RIGHT,TOP);
 		ob_end_clean();
 
@@ -125,7 +125,7 @@ class mainAction
 			_("Change 'Harmoni DB' Password").
 			"</li>";
 			
-		$introText =& new Block(ob_get_contents(),2);
+		$introText = new Block(ob_get_contents(),2);
 		$actionRows->add($introText, "100%", null, CENTER, CENTER);
 		ob_end_clean();
 		// end of authN links

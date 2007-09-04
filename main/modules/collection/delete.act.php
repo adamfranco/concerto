@@ -31,8 +31,8 @@ class deleteAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can delete this exhibition
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.delete"), 
 					$idManager->getId(RequestContext::value('collection_id')));
@@ -57,9 +57,9 @@ class deleteAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$repository =& $repositoryManager->getRepository(
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$repository =$repositoryManager->getRepository(
 				$idManager->getId(RequestContext::value('collection_id')));
 		return _("Delete Collection")." <em>".$repository->getDisplayName().
 			"</em> ";
@@ -73,25 +73,25 @@ class deleteAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$actionRows =& $this->getActionRows();
-		$harmoni =& Harmoni::instance();
+		$actionRows =$this->getActionRows();
+		$harmoni = Harmoni::instance();
 		
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$repositoryId =& $idManager->getId(RequestContext::value('collection_id'));
-		$repository =& $repositoryManager->getRepository($repositoryId);
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$repositoryId =$idManager->getId(RequestContext::value('collection_id'));
+		$repository =$repositoryManager->getRepository($repositoryId);
 		
 		$displayName = $repository->getDisplayName();
 		
 		
 		// Delete all of the tags for the assets in the repository
 		$itemsToDelete = array();
-		$assets =& $repository->getAssets();
+		$assets =$repository->getAssets();
 		while ($assets->hasNext()) {
-			$asset =& $assets->next();
-			$itemsToDelete[] =& TaggedItem::forId($asset->getId(), 'concerto');
+			$asset =$assets->next();
+			$itemsToDelete[] = TaggedItem::forId($asset->getId(), 'concerto');
 		}
-		$tagManager =& Services::getService('Tagging');
+		$tagManager = Services::getService('Tagging');
 		$tagManager->deleteItems($itemsToDelete, 'concerto');
 		
 		
@@ -100,14 +100,14 @@ class deleteAction
 
 		// Log the success or failure
 		if (Services::serviceRunning("Logging")) {
-			$loggingManager =& Services::getService("Logging");
-			$log =& $loggingManager->getLogForWriting("Concerto");
-			$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+			$loggingManager = Services::getService("Logging");
+			$log =$loggingManager->getLogForWriting("Concerto");
+			$formatType = new Type("logging", "edu.middlebury", "AgentsAndNodes",
 							"A format in which the acting Agent[s] and the target nodes affected are specified.");
-			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+			$priorityType = new Type("logging", "edu.middlebury", "Event_Notice",
 							"Normal events.");
 			
-			$item =& new AgentNodeEntryItem("Delete Node", "Repository deleted:\n<br/>&nbsp; &nbsp; &nbsp;".$displayName);
+			$item = new AgentNodeEntryItem("Delete Node", "Repository deleted:\n<br/>&nbsp; &nbsp; &nbsp;".$displayName);
 			$item->addNodeId($repositoryId);
 			
 			$log->appendLogWithTypes($item,	$formatType, $priorityType);

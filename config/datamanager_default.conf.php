@@ -14,6 +14,6 @@
  */
  
 // :: Set up the DataManager ::
-	$configuration =& new ConfigurationProperties;
+	$configuration = new ConfigurationProperties;
 	$configuration->addProperty('database_index', $dbID);
 	Services::startManagerAsService("DataManager", $context, $configuration);

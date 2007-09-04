@@ -31,7 +31,7 @@ class slide_xmlAction
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$slideAsset =& $this->getAsset();
+		$slideAsset =$this->getAsset();
 		return _("View the")
 			." <em>".$slideAsset->getDisplayName()."</em> "
 			._(" Slide");
@@ -44,9 +44,9 @@ class slide_xmlAction
 	 * @access public
 	 * @since 5/4/06
 	 */
-	function &getRepository () {
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");		
+	function getRepository () {
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");		
 		return $repositoryManager->getRepository(
 				$idManager->getId(
 					"edu.middlebury.concerto.exhibition_repository"));
@@ -60,12 +60,12 @@ class slide_xmlAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$harmoni =& Harmoni::instance();
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$authZ =& Services::getService("AuthZ");
+		$harmoni = Harmoni::instance();
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$authZ = Services::getService("AuthZ");
 	
-		$slideAsset =& $this->getAsset();
+		$slideAsset =$this->getAsset();
 		
 		/*********************************************************
 		 * First print the header, then the xml content, then exit before
@@ -80,28 +80,28 @@ class slide_xmlAction
 
 END;
 		// Get our record and its data
-		$slideRecords =& $slideAsset->getRecordsByRecordStructure(
+		$slideRecords =$slideAsset->getRecordsByRecordStructure(
 			$idManager->getId("Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure"));
 		
 		if ($slideRecords->hasNext()) {
-			$slideRecord =& $slideRecords->next();
+			$slideRecord =$slideRecords->next();
 			
 			// Text-Position
-			$textPosition =& $this->getFirstPartValueFromRecord(
+			$textPosition =$this->getFirstPartValueFromRecord(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position",
 				$slideRecord);
 			
 			// Display Metadata
-			$displayMetadata =& $this->getFirstPartValueFromRecord(
+			$displayMetadata =$this->getFirstPartValueFromRecord(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata",
 				$slideRecord);
 			
 			// Media
-			$mediaIdStringObj =& $this->getFirstPartValueFromRecord(
+			$mediaIdStringObj =$this->getFirstPartValueFromRecord(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id",
 				$slideRecord);
 			if (strlen($mediaIdStringObj->asString()))
-				$mediaId =& $idManager->getId($mediaIdStringObj->asString());
+				$mediaId =$idManager->getId($mediaIdStringObj->asString());
 			else
 				$mediaId = null;
 		}
@@ -123,7 +123,7 @@ END;
 				$mediaId)) 
 		{
 			print "\t\t<hr/>\n";
-			$mediaAsset =& $repositoryManager->getAsset($mediaId);
+			$mediaAsset =$repositoryManager->getAsset($mediaId);
 			$this->printAsset($mediaAsset);
 		}
 		
@@ -133,7 +133,7 @@ END;
 				$mediaId))
 		{
 			print "\t\t<div style='font-size: large; font-weight: bold; border: 2px dotted; padding: 5px;'>";
-			$harmoni =& Harmoni::instance();
+			$harmoni = Harmoni::instance();
 			print "\n\t\t<p>";
 			print _("You are not authorized to view the media for this slide.");
 			print "</p>\n\t\t\t<p>";
@@ -161,11 +161,11 @@ END;
 				$idManager->getId("edu.middlebury.authorization.view"),
 				$mediaId))		
 		{		
-			$mediaAsset =& $repositoryManager->getAsset($mediaId);
-			$mediaAssetRepository =& $mediaAsset->getRepository();
-			$mediaAssetRepositoryId =& $mediaAssetRepository->getId();
+			$mediaAsset =$repositoryManager->getAsset($mediaId);
+			$mediaAssetRepository =$mediaAsset->getRepository();
+			$mediaAssetRepositoryId =$mediaAssetRepository->getId();
 			
-			$fileRecords =& new MultiIteratorIterator();
+			$fileRecords = new MultiIteratorIterator();
 			$fileRecords->addIterator($mediaAsset->getRecordsByRecordStructure(
 				$idManager->getId("FILE")));
 			$fileRecords->addIterator($mediaAsset->getRecordsByRecordStructure(
@@ -187,34 +187,34 @@ END;
 	 * @access public
 	 * @since 9/28/05
 	 */
-	function printSlide ( &$slideAsset ) {
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
-		$authZ =& Services::getService("AuthZ");
+	function printSlide ( $slideAsset ) {
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
+		$authZ = Services::getService("AuthZ");
 		
 		// Get our record and its data
-		$slideRecords =& $slideAsset->getRecordsByRecordStructure(
+		$slideRecords =$slideAsset->getRecordsByRecordStructure(
 			$idManager->getId("Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure"));
 		
 		if ($slideRecords->hasNext()) {
-			$slideRecord =& $slideRecords->next();
+			$slideRecord =$slideRecords->next();
 			
 			// Text-Position
-			$textPosition =& $this->getFirstPartValueFromRecord(
+			$textPosition =$this->getFirstPartValueFromRecord(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.text_position",
 				$slideRecord);
 			
 			// Display Metadata
-			$displayMetadata =& $this->getFirstPartValueFromRecord(
+			$displayMetadata =$this->getFirstPartValueFromRecord(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.display_metadata",
 				$slideRecord);
 			
 			// Media
-			$mediaIdStringObj =& $this->getFirstPartValueFromRecord(
+			$mediaIdStringObj =$this->getFirstPartValueFromRecord(
 				"Repository::edu.middlebury.concerto.exhibition_repository::edu.middlebury.concerto.slide_record_structure.edu.middlebury.concerto.slide_record_structure.target_id",
 				$slideRecord);
 			if (strlen($mediaIdStringObj->asString()))
-				$mediaId =& $idManager->getId($mediaIdStringObj->asString());
+				$mediaId =$idManager->getId($mediaIdStringObj->asString());
 			else
 				$mediaId = null;
 		}
@@ -237,7 +237,7 @@ END;
 				$mediaId)) 
 		{
 			print "\t\t\t<hr/>\n";
-			$mediaAsset =& $repositoryManager->getAsset($mediaId);
+			$mediaAsset =$repositoryManager->getAsset($mediaId);
 			$this->printAsset($mediaAsset);
 		}
 		
@@ -247,7 +247,7 @@ END;
 				$mediaId))
 		{
 			print "\t\t\t<div style='font-size: large; font-weight: bold; border: 2px dotted; padding: 5px;'>";
-			$harmoni =& Harmoni::instance();
+			$harmoni = Harmoni::instance();
 			print "\n\t\t\t\t<p>";
 			print _("You are not authorized to view the media for this slide.");
 			print "</p>\n\t\t\t\t<p>";
@@ -275,11 +275,11 @@ END;
 				$idManager->getId("edu.middlebury.authorization.view"),
 				$mediaId))		
 		{		
-			$mediaAsset =& $repositoryManager->getAsset($mediaId);
-			$mediaAssetRepository =& $mediaAsset->getRepository();
-			$mediaAssetRepositoryId =& $mediaAssetRepository->getId();
+			$mediaAsset =$repositoryManager->getAsset($mediaId);
+			$mediaAssetRepository =$mediaAsset->getRepository();
+			$mediaAssetRepositoryId =$mediaAssetRepository->getId();
 			
-			$fileRecords =& new MultiIteratorIterator();
+			$fileRecords = new MultiIteratorIterator();
 			$fileRecords->addIterator($mediaAsset->getRecordsByRecordStructure(
 				$idManager->getId("FILE")));
 			$fileRecords->addIterator($mediaAsset->getRecordsByRecordStructure(

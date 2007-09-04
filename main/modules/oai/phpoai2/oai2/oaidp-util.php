@@ -191,7 +191,7 @@ function rawxmlrecord($sqlrecord, $element, $attr = '', $indent = 0)
 	}
 }
 
-function xmlelement($element, $attr = '', &$indent, $open = true)
+function xmlelement($element, $attr = '', $indent, $open = true)
 {
 	global $SQL;
 

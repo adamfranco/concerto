@@ -33,8 +33,8 @@ class listAction
 	 * @since 6/08/05
 	 */
 	function isAuthorizedToExecute () {
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 
 		return $authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.modify"),
@@ -49,8 +49,8 @@ class listAction
 	 * @since 3/5/07
 	 */
 	function buildContent () {
-		$harmoni =& Harmoni::instance();
-		$centerPane =& $this->getActionRows();
+		$harmoni = Harmoni::instance();
+		$centerPane =$this->getActionRows();
 		$updatesToRun = array();
 		$updatesInPlace = array();
 		
@@ -68,9 +68,9 @@ class listAction
 		
 		foreach($this->updateClasses as $name) {
 			$className = $name.'Action';
-			$update =& new $className;
+			$update = new $className;
 			print "\n\t<tr>";
-			$date =& $update->getDateIntroduced();
+			$date =$update->getDateIntroduced();
 			print "\n\t\t<td style='white-space: nowrap;'>".$date->asString()."</td>";
 			print "\n\t\t<td>".$update->getTitle()."</td>";
 			print "\n\t\t<td>".$update->getDescription()."</td>";

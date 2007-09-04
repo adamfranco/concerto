@@ -35,8 +35,8 @@ class browse_outline_xmlAction
 	function isAuthorizedToExecute () {
 		return true;
 		// Check that the user can access this collection
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		return $authZ->isUserAuthorizedBelow(
 					$idManager->getId("edu.middlebury.authorization.view"), 
 					$this->getRepositoryId());
@@ -97,7 +97,7 @@ END;
 	 * @since 4/26/05
 	 */
 	function getHeadingText () {
-		$repository =& $this->getRepository();
+		$repository =$this->getRepository();
 		return _("Browse Assets in the")
 			." <em>".$repository->getDisplayName()."</em> "
 			._(" Collection");
@@ -138,14 +138,14 @@ END;
 		print "\t<default_size>medium</default_size>\n";
 	
 		
-		$assets =& $this->getAssets();
+		$assets =$this->getAssets();
 		
 		
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		
 		while ($assets->hasNext()) {
-			$asset =& $assets->next();
+			$asset =$assets->next();
 			if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
 			{
 				$this->printAssetXML($asset);
@@ -164,7 +164,7 @@ END;
 	 * @since 5/4/06
 	 */
 	function getTitle () {
-		$repository =& $this->getRepository();
+		$repository =$this->getRepository();
 		return $repository->getDisplayName();
 	}
 	
@@ -176,7 +176,7 @@ END;
 	 * @since 5/4/06
 	 */
 	function setPassthrough () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		$harmoni->request->passthrough("collection_id");
 	}	
 	
@@ -189,10 +189,10 @@ END;
 	 * @access public
 	 * @since 10/14/05
 	 */
-	function printAssetXML( &$asset) {
+	function printAssetXML( $asset) {
 		
-		$assetId =& $asset->getId();
-		$harmoni =& Harmoni::instance();
+		$assetId =$asset->getId();
+		$harmoni = Harmoni::instance();
 		
 		
 		// ------------------------------------------

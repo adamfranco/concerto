@@ -37,14 +37,14 @@ class AssetPrinter {
 	 * @access public
 	 * @date 8/6/04
 	 */
-	function printAssetFunctionLinks (& $harmoni, &$asset, $repositoryId = NULL, $assetNum = 0, $includeEditDelete = true) {
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+	function printAssetFunctionLinks ($harmoni, $asset, $repositoryId = NULL, $assetNum = 0, $includeEditDelete = true) {
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		
-		$assetId =& $asset->getId();
+		$assetId =$asset->getId();
 		if ($repositoryId === NULL) {
-			$repository =& $asset->getRepository();
-			$repositoryId =& $repository->getId();
+			$repository =$asset->getRepository();
+			$repositoryId =$repository->getId();
 		}
 		
 		$links = array();
@@ -84,7 +84,7 @@ class AssetPrinter {
 					RequestContext::name("searchtype") => RequestContext::value("searchtype"));
 						
 		if (RequestContext::value("searchtype")) {
-			$searchModuleManager =& Services::getService("RepositorySearchModules");
+			$searchModuleManager = Services::getService("RepositorySearchModules");
 			foreach ($searchModuleManager->getCurrentValues(Type::fromString(RequestContext::value("searchtype"))) as $key => $value) {
 				$params[$key] = $value;
 			}
@@ -92,10 +92,10 @@ class AssetPrinter {
 		
 		// if we are limiting by type
 		if (RequestContext::value("limit_by_type") == 'true') {
-			$types =& $repository->getAssetTypes();
+			$types =$repository->getAssetTypes();
 			$selectedTypes = array();
 			while ($types->hasNext()) {
-				$type =& $types->next();
+				$type =$types->next();
 				if (RequestContext::value("type___".Type::typeToString($type)) == 'true')
 					$params[RequestContext::name("type___".Type::typeToString($type))] = 
 						RequestContext::value("type___".Type::typeToString($type));
@@ -116,7 +116,7 @@ class AssetPrinter {
 			// Add the options panel script to the header
 			// Add the options panel script to the header
 			if (!defined('ASSET_PANEL_LOADED')) {
-				$outputHandler =& $harmoni->getOutputHandler();
+				$outputHandler =$harmoni->getOutputHandler();
 				$outputHandler->setHead($outputHandler->getHead()
 				."\n\t\t<script type='text/javascript' src='".MYPATH."/javascript/AssetOptionsPanel.js'></script>"
 				."\n\t\t<link rel='stylesheet' type='text/css' href='".MYPATH."/javascript/AssetOptionsPanel.css' />");
@@ -141,7 +141,7 @@ class AssetPrinter {
 				$idManager->getId("edu.middlebury.authorization.view"),
 				$assetId)) 
 			{
-				$children =& $asset->getAssets();
+				$children =$asset->getAssets();
 				if ($children->hasNext()) {
 					if ($actionString != "asset.browse" ||
 							$assetId->getIdString() != 
@@ -221,7 +221,7 @@ class AssetPrinter {
 		if ($authZ->isUserAuthorizedBelow(
 				$idManager->getId("edu.middlebury.authorization.view"),
 				$assetId)) {
-			$children =& $asset->getAssets();
+			$children =$asset->getAssets();
 			if ($children->hasNext()) {
 				if ($actionString != "asset.browse" ||
 						$assetId->getIdString() != 
@@ -323,7 +323,7 @@ class AssetPrinter {
 				$assetId)) 
 		{
 			
-			$basket =& Basket::instance();
+			$basket = Basket::instance();
 			$links[] = $basket->getAddLink($assetId);
 			
 		}
@@ -339,7 +339,7 @@ class AssetPrinter {
 	 * @since 10/19/05
 	 */
 	function getMultiEditOptionsBlock () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		
 		$harmoni->history->markReturnURL("concerto/asset/delete-return");
 		$harmoni->history->markReturnURL("concerto/asset/edit-return");
@@ -385,7 +385,7 @@ class AssetPrinter {
 		print "\n\t</optgroup>";		
 		print "\n</select>";
 		
-		$idManager =& Services::getService("Id");
+		$idManager = Services::getService("Id");
 		
 		$checkboxName = RequestContext::name("asset");
 		

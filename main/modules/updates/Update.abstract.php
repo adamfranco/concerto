@@ -34,8 +34,8 @@ class Update
 	 * @since 6/08/05
 	 */
 	function isAuthorizedToExecute () {
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 
 		return $authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.modify"),
@@ -71,8 +71,8 @@ class Update
 	 * @access public
 	 * @since 3/5/07
 	 */
-	function &execute () {
-		$harmoni =& Harmoni::instance();
+	function execute () {
+		$harmoni = Harmoni::instance();
 		ob_start();
 		
 		if ($this->isInPlace()) {
@@ -86,7 +86,7 @@ class Update
 		
 		print "\n<br/><a href='".$harmoni->request->quickURL('updates', 'list')."'>&lt;--"._('Return to list')."</a>";
 		
-		$block =& new Block(ob_get_clean(), STANDARD_BLOCK);
+		$block = new Block(ob_get_clean(), STANDARD_BLOCK);
 		return $block;
 	}
 	
@@ -97,7 +97,7 @@ class Update
 	 * @access public
 	 * @since 3/5/07
 	 */
-	function &getDateIntroduced () {
+	function getDateIntroduced () {
 		throwError(new Error(__CLASS__."::".__FUNCTION__."() must be overridden in child classes."));
 	}
 	

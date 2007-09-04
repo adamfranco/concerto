@@ -34,8 +34,8 @@ class exportAction
 	 * @since 9/27/05
 	 */
 	function isAuthorizedToExecute () {
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 				
 		return $authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.view"),
@@ -72,13 +72,13 @@ class exportAction
 	 * @since 9/27/05
 	 */
 	function buildContent () {
-		$centerPane =& $this->getActionRows();
+		$centerPane =$this->getActionRows();
 
-		$authN =& Services::getService("AuthN");
-		$authTypes =& $authN->getAuthenticationTypes();
+		$authN = Services::getService("AuthN");
+		$authTypes =$authN->getAuthenticationTypes();
 		$uniqueString = "";
 		while($authTypes->hasNext()) {
-			$authType =& $authTypes->next();
+			$authType =$authTypes->next();
 			$uniqueString .= "_".$authN->getUserId($authType);
 		}
 		
@@ -95,9 +95,9 @@ class exportAction
 	 * @access public
 	 * @since 9/28/05
 	 */
-	function &createWizard () {		
+	function createWizard () {		
 		// Instantiate the wizard
-		$wizard =& SimpleWizard::withText(
+		$wizard = SimpleWizard::withText(
 			"\n<h3>"._("Click <em>Export</em> to Export Concerto")."</h3>".
 			"\n<br/>"._("The current content of concerto will be exported and presented as an archive for download.  Once the archive is downloaded click <em>Cancel</em> to go back.").
 			"\n<br/><h3>"._("Archive:")."</h3>".
@@ -116,26 +116,26 @@ class exportAction
 
 		
 		// Create the properties.
-		$fileNameProp =& $wizard->addComponent("filepath", new WTextField());
+		$fileNameProp =$wizard->addComponent("filepath", new WTextField());
 
-// 		$datefield =& $wizard->addComponent("effective_date", new WTextField());
-// 		$date =& DateAndTime::Now();
+// 		$datefield =$wizard->addComponent("effective_date", new WTextField());
+// 		$date = DateAndTime::Now();
 // 		$datefield->setValue($date->asString());		
 // 
-// 		$date2field =& $wizard->addComponent("expiration_date", new WTextField());
+// 		$date2field =$wizard->addComponent("expiration_date", new WTextField());
 // 		
 // 		if (is_object($date2))
 // 			$date2field->setValue($date->asString());
 		
- 		$type =& $wizard->addComponent("compression", new WSelectList());
+ 		$type =$wizard->addComponent("compression", new WSelectList());
  		$type->setValue(".tar.gz");
  		$type->addOption(".tar.gz", _("gzip"));
 //  		$type->addOption(".zip", _("zip"));
 //  		$type->addOption(".bz2", _("bz2"));
 
-		$save =& $wizard->addComponent("_save", 
+		$save =$wizard->addComponent("_save", 
 			WSaveButton::withLabel("Export"));
-		$cancel =& $wizard->addComponent("_cancel", new WCancelButton());
+		$cancel =$wizard->addComponent("_cancel", new WCancelButton());
 
 		return $wizard;
 	}
@@ -151,11 +151,11 @@ class exportAction
 	 * @since 4/28/05
 	 */
 	function saveWizard ( $cacheName ) {
-		$wizard =& $this->getWizard($cacheName);
+		$wizard =$this->getWizard($cacheName);
 				
 		$properties = $wizard->getAllValues();
 		// instantiate new exporter
-		$exporter =& XMLExporter::withCompression($properties['compression']);
+		$exporter = XMLExporter::withCompression($properties['compression']);
 		
 		// export all of concerto to this location
 		$dir = $exporter->exportAll();
@@ -187,7 +187,7 @@ class exportAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		
 		$return = $harmoni->request->quickURL("admin", "main");
 		

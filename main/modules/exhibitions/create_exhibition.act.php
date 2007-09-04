@@ -32,8 +32,8 @@ class create_exhibitionAction
 	 */
 	function isAuthorizedToExecute () {
 		// Check that the user can create an asset here.
-		$authZ =& Services::getService("AuthZ");
-		$idManager =& Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
 		 
 		return $authZ->isUserAuthorized(
 			$idManager->getId("edu.middlebury.authorization.add_children"),
@@ -70,9 +70,9 @@ class create_exhibitionAction
 	 * @since 4/26/05
 	 */
 	function buildContent () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		
-		$centerPane =& $this->getActionRows();
+		$centerPane =$this->getActionRows();
 		$cacheName = 'create_exhibition_wizard';
 		
 		$this->runWizard ( $cacheName, $centerPane );
@@ -86,28 +86,28 @@ class create_exhibitionAction
 	 * @access public
 	 * @since 4/28/05
 	 */
-	function &createWizard () {
-		$idManager =& Services::getService("Id");
-		$repositoryManager =& Services::getService("Repository");
+	function createWizard () {
+		$idManager = Services::getService("Id");
+		$repositoryManager = Services::getService("Repository");
 		
-		$exhibitionRepositoryId =& $idManager->getId(
+		$exhibitionRepositoryId =$idManager->getId(
 				"edu.middlebury.concerto.exhibition_repository");
-		$repository =& $repositoryManager->getRepository($exhibitionRepositoryId);
+		$repository =$repositoryManager->getRepository($exhibitionRepositoryId);
 		
 		
 		// Instantiate the wizard, then add our steps.
-		$wizard =& SimpleStepWizard::withDefaultLayout();
+		$wizard = SimpleStepWizard::withDefaultLayout();
 		
 		// :: Name and Description ::
-		$step =& $wizard->addStep("namedescstep", new WizardStep());
+		$step =$wizard->addStep("namedescstep", new WizardStep());
 		$step->setDisplayName(_("Name &amp; Description"));
 		
 		// Create the properties.
-		$displayNameProp =& $step->addComponent("display_name", new WTextField());
+		$displayNameProp =$step->addComponent("display_name", new WTextField());
 		$displayNameProp->setErrorText("<nobr>"._("A value for this field is required.")."</nobr>");
 		$displayNameProp->setErrorRule(new WECNonZeroRegex("[\\w]+"));
 		
-		$descriptionProp =& $step->addComponent("description", WTextArea::withRowsAndColumns(5,30));
+		$descriptionProp =$step->addComponent("description", WTextArea::withRowsAndColumns(5,30));
 				
 		// Create the step text
 		ob_start();
@@ -122,12 +122,12 @@ class create_exhibitionAction
 		ob_end_clean();
 		
 		// :: Effective/Expiration Dates ::
-		$step =& $wizard->addStep("datestep", new WizardStep());
+		$step =$wizard->addStep("datestep", new WizardStep());
 		$step->setDisplayName(_("Effective Dates")." ("._("optional").")");
 		
 		// Create the properties.
-		$property =& $step->addComponent("effective_date", new WTextField());
-		$property =& $step->addComponent("expiration_date", new WTextField());
+		$property =$step->addComponent("effective_date", new WTextField());
+		$property =$step->addComponent("expiration_date", new WTextField());
 		
 		// Create the step text
 		ob_start();
@@ -155,18 +155,18 @@ class create_exhibitionAction
 	 * @since 4/28/05
 	 */
 	function saveWizard ( $cacheName ) {
-		$wizard =& $this->getWizard($cacheName);
+		$wizard =$this->getWizard($cacheName);
 		
 		// Make sure we have a valid Repository
-		$idManager =& Services::getService("Id");
-		$authZ =& Services::getService("AuthZ");
-		$repositoryManager =& Services::getService("Repository");
+		$idManager = Services::getService("Id");
+		$authZ = Services::getService("AuthZ");
+		$repositoryManager = Services::getService("Repository");
 		
-		$exhibitionRepositoryId =& $idManager->getId(
+		$exhibitionRepositoryId =$idManager->getId(
 				"edu.middlebury.concerto.exhibition_repository");
-		$repository =& $repositoryManager->getRepository($exhibitionRepositoryId);
+		$repository =$repositoryManager->getRepository($exhibitionRepositoryId);
 		
-		$properties =& $wizard->getAllValues();
+		$properties =$wizard->getAllValues();
 		
 		$assetType = new Type("Asset Types",
 							"edu.middlebury.concerto",
@@ -174,12 +174,12 @@ class create_exhibitionAction
 							"Exhibition Assets are containers for Slideshows.");
 		
 		
-		$asset =& $repository->createAsset($properties['namedescstep']['display_name'], 
+		$asset =$repository->createAsset($properties['namedescstep']['display_name'], 
 									$properties['namedescstep']['description'], 
 									$assetType);
 									
-		$assetId =& $asset->getId();
-		$this->_assetId =& $assetId;
+		$assetId =$asset->getId();
+		$this->_assetId =$assetId;
 		
 		// Update the effective/expiration dates
 		if ($properties['datestep']['effective_date'])
@@ -191,14 +191,14 @@ class create_exhibitionAction
 		
 		// Log the success or failure
 		if (Services::serviceRunning("Logging")) {
-			$loggingManager =& Services::getService("Logging");
-			$log =& $loggingManager->getLogForWriting("Concerto");
-			$formatType =& new Type("logging", "edu.middlebury", "AgentsAndNodes",
+			$loggingManager = Services::getService("Logging");
+			$log =$loggingManager->getLogForWriting("Concerto");
+			$formatType = new Type("logging", "edu.middlebury", "AgentsAndNodes",
 							"A format in which the acting Agent[s] and the target nodes affected are specified.");
-			$priorityType =& new Type("logging", "edu.middlebury", "Event_Notice",
+			$priorityType = new Type("logging", "edu.middlebury", "Event_Notice",
 							"Normal events.");
 			
-			$item =& new AgentNodeEntryItem("Create Node", "Exhibition added");
+			$item = new AgentNodeEntryItem("Create Node", "Exhibition added");
 			$item->addNodeId($assetId);
 			
 			$log->appendLogWithTypes($item,	$formatType, $priorityType);
@@ -215,7 +215,7 @@ class create_exhibitionAction
 	 * @since 4/28/05
 	 */
 	function getReturnUrl () {
-		$harmoni =& Harmoni::instance();
+		$harmoni = Harmoni::instance();
 		return $harmoni->request->quickURL("exhibitions", "browse");
 	}
 }
