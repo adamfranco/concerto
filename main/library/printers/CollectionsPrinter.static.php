@@ -72,6 +72,7 @@ class CollectionsPrinter {
 	//===== Create Link =====//
 		require_once(MYDIR."/main/modules/collection/create.act.php");
 		if (createAction::isAuthorizedToExecute()) {
+// 		if (true) {
 			$links[] = "<a href='"
 				.$harmoni->request->quickURL("collection", "create")
 				."'>"

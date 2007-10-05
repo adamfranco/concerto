@@ -54,7 +54,13 @@ class RepositoryPrinter {
 		
 	//===== Browse Link =====//
 		try {
-			$isAuthorized = $authZ->isUserAuthorizedBelow(
+// 			$isAuthorized = $authZ->isUserAuthorizedBelow(
+// 				$idManager->getId("edu.middlebury.authorization.view"),
+// 				$repositoryId);
+			
+			// Checking down the hierarchy is taking WAY too long for large data sets.
+			// Maybe this can be renabled if better authorization implementations come up.
+			$isAuthorized = $authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.view"),
 				$repositoryId);
 		} catch (UnknownIdException $e) {
@@ -114,7 +120,13 @@ class RepositoryPrinter {
 			
 	//===== Export Link =====//
 		try {
-			$isAuthorized = $authZ->isUserAuthorizedBelow(
+// 			$isAuthorized = $authZ->isUserAuthorizedBelow(
+// 				$idManager->getId("edu.middlebury.authorization.view"),
+// 				$repositoryId);
+			
+			// Checking down the hierarchy is taking WAY too long for large data sets.
+			// Maybe this can be renabled if better authorization implementations come up.
+			$isAuthorized = $authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.view"),
 				$repositoryId);
 		} catch (UnknownIdException $e) {

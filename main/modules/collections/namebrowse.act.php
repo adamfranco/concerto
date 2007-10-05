@@ -132,7 +132,12 @@ function canView( $item ) {
 	$idManager = Services::getService("Id");
 	
 	try {
-		if ($authZ->isUserAuthorizedBelow($idManager->getId("edu.middlebury.authorization.view"), $item->getId()))
+		
+// 		if ($authZ->isUserAuthorizedBelow($idManager->getId("edu.middlebury.authorization.view"), $item->getId()))
+
+		// Checking down the hierarchy is taking WAY too long for large data sets.
+		// Maybe this can be renabled if better authorization implementations come up.
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $item->getId()))
 		{
 			return TRUE;
 		} else {

@@ -35,6 +35,11 @@
 			Support for repositories other than the HarmoniRepository, including those
 			that do not support the full range of read and write functions.
 		</new>
+		<change author='adam' date='2007-10-05'>
+			CollectionsBrowse: now checking collection-level authorizations only,
+			not traversing down into assets as this was taking WAY too long with
+			large data sets.
+		</change>
 	</version>
 	<version number="2.4.1" date="2007-04-10">
 		<fix author='adam'>
