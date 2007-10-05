@@ -286,7 +286,7 @@ function printRecord($repositoryId, $assetId, $record) {
 	$partStructureSet->reset();
 	while ($partStructureSet->hasNext()) {
 		$partStructureId =$partStructureSet->next();
-		$partStructureArray[] =$recordStructure->getPartStructure($partStructureId);
+		$partStructureArray[] = $recordStructure->getPartStructure($partStructureId);
 	}
 	// Get the rest of the parts (the unordered ones);
 	$partStructureIterator =$recordStructure->getPartStructures();
