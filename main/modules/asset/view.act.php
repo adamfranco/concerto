@@ -36,9 +36,19 @@ class viewAction
 		// Check that the user can access this collection
 		$authZ = Services::getService("AuthZ");
 		$idManager = Services::getService("Id");
-		return $authZ->isUserAuthorized(
+		try {
+			return $authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.view"), 
 					$this->getAssetId());
+		} catch (UnknownIdException $e) {
+			try {
+				$this->getAsset();
+			} catch (PermissionDeniedException $e) {
+				return false;
+			}
+			
+			return true;
+		}
 	}
 	
 	/**

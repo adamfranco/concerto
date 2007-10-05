@@ -135,10 +135,14 @@ class AssetPrinter {
 			
 			print "<a href='#' onclick=\"Javascript:AssetOptionsPanel.run('".$repositoryId->getIdString()."', '".$assetId->getIdString()."', this, [";
 			$toShow = array();
-			if ($authZ->isUserAuthorized(
+			try {
+				$isAuthorized = $authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.view"),
-				$assetId)) 
-			{
+				$assetId);
+			} catch (UnknownIdException $e) {
+				$isAuthorized = true;
+			}
+			if ($isAuthorized) {
 				$toShow[] = "'view'";
 			}
 			
@@ -349,11 +353,14 @@ class AssetPrinter {
 // 		}
 		
 	//===== Basket Link =====//
-		if ($authZ->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.view"),
-				$assetId)) 
-		{
-			
+		try {
+			$isAuthorized = $authZ->isUserAuthorized(
+			$idManager->getId("edu.middlebury.authorization.view"),
+			$assetId);
+		} catch (UnknownIdException $e) {
+			$isAuthorized = true;
+		}
+		if ($isAuthorized) {
 			$basket = Basket::instance();
 			$links[] = $basket->getAddLink($assetId);
 			
