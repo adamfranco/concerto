@@ -53,9 +53,15 @@ class RepositoryPrinter {
 		print " &nbsp; ";
 		
 	//===== Browse Link =====//
-		if ($authZ->isUserAuthorizedBelow(
+		try {
+			$isAuthorized = $authZ->isUserAuthorizedBelow(
 				$idManager->getId("edu.middlebury.authorization.view"),
-				$repositoryId)) 
+				$repositoryId);
+		} catch (UnknownIdException $e) {
+			// For non-Harmoni repositories, return true.
+			$isAuthorized = true;
+		}
+		if ($isAuthorized) 
 		{
 			if ($actionString != "collection.browse") {
 				$url->setModuleAction("collection", "browse");
@@ -83,9 +89,17 @@ class RepositoryPrinter {
 		}
 		
 	 //===== Add Link =====//
-	 	if ($authZ->isUserAuthorized(
-	 			$idManager->getId("edu.middlebury.authorization.add_children"), 
-	 			$repositoryId)) {
+	 	try {
+			$isAuthorized = $authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.add_children"),
+				$repositoryId);
+		} catch (UnknownIdException $e) {
+			$isAuthorized = $authZ->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.add_children"), 
+					$idManager->getId("edu.middlebury.authorization.root"));
+		}
+		if ($isAuthorized) 
+		{
 			$url->setModuleAction("asset", "add");
 			$links[] = "<a href='".$url->write()."'>";
 			$links[count($links) - 1] .= _("Add")."</a>";
@@ -99,9 +113,15 @@ class RepositoryPrinter {
 		}
 			
 	//===== Export Link =====//
-		if ($authZ->isUserAuthorized(
+		try {
+			$isAuthorized = $authZ->isUserAuthorizedBelow(
 				$idManager->getId("edu.middlebury.authorization.view"),
-				$repositoryId)) {
+				$repositoryId);
+		} catch (UnknownIdException $e) {
+			// For non-Harmoni repositories, return true.
+			$isAuthorized = true;
+		}
+		if ($isAuthorized) {
 			$harmoni->request->startNamespace('export');
 			$links[] = "<a href='".$harmoni->request->quickURL(
 				"collection", "export",
@@ -110,11 +130,16 @@ class RepositoryPrinter {
 			$harmoni->request->endNamespace();
 		}
 	//===== Edit Link =====//
-		if ($authZ->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.modify"), 
-				$repositoryId)) 
-		{
-		
+		try {
+			$isAuthorized = $authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.modify"),
+				$repositoryId);
+		} catch (UnknownIdException $e) {
+			$isAuthorized = $authZ->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.modify"), 
+					$idManager->getId("edu.middlebury.authorization.root"));
+		}
+		if ($isAuthorized) {		
 			$params = array("collection_id" => $repositoryId->getIdString(),
 							RequestContext::name("starting_number") => RequestContext::value("starting_number"),
 							RequestContext::name("limit_by") => RequestContext::value("limit_by"),
@@ -144,8 +169,13 @@ class RepositoryPrinter {
 		$canEditStructures = false;
 		while ($recStructFunctions->hasNext()) {
 			$function =$recStructFunctions->next();
-			if ($authZ->isUserAuthorized($function->getId(), $repositoryId))
-				$canEditStructures = true;
+			try {
+				if ($authZ->isUserAuthorized($function->getId(), $repositoryId))
+					$canEditStructures = true;
+			} catch (UnknownIdException $e) {
+				// do nothing;
+			}
+		
 			if ($authZ->isUserAuthorized($function->getId(), 
 				$idManager->getId("edu.middlebury.authorization.root")))
 			{
@@ -209,10 +239,16 @@ class RepositoryPrinter {
 			$links[] = ob_get_clean();
 		}
 	//===== Delete Link =====//
-		if ($authZ->iSUserAuthorized(
+		try {
+			$isAuthorized = $authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.delete"),
-				$repositoryId))
-		{
+				$repositoryId);
+		} catch (UnknownIdException $e) {
+			$isAuthorized = $authZ->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.delete"), 
+					$idManager->getId("edu.middlebury.authorization.root"));
+		}
+		if ($isAuthorized) {
 			ob_start();
 			print "<a href='Javascript:deleteRepository(\"".
 				$repositoryId->getIdString()."\", \"".

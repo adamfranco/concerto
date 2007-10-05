@@ -11,6 +11,9 @@
 
 <changelog name="Concerto ChangeLog">
 	<version number="2.4.2" date="The Future">
+		<important author='adam'>
+			As of this version, Concerto no longer supports PHP4. Please use PHP5 or later.
+		</important>
 		<change author='adam'>
 			Removing ampersands for compatability with other PHP5 code.
 			The BBEdit-grep string used for the find and replace was:

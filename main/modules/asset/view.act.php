@@ -112,41 +112,61 @@ class viewAction
 		print  "\n\t\t<dt style='font-weight: bold;'>";
 		print _("Type");
 		print ":</dt>\n\t\t<dd >";
-		print Type::typeToString($asset->getAssetType());
+		try {
+			print Type::typeToString($asset->getAssetType());
+		} catch (UnimplementedException $e) {
+			print "unknown";
+		}
 		print "</dd>";
 		
-		$date = $asset->getModificationDate();
-		print  "\n\t\t<dt style='font-weight: bold;'>";
-		print _("Modification Date");
-		print ":</dt>\n\t\t<dd >";
-		print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
-		print "</dd>";
+		try {
+			$date = $asset->getModificationDate();
+			print  "\n\t\t<dt style='font-weight: bold;'>";
+			print _("Modification Date");
+			print ":</dt>\n\t\t<dd >";
+			print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+			print "</dd>";
+		} catch (UnimplementedException $e) {
+			
+		}
 		
-		$date = $asset->getCreationDate();
-		print  "\n\t\t<dt style='font-weight: bold;'>";
-		print _("Creation Date");
-		print ":</dt>\n\t\t<dd >";
-		print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
-		print "</dd>";
+		try {
+			$date = $asset->getCreationDate();
+			print  "\n\t\t<dt style='font-weight: bold;'>";
+			print _("Creation Date");
+			print ":</dt>\n\t\t<dd >";
+			print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+			print "</dd>";
+		} catch (UnimplementedException $e) {
+			
+		}
 	
-		if(is_object($asset->getEffectiveDate())) {
-			$date = $asset->getEffectiveDate();
-			print  "\n\t\t<dt style='font-weight: bold;'>";
-			print _("Effective Date");
-			print ":</dt>\n\t\t<dd >";
-			print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
-			print "</dd>";
+		try {
+			if(is_object($asset->getEffectiveDate())) {
+				$date = $asset->getEffectiveDate();
+				print  "\n\t\t<dt style='font-weight: bold;'>";
+				print _("Effective Date");
+				print ":</dt>\n\t\t<dd >";
+				print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+				print "</dd>";
+			}
+		} catch (UnimplementedException $e) {
+			
 		}
 		
-		if(is_object($asset->getExpirationDate())) {
-			$date = $asset->getExpirationDate();
-			print  "\n\t\t<dt style='font-weight: bold;'>";
-			print _("Expiration Date");
-			print ":</dt>\n\t\t<dd >";
-			print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
-			print "</dd>";
+		try {
+			if(is_object($asset->getExpirationDate())) {
+				$date = $asset->getExpirationDate();
+				print  "\n\t\t<dt style='font-weight: bold;'>";
+				print _("Expiration Date");
+				print ":</dt>\n\t\t<dd >";
+				print $date->monthName()." ".$date->dayOfMonth().", ".$date->year()." ".$date->hmsString()." ".$date->timeZoneAbbreviation();
+				print "</dd>";
+			}
+			print "\n\t</dl>";
+		} catch (UnimplementedException $e) {
+			
 		}
-		print "\n\t</dl>";
 		
 		$contentCols->add(new Block(ob_get_clean(), STANDARD_BLOCK), "60%", null, LEFT, TOP);
 		
@@ -174,20 +194,39 @@ class viewAction
 		
 		// Get the set of RecordStructures so that we can print them in order.
 		$setManager = Services::getService("Sets");
-		$structSet =$setManager->getPersistentSet($repositoryId);		
-		// First, lets go through the info structures listed in the set and print out
-		// the info records for those structures in order.
-		while ($structSet->hasNext()) {
-			$structureId =$structSet->next();
-			$records =$asset->getRecordsByRecordStructure($structureId);
-			while ($records->hasNext()) {
-				$record =$records->next();
-				$recordId =$record->getId();
-				$printedRecordIds[] = $recordId->getIdString();
-		
-				print "<hr />";
-				printRecord($repositoryId, $assetId, $record);
-			}	
+		$structSet =$setManager->getPersistentSet($repositoryId);
+		if ($structSet->hasNext()) {
+			// First, lets go through the info structures listed in the set and print out
+			// the info records for those structures in order.
+			while ($structSet->hasNext()) {
+				$structureId =$structSet->next();
+				$records =$asset->getRecordsByRecordStructure($structureId);
+				while ($records->hasNext()) {
+					$record =$records->next();
+					$recordId =$record->getId();
+					$printedRecordIds[] = $recordId->getIdString();
+			
+					print "<hr />";
+					printRecord($repositoryId, $assetId, $record);
+				}	
+			}
+		} 
+		// if none are specified, print all.
+		else {
+			$structures = $asset->getRecordStructures();
+			while($structures->hasNext()) {
+				$structure = $structures->next();
+				$structureId = $structure->getId();
+				$records = $asset->getRecordsByRecordStructure($structureId);
+				while ($records->hasNext()) {
+					$record =$records->next();
+					$recordId =$record->getId();
+					$printedRecordIds[] = $recordId->getIdString();
+			
+					print "<hr />";
+					printRecord($repositoryId, $assetId, $record);
+				}
+			}
 		}
 		
 		$layout = new Block(ob_get_contents(), STANDARD_BLOCK);
@@ -202,15 +241,19 @@ class viewAction
 		// 	it is text, image, etc, or do otherwise with it if it is some other form
 		// 	of data.
 		//***********************************
-		$content =$asset->getContent();
-		if ($string = $content->asString()) {
-			ob_start();
-			print "\n<textarea readonly='readonly' rows='30' cols='80'>";
-			print htmlspecialchars($string);
-			print "</textarea>";
-			$layout = new Block(ob_get_contents(), STANDARD_BLOCK);
-			ob_end_clean();
-			$actionRows->add($layout, "100%", null, LEFT, CENTER);
+		try {
+			$content =$asset->getContent();
+			if ($string = $content->asString()) {
+				ob_start();
+				print "\n<textarea readonly='readonly' rows='30' cols='80'>";
+				print htmlspecialchars($string);
+				print "</textarea>";
+				$layout = new Block(ob_get_contents(), STANDARD_BLOCK);
+				ob_end_clean();
+				$actionRows->add($layout, "100%", null, LEFT, CENTER);
+			}
+		} catch (UnimplementedException $e) {
+			
 		}
 	}
 }

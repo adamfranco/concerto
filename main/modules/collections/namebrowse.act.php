@@ -131,11 +131,16 @@ function canView( $item ) {
 	$authZ = Services::getService("AuthZ");
 	$idManager = Services::getService("Id");
 	
-	if ($authZ->isUserAuthorizedBelow($idManager->getId("edu.middlebury.authorization.view"), $item->getId()))
-	{
-		return TRUE;
-	} else {
-		return FALSE;
+	try {
+		if ($authZ->isUserAuthorizedBelow($idManager->getId("edu.middlebury.authorization.view"), $item->getId()))
+		{
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	} catch (UnknownIdException $e) {
+		// For non-Harmoni repositories, return true.
+		return true;
 	}
 }
 

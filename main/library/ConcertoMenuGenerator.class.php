@@ -198,11 +198,15 @@ class ConcertoMenuGenerator
 	 * @since 5/15/06
 	 */
 	function addFirstParents ( $asset, $assetArray ) {
-		$parents =$asset->getParents();
-		if ($parents->hasNext()) {
-			$parent =$parents->next();
-			$assetArray[] =$parent;
-			$this->addFirstParents($parent, $assetArray);
+		try {
+			$parents =$asset->getParents();
+			if ($parents->hasNext()) {
+				$parent =$parents->next();
+				$assetArray[] =$parent;
+				$this->addFirstParents($parent, $assetArray);
+			}
+		} catch (UnimplementedException $e) {
+		
 		}
 	}
 	

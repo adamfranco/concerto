@@ -1084,9 +1084,13 @@ class AssetEditingAction
 			$field->addDisabledOption($assetId->getIdString(), ob_get_clean());
 		}
 		
-		$children =$asset->getAssets();
-		while ($children->hasNext()) {
-			$this->addAssetOption($field, $children->next(), $skip, $depth + 1);
+		try {
+			$children =$asset->getAssets();
+			while ($children->hasNext()) {
+				$this->addAssetOption($field, $children->next(), $skip, $depth + 1);
+			}
+		} catch (UnimplementedException $e) {
+		
 		}
 	}
 }

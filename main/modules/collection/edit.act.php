@@ -35,9 +35,15 @@ class editAction
 		// Check that the user can access this collection
 		$authZ = Services::getService("AuthZ");
 		$idManager = Services::getService("Id");
-		return $authZ->isUserAuthorized(
+		try {
+			return $authZ->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.modify"), 
 					$this->getRepositoryId());
+		} catch (UnknownIdException $e) {
+			return $authZ->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.modify"), 
+					$idManager->getId("edu.middlebury.authorization.root"));
+		}
 	}
 	
 	/**

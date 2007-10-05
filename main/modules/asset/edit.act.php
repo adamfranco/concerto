@@ -131,10 +131,18 @@ class editAction
 	 */
 	function updateAssetProperties ( $results, $asset ) {
 		// DisplayName
-		$asset->updateDisplayName($results['display_name']);
+		try {
+			$asset->updateDisplayName($results['display_name']);
+		} catch (UnimplementedException $e) {
+		} catch (PermissionDeniedException $e) {
+		}
 		
 		// Description
-		$asset->updateDescription($results['description']);
+		try {
+			$asset->updateDescription($results['description']);
+		} catch (UnimplementedException $e) {
+		} catch (PermissionDeniedException $e) {
+		}
 		
 		// Effective Date
 // 		$newEffDate = DateAndTime::fromString($results['effective_date']);
@@ -156,18 +164,24 @@ class editAction
 		$step = new WizardStep();
 		$step->setDisplayName(_("Content")." ("._("optional").")");
 		
-		$property =$step->addComponent("content", new WTextArea);
-		$property->setRows(20);
-		$property->setColumns(70);
-		
-		$content =$this->_assets[0]->getContent();
-		$property->setValue($content->asString());
-		
 		// Create the step text
 		ob_start();
 		print "\n<h2>"._("Content")."</h2>";
 		print "\n"._("This is an optional place to put content for this <em>Asset</em>. <br />If you would like more structure, you can create new schemas to hold the <em>Asset's</em> data.");
-		print "\n<br />[[content]]";
+		
+		try {
+			$content =$this->_assets[0]->getContent();
+			$property =$step->addComponent("content", new WTextArea);
+			$property->setRows(20);
+			$property->setColumns(70);
+			
+			$property->setValue($content->asString());
+			print "\n<br />[[content]]";
+		} catch (UnimplementedException $e) {
+			
+		}
+		
+		
 		print "\n<div style='width: 400px'> &nbsp; </div>";
 		$step->setContent(ob_get_contents());
 		ob_end_clean();
@@ -186,10 +200,14 @@ class editAction
 	 */
 	function updateAssetContent ( $results, $asset ) {
 		// Content 
-		$content =$asset->getContent();
-		$newContent = Blob::withValue($results);
-		if (is_object($content) && !$content->isEqualTo($newContent))
-			$asset->updateContent($newContent);
+		try {
+			$content =$asset->getContent();
+			$newContent = Blob::withValue($results);
+			if (is_object($content) && !$content->isEqualTo($newContent))
+				$asset->updateContent($newContent);
+		} catch (UnimplementedException $e) {
+		} catch (PermissionDeniedException $e) {
+		}
 	}
 	
 	
@@ -1381,24 +1399,29 @@ class editAction
 		$idManager = Services::getService("Id");
 		
 		// Check for authorization to remove the existing parent.
-		$parents =$this->_assets[0]->getParents();
-		if ($parents->hasNext()) {
-			$parent =$parents->next();
-			$parentId =$parent->getId();
-			
-			// If we aren't authorized to change the parent, just use it as the only option.
-			if ($authZManager->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.remove_children"),
-				$parentId))
-			{
-				$property->addOption("NONE", _("None"));
-				$property->setValue($parentId->getIdString());
+		try {
+			$parents =$this->_assets[0]->getParents();
+			if ($parents->hasNext()) {
+				$parent =$parents->next();
+				$parentId =$parent->getId();
+				
+				// If we aren't authorized to change the parent, just use it as the only option.
+				if ($authZManager->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.remove_children"),
+					$parentId))
+				{
+					$property->addOption("NONE", _("None"));
+					$property->setValue($parentId->getIdString());
+				} else {
+					$property->addOption($parentId->getIdString(), "- ".$parent->getDisplayName()." (".$parentId->getIdString().")");
+					$property->setValue($parentId->getIdString());
+					return $step;
+				}
 			} else {
-				$property->addOption($parentId->getIdString(), "- ".$parent->getDisplayName()." (".$parentId->getIdString().")");
-				$property->setValue($parentId->getIdString());
-				return $step;
+				$property->addOption("NONE", _("None"));
+				$property->setValue("NONE");
 			}
-		} else {
+		} catch (UnimplementedException $e) {
 			$property->addOption("NONE", _("None"));
 			$property->setValue("NONE");
 		}

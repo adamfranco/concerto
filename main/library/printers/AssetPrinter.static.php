@@ -108,9 +108,14 @@ class AssetPrinter {
 		
 		
 	//===== View Links =====/
-		if ($authZ->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.view"),
-				$assetId)) {
+		try {
+			$isAuthorized = $authZ->isUserAuthorized(
+			$idManager->getId("edu.middlebury.authorization.view"),
+			$assetId);
+		} catch (UnknownIdException $e) {
+			$isAuthorized = true;
+		}
+		if ($isAuthorized) {
 		
 		//===== Viewer Link =====//
 			// Add the options panel script to the header
@@ -137,32 +142,46 @@ class AssetPrinter {
 				$toShow[] = "'view'";
 			}
 			
-			if ($authZ->isUserAuthorizedBelow(
+			try {
+				$isAuthorized = $authZ->isUserAuthorizedBelow(
 				$idManager->getId("edu.middlebury.authorization.view"),
-				$assetId)) 
-			{
-				$children =$asset->getAssets();
-				if ($children->hasNext()) {
-					if ($actionString != "asset.browse" ||
-							$assetId->getIdString() != 
-							$harmoni->request->get('asset_id')) 
-					{
-						$toShow[] = "'browse'";
+				$assetId);
+			} catch (UnknownIdException $e) {
+				$isAuthorized = true;
+			}
+			if ($isAuthorized) {
+				try {
+					$children = $asset->getAssets();
+					if ($children->hasNext()) {
+						if ($actionString != "asset.browse" ||
+								$assetId->getIdString() != 
+								$harmoni->request->get('asset_id')) 
+						{
+							$toShow[] = "'browse'";
+						}
 					}
-				}
+				} catch (Exception $e) {}
 			}
 			
-			if ($authZ->isUserAuthorized(
+			try {
+				$isAuthorized = $authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.modify"),
-				$assetId)) 
-			{
+				$assetId);
+			} catch (UnknownIdException $e) {
+				$isAuthorized = true;
+			}
+			if ($isAuthorized) {
 				$toShow[] = "'edit'";
 			}
 			
-			if ($authZ->isUserAuthorized(
+			try {
+				$isAuthorized = $authZ->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.delete"),
-				$assetId)) 
-			{
+				$assetId);
+			} catch (UnknownIdException $e) {
+				$isAuthorized = true;
+			}
+			if ($isAuthorized) {
 				// If we are viewing the asset and we delete it, we can't return
 				// to viewing it.
 				if (ereg("^asset\..*$", $actionString) && 
@@ -183,10 +202,14 @@ class AssetPrinter {
 				$toShow[] = "'delete'";
 			}
 			
-			if ($authZ->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.add_children"),
-					$assetId)) 
-			{
+			try {
+				$isAuthorized = $authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.add_children"),
+				$assetId);
+			} catch (UnknownIdException $e) {
+				$isAuthorized = true;
+			}
+			if ($isAuthorized) {
 				$toShow[] = "'add_children'";
 			}
 			
@@ -218,21 +241,29 @@ class AssetPrinter {
 // 			}
  		}
 	//===== Browse Link =====//
-		if ($authZ->isUserAuthorizedBelow(
-				$idManager->getId("edu.middlebury.authorization.view"),
-				$assetId)) {
-			$children =$asset->getAssets();
-			if ($children->hasNext()) {
-				if ($actionString != "asset.browse" ||
-						$assetId->getIdString() != 
-						$harmoni->request->get('asset_id')) {
-					$links[] = "<a href='".
-						$harmoni->request->quickURL("asset", "browseAsset", 
-						array("collection_id" => $repositoryId->getIdString(),
-						"asset_id" => $assetId->getIdString()))."'>";
-					$links[count($links) - 1] .= _("Browse")."</a>";
-				} else
-					$links[] = _("Browse");
+		try {$isAuthorized = $authZ->isUserAuthorizedBelow(
+			$idManager->getId("edu.middlebury.authorization.view"),
+			$assetId);
+		} catch (UnknownIdException $e) {
+			$isAuthorized = true;
+		}
+		if ($isAuthorized) {
+			try {
+				$children =$asset->getAssets();
+				if ($children->hasNext()) {
+					if ($actionString != "asset.browse" ||
+							$assetId->getIdString() != 
+							$harmoni->request->get('asset_id')) {
+						$links[] = "<a href='".
+							$harmoni->request->quickURL("asset", "browseAsset", 
+							array("collection_id" => $repositoryId->getIdString(),
+							"asset_id" => $assetId->getIdString()))."'>";
+						$links[count($links) - 1] .= _("Browse")."</a>";
+					} else
+						$links[] = _("Browse");
+				}
+			} catch (UnimplementedException $e) {
+				//
 			}
 		}
 	//===== Edit Link =====//	

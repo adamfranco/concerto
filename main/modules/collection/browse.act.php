@@ -38,15 +38,20 @@ class browseAction
 	 * @since 4/26/05
 	 */
 	function isAuthorizedToExecute () {
-		// Check that the user can access this collection
-		$authZ = Services::getService("AuthZ");
-
-		$idManager = Services::getService("Id");
-		if (!$this->getRepositoryId())
-			return false;
-		return $authZ->isUserAuthorizedBelow(
-					$idManager->getId("edu.middlebury.authorization.view"), 
-					$this->getRepositoryId());
+		try {
+			// Check that the user can access this collection
+			$authZ = Services::getService("AuthZ");
+	
+			$idManager = Services::getService("Id");
+			if (!$this->getRepositoryId())
+				return false;
+			return $authZ->isUserAuthorizedBelow(
+						$idManager->getId("edu.middlebury.authorization.view"), 
+						$this->getRepositoryId());
+		} catch (UnknownIdException $e) {
+			// For non-Harmoni repositories, return true.
+			return true;
+		}
 	}
 	
 	/**
@@ -775,7 +780,11 @@ function printAssetShort($asset, $params, $num) {
 	$assetId =$asset->getId();
 	
 	if ($_SESSION["show_thumbnail"] == 'true') {
-		$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($asset);
+		try {
+			$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($asset);
+		} catch (Exception $e) {
+			$thumbnailURL = false;
+		}
 		if ($thumbnailURL !== FALSE) {
 			if (RepositoryInputOutputModuleManager::hasThumbnailNotIcon($asset))
 				$thumbClass = 'thumbnail_image';
@@ -869,18 +878,28 @@ function printAssetShort($asset, $params, $num) {
 		
 		print "\n<input type='hidden'";
 		print " name='".RequestContext::name("asset_can_modify_".$assetId->getIdString())."'";
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $assetId))
+		try {
+			if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $assetId))
+				print " value='true'";
+			else
+				print " value='false'";
+			print "/>";	
+		} catch (UnknownIdException $e) {
+			// allow non-harmoni Repositories.
 			print " value='true'";
-		else
-			print " value='false'";
-		print "/>";	
+		}
 		
 		print "\n<input type='hidden'";
 		print " name='".RequestContext::name("asset_can_delete_".$assetId->getIdString())."'";
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.delete"), $assetId))
+		try {
+			if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.delete"), $assetId))
+				print " value='true'";
+			else
+				print " value='false'";
+		} catch (UnknownIdException $e) {
+			// allow non-harmoni Repositories.
 			print " value='true'";
-		else
-			print " value='false'";
+		}
 		print "/>";	
 		
 		$harmoni->request->endNamespace();
@@ -897,10 +916,15 @@ function canView( $asset ) {
 	$authZ = Services::getService("AuthZ");
 	$idManager = Services::getService("Id");
 	
-	if ($authZ->isUserAuthorizedBelow($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
-	{
-		return TRUE;
-	} else {
-		return FALSE;
+	try {
+		if ($authZ->isUserAuthorizedBelow($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
+		{
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	} catch (UnknownIdException $e) {
+		// allow non-harmoni Repositories.
+		return true;
 	}
 }
