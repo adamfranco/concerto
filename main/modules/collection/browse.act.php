@@ -917,11 +917,18 @@ function canView( $asset ) {
 	$idManager = Services::getService("Id");
 	
 	try {
-		if ($authZ->isUserAuthorizedBelow($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
+		// Check the repository first since it is probably cached already, then the
+		// Asset itself if the repository returns false.
+		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getRepository()->getId()))
 		{
 			return TRUE;
 		} else {
-			return FALSE;
+			if ($authZ->isUserAuthorizedBelow($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
+			{
+				return TRUE;
+			} else {
+				return FALSE;
+			}
 		}
 	} catch (UnknownIdException $e) {
 		// allow non-harmoni Repositories.
