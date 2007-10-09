@@ -11,6 +11,17 @@
 
 <changelog name="Concerto">
 	<version number="2.5.0" date="The Future">
+		<releaseNotes>
+			As of this release, Concerto no longer supports PHP4. Please use PHP 5.2 or later.
+			
+			Concerto requires PHP 5.2 or later and either a MySQL 5.0 or later database or 
+			a PostgreSQL database.
+			
+			For upgrades from prior versions of concerto, please point your browser
+			at the harmoni database updater and run each of the updates. The updates
+			are safe to run multiple times as they will only take action where needed.
+			The updater is found at concerto/main/harmoni/core/DBHandler/db_updater.php
+		</releaseNotes>
 		<important author='adam'>
 			As of this version, Concerto no longer supports PHP4. Please use PHP5 or later.
 		</important>
@@ -21,7 +32,7 @@
 			replaced with
 					\1\2\3\4\5
 		</change>
-		<fix author='adam'>	
+		<fix author='adam' date='2007-10-09' ref='1708395' reftype='bug'>
 			Now using an empty default cookie domain to better work out of the box.
 		</fix>
 		<fix author='adam'>	
