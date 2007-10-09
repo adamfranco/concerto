@@ -7,27 +7,34 @@
  
  @version $Id$
  -->
- 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
 <xsl:import href="trim.xsl"/>
-
+<xsl:import href="paragraphs.xsl"/>
 <xsl:output format="text" />
 <xsl:strip-space elements="fix change new important" />
-
 <!--
 ///////////////////////////////////////////////////////////////////////
 // changelog
 ///////////////////////////////////////////////////////////////////////
 -->
 <xsl:template match="changelog">
-Name: <xsl:value-of select="@name" />
+Name: <xsl:value-of select="@name" /> Change Log
 <xsl:text>
 
 </xsl:text>
 	<xsl:for-each select="version">
 v. <xsl:value-of select="@number" /><xsl:if test="@date!=''"> (<xsl:value-of select="@date" />)</xsl:if>
-----------------------------------------------------<xsl:apply-templates />
+----------------------------------------------------
+<xsl:call-template name="addNewlines">
+	<xsl:with-param name="maxCharacters" select="84"/>
+	<xsl:with-param name="remainingString">
+		<xsl:call-template name="singleLineParagraphs">
+			<xsl:with-param name="s" select="releaseNotes"/>
+		</xsl:call-template>		
+	</xsl:with-param>
+</xsl:call-template>
+
+<xsl:apply-templates />
 
 	</xsl:for-each>
 </xsl:template>
@@ -78,8 +85,11 @@ v. <xsl:value-of select="@number" /><xsl:if test="@date!=''"> (<xsl:value-of sel
 	<xsl:text>&#x0A;&#x09;&#x09;</xsl:text>
 	<xsl:call-template name="addNewlines">
 		<xsl:with-param name="maxCharacters" select="76"/>
+		<xsl:with-param name="tabs" select="'&#x09;&#x09;'"/>
 		<xsl:with-param name="remainingString">
-			<xsl:value-of select="normalize-space(translate(translate(.,'&#10;',''), '&#x0A;', ' '))" />
+			<xsl:call-template name="singleLineParagraphs">
+				<xsl:with-param name="s" select="."/>
+			</xsl:call-template>		
 		</xsl:with-param>
 	</xsl:call-template>
 	
@@ -87,10 +97,12 @@ v. <xsl:value-of select="@number" /><xsl:if test="@date!=''"> (<xsl:value-of sel
 		<xsl:text>&#x0A;&#x09;&#x09;</xsl:text>
 		<xsl:text>(</xsl:text>
 		
+		<xsl:if test="@date!=''"><xsl:value-of select="@date" /> - </xsl:if>
+		
 		<xsl:call-template name="authors">
 			<xsl:with-param name="str" select="@author"/>
 		</xsl:call-template>
-
+				
 		<xsl:text>)</xsl:text>
 	</xsl:if>
 </xsl:template>
@@ -111,5 +123,8 @@ v. <xsl:value-of select="@number" /><xsl:if test="@date!=''"> (<xsl:value-of sel
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
+
+<!-- Ignore the releaseNotes data as we've already used it. -->
+<xsl:template match="releaseNotes"></xsl:template>
 
 </xsl:stylesheet>

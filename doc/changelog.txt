@@ -1,411 +1,899 @@
 
 
-Name: Concerto ChangeLog
+Name: Concerto Change Log
 
 
+
+v. 2.5.0 (The Future)
+----------------------------------------------------
+
+		
+	**** IMPORTANT *** Change: 
+		As of this version, Concerto no longer supports PHP4. Please use PHP5 or
+		later. 
+		(Adam Franco)
+		
+	* Change: 
+		Removing ampersands for compatability with other PHP5 code. The BBEdit-grep
+		string used for the find and replace was: (function
+		)&amp;|(=\s?)&amp;([^a-z#])|([^&amp;])&amp;\s?(\$) replaced with \1\2\3\4\5
+		(Adam Franco)
+		
+	* Bug Fix: 
+		Now using an empty default cookie domain to better work out of the box.
+		(Adam Franco)
+		
+	* Bug Fix: 
+		Periods in schema ids were breaking schema selection form fields.
+		(Adam Franco)
+		
+	* Bug Fix: 
+		Converting all short tags (&lt;?) to the full tags (&lt;?php) for compatibility
+		with more PHP configurations.
+		(Adam Franco)
+		
+	* New feature: 
+		Support for repositories other than the HarmoniRepository, including those
+		that do not support the full range of read and write functions.
+		(2007-10-05 - Adam Franco)
+		
+	* Change: 
+		CollectionsBrowse: now checking collection-level authorizations only, not
+		traversing down into assets as this was taking WAY too long with large data
+		sets. 
+		(2007-10-05 - Adam Franco)
+	
 v. 2.4.1 (2007-04-10)
 ----------------------------------------------------
+
 		
-	* Bug Fix: Fixed a few bugs that prevented Concerto from running in PHP 5. (Adam Franco)
+	* Bug Fix: 
+		Fixed a few bugs that prevented Concerto from running in PHP 5.
+		(Adam Franco)
 	
 v. 2.4.0 (2007-04-05)
 ----------------------------------------------------
+
 		
-	* New feature: OAI: Added Open Archives Initiative (OAI) provider support to Concerto. (Adam Franco)
+	* New feature: 
+		OAI: Added Open Archives Initiative (OAI) provider support to Concerto.
+		(Adam Franco)
 		
-	* New feature: Updates: Added an updater system. (Adam Franco)
+	* New feature: 
+		Updates: Added an updater system.
+		(Adam Franco)
 		
-	* Change: Schemas: Updating Dublin Core and VRA ids to be static strings. (Adam Franco)
+	* Change: 
+		Schemas: Updating Dublin Core and VRA ids to be static strings.
+		(Adam Franco)
 		
-	* Change: AssetView: Now escaping content and placing it in a text-area so that it doesn't stretch the page. (Adam Franco)
+	* Change: 
+		AssetView: Now escaping content and placing it in a text-area so that it
+		doesn't stretch the page.
+		(Adam Franco)
 		
-	* Change: Asset Browsing: Asset options/commands are now placed in a pop-up panel to save space and provide easy access to them. (Adam Franco)
+	* Change: 
+		Asset Browsing: Asset options/commands are now placed in a pop-up panel to
+		save space and provide easy access to them.
+		(Adam Franco)
 		
-	* Change: Wizards: Now steps can be accessed out-of-order via links. (Adam Franco)
+	* Change: 
+		Wizards: Now steps can be accessed out-of-order via links.
+		(Adam Franco)
 		
-	* Change: Importing: Can now import Assets directly under another Asset rather than just at the Repository root. (Adam Franco)
+	* Change: 
+		Importing: Can now import Assets directly under another Asset rather than
+		just at the Repository root.
+		(Adam Franco)
 		
-	* Change: Importing: Can now import a single file as an Asset, without compression. (Adam Franco)
+	* Change: 
+		Importing: Can now import a single file as an Asset, without compression.
+		(Adam Franco)
 		
-	* Bug Fix: Asset Editing: Parent Asset menu is now more workable with hierarchies of large numbers of Assets. (Adam Franco)
+	* Bug Fix: 
+		Asset Editing: Parent Asset menu is now more workable with hierarchies of
+		large numbers of Assets.
+		(Adam Franco)
 		
-	* Change: Asset Editing: Removed unused date fields to prevent user confusion. (Adam Franco)
+	* Change: 
+		Asset Editing: Removed unused date fields to prevent user confusion.
+		(Adam Franco)
 		
-	* New feature: Slideshows: Can now duplicate slideshows to easily make derivatives. (Adam Franco)
+	* New feature: 
+		Slideshows: Can now duplicate slideshows to easily make derivatives.
+		(Adam Franco)
 		
-	* Change: Slideshows: Most recently browsed collection and asset are maintained in the menu when going back to edit a slideshow, eliminating the need for much 'drilling-down'. (Adam Franco)
+	* Change: 
+		Slideshows: Most recently browsed collection and asset are maintained in the
+		menu when going back to edit a slideshow, eliminating the need for much
+		'drilling-down'. 
+		(Adam Franco)
 		
-	* Bug Fix: Slideshows: Fixed an id conflict when going back to a slideshow a second time (from browsing an asset). (Adam Franco)
+	* Bug Fix: 
+		Slideshows: Fixed an id conflict when going back to a slideshow a second
+		time (from browsing an asset).
+		(Adam Franco)
 	
 v. 2.3.0 (2006-12-13)
 ----------------------------------------------------
+
 		
-	* New feature: AuthN: Added support for administrators to act as another user. (Adam Franco)
+	* New feature: 
+		AuthN: Added support for administrators to act as another user.
+		(Adam Franco)
 		
-	* New feature: Files: Added support for files stored at remote locations. (Adam Franco)
+	* New feature: 
+		Files: Added support for files stored at remote locations.
+		(Adam Franco)
 		
-	* New feature: Exporting: Now shows status of the export. (Adam Franco)
+	* New feature: 
+		Exporting: Now shows status of the export.
+		(Adam Franco)
 		
-	* New feature: Importing: Exif importing method now has a default Dublin Core / VRA Core schema, so collections that use Dublin Core/VRA Core will not need to include a schema.xml file when importing images. (Adam Franco)
+	* New feature: 
+		Importing: Exif importing method now has a default Dublin Core / VRA Core
+		schema, so collections that use Dublin Core/VRA Core will not need to
+		include a schema.xml file when importing images.
+		(Adam Franco)
 		
-	* New feature: Changelog: Changelog view now displays Polyphony and Harmoni changelogs. (Adam Franco)
+	* New feature: 
+		Changelog: Changelog view now displays Polyphony and Harmoni changelogs.
+		(Adam Franco)
 		
-	* Bug Fix: Exporting: Temporary files are now removed after they are used. (Adam Franco)
+	* Bug Fix: 
+		Exporting: Temporary files are now removed after they are used.
+		(Adam Franco)
 		
-	* Bug Fix: Importing: Temporary files are now removed after they are used. (Adam Franco)
+	* Bug Fix: 
+		Importing: Temporary files are now removed after they are used.
+		(Adam Franco)
 		
-	* Bug Fix: Importing: Can now do xml imports that are in multiple directories and subdirectories. (Adam Franco)
+	* Bug Fix: 
+		Importing: Can now do xml imports that are in multiple directories and
+		subdirectories. 
+		(Adam Franco)
 		
-	* Bug Fix: Thumbnails: Can now determine if a thumbnail is real or an icon. Added borders around thumbnails. (Adam Franco)
+	* Bug Fix: 
+		Thumbnails: Can now determine if a thumbnail is real or an icon. Added
+		borders around thumbnails.
+		(Adam Franco)
 		
-	* Bug Fix: Thumbnails: Fixed spacing in Browse child Assets view. (Adam Franco)
+	* Bug Fix: 
+		Thumbnails: Fixed spacing in Browse child Assets view.
+		(Adam Franco)
 		
-	* Bug Fix: AssetBrowsing: Fixed ordering in Browse child Assets view. (Adam Franco)
+	* Bug Fix: 
+		AssetBrowsing: Fixed ordering in Browse child Assets view.
+		(Adam Franco)
 		
-	* Bug Fix: Documentation: Updated documentation for importing images with EXIF/IPTC metadata. (Adam Franco)
+	* Bug Fix: 
+		Documentation: Updated documentation for importing images with EXIF/IPTC
+		metadata. 
+		(Adam Franco)
 	
 v. 2.2.0 (2006-12-01)
 ----------------------------------------------------
+
 		
-	**** IMPORTANT *** Change: Concerto 2.2.0 is a merging of Concerto 2.1.13 with work done on the Concerto trunk by Tim and John over the summer. The additions on the trunk include configurations and admin interfaces for the CourseManagement and Scheduling OSIDs and for GUI-theme-management. (Adam Franco)
+	**** IMPORTANT *** Change: 
+		Concerto 2.2.0 is a merging of Concerto 2.1.13 with work done on the
+		Concerto trunk by Tim and John over the summer. The additions on the trunk
+		include configurations and admin interfaces for the CourseManagement and
+		Scheduling OSIDs and for GUI-theme-management.
+		(Adam Franco)
 		
-	* New feature: Admin interface for managing themes. (Tim Bahls)
+	* New feature: 
+		Admin interface for managing themes.
+		(Tim Bahls)
 		
-	* New feature: Admin interface for managing courses. (John Lee)
+	* New feature: 
+		Admin interface for managing courses.
+		(John Lee)
 	
 v. 2.1.13 (2006-11-30)
 ----------------------------------------------------
+
 		
-	* Bug Fix: Exhibitions: Now Slideshow order is properly maintained when deleting slideshows. (Adam Franco)
+	* Bug Fix: 
+		Exhibitions: Now Slideshow order is properly maintained when deleting
+		slideshows. 
+		(Adam Franco)
 		
-	* New feature: AuthZ: Added icon and popup display of Authorizations. (Adam Franco)
+	* New feature: 
+		AuthZ: Added icon and popup display of Authorizations.
+		(Adam Franco)
 		
-	* Bug Fix: Tagging: Fixed IE javascript errors. (Adam Franco)
+	* Bug Fix: 
+		Tagging: Fixed IE javascript errors.
+		(Adam Franco)
 	
 v. 2.1.12 (2006-11-28)
 ----------------------------------------------------
+
 		
-	* New feature: Tagging: Added support for Tagging. (Adam Franco)
+	* New feature: 
+		Tagging: Added support for Tagging.
+		(Adam Franco)
 		
-	* Bug Fix: Collections: Now checks authZ before showing collections in the list. (Adam Franco)
+	* Bug Fix: 
+		Collections: Now checks authZ before showing collections in the list.
+		(Adam Franco)
 		
-	* Bug Fix: Collections: The collection id was being dropped when viewing assets directly. (Adam Franco)
+	* Bug Fix: 
+		Collections: The collection id was being dropped when viewing assets
+		directly. 
+		(Adam Franco)
 		
-	* Bug Fix: Collections: Now checks authZ before showing collections in the list. (Adam Franco)
+	* Bug Fix: 
+		Collections: Now checks authZ before showing collections in the list.
+		(Adam Franco)
 	
 v. 2.1.11 (2006-10-25)
 ----------------------------------------------------
+
 		
-	* Bug Fix: AssetEditing/AssetDeleting: Multiple ID parsing now properly differentiates between empty whitespace and valid id strings. (Adam Franco)
+	* Bug Fix: 
+		AssetEditing/AssetDeleting: Multiple ID parsing now properly differentiates
+		between empty whitespace and valid id strings.
+		(Adam Franco)
 		
-	* Change: Polyphony icons have now been moved to their own directory for easier access when keeping polyphony installed in a non-web-accessible directory. (Adam Franco)
+	* Change: 
+		Polyphony icons have now been moved to their own directory for easier access
+		when keeping polyphony installed in a non-web-accessible directory.
+		(Adam Franco)
 		
-	* Change: SimpleThemeBlack: The image path is now configurable to allow for Concerto installation outside of a web-accessible directory. (Adam Franco)
+	* Change: 
+		SimpleThemeBlack: The image path is now configurable to allow for Concerto
+		installation outside of a web-accessible directory.
+		(Adam Franco)
 	
 v. 2.1.10 (2006-08-28)
 ----------------------------------------------------
+
 		
-	* Bug Fix: Dates: Prettier printing of dates. (Adam Franco)
+	* Bug Fix: 
+		Dates: Prettier printing of dates.
+		(Adam Franco)
 		
-	* Bug Fix: AssetImporting: Fixed up text to clarify that the user should import a Zip/GZip/Tar archive. (Adam Franco)
+	* Bug Fix: 
+		AssetImporting: Fixed up text to clarify that the user should import a
+		Zip/GZip/Tar archive.
+		(Adam Franco)
 		
-	* Bug Fix: Thumbnails: Now if Image Magick barfs on some multi-page PDFs and generates a single black pixel as a thumbnail, it won't be saved and the nice default icon will be used instead. (Adam Franco)
+	* Bug Fix: 
+		Thumbnails: Now if Image Magick barfs on some multi-page PDFs and generates
+		a single black pixel as a thumbnail, it won't be saved and the nice default
+		icon will be used instead.
+		(Adam Franco)
 	
 v. 2.1.9 (2006-08-16)
 ----------------------------------------------------
+
 		
-	* New feature: Exhibitions: Can now reorder slideshows in exhibitions. (Adam Franco)
+	* New feature: 
+		Exhibitions: Can now reorder slideshows in exhibitions.
+		(Adam Franco)
 		
-	* Change: RSS: RSS links now in head of document to alert the browser (specifically FireFox) of the availability of feeds. (Adam Franco)
+	* Change: 
+		RSS: RSS links now in head of document to alert the browser (specifically
+		FireFox) of the availability of feeds.
+		(Adam Franco)
 		
-	* Change: Slideshows: Number of slides now appears below title and doesn't wrap. (Adam Franco)
+	* Change: 
+		Slideshows: Number of slides now appears below title and doesn't wrap.
+		(Adam Franco)
 		
-	* Change: Config: Harmoni, Polyphony, and Viewer locations are now specified as the release-defaults, easing the release process. Harmoni/Polyphony locations are now specified in a config. (Adam Franco)
+	* Change: 
+		Config: Harmoni, Polyphony, and Viewer locations are now specified as the
+		release-defaults, easing the release process. Harmoni/Polyphony locations
+		are now specified in a config.
+		(Adam Franco)
 	
 v. 2.1.8 (2006-08-15)
 ----------------------------------------------------
+
 		
-	* Bug Fix: RSS: Added publication dates for slideshow RSS items. (Adam Franco)
+	* Bug Fix: 
+		RSS: Added publication dates for slideshow RSS items.
+		(Adam Franco)
 		
-	* Bug Fix: Slideshows: Removed debugging line in slideshow browse mode. (Adam Franco)
+	* Bug Fix: 
+		Slideshows: Removed debugging line in slideshow browse mode.
+		(Adam Franco)
 		
-	* Bug Fix: Slideshows: now displays an appropriate message if target media have been deleted. (Adam Franco)
+	* Bug Fix: 
+		Slideshows: now displays an appropriate message if target media have been
+		deleted. 
+		(Adam Franco)
 		
-	* Bug Fix: Slideshows: Now does't crash exhibition browsing if target media are missing. (Adam Franco)
+	* Bug Fix: 
+		Slideshows: Now does't crash exhibition browsing if target media are
+		missing. 
+		(Adam Franco)
 	
 v. 2.1.7 (2006-08-11)
 ----------------------------------------------------
+
 		
-	* Bug Fix: Now does't wrap the checkboxes in Collection browsing when the asset-browse link is present. (Adam Franco)
+	* Bug Fix: 
+		Now does't wrap the checkboxes in Collection browsing when the asset-browse
+		link is present.
+		(Adam Franco)
 		
-	* New feature: Authenticated RSS feeds of most recently added/edited assets. (Adam Franco)
+	* New feature: 
+		Authenticated RSS feeds of most recently added/edited assets.
+		(Adam Franco)
 		
-	* New feature: Authenticated RSS feeds of most recently added/edited slideshows. (Adam Franco)
+	* New feature: 
+		Authenticated RSS feeds of most recently added/edited slideshows.
+		(Adam Franco)
 		
-	* New feature: Authenticated RSS feeds of logs. (Adam Franco)
+	* New feature: 
+		Authenticated RSS feeds of logs.
+		(Adam Franco)
 		
-	* Bug Fix: Now forces cookie usage to prevent accidental or intentional session hijacking by the passing of session ids in the url. (Adam Franco)
+	* Bug Fix: 
+		Now forces cookie usage to prevent accidental or intentional session
+		hijacking by the passing of session ids in the url.
+		(Adam Franco)
 		
-	* Bug Fix: Now doesn't force a redirect after checking for tables, allowing HTTP authentication to work on the first pageload. (Adam Franco)
+	* Bug Fix: 
+		Now doesn't force a redirect after checking for tables, allowing HTTP
+		authentication to work on the first pageload.
+		(Adam Franco)
 		
-	* Bug Fix: Fixes in Harmoni and Polyphony. See their changelogs for more details. (Adam Franco)
+	* Bug Fix: 
+		Fixes in Harmoni and Polyphony. See their changelogs for more details.
+		(Adam Franco)
 	
 v. 2.1.6 (2006-08-04)
 ----------------------------------------------------
+
 		
-	* Bug Fix: Selection: Can now view selection contents in viewer. (Adam Franco)
+	* Bug Fix: 
+		Selection: Can now view selection contents in viewer.
+		(Adam Franco)
 		
-	* Bug Fix: Menus: Now provides a link back to the current collection/asset when viewing the selection. (Adam Franco)
+	* Bug Fix: 
+		Menus: Now provides a link back to the current collection/asset when viewing
+		the selection.
+		(Adam Franco)
 		
-	* Bug Fix: AssetDeleting: Now doesn't crash when deleting Assets from withing the child Asset browsing screen. (Adam Franco)
+	* Bug Fix: 
+		AssetDeleting: Now doesn't crash when deleting Assets from withing the child
+		Asset browsing screen.
+		(Adam Franco)
 		
-	* Bug Fix: AssetEditing: Now can handle unentered values (specifically dates) that return null rather than a valid primitive object. (Adam Franco)
+	* Bug Fix: 
+		AssetEditing: Now can handle unentered values (specifically dates) that
+		return null rather than a valid primitive object.
+		(Adam Franco)
 	
 v. 2.1.5 (2006-08-02)
 ----------------------------------------------------
+
 		
-	* Bug Fix: Slideshows: Clarifying metadata option. (Adam Franco)
+	* Bug Fix: 
+		Slideshows: Clarifying metadata option.
+		(Adam Franco)
 		
-	* Bug Fix: Deleting: Now prompts twice to confirm delete of Collections and Exhibitions. (Adam Franco)
+	* Bug Fix: 
+		Deleting: Now prompts twice to confirm delete of Collections and
+		Exhibitions. 
+		(Adam Franco)
 		
-	* Bug Fix: AssetDeleting: Now doesn't crash when deleting Assets from withing the Asset details screen. It was trying to return to the details for the newly non-existant asset. (Adam Franco)
+	* Bug Fix: 
+		AssetDeleting: Now doesn't crash when deleting Assets from withing the Asset
+		details screen. It was trying to return to the details for the newly
+		non-existant asset.
+		(Adam Franco)
 		
-	* Bug Fix: Fixes in Harmoni, Polyphony, and the Viewer. See their changelogs for more details. (Adam Franco)
+	* Bug Fix: 
+		Fixes in Harmoni, Polyphony, and the Viewer. See their changelogs for more
+		details. 
+		(Adam Franco)
 	
 v. 2.1.4 (2006-07-21)
 ----------------------------------------------------
+
 		
-	* New feature: Importing: New 'Files-Only' importing method (Adam Franco)
+	* New feature: 
+		Importing: New 'Files-Only' importing method
+		(Adam Franco)
 		
-	* Bug Fix: AssetEditing-Files: Now doesn't create a thumbnail if conversion fails. (Adam Franco)
+	* Bug Fix: 
+		AssetEditing-Files: Now doesn't create a thumbnail if conversion fails.
+		(Adam Franco)
 		
-	* Bug Fix: AssetEditing-Files: Renamed button label. (Adam Franco)
+	* Bug Fix: 
+		AssetEditing-Files: Renamed button label.
+		(Adam Franco)
 		
-	* Bug Fix: AssetEditing-Files: Optional values are now (properly) unchecked. (Adam Franco)
+	* Bug Fix: 
+		AssetEditing-Files: Optional values are now (properly) unchecked.
+		(Adam Franco)
 		
-	* Bug Fix: AssetCreation: Now uses a SelectOrNew with some default types for the asset type. (Adam Franco)
+	* Bug Fix: 
+		AssetCreation: Now uses a SelectOrNew with some default types for the asset
+		type. 
+		(Adam Franco)
 		
-	* Bug Fix: UI flow: Now returns to browsing when checked assets are delete/edited. (Adam Franco)
+	* Bug Fix: 
+		UI flow: Now returns to browsing when checked assets are delete/edited.
+		(Adam Franco)
 	
 v. 2.1.3 (2006-06-30)
 ----------------------------------------------------
+
 		
-	* Bug Fix: Importing: Fixed cacheName problem when authenticated via LDAP. (Adam Franco)
+	* Bug Fix: 
+		Importing: Fixed cacheName problem when authenticated via LDAP.
+		(Adam Franco)
 	
 v. 2.1.2 (2006-06-26)
 ----------------------------------------------------
+
 		
-	* Bug Fix: CollectionEditing: Now has a larger box for description. (Adam Franco)
+	* Bug Fix: 
+		CollectionEditing: Now has a larger box for description.
+		(Adam Franco)
 		
-	* Bug Fix: CollectionBrowsing: Now allows a longer description. (Adam Franco)
+	* Bug Fix: 
+		CollectionBrowsing: Now allows a longer description.
+		(Adam Franco)
 		
-	* Bug Fix: AssetEditing: Fixed issue where selecting too many assets to edit (~50) overflowed the allowed length of the session array key, preventing the editing of many assets at once. (Adam Franco)
+	* Bug Fix: 
+		AssetEditing: Fixed issue where selecting too many assets to edit (~50)
+		overflowed the allowed length of the session array key, preventing the
+		editing of many assets at once.
+		(Adam Franco)
 		
-	* Bug Fix: AssetEditing: Fixed issue where single-valued parts were not able to be added properly in the multi-edit wizard, causing a fatal error. (Adam Franco)
+	* Bug Fix: 
+		AssetEditing: Fixed issue where single-valued parts were not able to be
+		added properly in the multi-edit wizard, causing a fatal error.
+		(Adam Franco)
 	
 v. 2.1.1 (2006-06-20)
 ----------------------------------------------------
+
 		
-	* Bug Fix: Schemas: Fixed a missing variable that was preventing duplication of local schemas. (Adam Franco)
+	* Bug Fix: 
+		Schemas: Fixed a missing variable that was preventing duplication of local
+		schemas. 
+		(Adam Franco)
 	
 v. 2.1.0 (2006-06-16)
 ----------------------------------------------------
+
 		
-	**** IMPORTANT *** Change: The following 9 queries need to be run on a Concerto 2.0.0 database to upgrade it to support the needs of Concerto 2.1.0: ALTER TABLE `dm_schema` ADD `active` TINYINT( 1 ) UNSIGNED DEFAULT '1' NOT NULL AFTER `revision` ; ALTER TABLE `dr_authoritative_values` ADD `fk_repository` VARCHAR( 100 ) NOT NULL AFTER `fk_partstructure` ; ALTER TABLE `dr_authoritative_values` DROP PRIMARY KEY; ALTER TABLE `dr_authoritative_values` DROP INDEX `fk_partstructure` , ADD INDEX `fk_partstructure` ( `fk_partstructure` , `fk_repository` ) ; ALTER TABLE `dr_authoritative_values` CHANGE `value` `value` VARCHAR( 240 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ; DROP TABLE `dr_authority_options` ; ALTER TABLE `log_agent` ADD PRIMARY KEY ( `fk_entry` , `fk_agent` ) ; ALTER TABLE `log_entry` ADD INDEX ( `log_name` ); ALTER TABLE `log_node` ADD PRIMARY KEY ( `fk_entry` , `fk_node` ) ; (Adam Franco)
+	**** IMPORTANT *** Change: 
+		The following 9 queries need to be run on a Concerto 2.0.0 database to
+		upgrade it to support the needs of Concerto 2.1.0:
 		
-	* Bug Fix: Normalized case in edit/delete links. (Adam Franco)
+		ALTER TABLE `dm_schema` ADD `active` TINYINT( 1 ) UNSIGNED DEFAULT '1'
+		NOT NULL AFTER `revision` ;
 		
-	* New feature: AssetBrowsing: Checkbox now enabled even if the user doesn't have authorization to modify the asset, allowing it to be checked for addition to the selection. (Adam Franco)
+		ALTER TABLE `dr_authoritative_values` ADD `fk_repository` VARCHAR( 100 )
+		NOT NULL AFTER `fk_partstructure` ;
 		
-	* New feature: AssetDetails: Now prints Modification/Creation dates. (Adam Franco)
+		ALTER TABLE `dr_authoritative_values` DROP PRIMARY KEY;
 		
-	* Bug Fix: URLs specifying parameters now continue through first access attempt where install is checked. (Adam Franco)
+		ALTER TABLE `dr_authoritative_values` DROP INDEX `fk_partstructure` , ADD
+		INDEX `fk_partstructure` ( `fk_partstructure` , `fk_repository` ) ;
 		
-	* Change: AssetEditing: DisplayNames are now NOT required for Assets. (Adam Franco)
+		ALTER TABLE `dr_authoritative_values` CHANGE `value` `value` VARCHAR( 240
+		) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
 		
-	* New feature: AssetEditing: SchemaField descriptions are now available in the asset editing interface. (Adam Franco)
+		DROP TABLE `dr_authority_options` ;
 		
-	* Change: AssetEditing: Add/Remove buttons for Records and repeatable Values are now better labeled. (Adam Franco)
+		ALTER TABLE `log_agent` ADD PRIMARY KEY ( `fk_entry` , `fk_agent` ) ;
 		
-	* New feature: AssetEditing: Thumbnails of currently edited assets are now displayed in asset editing interfaces. (Adam Franco)
+		ALTER TABLE `log_entry` ADD INDEX ( `log_name` );
 		
-	* Bug Fix: AssetEditing: The FILE record structure [schema] now respects the order in the Asset Editing interface. (Adam Franco)
+		ALTER TABLE `log_node` ADD PRIMARY KEY ( `fk_entry` , `fk_node` ) ;
+		(Adam Franco)
 		
-	* Bug Fix: Collection.Delete: Now selects the display name BEFORE deleting the repository. (Adam Franco)
+	* Bug Fix: 
+		Normalized case in edit/delete links.
+		(Adam Franco)
 		
-	* Bug Fix: CollectionCreating: The FILE record structure is now added by default. (Adam Franco)
+	* New feature: 
+		AssetBrowsing: Checkbox now enabled even if the user doesn't have
+		authorization to modify the asset, allowing it to be checked for addition to
+		the selection.
+		(Adam Franco)
 		
-	* Bug Fix: Collection.Edit: Fixed extra space that was messing up the select lists. (Adam Franco)
+	* New feature: 
+		AssetDetails: Now prints Modification/Creation dates.
+		(Adam Franco)
 		
-	* New feature: Schemas: Known SchemaField data types are now ordered and have descriptions. (Adam Franco)
+	* Bug Fix: 
+		URLs specifying parameters now continue through first access attempt where
+		install is checked.
+		(Adam Franco)
 		
-	* Change: Schemas: Now uses StatusStars for conversion operations. (Adam Franco)
+	* Change: 
+		AssetEditing: DisplayNames are now NOT required for Assets.
+		(Adam Franco)
 		
-	* Change: Schemas: Now return to the schema step of collection editing if needed. (Adam Franco)
+	* New feature: 
+		AssetEditing: SchemaField descriptions are now available in the asset
+		editing interface.
+		(Adam Franco)
 		
-	* Change: Schemas: AuthoritativeValues addition is now an AuthorizationFunction. (Adam Franco)
+	* Change: 
+		AssetEditing: Add/Remove buttons for Records and repeatable Values are now
+		better labeled.
+		(Adam Franco)
 		
-	* New feature: Schemas: Added support for SchemaField/PartStucture/Part data-type conversion. (Adam Franco)
+	* New feature: 
+		AssetEditing: Thumbnails of currently edited assets are now displayed in
+		asset editing interfaces.
+		(Adam Franco)
 		
-	* New feature: Schemas: Added support for Schema/RecordStructure/Record duplication. (Adam Franco)
+	* Bug Fix: 
+		AssetEditing: The FILE record structure [schema] now respects the order in
+		the Asset Editing interface.
+		(Adam Franco)
 		
-	* New feature: Schemas: Adding support for Schema/RecordStructure deleting. (Adam Franco)
+	* Bug Fix: 
+		Collection.Delete: Now selects the display name BEFORE deleting the
+		repository. 
+		(Adam Franco)
 		
-	* New feature: Schemas: Schema Editing can now be accessed from the Collection.Edit wizard and from the Collection links. (Adam Franco)
+	* Bug Fix: 
+		CollectionCreating: The FILE record structure is now added by default.
+		(Adam Franco)
 		
-	* Bug Fix: Schemas: Changed the term 'Schema Element' to 'Schema Field'. (Adam Franco)
+	* Bug Fix: 
+		Collection.Edit: Fixed extra space that was messing up the select lists.
+		(Adam Franco)
 		
-	* Bug Fix: Schemas: Repeatable flag can now only be changed from false to true. (Adam Franco)
+	* New feature: 
+		Schemas:Known SchemaField data types are now ordered and have descriptions.
+		(Adam Franco)
 		
-	* Bug Fix: Schemas: Updated the Schema creation wizard to support Authoratiative Lists. (Adam Franco)
+	* Change: 
+		Schemas: Now uses StatusStars for conversion operations.
+		(Adam Franco)
 		
-	* New feature: Schemas: New installs now have Dublin Core and VRA Core defined by default. (Adam Franco)
+	* Change: 
+		Schemas: Now return to the schema step of collection editing if needed.
+		(Adam Franco)
 		
-	* Change: Slideshows are now using the outline-xml/slide-xml ajax loading paradigm rather than putting all slide info in one giant slideshow-xml file. (Adam Franco)
+	* Change: 
+		Schemas: AuthoritativeValues addition is now an AuthorizationFunction.
+		(Adam Franco)
 		
-	* Bug Fix: Logging: Ensured that logging is now ready for use before attempting to log errors. (Adam Franco)
+	* New feature: 
+		Schemas: Added support for SchemaField/PartStucture/Part data-type
+		conversion. 
+		(Adam Franco)
 		
-	* Bug Fix: Theme: improved the look of headings, added more heading/menu levels. (Adam Franco)
+	* New feature: 
+		Schemas: Added support for Schema/RecordStructure/Record duplication.
+		(Adam Franco)
 		
-	* New feature: Added user documentation. (Adam Franco)
+	* New feature: 
+		Schemas: Adding support for Schema/RecordStructure deleting.
+		(Adam Franco)
 		
-	* Change: Display: The version and copyright year are now dynamically pulled from the changelog. (Adam Franco)
+	* New feature: 
+		Schemas: Schema Editing can now be accessed from the Collection.Edit wizard
+		and from the Collection links.
+		(Adam Franco)
+		
+	* Bug Fix: 
+		Schemas: Changed the term 'Schema Element' to 'Schema Field'.
+		(Adam Franco)
+		
+	* Bug Fix: 
+		Schemas: Repeatable flag can now only be changed from false to true.
+		(Adam Franco)
+		
+	* Bug Fix: 
+		Schemas:Updated the Schema creation wizard to support Authoratiative Lists.
+		(Adam Franco)
+		
+	* New feature: 
+		Schemas: New installs now have Dublin Core and VRA Core defined by default.
+		(Adam Franco)
+		
+	* Change: 
+		Slideshows are now using the outline-xml/slide-xml ajax loading paradigm
+		rather than putting all slide info in one giant slideshow-xml file.
+		(Adam Franco)
+		
+	* Bug Fix: 
+		Logging: Ensured that logging is now ready for use before attempting to log
+		errors. 
+		(Adam Franco)
+		
+	* Bug Fix: 
+		Theme: improved the look of headings, added more heading/menu levels.
+		(Adam Franco)
+		
+	* New feature: 
+		Added user documentation.
+		(Adam Franco)
+		
+	* Change: 
+		Display: The version and copyright year are now dynamically pulled from the
+		changelog. 
+		(Adam Franco)
 	
 v. 2.0.0 (2006-05-26)
 ----------------------------------------------------
+
 		
-	* Bug Fix: Now can remove empty part values. (Adam Franco)
+	* Bug Fix: 
+		Now can remove empty part values.
+		(Adam Franco)
 		
-	* Change: Assets by default now don't show ids in the browse mode. (Adam Franco)
+	* Change: 
+		Assets by default now don't show ids in the browse mode.
+		(Adam Franco)
 		
-	* Bug Fix: ExhibitionBrowse now only prints description block when a description exists. (Adam Franco)
+	* Bug Fix: 
+		ExhibitionBrowse now only prints description block when a description
+		exists. 
+		(Adam Franco)
 		
-	* Bug Fix: ExhibitionBrowse theme now matches CollectionsBrowse (Adam Franco)
+	* Bug Fix: 
+		ExhibitionBrowse theme now matches CollectionsBrowse
+		(Adam Franco)
 		
-	* Bug Fix: ExhibitionBrowse now orders by title. (Adam Franco)
+	* Bug Fix: 
+		ExhibitionBrowse now orders by title.
+		(Adam Franco)
 		
-	* Bug Fix: Theme: ensuring that all links get the pointer cursor even if they don't have an href, but just and onclick. (Adam Franco)
+	* Bug Fix: 
+		Theme: ensuring that all links get the pointer cursor even if they don't
+		have an href, but just and onclick.
+		(Adam Franco)
 		
-	* Change: Changing to 'Asset Types' domain for slideshows/slides. (Adam Franco)
+	* Change: 
+		Changing to 'Asset Types' domain for slideshows/slides.
+		(Adam Franco)
 		
-	* Change: Adding 'currently open slideshows' to main menu. (Adam Franco)
+	* Change: 
+		Adding 'currently open slideshows' to main menu.
+		(Adam Franco)
 		
-	* Bug Fix: CollectionBrowse now returns unauthorized if a collection id isn't passed. (Adam Franco)
+	* Bug Fix: 
+		CollectionBrowse now returns unauthorized if a collection id isn't passed.
+		(Adam Franco)
 	
 v. 2.0-beta 4 (2006-05-19)
 ----------------------------------------------------
+
 		
-	* Change: Reworked theme, moved user/admin tools (Adam Franco)
+	* Change: 
+		Reworked theme, moved user/admin tools
+		(Adam Franco)
 		
-	* Change: "Basket" is now being displayed as "Selection" (Adam Franco)
+	* Change: 
+		"Basket" is now being displayed as "Selection"
+		(Adam Franco)
 		
-	* Change: Reworking Collection browsing interface to be more intuitive. (Adam Franco)
+	* Change: 
+		Reworking Collection browsing interface to be more intuitive.
+		(Adam Franco)
 		
-	* Change: Adding Display options to the Browsing interface. (Adam Franco)
+	* Change: 
+		Adding Display options to the Browsing interface.
+		(Adam Franco)
 		
-	* Change: Unifying browsing of sub-assets and collection. (Adam Franco)
+	* Change: 
+		Unifying browsing of sub-assets and collection.
+		(Adam Franco)
 		
-	* New feature: The user's browsing position in collections and assets is now stored and retreived from the session. (Adam Franco)
+	* New feature: 
+		The user's browsing position in collections and assets is now stored and
+		retreived from the session.
+		(Adam Franco)
 		
-	* New feature: The full hierarchy of ancestor assets is now desplayed in the menu. (Adam Franco)
+	* New feature: 
+		The full hierarchy of ancestor assets is now desplayed in the menu.
+		(Adam Franco)
 	
 v. 2.0-beta 3 (2006-05-05)
 ----------------------------------------------------
+
 		
-	* Bug Fix: AddSlidshow now has all of the text-position options displayed. (Adam Franco)
+	* Bug Fix: 
+		AddSlidshow now has all of the text-position options displayed.
+		(Adam Franco)
 		
-	* Change: Check/uncheck/etc commands in browse mode are now in a select list. (Adam Franco)
+	* Change: 
+		Check/uncheck/etc commands in browse mode are now in a select list.
+		(Adam Franco)
 		
-	* New feature: Assets and Asset-search-order now support modification and creation times. (Adam Franco)
+	* New feature: 
+		Assets and Asset-search-order now support modification and creation times.
+		(Adam Franco)
 		
-	* Bug Fix: After editing Collections, the user is now returned to the previous page they were viewing. (Adam Franco)
+	* Bug Fix: 
+		After editing Collections, the user is now returned to the previous page
+		they were viewing.
+		(Adam Franco)
 		
-	* Change: Unified the slideshow display functions into a class hierarchy rather than being repeated in each class. (Adam Franco)
+	* Change: 
+		Unified the slideshow display functions into a class hierarchy rather than
+		being repeated in each class.
+		(Adam Franco)
 		
-	* Bug Fix: Modify Slideshow: neither the SlideShow title nor description are updating with this action. (Adam Franco)
+	* Bug Fix: 
+		Modify Slideshow: neither the SlideShow title nor description are updating
+		with this action.
+		(Adam Franco)
 		
-	* Bug Fix: Modify Slideshow: adding a text only slide results in no slides being shown when viewing slideshow... (Adam Franco)
+	* Bug Fix: 
+		Modify Slideshow: adding a text only slide results in no slides being shown
+		when viewing slideshow...
+		(Adam Franco)
 		
-	* Change: Made the Add-Asset-To-Basket process work via AJAX rather than reloading the page. (Adam Franco)
+	* Change: 
+		Made the Add-Asset-To-Basket process work via AJAX rather than reloading the
+		page. 
+		(Adam Franco)
 		
-	* New feature: Implemented Authority-Lists for Part values. (Adam Franco)
+	* New feature: 
+		Implemented Authority-Lists for Part values.
+		(Adam Franco)
 		
-	* New feature: Implemented logging of changes via the OSID Logging service. (Adam Franco)
+	* New feature: 
+		Implemented logging of changes via the OSID Logging service.
+		(Adam Franco)
 		
-	* Change: Added StatusStars Status Bar to all importer actions. (Christopher Shubert)
+	* Change: 
+		Added StatusStars Status Bar to all importer actions.
+		(Christopher Shubert)
 	
 v. 2.0-beta 2 (2006-02-09)
 ----------------------------------------------------
+
 		
-	* New feature: Defined Dublin Core and VRA metadata schemas for easy importing. (Adam Franco)
+	* New feature: 
+		Defined Dublin Core and VRA metadata schemas for easy importing.
+		(Adam Franco)
 		
-	* Change: New main window layout. (Adam Franco)
+	* Change: 
+		New main window layout.
+		(Adam Franco)
 		
-	* New feature: Assets can now be recursively deleted. (Christopher Shubert)
+	* New feature: 
+		Assets can now be recursively deleted.
+		(Christopher Shubert)
 		
-	* Change: Reworked Schema display to allow for large descriptions. (Adam Franco)
+	* Change: 
+		Reworked Schema display to allow for large descriptions.
+		(Adam Franco)
 		
-	* New feature: Added XML import-exort interfaces. (Christopher Shubert)
+	* New feature: 
+		Added XML import-exort interfaces.
+		(Christopher Shubert)
 		
-	* Change: Reworked viewer loading to use AJAX-style loading of individual Asset-information with a more streamlined overview XML document. (Adam Franco)
+	* Change: 
+		Reworked viewer loading to use AJAX-style loading of individual
+		Asset-information with a more streamlined overview XML document.
+		(Adam Franco)
 		
-	* Change: Improved Exhibition browsing. (Adam Franco)
+	* Change: 
+		Improved Exhibition browsing.
+		(Adam Franco)
 		
-	* Change: Asset-View links now work with the viewer. (Christopher Shubert)
+	* Change: 
+		Asset-View links now work with the viewer.
+		(Christopher Shubert)
 		
-	* Change: Now supports being accessed via https urls. (Adam Franco)
+	* Change: 
+		Now supports being accessed via https urls.
+		(Adam Franco)
 		
-	* New feature: New theme. (Adam Franco)
+	* New feature: 
+		New theme.
+		(Adam Franco)
 		
-	* New feature: Reworked asset browsing to be more usable. (Adam Franco)
+	* New feature: 
+		Reworked asset browsing to be more usable.
+		(Adam Franco)
 		
-	* New feature: Implemented asset searching. (Adam Franco)
+	* New feature: 
+		Implemented asset searching.
+		(Adam Franco)
 		
-	* New feature: Lots of little improvements. (Adam Franco)
+	* New feature: 
+		Lots of little improvements.
+		(Adam Franco)
 		
-	* New feature: Implemented Asset editing in a single wizard. (Adam Franco)
+	* New feature: 
+		Implemented Asset editing in a single wizard.
+		(Adam Franco)
 		
-	* New feature: Multi-Asset editing. (Adam Franco)
+	* New feature: 
+		Multi-Asset editing.
+		(Adam Franco)
 		
-	* Change: Lots of speed optimizations. (Adam Franco)
+	* Change: 
+		Lots of speed optimizations.
+		(Adam Franco)
 	
 v. 0.2.0 (2005-10-12)
 ----------------------------------------------------
+
 		
-	* New feature: Lots of other changes that make this now a workable system. (Adam Franco)
+	* New feature: 
+		Lots of other changes that make this now a workable system.
+		(Adam Franco)
 		
-	* New feature: Now uses new Wizard system. (Gabe Schine)
+	* New feature: 
+		Now uses new Wizard system.
+		(Gabe Schine)
 		
-	* New feature: New XML importing system (Christopher Shubert)
+	* New feature: 
+		New XML importing system
+		(Christopher Shubert)
 		
-	* New feature: New Exhibition/Slideshow sytem. (Adam Franco)
+	* New feature: 
+		New Exhibition/Slideshow sytem.
+		(Adam Franco)
 		
-	* Bug Fix: Converted remaining refernces to the 'MIDDLE' alignment to the new 'CENTER' alignment used by the GUIManager. (Adam Franco)
+	* Bug Fix: 
+		Converted remaining refernces to the 'MIDDLE' alignment to the new 'CENTER'
+		alignment used by the GUIManager.
+		(Adam Franco)
 		
-	* Change: The default config now sets up the IdManager with a prefix 'dev_id-' to encourage testing of string-id support. (Adam Franco)
+	* Change: 
+		The default config now sets up the IdManager with a prefix 'dev_id-' to
+		encourage testing of string-id support.
+		(Adam Franco)
 		
-	* Change: Concerto Actions are now classes in order to allow for easier refactoring of common functionality via subclassing. (Adam Franco)
+	* Change: 
+		Concerto Actions are now classes in order to allow for easier refactoring of
+		common functionality via subclassing.
+		(Adam Franco)
 		
-	* New feature: Can now add Assets as children of other Assets. (Adam Franco)
+	* New feature: 
+		Can now add Assets as children of other Assets.
+		(Adam Franco)
 	
 v. 0.1.2 (2005-04-14)
 ----------------------------------------------------
+
 		
-	* Bug Fix: Path declaration now works on Win32 systems with their reverse-slash directories. Thanks fcool for noticing this. (Adam Franco)
+	* Bug Fix: 
+		Path declaration now works on Win32 systems with their reverse-slash
+		directories. Thanks fcool for noticing this.
+		(Adam Franco)
 		
-	* Bug Fix: Fixed problems with Record editing. (Adam Franco)
+	* Bug Fix: 
+		Fixed problems with Record editing.
+		(Adam Franco)
 		
-	**** IMPORTANT *** Change: Concerto now runs on PHP5 and on Win32 systems in addition to PHP4.3 and POSIX systems. (Adam Franco)
+	**** IMPORTANT *** Change: 
+		Concerto now runs on PHP5 and on Win32 systems in addition to PHP4.3 and
+		POSIX systems.
+		(Adam Franco)
 	
 v. 0.1.1 (2005-04-11)
 ----------------------------------------------------
+
 		
-	* Change: Authentication now plays nicely with GET parameters and maintains them around during the authentication sequence. (Adam Franco)
+	* Change: 
+		Authentication now plays nicely with GET parameters and maintains them
+		around during the authentication sequence.
+		(Adam Franco)
 	
 v. 0.1.0 (2005-04-07)
 ----------------------------------------------------
+
 		
-	* New feature: Created an installer script for devs. (Adam Franco)
+	* New feature: 
+		Created an installer script for devs.
+		(Adam Franco)
 		
-	* New feature: Everything. (Adam Franco)
+	* New feature: 
+		Everything.
+		(Adam Franco)
 	
