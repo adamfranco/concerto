@@ -49,5 +49,7 @@ error_reporting(E_ALL);
  * to the error handling function even if they are subsequently
  * ignored, resulting in performance degredation.
  *********************************************************/
-// set_error_handler('printErrorInHtml');
-// error_notice_levels(array(E_STRICT, E_NOTICE, E_USER_NOTICE));
+set_error_handler(array('HarmoniErrorHandler', 'handleError'));
+
+// $handler = HarmoniErrorHandler::instance();
+// $handler->enableLoggingFor(E_STRICT, E_NOTICE);

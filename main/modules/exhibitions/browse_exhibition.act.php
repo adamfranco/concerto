@@ -147,8 +147,9 @@ class browse_exhibitionAction
 	 * @return object SObject
 	 * @access public
 	 * @since 9/28/05
+	 * @static
 	 */
-	function getFirstPartValueFromRecord ( $partStructIdString, $record ) {
+	public static function getFirstPartValueFromRecord ( $partStructIdString, $record ) {
 		$idManager = Services::getService("Id");
 		
 		$parts =$record->getPartsByPartStructure(

@@ -51,6 +51,10 @@
 			not traversing down into assets as this was taking WAY too long with
 			large data sets.
 		</change>
+		<fix author='adam' date='2007-10-10'>
+			Fixing a number of E_STRICT notices and improving the class and interface
+			hierarchies.
+		</fix>
 	</version>
 	<version number="2.4.1" date="2007-04-10">
 		<fix author='adam'>
