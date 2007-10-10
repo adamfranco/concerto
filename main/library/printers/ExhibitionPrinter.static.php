@@ -19,15 +19,8 @@
  * @version $Id$
  */
 
-class ExhibitionPrinter {
-		
-	/**
-	 * Die constructor for static class
-	 */
-	function ExhibitionPrinter () {
-		die("Static class ExhibitionPrinter can not be instantiated.");
-	}
-	
+abstract class ExhibitionPrinter {
+
 	/**
 	 * Print links for the various functions that are possible to do with this
 	 * Asset.
@@ -36,8 +29,9 @@ class ExhibitionPrinter {
 	 * @return void
 	 * @access public
 	 * @date 8/6/04
+	 * @static
 	 */
-	function printFunctionLinks ($asset, $repositoryId = NULL) {
+	static function printFunctionLinks ($asset, $repositoryId = NULL) {
 		$harmoni = Harmoni::instance();
 		$authZ = Services::getService("AuthZ");
 		$idManager = Services::getService("Id");

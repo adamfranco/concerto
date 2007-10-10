@@ -21,7 +21,7 @@ require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php
  *
  * @version $Id$
  */
-class RepositoryAction
+abstract class RepositoryAction
 	extends MainWindowAction
 {
 		

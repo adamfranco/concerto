@@ -21,7 +21,7 @@
  *
  * @version $Id$
  */
-class AssetAction
+abstract class AssetAction
 	extends RepositoryAction
 {
 		

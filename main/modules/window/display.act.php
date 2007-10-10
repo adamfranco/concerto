@@ -26,7 +26,17 @@ require_once(POLYPHONY."/main/modules/tags/TagAction.abstract.php");
 class displayAction 
 	extends Action
 {
-		
+	/**
+	 * AuthZ
+	 * 
+	 * @return boolean
+	 * @access public
+	 * @since 10/10/07
+	 */
+	public function isAuthorizedToExecute () {
+		return true;
+	}
+	
 	/**
 	 * Execute the Action
 	 * 
@@ -35,7 +45,7 @@ class displayAction
 	 * @access public
 	 * @since 4/25/05
 	 */
-	function execute ( $harmoni ) {
+	function execute () {
 		/**
 		 * @package concerto.display
 		 * 
@@ -61,6 +71,7 @@ class displayAction
 		$xLayout = new XLayout();
 		$yLayout = new YLayout();
 		
+		$harmoni = Harmoni::instance();
 		
 		$mainScreen = new Container($yLayout, BLOCK, 1);
 		

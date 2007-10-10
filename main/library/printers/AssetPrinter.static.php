@@ -19,14 +19,7 @@
  * @version $Id$
  */
 
-class AssetPrinter {
-		
-	/**
-	 * Die constructor for static class
-	 */
-	function AssetPrinter () {
-		die("Static class AssetPrinter can not be instantiated.");
-	}
+abstract class AssetPrinter {
 	
 	/**
 	 * Print links for the various functions that are possible to do with this
@@ -36,8 +29,9 @@ class AssetPrinter {
 	 * @return void
 	 * @access public
 	 * @date 8/6/04
+	 * @static
 	 */
-	function printAssetFunctionLinks ($harmoni, $asset, $repositoryId = NULL, $assetNum = 0, $includeEditDelete = true) {
+	static function printAssetFunctionLinks ($harmoni, $asset, $repositoryId = NULL, $assetNum = 0, $includeEditDelete = true) {
 		$authZ = Services::getService("AuthZ");
 		$idManager = Services::getService("Id");
 		
@@ -375,8 +369,9 @@ class AssetPrinter {
 	 * @return object Component
 	 * @access public
 	 * @since 10/19/05
+	 * @static
 	 */
-	function getMultiEditOptionsBlock () {
+	static function getMultiEditOptionsBlock () {
 		$harmoni = Harmoni::instance();
 		
 		$harmoni->history->markReturnURL("concerto/asset/delete-return");

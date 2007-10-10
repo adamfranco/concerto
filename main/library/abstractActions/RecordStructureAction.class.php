@@ -21,7 +21,7 @@
  *
  * @version $Id$
  */
-class RecordStructureAction
+abstract class RecordStructureAction
 	extends RepositoryAction
 {
 		

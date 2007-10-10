@@ -19,23 +19,17 @@
  * @version $Id$
  */
 
-class CollectionsPrinter {
+abstract class CollectionsPrinter {
 		
-	/**
-	 * Die constructor for static class
-	 */
-	function CollectionsPrinter () {
-		die("Static class CollectionsPrinter can not be instantiated.");
-	}
-	
 	/**
 	 * Print links for the various functions that are possible to do.
 	 * 
 	 * @return void
 	 * @access public
 	 * @date 8/6/04
+	 * @static
 	 */
-	function printFunctionLinks () {
+	static function printFunctionLinks () {
 		$links = array();
 		$harmoni = Harmoni::instance();
 		$actionString = $harmoni->getCurrentAction();
@@ -71,7 +65,8 @@ class CollectionsPrinter {
 		}	
 	//===== Create Link =====//
 		require_once(MYDIR."/main/modules/collection/create.act.php");
-		if (createAction::isAuthorizedToExecute()) {
+		$createAction = new createAction;
+		if ($createAction->isAuthorizedToExecute()) {
 // 		if (true) {
 			$links[] = "<a href='"
 				.$harmoni->request->quickURL("collection", "create")

@@ -30,7 +30,7 @@ class OAI {
 	 * @static
 	 * @since 3/9/07
 	 */
-	function getCurrentRecordTable () {
+	static function getCurrentRecordTable () {
 		$currentHarvesterConfig = OAI::getCurrentHarvesterConfig();
 		return 'oai_'.$currentHarvesterConfig['name'];
 	}
@@ -43,7 +43,7 @@ class OAI {
 	 * @static
 	 * @since 3/9/07
 	 */
-	function getCurrentHarvesterConfig () {
+	static function getCurrentHarvesterConfig () {
 		global $errors;
 		
 		$harmoni = Harmoni::instance();

@@ -45,3 +45,9 @@
 	
 	$context = new OsidContext;
 	$context->assignContext('harmoni', $harmoni);
+	
+	
+	/*********************************************************
+	 * Set the default timezone of your system
+	 *********************************************************/
+	date_default_timezone_set('America/New_York');

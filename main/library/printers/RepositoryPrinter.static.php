@@ -19,14 +19,7 @@
  * @version $Id$
  */
 
-class RepositoryPrinter {
-		
-	/**
-	 * Die constructor for static class
-	 */
-	function RepositoryPrinter () {
-		die("Static class RepositoryPrinter can not be instantiated.");
-	}
+abstract class RepositoryPrinter {
 	
 	/**
 	 * Print links for the various functions that are possible to do with this
@@ -36,8 +29,9 @@ class RepositoryPrinter {
 	 * @return void
 	 * @access public
 	 * @date 8/6/04
+	 * @static
 	 */
-	function printRepositoryFunctionLinks ($harmoni, $repository) {		
+	static function printRepositoryFunctionLinks ($harmoni, $repository) {		
 		$authZ = Services::getService("AuthZ");
 		$idManager = Services::getService("Id");
 		$repositoryId =$repository->getId();

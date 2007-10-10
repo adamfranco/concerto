@@ -66,7 +66,7 @@ class ConcertoMenuGenerator
 					$harmoni->request->get('asset_id'))) 
 			{
 				// Repository Link
-				$repository =$this->getRepository();
+				$repository = $this->getRepository();
 				if ($repository) {
 					$linkTitle = $repository->getDisplayName();
 					$repositoryId =$repository->getId();
@@ -289,6 +289,28 @@ class ConcertoMenuGenerator
 			}
 			$j++;
 		}
+	}
+	
+	/**
+	 * Execute the action.
+	 * 
+	 * @return void
+	 * @access public
+	 * @since 10/10/07
+	 */
+	public function buildContent () {
+		throw new UnimplementedException();
+	}
+	
+	/**
+	 * check authorization.
+	 * 
+	 * @return boolean
+	 * @access public
+	 * @since 10/10/07
+	 */
+	public function isAuthorizedToExecute () {
+		throw new UnimplementedException();
 	}
 }
 
