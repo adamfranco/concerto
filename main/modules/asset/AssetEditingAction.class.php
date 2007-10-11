@@ -59,14 +59,17 @@ abstract class AssetEditingAction
 	 */
 	function _loadAssets ($assetIdStrings) {
 		$idManager = Services::getService("Id");
-	 	$repository =$this->getRepository();
+	 	$repository = $this->getRepository();
+	 	
+	 	if (!$repository)
+	 		throw new Exception("Repository not found");
 	 	
 	 	$this->_assets = array();
 	 	
 	 	foreach ($assetIdStrings as $idString) {
 	 		// ignore whitepace or empty strings
 			if (preg_match('/\\S+/', $idString))
-	 			$this->_assets[] =$repository->getAsset($idManager->getId($idString));
+	 			$this->_assets[] = $repository->getAsset($idManager->getId($idString));
 	 	}
 	}
 	
@@ -120,9 +123,10 @@ abstract class AssetEditingAction
 		$idManager = Services::getService("Id");
 	 	$repository =$this->getRepository();
 	 	
+	 	if (!$repository)
+	 		throw new Exception("Repository not found");
 	 	
 	 	// Records
-		$repository =$this->getRepository();
 		$repositoryId =$this->getRepositoryId();
 		
 		// Get the set of RecordStructures so that we can print them in order.
@@ -230,6 +234,9 @@ abstract class AssetEditingAction
 		// old implementation:
 		$repositoryId =$this->getRepositoryId();
 		
+		if (!$repositoryId)
+	 		throw new Exception("Repository not found");
+		
 		$assets = explode(',', RequestContext::value("assets"));
 		$assetIdString = RequestContext::value("asset_id");
 		
@@ -318,6 +325,9 @@ abstract class AssetEditingAction
 	 *********************************************************/
 	 	$repository =$this->getRepository();
 	 	$repositoryId =$this->getRepositoryId();
+	 	
+	 	if (!$repository)
+	 		throw new Exception("Repository not found");
 	 	
 	 	// Get the set of RecordStructures so that we can print them in order.
 		$setManager = Services::getService("Sets");
@@ -1056,7 +1066,10 @@ abstract class AssetEditingAction
 	 * @since 4/2/07
 	 */
 	function getRootAssets () {
-		$repository =$this->getRepository();
+		$repository = $this->getRepository();
+		
+		if (!$repository)
+	 		throw new Exception("Repository not found");
 		
 		$criteria = NULL;
 		$searchProperties = new HarmoniProperties(

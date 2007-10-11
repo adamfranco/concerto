@@ -423,7 +423,7 @@ abstract class AssetPrinter {
 		$checkboxName = RequestContext::name("asset");
 		
 		$editMultiURL = str_replace("&amp;", "&", 
-			$harmoni->request->quickURL("asset", "multiedit"));
+			$harmoni->request->quickURL("asset", "multiedit", array('collection_id' => RequestContext::value('collection_id'))));
 		$editSingleURL = str_replace("&amp;", "&", 
 			$harmoni->request->quickURL("asset", "edit"));
 		

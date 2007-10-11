@@ -58,6 +58,9 @@
 		<fix author='adam' date='2007-10-11'>
 			AssetBrowse: Checkboxes now work with ids containing periods.
 		</fix>
+		<change author='adam' date='2007-10-11'>
+			Now includes new-style SQL install process and support for PostgreSQL.
+		</change>
 	</version>
 	<version number="2.4.1" date="2007-04-10">
 		<fix author='adam'>
