@@ -32,7 +32,7 @@
 			replaced with
 					\1\2\3\4\5
 		</change>
-		<fix author='adam' date='2007-10-09' ref='1708395' reftype='bug'>
+		<fix author='adam' date='2007-10-09' ref='1708395' reftype='bug' reporter='pablo_casado,chris_newton'>
 			Now using an empty default cookie domain to better work out of the box.
 		</fix>
 		<fix author='adam'>	
@@ -704,6 +704,16 @@
 		<name short="tim">Tim Bahls</name>
 		<name short="john">John Lee</name>
 	</authors>
+	<reporters>
+		<reporter short="chris_newton">
+			<name>Chris Newton</name>
+			<!-- <institution></institution> -->
+		</reporter>
+		<reporter short="pablo_casado">
+			<name>Pablo Casado</name>
+			<institution>Open University of Catalonia</institution>
+		</reporter>
+	</reporters>
 	<groupid>82873</groupid>
 	<reftypes>
 		<reftype name="bug">567473</reftype>

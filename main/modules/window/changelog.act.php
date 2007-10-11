@@ -25,6 +25,16 @@ require_once(POLYPHONY."/main/library/AbstractActions/Action.class.php");
 class changelogAction
 	extends Action
 {
+	/**
+	 * Authorization
+	 * 
+	 * @return boolean
+	 * @access public
+	 * @since 10/11/07
+	 */
+	public function isAuthorizedToExecute () {
+		return true;
+	}
 		
 	/**
 	 * Execute this action.

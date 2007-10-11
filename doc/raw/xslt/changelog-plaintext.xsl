@@ -105,23 +105,71 @@ v. <xsl:value-of select="@number" /><xsl:if test="@date!=''"> (<xsl:value-of sel
 				
 		<xsl:text>)</xsl:text>
 	</xsl:if>
+	<xsl:if test="@reporter">
+		<xsl:text>&#x0A;&#x09;&#x09;</xsl:text>
+		<xsl:text>(reported by </xsl:text>		
+		<xsl:call-template name="reporters">
+			<xsl:with-param name="str" select="@reporter"/>
+		</xsl:call-template>
+				
+		<xsl:text>)</xsl:text>
+	</xsl:if>
 </xsl:template>
 
 <xsl:template name="authors">
-  <xsl:param name="str"/>
-  <xsl:choose>
-    <xsl:when test="contains($str,',')">
-    	<xsl:value-of select="//authors/name[@short=substring-before($str,',')]" />
-  	
-      <xsl:text>, </xsl:text>
-      <xsl:call-template name="authors">
-        <xsl:with-param name="str" select="substring-after($str,',')"/>
-      </xsl:call-template>
-    </xsl:when>
-    <xsl:otherwise>
-    	<xsl:value-of select="//authors/name[@short=$str]" />
-    </xsl:otherwise>
-  </xsl:choose>
+	<xsl:param name="str"/>
+	<xsl:choose>
+		<xsl:when test="contains($str,',')">
+			<xsl:call-template name="authors">
+				<xsl:with-param name="str" select="substring-before($str,',')"/>
+			</xsl:call-template>			
+			<xsl:text>, </xsl:text>
+			<xsl:call-template name="authors">
+				<xsl:with-param name="str" select="substring-after($str,',')"/>
+			</xsl:call-template>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:choose>
+				<xsl:when test="//authors/name[@short=$str]">
+					<xsl:value-of select="//authors/name[@short=$str]" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$str" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<xsl:template name="reporters">
+	<xsl:param name="str"/>
+	<xsl:choose>
+	<xsl:when test="contains($str,',')">
+		<xsl:call-template name="reporters">
+			<xsl:with-param name="str" select="substring-before($str,',')"/>
+		</xsl:call-template>
+		<xsl:text>, </xsl:text>
+		<xsl:call-template name="reporters">
+			<xsl:with-param name="str" select="substring-after($str,',')"/>
+		</xsl:call-template>
+	</xsl:when>
+	<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="//reporters/reporter[@short=$str]">
+				<xsl:value-of select="//reporters/reporter[@short=$str]/name" />
+				<xsl:choose>
+					<xsl:when test="//reporters/reporter[@short=$str]/institution">
+						 <xsl:text> of </xsl:text>
+						<xsl:value-of select="//reporters/reporter[@short=$str]/institution" />
+					</xsl:when>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$str" />
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <!-- Ignore the releaseNotes data as we've already used it. -->

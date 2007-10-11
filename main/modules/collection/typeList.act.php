@@ -37,13 +37,20 @@ class typeListAction
 	 * @since 4/26/05
 	 */
 	function isAuthorizedToExecute () {
-		// Check that the user can access this collection
-		$authZ = Services::getService("AuthZ");
-
-		$idManager = Services::getService("Id");
-		return $authZ->isUserAuthorizedBelow(
-					$idManager->getId("edu.middlebury.authorization.view"), 
-					$this->getRepositoryId());
+		try {
+			// Check that the user can access this collection
+			$authZ = Services::getService("AuthZ");
+	
+			$idManager = Services::getService("Id");
+			if (!$this->getRepositoryId())
+				return false;
+			return $authZ->isUserAuthorizedBelow(
+						$idManager->getId("edu.middlebury.authorization.view"), 
+						$this->getRepositoryId());
+		} catch (UnknownIdException $e) {
+			// For non-Harmoni repositories, return true.
+			return true;
+		}
 	}
 	
 	/**
@@ -85,18 +92,22 @@ class typeListAction
 		print "\n\t<table border='0'>";
 		print "\n\t\t<tr>";
 		$i = 0;
-		$types =$repository->getAssetTypes();
-		while ($types->hasNext()) {
-			print "\n\t\t\t<td>";
-			$type =$types->next();
-			print "\n\t\t\t\t<input type='checkbox'";
-			print " name='".RequestContext::name("type___".Type::typeToString($type))."'";
-			print " value='true'";
-			print "/>".$type->getKeyword()."";
-			print "\n\t\t\t<td>";
-			$i++;
-			if (($i % 4) == 0)
-				print "\n\t\t</tr>\n\t\t<tr>";
+		try {
+			$types =$repository->getAssetTypes();
+			while ($types->hasNext()) {
+				print "\n\t\t\t<td>";
+				$type =$types->next();
+				print "\n\t\t\t\t<input type='checkbox'";
+				print " name='".RequestContext::name("type___".Type::typeToString($type))."'";
+				print " value='true'";
+				print "/>".$type->getKeyword()."";
+				print "\n\t\t\t<td>";
+				$i++;
+				if (($i % 4) == 0)
+					print "\n\t\t</tr>\n\t\t<tr>";
+			}
+		} catch (UnimplementedException $e) {
+			print "\n\t\t\t<td>"._("No types available.")."</td>";
 		}
 		print "\n\t\t</tr>";
 		print "\n\t</table>";

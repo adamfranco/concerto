@@ -6,7 +6,16 @@ Name: Concerto Change Log
 
 v. 2.5.0 (The Future)
 ----------------------------------------------------
+As of this release, Concerto no longer supports PHP4. Please use PHP 5.2 or later.
 
+Concerto requires PHP 5.2 or later and either a MySQL 5.0 or later database or a
+PostgreSQL database.
+
+For upgrades from prior versions of concerto, please point your browser at the
+harmoni database updater and run each of the updates. The updates are safe to run
+multiple times as they will only take action where needed. The updater is found at
+concerto/main/harmoni/core/DBHandler/db_updater.php 
+		
 		
 	**** IMPORTANT *** Change: 
 		As of this version, Concerto no longer supports PHP4. Please use PHP5 or
@@ -19,9 +28,10 @@ v. 2.5.0 (The Future)
 		)&amp;|(=\s?)&amp;([^a-z#])|([^&amp;])&amp;\s?(\$) replaced with \1\2\3\4\5
 		(Adam Franco)
 		
-	* Bug Fix: 
+	* Bug Fix: #1708395 
 		Now using an empty default cookie domain to better work out of the box.
-		(Adam Franco)
+		(2007-10-09 - Adam Franco)
+		(reported by Pablo Casado of Open University of Catalonia, Chris Newton)
 		
 	* Bug Fix: 
 		Periods in schema ids were breaking schema selection form fields.
@@ -42,6 +52,11 @@ v. 2.5.0 (The Future)
 		traversing down into assets as this was taking WAY too long with large data
 		sets. 
 		(2007-10-05 - Adam Franco)
+		
+	* Bug Fix: 
+		Fixing a number of E_STRICT notices and improving the class and interface
+		hierarchies. 
+		(2007-10-10 - Adam Franco)
 	
 v. 2.4.1 (2007-04-10)
 ----------------------------------------------------
