@@ -467,7 +467,7 @@ abstract class AssetPrinter {
 		for (var i = 0; i < assetElements.length; i++) {
 			if (!assetElements[i].disabled && assetElements[i].checked == true) 
 			{
-				var authFields = document.getElementsByName(assetElements[i].name + '_can_modify_' + assetElements[i].value);
+				var authFields = document.getElementsByName(assetElements[i].name + '_can_modify_' + assetElements[i].value.replaceAll(/\./, '_'));
 				if (authFields[0].value != 'true')
 				{
 					assetElements[i].checked = false;
