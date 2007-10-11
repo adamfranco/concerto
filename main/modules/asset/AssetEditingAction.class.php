@@ -24,21 +24,29 @@ require_once(HARMONI."/utilities/StatusStars.class.php");
  *
  * @version $Id$
  */
-class AssetEditingAction
+abstract class AssetEditingAction
 	extends RepositoryAction
 {
+
+	/**
+	 * @var array $saveMessages;  
+	 * @access protected
+	 * @since 10/11/07
+	 */
+	protected $saveMessages = array();
 	
 	/**
 	 * Initialize an instance of the object
 	 * 
 	 * @return void
-	 * @access private
+	 * @access protected
 	 * @since 10/26/05
 	 */
-	function _init () {
+	protected function _init () {
 		$this->_recStructsToIgnore = array();
 		$this->_multExistString = _("(multiple values exist)");
 		$this->_newStructuredTagValues = array();
+		
 	}
 	
 	/**
@@ -135,14 +143,22 @@ class AssetEditingAction
 	 	$status->initializeStatistics(count($this->_assets));
 	 	foreach (array_keys($this->_assets) as $key) {
 	 		$asset =$this->_assets[$key];
-			if ($authZMan->isUserAuthorized(
+	 		try {
+				$isAuthorized = $authZMan->isUserAuthorized(
 					$idManager->getId("edu.middlebury.authorization.modify"), 
-					$asset->getId()))
-			{
+					$asset->getId());
+			} catch (UnknownIdException $e) {
+				$isAuthorized = true;
+			}
+			
+			if ($isAuthorized) {
 // 				printpre("<hr>".$asset->getDisplayName());
 				
-				$this->updateAssetProperties($results['assetproperties'], $asset);
-				$this->updateAssetContent($results['contentstep']['content'], $asset);
+				if (isset($results['assetproperties']))
+					$this->updateAssetProperties($results['assetproperties'], $asset);
+				if (isset($results['contentstep']['content']))
+					$this->updateAssetContent($results['contentstep']['content'], $asset);
+				
 				if (isset($results['filestep']))
 					$this->updateFileRecords($results['filestep']['files'], $initialState, $asset);
 				if (isset($results['remotefilestep']))
@@ -545,7 +561,7 @@ class AssetEditingAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function updateFileRecords ( $results, $asset ) {
+	function updateFileRecords ( $results, $initialState, $asset, $structIdString = 'FILE' ) {
 		
 	}
 	
@@ -959,70 +975,77 @@ class AssetEditingAction
 		$authZManager = Services::getService("AuthZ");
 		
 		// remove the parents if requested.
-		$parents =$asset->getParents();
-		if ($parents->hasNext() && $results == 'NONE') {
-			printpre("<hr/>Removing Parents:");
-			while ($parents->hasNext()) {
-				$parent =$parents->next();
-				
-				if ($authZManager->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.remove_children"),
-					$parent->getId()))
-				{
-					printpre("Removing from: "); 
-					printpre($parent->getId());
+		try {
+			$parents =$asset->getParents();
+			if ($parents->hasNext() && $results == 'NONE') {
+				printpre("<hr/>Removing Parents:");
+				while ($parents->hasNext()) {
+					$parent =$parents->next();
 					
-					$parent->removeAsset($asset->getId(), TRUE);
-				} else {
-					printpre("No Authorization to remove from: "); 
-					printpre($parent->getId());
-				}
-			}
-			return;
-		}
-		
-		// Change parents if needed
-		if ($results && $results != 'NONE') {			
-			$newParentId =$idManager->getId($results);
-			
-			printpre("<hr/>Trying to change or add Parents:");
-			
-			//verify the current parent and change parents if needed.
-			if ($parents->hasNext()) {
-				$parent =$parents->next();
-				
-				if (!$newParentId->isEqual($parent->getId())
-					&& $authZManager->isUserAuthorized(
+					if ($authZManager->isUserAuthorized(
 						$idManager->getId("edu.middlebury.authorization.remove_children"),
-						$parent->getId())
-					&& $authZManager->isUserAuthorized(
-						$idManager->getId("edu.middlebury.authorization.add_children"),
-						$newParentId))
+						$parent->getId()))
+					{
+						printpre("Removing from: "); 
+						printpre($parent->getId());
+						
+						$parent->removeAsset($asset->getId(), TRUE);
+					} else {
+						printpre("No Authorization to remove from: "); 
+						printpre($parent->getId());
+					}
+				}
+				return;
+			}
+			
+			// Change parents if needed
+			if ($results && $results != 'NONE') {			
+				$newParentId =$idManager->getId($results);
+				
+				printpre("<hr/>Trying to change or add Parents:");
+				
+				//verify the current parent and change parents if needed.
+				if ($parents->hasNext()) {
+					$parent =$parents->next();
+					
+					if (!$newParentId->isEqual($parent->getId())
+						&& $authZManager->isUserAuthorized(
+							$idManager->getId("edu.middlebury.authorization.remove_children"),
+							$parent->getId())
+						&& $authZManager->isUserAuthorized(
+							$idManager->getId("edu.middlebury.authorization.add_children"),
+							$newParentId))
+					{
+						printpre("Changing parents from: ");
+						printpre($parent->getId());
+						printpre("To: ");
+						printpre($newParentId);
+						$parent->removeAsset($asset->getId(), TRUE);
+						
+						$repository =$asset->getRepository();
+						$newParent =$repository->getAsset($newParentId);
+						$newParent->addAsset($asset->getId());
+					}
+				}
+				// If there isn't a previous parent, then just add a parent
+				else if ($authZManager->isUserAuthorized(
+							$idManager->getId("edu.middlebury.authorization.add_children"),
+							$newParentId))
 				{
-					printpre("Changing parents from: ");
-					printpre($parent->getId());
-					printpre("To: ");
+					printpre("Changing parents from NONE to: ");
 					printpre($newParentId);
-					$parent->removeAsset($asset->getId(), TRUE);
 					
 					$repository =$asset->getRepository();
 					$newParent =$repository->getAsset($newParentId);
 					$newParent->addAsset($asset->getId());
 				}
 			}
-			// If there isn't a previous parent, then just add a parent
-			else if ($authZManager->isUserAuthorized(
-						$idManager->getId("edu.middlebury.authorization.add_children"),
-						$newParentId))
-			{
-				printpre("Changing parents from NONE to: ");
-				printpre($newParentId);
-				
-				$repository =$asset->getRepository();
-				$newParent =$repository->getAsset($newParentId);
-				$newParent->addAsset($asset->getId());
-			}
+		} catch (UnimplementedException $e) {
+			$this->saveMessages[] = _("Could not change Asset parent.")." "._("Not supported by this repository.");
+		} catch (UnauthorizedException $e) {
+			$this->saveMessages[] = _("Could not change Asset parent.")." "._("Unauthorized.");
 		}
+		
 	}
 	
 	/**
@@ -1075,14 +1098,20 @@ class AssetEditingAction
 		print " ".$asset->getDisplayName();
 		print " (".$assetId->getIdString().")";
 		
-		if ($authZManager->isUserAuthorized(
+		try {
+			$isAuthorized = $authZManager->isUserAuthorized(
 				$idManager->getId("edu.middlebury.authorization.add_children"),
-				$assetId))
-		{
+				$assetId);
+		} catch (UnknownIdException $e) {
+			$isAuthorized = true;
+		}
+		if ($isAuthorized) {
 			$field->addOption($assetId->getIdString(), ob_get_clean());
 		} else {
 			$field->addDisabledOption($assetId->getIdString(), ob_get_clean());
 		}
+		
+		
 		
 		try {
 			$children =$asset->getAssets();

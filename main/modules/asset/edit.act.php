@@ -48,12 +48,16 @@ class editAction
 	 * @since 4/26/05
 	 */
 	function isAuthorizedToExecute () {
-		// Check that the user can access this collection
-		$authZ = Services::getService("AuthZ");
-		$idManager = Services::getService("Id");
-		return $authZ->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.modify"), 
-					$this->_assets[0]->getId());
+		try {
+			// Check that the user can access this collection
+			$authZ = Services::getService("AuthZ");
+			$idManager = Services::getService("Id");
+			return $authZ->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.modify"), 
+						$this->_assets[0]->getId());
+		} catch (UnknownIdException $e) {
+			return true;
+		}
 	}
 	
 	/**

@@ -55,6 +55,9 @@
 			Fixing a number of E_STRICT notices and improving the class and interface
 			hierarchies.
 		</fix>
+		<fix author='adam' date='2007-10-11'>
+			AssetBrowse: Checkboxes now work with ids containing periods.
+		</fix>
 	</version>
 	<version number="2.4.1" date="2007-04-10">
 		<fix author='adam'>
