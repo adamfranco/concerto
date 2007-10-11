@@ -241,7 +241,7 @@ class createAction
 	function getReturnUrl () {
 		$harmoni = Harmoni::instance();
 		
-		if ($this->repositoryId)
+		if (isset($this->repositoryId))
 			return $harmoni->request->quickURL("collection", "edit", array(
 						"collection_id" => $this->repositoryId->getIdString(), 
 						"wizardSkipToStep" => "schema"));

@@ -218,7 +218,7 @@ class exportAction
 				
 		$return = $harmoni->request->quickURL("collections", "namebrowse");
 		
-		if ($this->_archiveFile) {
+		if (isset($this->_archiveFile)) {
 			$harmoni->request->startNamespace('export');
 			$downloadUrl = $harmoni->request->quickURL("export", "getFile",
 					array('file' => urlencode($this->_archiveFileKey)));

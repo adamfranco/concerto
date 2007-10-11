@@ -477,7 +477,7 @@ class addAction
 	function getReturnUrl () {
 		$harmoni = Harmoni::instance();
 		$repositoryId =$this->getRepositoryId();
-		if ($this->_assetId) 
+		if (isset($this->_assetId)) 
 			return $harmoni->request->quickURL("asset", "edit", array(
 				"collection_id" => $repositoryId->getIdString(),
 				"assets" => $this->_assetId->getIdString()));
