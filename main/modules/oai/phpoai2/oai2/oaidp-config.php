@@ -83,7 +83,7 @@ $MY_URI = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME'];
 $repositoryName       = $config->getProperty('OAI_REPOSITORY_NAME');
 // $baseURL			  = $MY_URI;
 // You can use a static URI as well.
- $baseURL 			= $harmoni->request->quickURL('oai', 'provider');
+ $baseURL 			= MYPATH."/oai.php"; //$harmoni->request->quickURL('oai', 'provider');
 // do not change
 $protocolVersion      = '2.0';
 

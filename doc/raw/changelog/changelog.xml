@@ -61,6 +61,9 @@
 		<change author='adam' date='2007-10-11'>
 			Now includes new-style SQL install process and support for PostgreSQL.
 		</change>
+		<new author='adam' date='2007-10-12'>
+			OAI: New oai.php entry point in application root directory.
+		</new>
 	</version>
 	<version number="2.4.1" date="2007-04-10">
 		<fix author='adam'>
