@@ -18,13 +18,19 @@
 require_once(dirname(__FILE__)."/../../library/ArgumentParser.inc.php");
 require_once(dirname(__FILE__)."/../../library/ArrayKeyFunctions.inc.php");
 
-$options = getOptionArray(__FILE__, $_SERVER['argv']);
-$params = getParameterArray(__FILE__, $_SERVER['argv']);
+if (count($_SERVER['argv'])) {
+	$options = getOptionArray(__FILE__, $_SERVER['argv']);
+	$params = getParameterArray(__FILE__, $_SERVER['argv']);
+} else {
+	header('Content-type: text/plain;');
+	$options = array();
+	$params = array();
+}
 
 $helpFlags = array_intersect_key(array('help'=>TRUE, 'help'=>TRUE, 'h'=>TRUE, '?'=>TRUE), $options);
 
 // check the number of args and print help if necessary
-if (count($options) > 1 || count ($params) || count($helpFlags))
+if (count($helpFlags) || count($options) || count ($params) )
 {
 ?>
 
@@ -32,8 +38,7 @@ This is a command line script that will populate the OAI data tables from the
 repositories in Concerto.
 
 Options:
-    -v       Verbose output
-
+    
 Usage:
 
 <?php echo $argv[0]; ?> [options] 

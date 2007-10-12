@@ -259,7 +259,11 @@ class updateAction
 				$asset =$assets->next();
 				$assetId =$asset->getId();
 				$existingAssetIds[] = $assetId->getIdString();
-				$modificationDate =$asset->getModificationDate();
+				try {
+					$modificationDate = $asset->getModificationDate();
+				} catch (UnimplementedException $e) {
+					$modificationDate = DateAndTime::now();
+				}
 				
 				$query =$baseCheckQuery->copy();
 				$query->addWhereEqual("oai_set", $repositoryId->getIdString());
@@ -300,11 +304,15 @@ class updateAction
 					$isVisible = true;
 				} else {
 					$isVisible = false;
-					foreach ($authGroupIds as $id) {
-						if ($authorizationManager->isAuthorized($id, $viewId, $assetId)) {
-							$isVisible = true;
-							break;
+					try {
+						foreach ($authGroupIds as $id) {
+							if ($authorizationManager->isAuthorized($id, $viewId, $assetId)) {
+								$isVisible = true;
+								break;
+							}
 						}
+					} catch (UnknownIdException $e) {
+						$isVisible = true;
 					}
 				}
 				
@@ -479,8 +487,11 @@ class updateAction
 		$string = '';
 		while ($partIterator->hasNext()) {
 			$part =$partIterator->next();
-			$value =$part->getValue();
-			$string .= $value->asString();
+			$value = $part->getValue();
+			if (is_object($value) && method_exists($value, 'asString'))
+				$string .= $value->asString();
+			else
+				$string = $string.$value;
 			
 			if ($partIterator->hasNext()) {
 				$string .= ';';
