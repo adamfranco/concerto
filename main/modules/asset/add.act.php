@@ -23,6 +23,14 @@ require_once(MYDIR."/main/library/abstractActions/RepositoryAction.class.php");
 class addAction 
 	extends RepositoryAction
 {
+
+	/**
+	 * @var array $saveMessages;  
+	 * @access protected
+	 * @since 10/11/07
+	 */
+	protected $saveMessages = array();
+	
 	/**
 	 * Check Authorizations
 	 * 
@@ -377,11 +385,19 @@ class addAction
 		
 		$properties = $wizard->getAllValues();
 		
+		if (isset($properties['parentstep']['parent'])
+			&& $properties['parentstep']['parent']
+			&& $properties['parentstep']['parent'] != 'NONE')
+		{
+			$parentId = $idManager->getId($properties['parentstep']['parent']);
+			$authorizedToAddToParent = $authZ->isUserAuthorized(
+				$idManager->getId("edu.middlebury.authorization.add_children"), $parentId);
+		}
+		
 		// First, verify that we chose a parent that we can add children to.
 		if (!$properties['parentstep']['parent'] 
 			|| $properties['parentstep']['parent'] == 'NONE'
-			|| ($parentId =$idManager->getId($properties['parentstep']['parent'])
-				&& $authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.add_children"), $parentId)))
+			|| (isset($parentId) && $authorizedToAddToParent))
 		{
 			
 			// Get the type from the select if one is specified
@@ -421,8 +437,14 @@ class addAction
 			$assetId =$asset->getId();
 			$this->_assetId =$assetId;
 			
-			$content = Blob::withValue($properties['contentstep']['content']);
-			$asset->updateContent($content);
+			if (isset($properties['contentstep']['content'])) {
+				$content = Blob::withValue($properties['contentstep']['content']);
+				try {
+					$asset->updateContent($content);
+				} catch (UnimplementedException $e) {
+					$this->saveMessages[] = _("Could set Asset content.")." "._("Not supported by this repository.");
+				}
+			}
 			
 			// Update the effective/expiration dates
 // 			if ($properties['datestep']['effective_date'])
@@ -436,7 +458,7 @@ class addAction
 			if ($properties['parentstep']['parent'] 
 				&& $properties['parentstep']['parent'] != 'NONE') 
 			{
-				$parentId =$idManager->getId($properties['parentstep']['parent']);
+				$parentId = $idManager->getId($properties['parentstep']['parent']);
 				$parentAsset =$repository->getAsset($parentId);
 				$parentAsset->addAsset($assetId);
 			}
