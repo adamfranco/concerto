@@ -138,14 +138,18 @@ class editAction
 		try {
 			$asset->updateDisplayName($results['display_name']);
 		} catch (UnimplementedException $e) {
+			$this->saveMessages[] = _("Could not display name.")." "._("Not supported by this repository.");
 		} catch (PermissionDeniedException $e) {
+			$this->saveMessages[] = _("Could not display name.")." "._("Permission denied.");
 		}
 		
 		// Description
 		try {
 			$asset->updateDescription($results['description']);
 		} catch (UnimplementedException $e) {
+			$this->saveMessages[] = _("Could not description.")." "._("Not supported by this repository.");
 		} catch (PermissionDeniedException $e) {
+			$this->saveMessages[] = _("Could not description.")." "._("Permission denied.");
 		}
 		
 		// Effective Date
@@ -165,14 +169,6 @@ class editAction
 	 * @since 10/26/05
 	 */
 	function getAssetContentStep () {
-		$step = new WizardStep();
-		$step->setDisplayName(_("Content")." ("._("optional").")");
-		
-		// Create the step text
-		ob_start();
-		print "\n<h2>"._("Content")."</h2>";
-		print "\n"._("This is an optional place to put content for this <em>Asset</em>. <br />If you would like more structure, you can create new schemas to hold the <em>Asset's</em> data.");
-		
 		try {
 			$content =$this->_assets[0]->getContent();
 			$property =$step->addComponent("content", new WTextArea);
@@ -180,17 +176,25 @@ class editAction
 			$property->setColumns(70);
 			
 			$property->setValue($content->asString());
+			
+			$step = new WizardStep();
+			$step->setDisplayName(_("Content")." ("._("optional").")");
+			
+			// Create the step text
+			ob_start();
+			print "\n<h2>"._("Content")."</h2>";
+			print "\n"._("This is an optional place to put content for this <em>Asset</em>. <br />If you would like more structure, you can create new schemas to hold the <em>Asset's</em> data.");
+			
 			print "\n<br />[[content]]";
+			
+			print "\n<div style='width: 400px'> &nbsp; </div>";
+			$step->setContent(ob_get_clean());
+			
+			return $step;
+			
 		} catch (UnimplementedException $e) {
 			
 		}
-		
-		
-		print "\n<div style='width: 400px'> &nbsp; </div>";
-		$step->setContent(ob_get_contents());
-		ob_end_clean();
-		
-		return $step;
 	}
 	
 	/**
@@ -210,7 +214,9 @@ class editAction
 			if (is_object($content) && !$content->isEqualTo($newContent))
 				$asset->updateContent($newContent);
 		} catch (UnimplementedException $e) {
+			$this->saveMessages[] = _("Could not content.")." "._("Not supported by this repository.");
 		} catch (PermissionDeniedException $e) {
+			$this->saveMessages[] = _("Could not content.")." "._("Permission denied.");
 		}
 	}
 	

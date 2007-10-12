@@ -377,7 +377,11 @@ abstract class AssetPrinter {
 		$harmoni->history->markReturnURL("concerto/asset/delete-return");
 		$harmoni->history->markReturnURL("concerto/asset/edit-return");
 		
-		$harmoni->request->startNamespace("AssetMultiEdit");
+		$harmoni->request->startNamespace(NULL);
+		$collectionId = RequestContext::value('collection_id');
+		$harmoni->request->endNamespace();
+		
+		
 		
 		ob_start();
 		
@@ -420,15 +424,19 @@ abstract class AssetPrinter {
 		
 		$idManager = Services::getService("Id");
 		
+		$harmoni->request->startNamespace("AssetMultiEdit");
 		$checkboxName = RequestContext::name("asset");
+		$harmoni->request->endNamespace();
 		
 		$editMultiURL = str_replace("&amp;", "&", 
-			$harmoni->request->quickURL("asset", "multiedit", array('collection_id' => RequestContext::value('collection_id'))));
+			$harmoni->request->quickURL("asset", "multiedit", array('collection_id' => $collectionId)));
 		$editSingleURL = str_replace("&amp;", "&", 
-			$harmoni->request->quickURL("asset", "edit"));
+			$harmoni->request->quickURL("asset", "edit", array('collection_id' => $collectionId)));
 		
 		$deleteMultiURL = str_replace("&amp;", "&", 
-			$harmoni->request->quickURL("asset", "multdelete"));
+			$harmoni->request->quickURL("asset", "multdelete", array('collection_id' => $collectionId)));
+		
+		
 		
 		$pleaseSelectStringEdit = _("Please check some Assets to edit.");
 		$pleaseSelectStringDelete = _("Please check some Assets to delete.");
@@ -566,7 +574,7 @@ END;
 		
 		$block = new Block(ob_get_contents(), HIGHLIT_BLOCK);
 		ob_end_clean();
-		$harmoni->request->endNamespace();
+		
 		return $block;
 	}
 }

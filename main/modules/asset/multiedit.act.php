@@ -52,13 +52,16 @@ class multieditAction
 		// Check that the user can access this collection
 		$authZ = Services::getService("AuthZ");
 		$idManager = Services::getService("Id");
+		
 		foreach( array_keys($this->_assets) as $key) {
-			if (!$authZ->isUserAuthorized(
-					$idManager->getId("edu.middlebury.authorization.modify"), 
-					$this->_assets[$key]->getId()))
-			{
-				return false;
-			}
+			try {
+				if (!$authZ->isUserAuthorized(
+						$idManager->getId("edu.middlebury.authorization.modify"), 
+						$this->_assets[$key]->getId()))
+				{
+					return false;
+				}
+			} catch (UnknownIdException $e) {}
 		}
 		return true;
 	}
@@ -210,16 +213,29 @@ class multieditAction
 	function updateAssetProperties ( $results, $asset ) {
 		// DisplayName
 		if ($results['display_name']['checked'] == '1'
+			&& isset($results['assetproperties']) 
 			&& $asset->getDisplayName() != $results['assetproperties']['display_name']['value']) 
 		{
-			$asset->updateDisplayName($results['display_name']['value']);
+			try {
+				$asset->updateDisplayName($results['display_name']['value']);
+			} catch (UnimplementedException $e) {
+				$this->saveMessages[] = _("Could not display name.")." "._("Not supported by this repository.");
+			} catch (PermissionDeniedException $e) {
+				$this->saveMessages[] = _("Could not display name.")." "._("Permission denied.");
+			}
 		}
 		
 		// Description
 		if ($results['description']['checked'] == '1'
 			&& $asset->getDescription() != $results['description']['value']) 
 		{
-			$asset->updateDescription($results['description']['value']);
+			try {
+				$asset->updateDescription($results['description']['value']);
+			} catch (UnimplementedException $e) {
+				$this->saveMessages[] = _("Could not description.")." "._("Not supported by this repository.");
+			} catch (PermissionDeniedException $e) {
+				$this->saveMessages[] = _("Could not description.")." "._("Permission denied.");
+			}
 		}
 		
 		// Effective Date
@@ -250,37 +266,47 @@ class multieditAction
 		$step = new WizardStep();
 		$step->setDisplayName(_("Content")." ("._("optional").")");
 		
-		$vProperty =$step->addComponent("content", new WVerifiedChangeInput);
-		$property =$vProperty->setInputComponent(new WTextArea);
-		$property->setRows(20);
-		$property->setColumns(70);
-		
-		$content =$this->_assets[0]->getContent();
 		$multipleExist = FALSE;
-		for ($i = 1; $i < count($this->_assets); $i++) {
-			if ($content->isEqualTo($this->_assets[$i]->getContent())) {
-				$multipleExist = TRUE;
-				break;
+		for ($i = 0; $i < count($this->_assets); $i++) {
+			if (!isset($content)) {
+				try {
+					$content =$this->_assets[0]->getContent();
+				} catch (UnimplementedException $e) {}
+				continue;
 			}
+			try {
+				if ($content->isEqualTo($this->_assets[$i]->getContent())) {
+					$multipleExist = TRUE;
+					break;
+				}
+			} catch (UnimplementedException $e) {}
 		}
-		if ($multipleExist) {
-			$property->setStartingDisplayText($this->_multExistString);
-			$vProperty->setChecked(false);
-		} else {
-			$property->setValue($content->asString());
-			$vProperty->setChecked(true);
-	 	}
 		
-		// Create the step text
-		ob_start();
-		print "\n<h2>"._("Content")."</h2>";
-		print "\n"._("This is an optional place to put content for this <em>Asset</em>. <br />If you would like more structure, you can create new schemas to hold the <em>Asset's</em> data.");
-		print "\n<br />[[content]]";
-		print "\n<div style='width: 400px'> &nbsp; </div>";
-		$step->setContent(ob_get_contents());
-		ob_end_clean();
-		
-		return $step;
+		if (isset($content)) {
+			$vProperty =$step->addComponent("content", new WVerifiedChangeInput);
+			$property =$vProperty->setInputComponent(new WTextArea);
+			$property->setRows(20);
+			$property->setColumns(70);
+			
+			if ($multipleExist) {
+				$property->setStartingDisplayText($this->_multExistString);
+				$vProperty->setChecked(false);
+			} else {
+				$property->setValue($content->asString());
+				$vProperty->setChecked(true);
+			}
+			
+			// Create the step text
+			ob_start();
+			print "\n<h2>"._("Content")."</h2>";
+			print "\n"._("This is an optional place to put content for this <em>Asset</em>. <br />If you would like more structure, you can create new schemas to hold the <em>Asset's</em> data.");
+			print "\n<br />[[content]]";
+			print "\n<div style='width: 400px'> &nbsp; </div>";
+			$step->setContent(ob_get_contents());
+			ob_end_clean();
+			
+			return $step;
+		}
 	}
 	
 	/**
@@ -530,27 +556,11 @@ class multieditAction
 	 * @since 12/15/05
 	 */
 	function getParentStep () {
-		// :: Parent ::
-		$step = new WizardStep();
-		$step->setDisplayName(_("Parent")." ("._("optional").")");
-		
-		// Create the properties.
-		$vProperty =$step->addComponent("parent", new WVerifiedChangeInput);
-		$property =$vProperty->setInputComponent(new WSelectList);
-		
-		// Create the step text
-		ob_start();
-		print "\n<h2>"._("Parent <em>Asset</em>")."</h2>";
-		print "\n"._("Optionally select one of the <em>Assets</em> below if you wish to make these assets the children of another asset: ");
-		print "\n<br />[[parent]]";
-		
-		$step->setContent(ob_get_clean());
-				
-		
 		$harmoni = Harmoni::instance();
 		$authZManager = Services::getService("AuthZ");
 		$idManager = Services::getService("Id");
 		
+		$supported = false;
 		$multipleValuesExist = false;
 		$commonParentId = null;
 		$commonParent = null;
@@ -559,87 +569,110 @@ class multieditAction
 			$assetId = $this->_assets[$i]->getId();
 			$excluded[] = $assetId->getIdString();
 			
-			$parents =$this->_assets[$i]->getParents();
-			if ($parents->hasNext()) {
-				$parent =$parents->next();
-				$parentId =$parent->getId();
-				
-				// If we are at the first asset and there is a parent, use it and continue
-				if ($i == 0) {
-					$commonParentId =$parentId;
-					$commonParent =$parent;
-					continue;
-				}
-				
-				// if we are just now hitting an id after passing assets
-				// without parents, then multiple values exist
-				if ($i > 0 && $commonParentId == null) {
-					$multipleValuesExist = true;
-					continue;
-				}
-				
-				// If we have different parent Ids...
-				if (!$parentId->isEqual($commonParentId)) {
-					$multipleValuesExist = true;
+			try {
+				$parents =$this->_assets[$i]->getParents();
+				$supported = true;
+				if ($parents->hasNext()) {
+					$parent =$parents->next();
+					$parentId =$parent->getId();
 					
-					unset($commonParentId);
-					$commonParentId = null;
-					unset($commonParent);
-					$commonParent = null;
+					// If we are at the first asset and there is a parent, use it and continue
+					if ($i == 0) {
+						$commonParentId =$parentId;
+						$commonParent =$parent;
+						continue;
+					}
 					
-					continue;
+					// if we are just now hitting an id after passing assets
+					// without parents, then multiple values exist
+					if ($i > 0 && $commonParentId == null) {
+						$multipleValuesExist = true;
+						continue;
+					}
+					
+					// If we have different parent Ids...
+					if (!$parentId->isEqual($commonParentId)) {
+						$multipleValuesExist = true;
+						
+						unset($commonParentId);
+						$commonParentId = null;
+						unset($commonParent);
+						$commonParent = null;
+						
+						continue;
+					}
 				}
+			} catch (UnimplementedException $e) {}
+			
+			try {
+				$descendentInfo =$this->_assets[$i]->getDescendentInfo();
+				$supported = true;
+				while ($descendentInfo->hasNext()) {
+					$info =$descendentInfo->next();
+					$childId =$info->getNodeId();
+					if (!in_array($childId->getIdString(), $excluded))
+						$excluded[] = $childId->getIdString();
+				}
+			} catch (UnimplementedException $e) {}
+		}
+		
+		
+		if ($supported) {
+			// :: Parent ::
+			$step = new WizardStep();
+			$step->setDisplayName(_("Parent")." ("._("optional").")");
+			
+			// Create the properties.
+			$vProperty =$step->addComponent("parent", new WVerifiedChangeInput);
+			$property =$vProperty->setInputComponent(new WSelectList);
+			
+			// Create the step text
+			ob_start();
+			print "\n<h2>"._("Parent <em>Asset</em>")."</h2>";
+			print "\n"._("Optionally select one of the <em>Assets</em> below if you wish to make these assets the children of another asset: ");
+			print "\n<br />[[parent]]";
+			
+			$step->setContent(ob_get_clean());
+			
+			// Check for authorization to remove the existing parent.
+			if (!$multipleValuesExist && is_object($commonParentId)) {
+				// If we aren't authorized to change the parent, just use it as the only option.
+				if ($authZManager->isUserAuthorized(
+					$idManager->getId("edu.middlebury.authorization.remove_children"),
+					$commonParentId))
+				{
+					$property->addOption("NONE", _("None"));
+					$property->setValue($commonParentId->getIdString());
+					$vProperty->setChecked(true);
+				} else {
+					$property->addOption(
+						$commonParentId->getIdString(), 
+						"- ".$commonParent->getDisplayName()." (".$commonParentId->getIdString().")");
+					$property->setValue($commonParentId->getIdString());
+					$vProperty->setChecked(true);
+	
+					return $step;
+				}
+			} else if (!$multipleValuesExist) {
+				$vProperty->setChecked(true);
+				$property->addOption("NONE", _("None"));
+				$property->setValue("NONE");
+			} 
+			// Multiple values exist
+			else {
+				$property->addOption("", _("(multiple values exist)"));
+				$property->setValue("");
+				$vProperty->setChecked(false);
 			}
 			
-			$descendentInfo =$this->_assets[$i]->getDescendentInfo();
-			while ($descendentInfo->hasNext()) {
-				$info =$descendentInfo->next();
-				$childId =$info->getNodeId();
-				if (!in_array($childId->getIdString(), $excluded))
-					$excluded[] = $childId->getIdString();
+			$property->_startingDisplay = "";
+		
+			$rootAssets =$this->getRootAssets();
+			while ($rootAssets->hasNext()) {
+				$this->addAssetOption($property, $rootAssets->next(), $excluded);
 			}
+			
+			return $step;
 		}
-		
-		
-		
-		// Check for authorization to remove the existing parent.
-		if (!$multipleValuesExist && is_object($commonParentId)) {
-			// If we aren't authorized to change the parent, just use it as the only option.
-			if ($authZManager->isUserAuthorized(
-				$idManager->getId("edu.middlebury.authorization.remove_children"),
-				$commonParentId))
-			{
-				$property->addOption("NONE", _("None"));
-				$property->setValue($commonParentId->getIdString());
-				$vProperty->setChecked(true);
-			} else {
-				$property->addOption(
-					$commonParentId->getIdString(), 
-					"- ".$commonParent->getDisplayName()." (".$commonParentId->getIdString().")");
-				$property->setValue($commonParentId->getIdString());
-				$vProperty->setChecked(true);
-
-				return $step;
-			}
-		} else if (!$multipleValuesExist) {
-			$vProperty->setChecked(true);
-			$property->addOption("NONE", _("None"));
-			$property->setValue("NONE");
-		} 
-		// Multiple values exist
-		else {
-			$property->addOption("", _("(multiple values exist)"));
-			$property->setValue("");
-			$vProperty->setChecked(false);
-		}
-		
-		$property->_startingDisplay = "";
-	
-		$rootAssets =$this->getRootAssets();
-		while ($rootAssets->hasNext()) {
-			$this->addAssetOption($property, $rootAssets->next(), $excluded);
-		}
-		
-		return $step;
 	}
 }

@@ -189,7 +189,10 @@ abstract class AssetEditingAction
 					$item->addNodeId($asset->getId());
 			}
 			
-			if ($results['parentstep'] != $initialState['parentstep']) {
+			
+			if (isset($results['parentstep'])
+				&& $results['parentstep'] != $initialState['parentstep']) 
+			{
 				if (is_array($results['parentstep']['parent']))	{
 					if ($results['parentstep']['parent']['checked'])
 						$this->updateAssetParent(
@@ -364,12 +367,16 @@ abstract class AssetEditingAction
 	/*********************************************************
 	 *  :: Content ::
 	 *********************************************************/
-		$wizard->addStep("contentstep", $this->getAssetContentStep());
+	 	$step = $this->getAssetContentStep();
+	 	if (!is_null($step))
+			$wizard->addStep("contentstep", $step);
 		
 	/*********************************************************
 	 *  :: Content ::
 	 *********************************************************/
-		$wizard->addStep("parentstep", $this->getParentStep());
+	 	$step = $this->getParentStep();
+	 	if (!is_null($step))
+			$wizard->addStep("parentstep", $step);
 		
 		
 		$wizard->initialState = $wizard->getAllValues();
