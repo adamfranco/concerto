@@ -171,14 +171,15 @@ class editAction
 	function getAssetContentStep () {
 		try {
 			$content =$this->_assets[0]->getContent();
-			$property =$step->addComponent("content", new WTextArea);
+			
+			$step = new WizardStep();
+			$step->setDisplayName(_("Content")." ("._("optional").")");
+			
+			$property = $step->addComponent("content", new WTextArea);
 			$property->setRows(20);
 			$property->setColumns(70);
 			
 			$property->setValue($content->asString());
-			
-			$step = new WizardStep();
-			$step->setDisplayName(_("Content")." ("._("optional").")");
 			
 			// Create the step text
 			ob_start();
@@ -733,8 +734,13 @@ class editAction
 			
 			$exisistingRecords[] = $recordId->getIdString();
 			
+			if (isset($initialState[$i]))
+				$fileInitialState = $initialState[$i];
+			else
+				$fileInitialState = array();
+				
 			$this->updateFileRecord($recordResults, 
-				$initialState[$i], $record, $structIdString);
+				$fileInitialState, $record, $structIdString);
 		}
 		
 		// Delete any records that were removed.
@@ -778,7 +784,8 @@ class editAction
 		}
 		
 		// If we've uploaded a thumbnail, safe it.
-		if ($results['thumbnail_upload']['tmp_name'] 
+		if (isset($results['thumbnail_upload']['tmp_name']) 
+			&& $results['thumbnail_upload']['tmp_name'] 
 			&& $results['thumbnail_upload']['name']) 
 		{
 			$name = $results['thumbnail_upload']['name'];
@@ -798,16 +805,19 @@ class editAction
 		}
 		// otherwise, if we've uploaded a new file only, get rid of the
 		// old one and try to create a new one
-		else if (($results['file_upload']['tmp_name'] 
+		else if ((isset($results['file_upload']['tmp_name']) 
+				&& $results['file_upload']['tmp_name'] 
 				&& $results['file_upload']['name'])
-			|| ($results['file_url'] &&  $results['file_url'] != $initialState['file_url'])) 
+			|| (
+				isset($results['file_url']) && $results['file_url']
+				&& (!isset($initialState['file_url']) || $results['file_url'] != $initialState['file_url']))) 
 		{
 			$imageProcessor = Services::getService("ImageProcessor");
 					
 			// If our image format is supported by the image processor,
 			// generate a thumbnail.
 			if ($imageProcessor->isFormatSupported($mimeType)) {
-				if ($results['file_upload']['tmp_name']) {
+				if (isset($results['file_upload']['tmp_name']) && $results['file_upload']['tmp_name']) {
 					$sourceData = file_get_contents($results['file_upload']['tmp_name']);
 				} else {
 					// Download the file data and temporarily store it in the results
@@ -833,22 +843,22 @@ class editAction
 		}
 		
 		// if the "use custom" box was checked store the name.
-		if ($results['file_name']['checked'] == '1') {
+		if (isset($results['file_name']['checked']) && $results['file_name']['checked'] == '1') {
 			$parts['FILE_NAME']->updateValue($results['file_name']['value']);
 		}
 		
 		// if the "use custom" box was checked store the size.
-		if ($results['file_size']['checked'] == '1') {
-			$parts['FILE_SIZE']->updateValue($results['file_size']['value']);
-		}
+// 		if (isset($results['file_size']['checked']) && $results['file_size']['checked'] == '1') {
+// 			$parts['FILE_SIZE']->updateValue($results['file_size']['value']);
+// 		}
 		
 		// if the "use custom" box was checked store the mime type.
-		if ($results['mime_type']['checked'] == '1') {
+		if (isset($results['mime_type']['checked']) && $results['mime_type']['checked'] == '1') {
 			$parts['MIME_TYPE']->updateValue($results['mime_type']['value']);
 		}
 		
 		// if the "use custom" box was checked store the height.
-		if ($results['height']['checked'] == '1') {
+		if (isset($results['height']['checked']) && $results['height']['checked'] == '1') {
 			$dimArray = $parts['DIMENSIONS']->getValue();
 			if (ereg("^([0-9]+)px$", $results['height']['value'], $matches))
 				$dimArray[1] = $matches[1];
@@ -860,7 +870,7 @@ class editAction
 		unset($dimArray, $matches);
 		
 		// if the "use custom" box was checked store the width.
-		if ($results['width']['checked'] == '1') {
+		if (isset($results['width']['checked']) && $results['width']['checked'] == '1') {
 			$dimArray = $parts['DIMENSIONS']->getValue();
 			if (ereg("^([0-9]+)px$", $results['width']['value'], $matches))
 				$dimArray[0] = $matches[1];
@@ -872,7 +882,7 @@ class editAction
 		unset($dimArray, $matches);
 		
 		// if the "use custom" box was checked store the height.
-		if ($results['thumbnail_height']['checked'] == '1'
+		if (isset($results['thumbnail_height']['checked']) && $results['thumbnail_height']['checked'] == '1'
 			&& ereg("^([0-9]+)px$", $results['thumbnail_height']['value'], $matches)) 
 		{
 			$dimArray = $parts['THUMBNAIL_DIMENSIONS']->getValue();
@@ -883,7 +893,7 @@ class editAction
 		unset($dimArray, $matches);
 		
 		// if the "use custom" box was checked store the width.
-		if ($results['thumbnail_width']['checked'] == '1'
+		if (isset($results['thumbnail_width']['checked']) && $results['thumbnail_width']['checked'] == '1'
 			&& ereg("^([0-9]+)px$", $results['thumbnail_width']['value'], $matches)) 
 		{
 			$dimArray = $parts['THUMBNAIL_DIMENSIONS']->getValue();
@@ -1197,8 +1207,13 @@ class editAction
 			
 			$exisistingRecords[] = $recordId->getIdString();
 			
+			if (isset($initialState[$recStructIdString]['records'][$i]))
+				$tmpInitialState = $initialState[$recStructIdString]['records'][$i];
+			else
+				$tmpInitialState = array();
+			
 			$this->updateRecord($recordResults, 
-				$initialState[$recStructIdString]['records'][$i], $record, $asset->getId());
+				$tmpInitialState, $record, $asset->getId());
 		}
 		
 		// Delete any records that were removed.

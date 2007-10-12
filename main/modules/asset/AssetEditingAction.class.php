@@ -650,8 +650,17 @@ abstract class AssetEditingAction
 	function hasChangedParts ( $results, $initialState, $recStructId ) {
 		$recStructIdString = preg_replace("/[^a-zA-Z0-9:_\-]/", "_",
 								$recStructId->getIdString());
-		if ($results[$recStructIdString] != $initialState[$recStructIdString])
+		if (
+			// One isset only
+			(isset($results[$recStructIdString]) && !isset($results[$recStructIdString]))
+			|| (!isset($results[$recStructIdString]) && isset($results[$recStructIdString]))
+			
+			// Both are set and not equal
+			|| ((isset($results[$recStructIdString]) && isset($results[$recStructIdString]))
+				&& $results[$recStructIdString] != $initialState[$recStructIdString]))
+		{
 			return TRUE;
+		}
 		
 		return FALSE;
 	}
@@ -768,17 +777,22 @@ abstract class AssetEditingAction
 			$partStructId = $partStruct->getId();
 			$partStructIdString = preg_replace("/[^a-zA-Z0-9:_\-]/", "_", $partStructId->getIdString());
 			
+			if (isset($initialState[$partStructIdString]))
+				$tmpInitialState = $initialState[$partStructIdString];
+			else
+				$tmpInitialState = array();
+			
 			if ($partStruct->isRepeatable()) {
 				printpre("Updating RepeatablePart: ".$partStruct->getDisplayName());
 				$this->updateRepeatablePart(
 					$results[$partStructIdString], 
-					$initialState[$partStructIdString], 
+					$tmpInitialState, 
 					$partStruct, $record, $assetId);
 			} else {
 				printpre("Updating SingleValuedPart: ".$partStruct->getDisplayName());
 				$this->updateSingleValuedPart(
 					$results[$partStructIdString],
-					$initialState[$partStructIdString], 
+					$tmpInitialState, 
 					$partStruct, $record, $assetId);
 			}
 		}
