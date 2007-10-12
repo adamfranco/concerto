@@ -74,8 +74,8 @@ class AssetComponent
 		
 		if (is_object($this->_id)) {
 			$repositoryManager = Services::getService('Repository');
-			if ($repositoryManager->getAsset($this->_id)) {
-				$asset =$repositoryManager->getAsset($this->_id);
+			try {
+				$asset = $repositoryManager->getAsset($this->_id);
 				
 				
 				print "\n<table border='0'>";
@@ -101,7 +101,7 @@ class AssetComponent
 				
 				print "\n\t\t</td>\n\t\t</tr>";
 				print "\n</table>";
-			} else {
+			} catch (UnknownIdException $e) {
 				print "\n<div style='margin: 10px; padding: 10px; border: 1px dotted;'>";
 				print _("The target Asset has been deleted or is no longer available.");
 				print "</div>";
