@@ -67,6 +67,15 @@
 		<fix author='adam' date='2007-10-12'>
 			OAI: Now supports the new SimpleTableRepository.
 		</fix>
+		<change author='adam' date='2007-10-15' ref='1812422' reftype='bug'>
+			Documented PEAR::DB dependency in OAI provider.
+		</change>
+		<change author='adam' date='2007-10-15' ref='1812286' reftype='bug' reporter="chris_newton">
+			Documented PEAR::Archive_Tar dependency.
+		</change>
+		<change author='adam' date='2007-10-15' ref='1812287' reftype='bug' reporter="chris_newton">
+			Documented ImageMagick dependency.
+		</change>
 	</version>
 	<version number="2.4.1" date="2007-04-10">
 		<fix author='adam'>

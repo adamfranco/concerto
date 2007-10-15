@@ -9,16 +9,26 @@
 
 ------Concerto Installation-------
 
+For the latest installation instructions and further security documentation, please
+visit the Concerto Wiki:
+	http://harmoni.sourceforge.net/wiki/index.php/Concerto_Installation
+	
 ----------------------------------
-Bundle Installation:
 
 These instructions assume that you have downloaded the Concerto bundle
 (which includes the Harmoni, Polyphony, and DOMIT libraries as well as the
 Concerto viewer).
 
 Dependencies:
-	- a MySql database
-	- imagemagick		(for thumbnail generation/image-resizing)
+    * Apache Webserver
+    * PHP 5.2 or greater
+    * One of the following databases:
+          o MySQL 5.0 or greater
+          o PostgreSQL 
+    * The ImageMagick libraries - For thumbnail generation/image-resizing.
+    * The following PEAR packages:
+          o PEAR::DB - Needed by the OAI provider implementation.
+          o PEAR::Archive_Tar - Needed for importing and exporting Assets.
 
 Recommended Environment Settings:
 	Concerto should run in a standard PHP environment, however due to the large
@@ -76,7 +86,12 @@ Setting up Concerto:
 			Password: password
 		Use the Concerto Admin tools to create a new admin account and delete
 		the default one.
+		
+Troubleshooting:
 
-----------------------------------
-Developer Installation:
-	Please read install/INSTALL-DEVELOPERS.txt
+	"MySQL server has gone away" Errors:
+	If Concerto stores its files in a MySQL database, then the 
+		max_allowed_packet
+	option on the server needs to be raised above its default limit of 1MB.
+	Note that Concerto base64 encodes file data to make it binary-safe, at the expense
+	of a ~33% increase in storage size.
