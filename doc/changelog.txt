@@ -57,6 +57,40 @@ concerto/main/harmoni/core/DBHandler/db_updater.php
 		Fixing a number of E_STRICT notices and improving the class and interface
 		hierarchies. 
 		(2007-10-10 - Adam Franco)
+		
+	* Bug Fix: 
+		AssetBrowse: Checkboxes now work with ids containing periods.
+		(2007-10-11 - Adam Franco)
+		
+	* Change: 
+		Now includes new-style SQL install process and support for PostgreSQL.
+		(2007-10-11 - Adam Franco)
+		
+	* New feature: 
+		OAI: New oai.php entry point in application root directory.
+		(2007-10-12 - Adam Franco)
+		
+	* Bug Fix: 
+		OAI: Now supports the new SimpleTableRepository.
+		(2007-10-12 - Adam Franco)
+		
+	* Change: #1812422 
+		Documented PEAR::DB dependency in OAI provider.
+		(2007-10-15 - Adam Franco)
+		
+	* Change: #1812286 
+		Documented PEAR::Archive_Tar dependency.
+		(2007-10-15 - Adam Franco)
+		(reported by Chris Newton)
+		
+	* Change: #1812287 
+		Documented ImageMagick dependency.
+		(2007-10-15 - Adam Franco)
+		(reported by Chris Newton)
+		
+	* Bug Fix: #1811204 
+		Wizard links are now working in the Edit Slideshow Wizard.
+		(2007-10-16 - Adam Franco)
 	
 v. 2.4.1 (2007-04-10)
 ----------------------------------------------------

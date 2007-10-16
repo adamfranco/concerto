@@ -121,10 +121,11 @@
 		<xsl:choose>
 			<xsl:when test="@reftype">
 				<xsl:variable name="reftype" select="@reftype" />
-				<xsl:variable name="trackerid" select="//reftypes/reftype[@name = $reftype]" />
+				<xsl:variable name="group" select="//reftypes/reftype[@name = $reftype]/@group" />
+				<xsl:variable name="tracker" select="//reftypes/reftype[@name = $reftype]/@tracker" />
         		<a>
         			<xsl:attribute name="href">
-        				http://sourceforge.net/tracker/index.php?func=detail&amp;aid=<xsl:value-of select="@ref" />&amp;group_id=<xsl:value-of select="//groupid" />&amp;atid=<xsl:value-of select="$trackerid" />
+        				http://sourceforge.net/tracker/index.php?func=detail&amp;aid=<xsl:value-of select="@ref" />&amp;group_id=<xsl:value-of select="$group" />&amp;atid=<xsl:value-of select="$tracker" />
         			</xsl:attribute>
         			#<xsl:value-of select="@ref" />
         		</a>

@@ -37,7 +37,7 @@
 		<li>
 <b>Change:</b> Removing ampersands for compatability with other PHP5 code. The BBEdit-grep string used for the find and replace was: (function )&amp;|(=\s?)&amp;([^a-z#])|([^&amp;])&amp;\s?(\$) replaced with \1\2\3\4\5 (<em>Adam Franco</em>)</li>
 		<li>
-<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1708395&amp;group_id=82873&amp;atid=567473">
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1708395&amp;group_id=88266&amp;atid=586054">
         			#1708395</a> Now using an empty default cookie domain to better work out of the box. (<em>2007-10-09 - Adam Franco</em>)<br> (<em>reported by Pablo Casado of Open University of Catalonia, Chris Newton</em>)</li>
 		<li>
 <b>Bug Fix:</b> Periods in schema ids were breaking schema selection form fields. (<em>Adam Franco</em>)</li>
@@ -49,6 +49,26 @@
 <b>Change:</b> CollectionsBrowse: now checking collection-level authorizations only, not traversing down into assets as this was taking WAY too long with large data sets. (<em>2007-10-05 - Adam Franco</em>)</li>
 		<li>
 <b>Bug Fix:</b> Fixing a number of E_STRICT notices and improving the class and interface hierarchies. (<em>2007-10-10 - Adam Franco</em>)</li>
+		<li>
+<b>Bug Fix:</b> AssetBrowse: Checkboxes now work with ids containing periods. (<em>2007-10-11 - Adam Franco</em>)</li>
+		<li>
+<b>Change:</b> Now includes new-style SQL install process and support for PostgreSQL. (<em>2007-10-11 - Adam Franco</em>)</li>
+		<li>
+<b>New feature:</b> OAI: New oai.php entry point in application root directory. (<em>2007-10-12 - Adam Franco</em>)</li>
+		<li>
+<b>Bug Fix:</b> OAI: Now supports the new SimpleTableRepository. (<em>2007-10-12 - Adam Franco</em>)</li>
+		<li>
+<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1812422&amp;group_id=88266&amp;atid=586054">
+        			#1812422</a> Documented PEAR::DB dependency in OAI provider. (<em>2007-10-15 - Adam Franco</em>)</li>
+		<li>
+<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1812286&amp;group_id=88266&amp;atid=586054">
+        			#1812286</a> Documented PEAR::Archive_Tar dependency. (<em>2007-10-15 - Adam Franco</em>)<br> (<em>reported by Chris Newton</em>)</li>
+		<li>
+<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1812287&amp;group_id=88266&amp;atid=586054">
+        			#1812287</a> Documented ImageMagick dependency. (<em>2007-10-15 - Adam Franco</em>)<br> (<em>reported by Chris Newton</em>)</li>
+		<li>
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1811204&amp;group_id=88266&amp;atid=586054">
+        			#1811204</a> Wizard links are now working in the Edit Slideshow Wizard. (<em>2007-10-16 - Adam Franco</em>)</li>
 	</ul>
 <br><h2>Version 2.4.1</h2>
 <h3>2007-04-10</h3>

@@ -76,6 +76,9 @@
 		<change author='adam' date='2007-10-15' ref='1812287' reftype='bug' reporter="chris_newton">
 			Documented ImageMagick dependency.
 		</change>
+		<fix author='adam' date='2007-10-16' ref='1811204' reftype='bug'>
+			Wizard links are now working in the Edit Slideshow Wizard.
+		</fix>
 	</version>
 	<version number="2.4.1" date="2007-04-10">
 		<fix author='adam'>
@@ -735,10 +738,17 @@
 			<institution>Open University of Catalonia</institution>
 		</reporter>
 	</reporters>
-	<groupid>82873</groupid>
 	<reftypes>
-		<reftype name="bug">567473</reftype>
-		<reftype name="fr">567476</reftype>
-		<reftype name="task"></reftype>
+		<reftype name="bug" group="88266" tracker='586054'/>
+		<reftype name="fr" group="88266" tracker='586057'/>
+		<reftype name="patch" group="88266" tracker='586056'/>
+		
+		<reftype name="harmoni_bug" group="82873" tracker='567473'/>
+		<reftype name="harmoni_fr" group="82873" tracker='567476'/>
+		<reftype name="harmoni_patch" group="82873" tracker='567475'/>
+		
+		<reftype name="segue_bug" group="82171" tracker='565234'/>
+		<reftype name="segue_fr" group="82171" tracker='565237'/>
+		<reftype name="segue_patch" group="82171" tracker='565236'/>
 	</reftypes>
 </changelog>
