@@ -79,6 +79,9 @@
 		<fix author='adam' date='2007-10-16' ref='1811204' reftype='bug'>
 			Wizard links are now working in the Edit Slideshow Wizard.
 		</fix>
+		<fix author='adam' date='2007-10-16' ref='1811216' reftype='bug'>
+			Wizard links now do not bypass PHP field validation.
+		</fix>
 	</version>
 	<version number="2.4.1" date="2007-04-10">
 		<fix author='adam'>
