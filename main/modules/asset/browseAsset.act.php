@@ -246,10 +246,11 @@ class browseAssetAction
 		$resultPrinter = new ArrayResultPrinter($tmpAssets, 
 									$_SESSION["asset_columns"], 
 									$_SESSION["assets_per_page"], 
-									"printAssetShort", $this->getParams());
+									array($this, "printAssetShort"), 
+									$this->getParams());
 		$resultPrinter->setStartingNumber($this->_state['startingNumber']);
 		
-		$resultLayout =$resultPrinter->getLayout("canView");
+		$resultLayout =$resultPrinter->getLayout(array($this, "canView"));
 		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
 		$resultLayout->setPostHTML("</form>");
 		
@@ -272,4 +273,6 @@ class browseAssetAction
 		
 		$searchBar->add($this->getDisplayOptions($resultPrinter), null, null, LEFT, TOP);
 	}
+	
+	
 }

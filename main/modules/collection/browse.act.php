@@ -479,11 +479,11 @@ END;
 		$resultPrinter = new IteratorResultPrinter($this->getAssets(),
 									$_SESSION["asset_columns"], 
 									$_SESSION["assets_per_page"], 
-									"printAssetShort", $this->getParams());
+									array($this, "printAssetShort"), $this->getParams());
 									
 		$resultPrinter->setStartingNumber($this->_state['startingNumber']);
 		
-		$resultLayout =$resultPrinter->getLayout("canView");
+		$resultLayout =$resultPrinter->getLayout(array($this, "canView"));
 		$resultLayout->setPreHTML("<form id='AssetMultiEditForm' name='AssetMultiEditForm' action='' method='post'>");
 		$resultLayout->setPostHTML("</form>");
 		
@@ -763,175 +763,168 @@ END;
 		}
 		print ">".(($label)?$label:$value)."</option>";
 	}
-}
 
-
-// Callback function for printing Assets
-function printAssetShort($asset, $params, $num) {
-	$harmoni = Harmoni::instance();
-	$container = new Container(new YLayout, BLOCK, EMPHASIZED_BLOCK);
-	$fillContainerSC = new StyleCollection("*.fillcontainer", "fillcontainer", "Fill Container", "Elements with this style will fill their container.");
-	$fillContainerSC->addSP(new MinHeightSP("88%"));
-	$container->addStyle($fillContainerSC);
-	
-	$centered = new StyleCollection("*.centered", "centered", "Centered", "Centered Text");
-	$centered->addSP(new TextAlignSP("center"));	
-	
-	$assetId =$asset->getId();
-	
-	if ($_SESSION["show_thumbnail"] == 'true') {
-		try {
-			$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($asset);
-		} catch (Exception $e) {
-			$thumbnailURL = false;
-		}
-		if ($thumbnailURL !== FALSE) {
-			if (RepositoryInputOutputModuleManager::hasThumbnailNotIcon($asset))
-				$thumbClass = 'thumbnail_image';
-			else
+	// Callback function for printing Assets
+	function printAssetShort($asset, $params, $num) {
+		$harmoni = Harmoni::instance();
+		$container = new Container(new YLayout, BLOCK, EMPHASIZED_BLOCK);
+		$fillContainerSC = new StyleCollection("*.fillcontainer", "fillcontainer", "Fill Container", "Elements with this style will fill their container.");
+		$fillContainerSC->addSP(new MinHeightSP("88%"));
+		$container->addStyle($fillContainerSC);
+		
+		$centered = new StyleCollection("*.centered", "centered", "Centered", "Centered Text");
+		$centered->addSP(new TextAlignSP("center"));	
+		
+		$assetId =$asset->getId();
+		
+		if ($_SESSION["show_thumbnail"] == 'true') {
+			try {
+				$thumbnailURL = RepositoryInputOutputModuleManager::getThumbnailUrlForAsset($asset);
+			} catch (Exception $e) {
+				$thumbnailURL = false;
+			}
+			if ($thumbnailURL !== FALSE) {
+				if (RepositoryInputOutputModuleManager::hasThumbnailNotIcon($asset))
+					$thumbClass = 'thumbnail_image';
+				else
+					$thumbClass = 'thumbnail_icon';
+			} else {
+				$thumbnailURL = POLYPHONY_PATH."/icons/filetypes/unknown.png";
 				$thumbClass = 'thumbnail_icon';
-		} else {
-			$thumbnailURL = POLYPHONY_PATH."/icons/filetypes/unknown.png";
-			$thumbClass = 'thumbnail_icon';
+			}
+			
+			$thumbSize = $_SESSION["thumbnail_size"]."px";
+	
+			ob_start();
+			print "\n<div style='height: $thumbSize; width: $thumbSize; margin: auto;'>";
+			print "\n\t<a style='cursor: pointer;'";
+			print " onclick='Javascript:window.open(";
+			print '"'.AssetPrinter::getSlideshowLink($asset, $num).'", ';
+			
+	// 		print '"'.preg_replace("/[^a-z0-9]/i", '_', $assetId->getIdString()).'", ';
+			print '"_blank", ';
+			print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
+			print ")'>";
+			print "\n\t\t<img src='$thumbnailURL' class='thumbnail $thumbClass' alt='Thumbnail Image' style='max-height: $thumbSize; max-width: $thumbSize;' />";
+			print "\n\t</a>";
+			print "\n</div>";
+			$component = new UnstyledBlock(ob_get_contents());
+			$component->addStyle($centered);
+			ob_end_clean();
+			$container->add($component, "100%", null, CENTER, CENTER);
+			
 		}
 		
-		$xmlModule = 'collection';
-		$xmlAssetIdString = $assetId->getIdString();
-		$xmlStart = $num - 1;
-		
-		$thumbSize = $_SESSION["thumbnail_size"]."px";
-
 		ob_start();
-		print "\n<div style='height: $thumbSize; width: $thumbSize; margin: auto;'>";
-		print "\n\t<a style='cursor: pointer;'";
-		print " onclick='Javascript:window.open(";
-		print '"'.VIEWER_URL."?&amp;source=";
-		$params["asset_id"] = $xmlAssetIdString;
-		print urlencode($harmoni->request->quickURL($xmlModule, "browse_outline_xml", $params));
-		print '&amp;start='.$xmlStart.'", ';
-// 		print '"'.preg_replace("/[^a-z0-9]/i", '_', $assetId->getIdString()).'", ';
-		print '"_blank", ';
-		print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
-		print ")'>";
-		print "\n\t\t<img src='$thumbnailURL' class='thumbnail $thumbClass' alt='Thumbnail Image' style='max-height: $thumbSize; max-width: $thumbSize;' />";
-		print "\n\t</a>";
-		print "\n</div>";
-		$component = new UnstyledBlock(ob_get_contents());
-		$component->addStyle($centered);
-		ob_end_clean();
-		$container->add($component, "100%", null, CENTER, CENTER);
-		
-	}
-	
-	ob_start();
-	if ($_SESSION["show_displayName"] == 'true')
-		print "\n\t<div style='font-weight: bold; height: 50px; overflow: auto;'>".htmlspecialchars($asset->getDisplayName())."</div>";
-	if ($_SESSION["show_id"] == 'true')
-		print "\n\t<div>"._("ID#").": ".$assetId->getIdString()."</div>";
-	if ($_SESSION["show_description"] == 'true') {
-		$description = HtmlString::withValue($asset->getDescription());
-		$description->trim(16);
-		$descriptionShort = preg_replace('/\.\.\.$/', 
-			"<a onclick=\""
-				."var panel = Panel.run("
-					."'".addslashes(htmlspecialchars($asset->getDisplayName()))."', "
-					."100, 400, this.parentNode); "
-				."if (!panel.contentElement.innerHTML) "
-					."{panel.contentElement.innerHTML = this.parentNode.nextSibling.innerHTML;}"
-			."\">...</a>", $description->asString());
-		print  "\n\t<div style='font-size: smaller; height: 50px; overflow: auto;'>";
-		print $descriptionShort;
-		print "</div>";
-		if (preg_match('/\.\.\.$/', $description->asString())) {
-			print "<div style='display: none'>".$asset->getDescription()."</div>";
+		if ($_SESSION["show_displayName"] == 'true')
+			print "\n\t<div style='font-weight: bold; height: 50px; overflow: auto;'>".htmlspecialchars($asset->getDisplayName())."</div>";
+		if ($_SESSION["show_id"] == 'true')
+			print "\n\t<div>"._("ID#").": ".$assetId->getIdString()."</div>";
+		if ($_SESSION["show_description"] == 'true') {
+			$description = HtmlString::withValue($asset->getDescription());
+			$description->trim(16);
+			$descriptionShort = preg_replace('/\.\.\.$/', 
+				"<a onclick=\""
+					."var panel = Panel.run("
+						."'".addslashes(htmlspecialchars($asset->getDisplayName()))."', "
+						."100, 400, this.parentNode); "
+					."if (!panel.contentElement.innerHTML) "
+						."{panel.contentElement.innerHTML = this.parentNode.nextSibling.innerHTML;}"
+				."\">...</a>", $description->asString());
+			print  "\n\t<div style='font-size: smaller; height: 50px; overflow: auto;'>";
+			print $descriptionShort;
+			print "</div>";
+			if (preg_match('/\.\.\.$/', $description->asString())) {
+				print "<div style='display: none'>".$asset->getDescription()."</div>";
+			}
 		}
-	}
-	if ($_SESSION["show_tags"] == 'true') {
-		// Tags
-		print "\n\t<div style='font-size: smaller; height: 50px; overflow: auto; text-align: justify; margin-top: 5px;'>";
-		print TagAction::getTagCloudForItem(TaggedItem::forId($assetId, 'concerto'), 'view',
-				array(	'font-size: 90%;',
-						'font-size: 100%;',
-				));
-		print "\n\t</div>";
+		if ($_SESSION["show_tags"] == 'true') {
+			// Tags
+			print "\n\t<div style='font-size: smaller; height: 50px; overflow: auto; text-align: justify; margin-top: 5px;'>";
+			print TagAction::getTagCloudForItem(TaggedItem::forId($assetId, 'concerto'), 'view',
+					array(	'font-size: 90%;',
+							'font-size: 100%;',
+					));
+			print "\n\t</div>";
+		}
+		
+		$component = new UnstyledBlock(ob_get_contents());
+		ob_end_clean();
+		$container->add($component, "100%", null, LEFT, TOP);
+		
+		// Bottom controls
+		if ($_SESSION["show_controls"] == 'true') {
+			$authZ = Services::getService("AuthZ");
+			$idManager = Services::getService("Id");
+			ob_start();
+			print "\n<div style='margin-top: 5px; font-size: small; white-space: nowrap;'>";
+		
+			AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num, false);
+			print " | ";
+			
+			$harmoni->request->startNamespace("AssetMultiEdit");
+			print "\n<input type='checkbox'";
+			print " name='".RequestContext::name("asset")."'";
+			print " value='".$assetId->getIdString()."'";
+			print "/>";
+			
+			print "\n<input type='hidden'";
+			print " name='".RequestContext::name("asset_can_modify_".$assetId->getIdString())."'";
+			try {
+				if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $assetId))
+					print " value='true'";
+				else
+					print " value='false'";
+				print "/>";	
+			} catch (UnknownIdException $e) {
+				// allow non-harmoni Repositories.
+				print " value='true'";
+			}
+			
+			print "\n<input type='hidden'";
+			print " name='".RequestContext::name("asset_can_delete_".$assetId->getIdString())."'";
+			try {
+				if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.delete"), $assetId))
+					print " value='true'";
+				else
+					print " value='false'";
+			} catch (UnknownIdException $e) {
+				// allow non-harmoni Repositories.
+				print " value='true'";
+			}
+			print "/>";	
+			
+			$harmoni->request->endNamespace();
+			print "</div>";
+			
+			$container->add(new UnstyledBlock(ob_get_clean()), "100%", null, RIGHT, BOTTOM);
+		}
+		
+		return $container;
 	}
 	
-	$component = new UnstyledBlock(ob_get_contents());
-	ob_end_clean();
-	$container->add($component, "100%", null, LEFT, TOP);
-	
-	// Bottom controls
-	if ($_SESSION["show_controls"] == 'true') {
+	// Callback function for checking authorizations
+	public function canView( $asset ) {
 		$authZ = Services::getService("AuthZ");
 		$idManager = Services::getService("Id");
-		ob_start();
-		print "\n<div style='margin-top: 5px; font-size: small; white-space: nowrap;'>";
-	
-		AssetPrinter::printAssetFunctionLinks($harmoni, $asset, NULL, $num, false);
-		print " | ";
 		
-		$harmoni->request->startNamespace("AssetMultiEdit");
-		print "\n<input type='checkbox'";
-		print " name='".RequestContext::name("asset")."'";
-		print " value='".$assetId->getIdString()."'";
-		print "/>";
-		
-		print "\n<input type='hidden'";
-		print " name='".RequestContext::name("asset_can_modify_".$assetId->getIdString())."'";
 		try {
-			if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.modify"), $assetId))
-				print " value='true'";
-			else
-				print " value='false'";
-			print "/>";	
-		} catch (UnknownIdException $e) {
-			// allow non-harmoni Repositories.
-			print " value='true'";
-		}
-		
-		print "\n<input type='hidden'";
-		print " name='".RequestContext::name("asset_can_delete_".$assetId->getIdString())."'";
-		try {
-			if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.delete"), $assetId))
-				print " value='true'";
-			else
-				print " value='false'";
-		} catch (UnknownIdException $e) {
-			// allow non-harmoni Repositories.
-			print " value='true'";
-		}
-		print "/>";	
-		
-		$harmoni->request->endNamespace();
-		print "</div>";
-		
-		$container->add(new UnstyledBlock(ob_get_clean()), "100%", null, RIGHT, BOTTOM);
-	}
-	
-	return $container;
-}
-
-// Callback function for checking authorizations
-function canView( $asset ) {
-	$authZ = Services::getService("AuthZ");
-	$idManager = Services::getService("Id");
-	
-	try {
-		// Check the repository first since it is probably cached already, then the
-		// Asset itself if the repository returns false.
-		if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getRepository()->getId()))
-		{
-			return TRUE;
-		} else {
-			if ($authZ->isUserAuthorizedBelow($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
+			// Check the repository first since it is probably cached already, then the
+			// Asset itself if the repository returns false.
+			if ($authZ->isUserAuthorized($idManager->getId("edu.middlebury.authorization.view"), $asset->getRepository()->getId()))
 			{
 				return TRUE;
 			} else {
-				return FALSE;
+				if ($authZ->isUserAuthorizedBelow($idManager->getId("edu.middlebury.authorization.view"), $asset->getId()))
+				{
+					return TRUE;
+				} else {
+					return FALSE;
+				}
 			}
+		} catch (UnknownIdException $e) {
+			// allow non-harmoni Repositories.
+			return true;
 		}
-	} catch (UnknownIdException $e) {
-		// allow non-harmoni Repositories.
-		return true;
 	}
 }

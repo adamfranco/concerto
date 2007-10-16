@@ -20,56 +20,66 @@
  */
 
 abstract class AssetPrinter {
-	
+
 	/**
-	 * Print links for the various functions that are possible to do with this
-	 * Asset.
+	 * Answer the Viewer URL
 	 * 
-	 * @param object Asset $asset The Asset to print the links for.
-	 * @return void
+	 * @param object Asset $asset
+	 * @param optional integer $assetNumber Default 0.
+	 * @return string
 	 * @access public
-	 * @date 8/6/04
-	 * @static
+	 * @since 10/16/07
 	 */
-	static function printAssetFunctionLinks ($harmoni, $asset, $repositoryId = NULL, $assetNum = 0, $includeEditDelete = true) {
-		$authZ = Services::getService("AuthZ");
-		$idManager = Services::getService("Id");
+	public static function getSlideshowLink (Asset $asset, $assetNumber = 0) {
+		$harmoni = Harmoni::instance();
 		
-		$assetId =$asset->getId();
-		if ($repositoryId === NULL) {
-			$repository =$asset->getRepository();
-			$repositoryId =$repository->getId();
-		}
+		$params = self::getUrlParams($asset);
 		
-		$links = array();
-		
-		/*********************************************************
-		 * Parameters to pass on through our links
-		 *********************************************************/
 		// If we are in an asset, the viewer should contain the asset followed
 		// by slides for each of its children
-		$actionString = $harmoni->getCurrentAction();
-		if (ereg("^asset\..*$", $actionString))	{
+		if ($harmoni->request->getRequestedModule() ==  'asset')	{
 			$xmlModule = 'asset';
 			$xmlAction = 'browsexml';
 			$xmlAssetIdString = $harmoni->request->get("asset_id");
 			
-			if ($harmoni->request->get("asset_id") ==
-					$assetId->getIdString())
+			if ($harmoni->request->get("asset_id") == $asset->getId()->getIdString())
 				$xmlStart = 0;
 			else
-				$xmlStart = $assetNum;
+				$xmlStart = $assetNumber;
 		} 
 	// Otherwise, the viewer should contain the asset allong with slides
 	// for the other assets in the collection.
 		else {
 			$xmlModule = 'collection';
 			$xmlAction = 'browse_outline_xml';
-			$xmlAssetIdString = $assetId->getIdString();
-			$xmlStart = $assetNum - 1;
+			$xmlAssetIdString = $asset->getId()->getIdString();
+			$xmlStart = $assetNumber - 1;
 		}
-		$params = array("collection_id" => $repositoryId->getIdString(),
-					"asset_id" => $xmlAssetIdString,
+		
+		$params['asset_id'] = $xmlAssetIdString;
+				
+		$viewerUrl = VIEWER_URL."?&amp;source=";
+		$harmoni->request->startNamespace(NULL);
+		$viewerUrl .= urlencode($harmoni->request->quickURL($xmlModule, $xmlAction, $params));
+		$harmoni->request->endNamespace();
+		$viewerUrl .= '&amp;start='.$xmlStart;
+		
+		
+		return $viewerUrl;
+	}
+	
+	/**
+	 * Answer a list of parameters to pass through urls
+	 * 
+	 * @return array
+	 * @access public
+	 * @since 10/16/07
+	 */
+	public static function getUrlParams (Asset $asset) {
+		$repository = $asset->getRepository();
+		
+		$params = array("collection_id" => $repository->getId()->getIdString(),
+					"asset_id" => $asset->getId()->getIdString(),
 					RequestContext::name("starting_number") => RequestContext::value("starting_number"),
 					RequestContext::name("limit_by_type") => RequestContext::value("limit_by_type"),
 					RequestContext::name("order") => RequestContext::value("order"),
@@ -86,7 +96,7 @@ abstract class AssetPrinter {
 		
 		// if we are limiting by type
 		if (RequestContext::value("limit_by_type") == 'true') {
-			$types =$repository->getAssetTypes();
+			$types = $repository->getAssetTypes();
 			$selectedTypes = array();
 			while ($types->hasNext()) {
 				$type =$types->next();
@@ -95,6 +105,36 @@ abstract class AssetPrinter {
 						RequestContext::value("type___".Type::typeToString($type));
 			}
 		}
+		
+		return $params;
+	}
+	
+	/**
+	 * Print links for the various functions that are possible to do with this
+	 * Asset.
+	 * 
+	 * @param object Asset $asset The Asset to print the links for.
+	 * @return void
+	 * @access public
+	 * @date 8/6/04
+	 * @static
+	 */
+	static function printAssetFunctionLinks ($harmoni, $asset, $repositoryId = NULL, $assetNum = 0, $includeEditDelete = true) {
+		$actionString = $harmoni->getCurrentAction();
+		
+		$authZ = Services::getService("AuthZ");
+		$idManager = Services::getService("Id");
+		
+		$assetId = $asset->getId();
+		$repository = $asset->getRepository();
+		$repositoryId = $repository->getId();
+		
+		$links = array();
+		
+		/*********************************************************
+		 * Parameters to pass on through our links
+		 *********************************************************/
+		$params = self::getUrlParams($asset);
 		
 		// Authorization Icon
 		print AuthZPrinter::getAZIcon($assetId);
@@ -123,9 +163,6 @@ abstract class AssetPrinter {
 			}
 			
 			ob_start();
-			$viewerUrl = VIEWER_URL."?&amp;source=";
-			$viewerUrl .= urlencode($harmoni->request->quickURL($xmlModule, $xmlAction, $params));
-			$viewerUrl .= '&amp;start='.$xmlStart;
 			
 			print "<a href='#' onclick=\"Javascript:AssetOptionsPanel.run('".$repositoryId->getIdString()."', '".$assetId->getIdString()."', this, [";
 			$toShow = array();
@@ -213,7 +250,7 @@ abstract class AssetPrinter {
 			}
 			
 			print implode(", ", $toShow);
-			print "], '".$viewerUrl."'); return false;\">"._("Options...")."</a> ";
+			print "], '".self::getSlideshowLink($asset, $assetNum)."'); return false;\">"._("Options...")."</a> ";
 					
 			$links[] = ob_get_clean();
 
