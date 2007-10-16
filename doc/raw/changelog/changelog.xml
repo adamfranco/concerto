@@ -85,6 +85,12 @@
 		<fix author='adam' date='2007-10-16' ref='1812284' reftype='bug'>
 			Asset Editing UI now returns to the previous page on save or cancel.
 		</fix>
+		<fix author='adam' date='2007-10-16' ref='1814540' reftype='bug'>
+			Asset parents now showing in sidebar hierarchy.
+			
+			ConcertoMenugenerator::addFirstParents() was missing an ampersand that 
+			forces passing of the array parameter by reference.
+		</fix>
 	</version>
 	<version number="2.4.1" date="2007-04-10">
 		<fix author='adam'>

@@ -197,7 +197,7 @@ class ConcertoMenuGenerator
 	 * @access public
 	 * @since 5/15/06
 	 */
-	function addFirstParents ( $asset, $assetArray ) {
+	function addFirstParents ( Asset $asset, array &$assetArray ) {
 		try {
 			$parents =$asset->getParents();
 			if ($parents->hasNext()) {
