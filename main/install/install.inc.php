@@ -64,15 +64,15 @@ if (!isset($_SESSION['table_setup_complete'])) {
 		switch ($dbHandler->getDatabaseType($dbID)) {
 			case MYSQL:
 				SQLUtils::runSQLdir(HARMONI_BASE."/SQL/MySQL", $dbID);
-				SQLUtils::runSQLdir(MYDIR."/main/SQL/MySQL", $dbID);
+// 				SQLUtils::runSQLdir(MYDIR."/main/SQL/MySQL", $dbID);
 				break;
 			case POSTGRESQL:
 				SQLUtils::runSQLdir(HARMONI_BASE."/SQL/PostgreSQL", $dbID);
-				SQLUtils::runSQLdir(MYDIR."/main/SQL/PostgreSQL", $dbID);
+// 				SQLUtils::runSQLdir(MYDIR."/main/SQL/PostgreSQL", $dbID);
 				break;
 			case ORACLE:
 				SQLUtils::runSQLdir(HARMONI_BASE."/SQL/PostgreSQL", $dbID);
-				SQLUtils::runSQLdir(MYDIR."/main/SQL/PostgreSQL", $dbID);
+// 				SQLUtils::runSQLdir(MYDIR."/main/SQL/PostgreSQL", $dbID);
 				break;
 			default:
 				throw new Exception("Database schemas are not defined for specified database type.");

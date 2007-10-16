@@ -97,6 +97,9 @@
 			
 			Unified printing of asset-browsing slideshow URLs.
 		</fix>
+		<change author='adam' date='2007-10-16' ref='1814133' reftype='fr'>
+			Moving installer scripts into concerto/main/install
+		</change>
 	</version>
 	<version number="2.4.1" date="2007-04-10">
 		<fix author='adam'>

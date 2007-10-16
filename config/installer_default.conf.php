@@ -13,4 +13,4 @@
  * @version $Id$
  */
 
-require (MYDIR."/install/dev_install.inc.php");
+require (MYDIR."/main/install/install.inc.php");
