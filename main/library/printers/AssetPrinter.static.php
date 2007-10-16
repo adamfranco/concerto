@@ -169,6 +169,7 @@ abstract class AssetPrinter {
 				$isAuthorized = true;
 			}
 			if ($isAuthorized) {
+				$harmoni->history->markReturnURL("concerto/asset/edit-return");
 				$toShow[] = "'edit'";
 			}
 			

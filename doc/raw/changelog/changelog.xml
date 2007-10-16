@@ -82,6 +82,9 @@
 		<fix author='adam' date='2007-10-16' ref='1811216' reftype='bug'>
 			Wizard links now do not bypass PHP field validation.
 		</fix>
+		<fix author='adam' date='2007-10-16' ref='1812284' reftype='bug'>
+			Asset Editing UI now returns to the previous page on save or cancel.
+		</fix>
 	</version>
 	<version number="2.4.1" date="2007-04-10">
 		<fix author='adam'>
