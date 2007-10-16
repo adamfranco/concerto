@@ -92,7 +92,7 @@
 			forces passing of the array parameter by reference.
 		</fix>
 		<fix author='adam' date='2007-10-16' ref='1812418' reftype='bug'>
-			Slidshows: Now when browsing child assets, clicking on the thumbnail
+			Slideshows: Now when browsing child assets, clicking on the thumbnail
 			loads the same viewer URL as the 'view' button.
 			
 			Unified printing of asset-browsing slideshow URLs.
