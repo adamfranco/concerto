@@ -34,7 +34,12 @@ define ("ENABLE_DWARVES", false);
 define ("ENABLE_TIMERS", false);
  
  
- 
+
+/*********************************************************
+ * Set the HarmoniErrorHandler as the default exception Handler.
+ *********************************************************/
+set_exception_handler(array('HarmoniErrorHandler', 'handleException'));
+
 
 /*********************************************************
  * Un-comment the following line to use the Harmoni error
