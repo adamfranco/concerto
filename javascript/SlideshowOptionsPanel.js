@@ -52,7 +52,9 @@ function SlideshowOptionsPanel ( exhibitionId, assetId, positionElement, toShow,
 		this.toShow = toShow;
 		this.viewerUrl = viewerUrl;
 		this.defaultParams = {'slideshow_id': this.assetId};
-		this.options = this.contentElement.appendChild(document.createElement('table'));
+		
+		var optionsTable = this.contentElement.appendChild(document.createElement('table'));
+		this.options = optionsTable.appendChild(document.createElement('tbody'));
 				
 		if (toShow.elementExists('view')) {
 			this.addPopupButton(this.viewerUrl, 'View', 'View this Slideshow in the pop-up viewer.');

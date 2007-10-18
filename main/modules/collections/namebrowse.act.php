@@ -127,7 +127,7 @@ function printRepositoryShort($repository) {
 }
 
 // Callback function for checking authorizations
-function canView( $item ) {
+function canView(Repository $item ) {
 	$authZ = Services::getService("AuthZ");
 	$idManager = Services::getService("Id");
 	

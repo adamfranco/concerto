@@ -100,6 +100,10 @@
 		<change author='adam' date='2007-10-16' ref='1814133' reftype='fr'>
 			Moving installer scripts into concerto/main/install
 		</change>
+		<fix author='adam' date='2007-10-18' ref='1810360' reftype='bug'>
+			Asset and Slideshow options panels now work in IE. Need to explicitly
+			add tbody elements to tables.
+		</fix>
 	</version>
 	<version number="2.4.1" date="2007-04-10">
 		<fix author='adam'>
