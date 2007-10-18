@@ -58,7 +58,7 @@ abstract class SlideShowPrinter {
 			print urlencode($harmoni->request->quickURL("exhibitions", "slideshowOutlineXml", 
 						array("slideshow_id" => $assetId->getIdString())));
 			print '", ';
-			print '"'.$asset->getDisplayName().'", ';
+			print '"_blank", ';
 			print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
 			print ")'>";
 			print _("View")."</a>";

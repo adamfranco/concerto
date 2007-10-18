@@ -203,14 +203,14 @@ function printAssetShort($asset, $harmoni) {
 	$assetId =$asset->getId();
 	ob_start();
 	if (isset($firstMediaUrl) && $firstMediaUrl) {
-		print "<a onclick='Javascript:window.open(";
+		print "<a href='#' onclick='window.open(";
 		print '"'.VIEWER_URL."?&source=";
 		print urlencode($harmoni->request->quickURL("exhibitions", "slideshowOutlineXml", 
 					array("slideshow_id" => $assetId->getIdString())));
 		print '", ';
-		print '"'.$asset->getDisplayName().'", ';
+		print '"_blank", ';
 		print '"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500"';
-		print ")'>";
+		print "); return false;'>";
 		print "\n<img src='".$firstMediaUrl."' style='float: right; max-height: 200px; max-width: 200px;' class='thumbnail_image'/>";
 		print "</a>";
 	}

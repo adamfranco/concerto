@@ -104,6 +104,11 @@
 			Asset and Slideshow options panels now work in IE. Need to explicitly
 			add tbody elements to tables.
 		</fix>
+		<fix author='adam' date='2007-10-18' ref='1815787' reftype='bug' reporter='andy_wentink'>
+			Slideshows: Spaces in the window-name parameter to the window.open() 
+			function were preventing some slideshow windows from opening when
+			clicked on.
+		</fix>
 	</version>
 	<version number="2.4.1" date="2007-04-10">
 		<fix author='adam'>
@@ -761,6 +766,14 @@
 		<reporter short="pablo_casado">
 			<name>Pablo Casado</name>
 			<institution>Open University of Catalonia</institution>
+		</reporter>
+		<reporter short="andy_wentink">
+			<name>Andy Wentink</name>
+			<institution>Middlebury College</institution>
+		</reporter>
+		<reporter short="mike_lynch">
+			<name>Mike Lynch</name>
+			<institution>Middlebury College</institution>
 		</reporter>
 	</reporters>
 	<reftypes>

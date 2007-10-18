@@ -152,13 +152,17 @@ function AssetOptionsPanel ( repositoryId, assetId, positionElement, toShow, vie
 	 * @param string title
 	 * @param string description
 	 * @param object params
+	 * @param optional string target.
 	 * @return void
 	 * @access public
 	 * @since 4/2/07
 	 */
-	AssetOptionsPanel.prototype.addPopupButton = function (url, title, description, params) {
+	AssetOptionsPanel.prototype.addPopupButton = function (url, title, description, params, target) {
+		if (!target)
+			target = '_blank';
+		
 		this.addOnclickButton (
-			function () { window.open(url.urlDecodeAmpersands(), '_blank', 
+			function () { window.open(url.urlDecodeAmpersands(), target, 
 				"toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=500");},
 			title, description, params);
 	}
