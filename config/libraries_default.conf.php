@@ -17,12 +17,12 @@
  * Harmoni Location
  * 		the location on the file system
  *********************************************************/
-define("HARMONI_DIR", MYDIR."/harmoni/");
+define("HARMONI_DIR", MYDIR."/main/harmoni/");
 
 /*********************************************************
  * Polyphony location
  *		DIR: the location on the file system
  *		PATH: the location as seen by the browser. For image urls.
  *********************************************************/
-define("POLYPHONY_DIR", MYDIR."/polyphony/");
-define("POLYPHONY_PATH", dirname(MYURL)."/polyphony/");
+define("POLYPHONY_DIR", MYDIR."/main/polyphony/");
+define("POLYPHONY_PATH", dirname(MYURL)."/main/polyphony/");
