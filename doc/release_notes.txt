@@ -3,7 +3,7 @@ Name: Concerto Release Notes
 (See the Concerto change log for more details)
 
 
-v. 2.5.0 (The Future)
+v. 2.5.0 (2007-10-22)
 ----------------------------------------------------
 As of this release, Concerto no longer supports PHP4. Please use PHP 5.2 or later.
 

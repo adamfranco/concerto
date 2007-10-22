@@ -4,7 +4,7 @@ Name: Concerto Change Log
 
 
 
-v. 2.5.0 (The Future)
+v. 2.5.0 (2007-10-22)
 ----------------------------------------------------
 As of this release, Concerto no longer supports PHP4. Please use PHP 5.2 or later.
 
@@ -91,6 +91,44 @@ concerto/main/harmoni/core/DBHandler/db_updater.php
 	* Bug Fix: #1811204 
 		Wizard links are now working in the Edit Slideshow Wizard.
 		(2007-10-16 - Adam Franco)
+		
+	* Bug Fix: #1811216 
+		Wizard links now do not bypass PHP field validation.
+		(2007-10-16 - Adam Franco)
+		
+	* Bug Fix: #1812284 
+		Asset Editing UI now returns to the previous page on save or cancel.
+		(2007-10-16 - Adam Franco)
+		
+	* Bug Fix: #1814540 
+		Asset parents now showing in sidebar hierarchy.
+		
+		ConcertoMenugenerator::addFirstParents() was missing an ampersand that
+		forces passing of the array parameter by reference.
+		(2007-10-16 - Adam Franco)
+		
+	* Bug Fix: #1812418 
+		Slideshows: Now when browsing child assets, clicking on the thumbnail loads
+		the same viewer URL as the 'view' button.
+		
+		Unified printing of asset-browsing slideshow URLs.
+		(2007-10-16 - Adam Franco)
+		
+	* Change: #1814133 
+		Moving installer scripts into concerto/main/install
+		(2007-10-16 - Adam Franco)
+		
+	* Bug Fix: #1810360 
+		Asset and Slideshow options panels now work in IE. Need to explicitly add
+		tbody elements to tables.
+		(2007-10-18 - Adam Franco)
+		
+	* Bug Fix: #1815787 
+		Slideshows: Spaces in the window-name parameter to the window.open()
+		function were preventing some slideshow windows from opening when clicked
+		on. 
+		(2007-10-18 - Adam Franco)
+		(reported by Andy Wentink of Middlebury College)
 	
 v. 2.4.1 (2007-04-10)
 ----------------------------------------------------
