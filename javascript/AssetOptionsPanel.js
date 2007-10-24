@@ -62,7 +62,7 @@ function AssetOptionsPanel ( repositoryId, assetId, positionElement, toShow, vie
 		}
 		
 		if (toShow.elementExists('browse')) {
-			this.addButton ('asset', 'browse', 'Browse', 'Browse the Assets contained by this Asset.');
+			this.addButton ('asset', 'browseAsset', 'Browse', 'Browse the Assets contained by this Asset.');
 		}
 		
 		if (toShow.elementExists('edit')) {
@@ -74,7 +74,7 @@ function AssetOptionsPanel ( repositoryId, assetId, positionElement, toShow, vie
 		}
 		
 		if (toShow.elementExists('add_children')) {
-			this.addButton ('asset', 'add', 'Add Child', 'Add an Asset below this Asset.', {'collection_id': this.repositoryId, 'parent': this.assetId});
+			this.addButton ('asset', 'create', 'Add Child', 'Add an Asset below this Asset.', {'collection_id': this.repositoryId, 'parent': this.assetId});
 			
 			var url = Harmoni.quickUrl('collection', 'import', {'collection_id': this.repositoryId, 'parent': this.assetId}, 'import');
 			this.addOnclickButton (

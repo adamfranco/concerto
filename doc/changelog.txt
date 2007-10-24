@@ -4,6 +4,20 @@ Name: Concerto Change Log
 
 
 
+v. 2.5.1 (2007-10-24)
+----------------------------------------------------
+This release includes several bug fixes in the Polyphony libraries which impacted
+browsing of logs by admins and some spurious access of pages by search engine spiders.
+
+As well, this release includes a change to the way assets are created in order to
+streamline the process and prevent confusion.
+		
+		
+	* Change: #1812313 
+		AssetCreation: The asset creation process has been streamlined to allow
+		easier creation of assets from files.
+		(2007-10-24 - Adam Franco)
+	
 v. 2.5.0 (2007-10-22)
 ----------------------------------------------------
 As of this release, Concerto no longer supports PHP4. Please use PHP 5.2 or later.

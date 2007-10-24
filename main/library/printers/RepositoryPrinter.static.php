@@ -100,7 +100,7 @@ abstract class RepositoryPrinter {
 		}
 		if ($isAuthorized) 
 		{
-			$url->setModuleAction("asset", "add");
+			$url->setModuleAction("asset", "create");
 			$links[] = "<a href='".$url->write()."'>";
 			$links[count($links) - 1] .= _("Add")."</a>";
 	//===== Import Link =====//
