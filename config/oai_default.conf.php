@@ -17,11 +17,11 @@
 ini_set('include_path', ini_get('include_path').':/usr/local/lib/php/PEAR');
 
 $config = new ConfigurationProperties;
-$config->addProperty('ENABLE_OAI', $arg0 = false);
+$config->addProperty('ENABLE_OAI', false);
 
-$config->addProperty('OAI_REPOSITORY_NAME', $arg1 = 'Concerto at Example University');
-$config->addProperty('OAI_REPOSITORY_ID', $arg2 = 'concerto.example.edu');
-$config->addProperty('OAI_ADMIN_EMAIL', $arg3 = 'admin@example.edu');
+$config->addProperty('OAI_REPOSITORY_NAME', 'Concerto at Example University');
+$config->addProperty('OAI_REPOSITORY_ID', 'concerto.example.edu');
+$config->addProperty('OAI_ADMIN_EMAIL', 'admin@example.edu');
 
 $config->addProperty('OAI_DBID', $dbID);
 $config->addProperty('OAI_DB_HOST', $dbHost);
@@ -29,7 +29,7 @@ $config->addProperty('OAI_DB_USER', $dbUser);
 $config->addProperty('OAI_DB_PASSWD', $dbPass);
 $config->addProperty('OAI_DB_NAME', $dbName);
 
-$config->addProperty('OAI_TOKEN_DIR', $arg4 = '/tmp/concerto-oai_tokens');
+$config->addProperty('OAI_TOKEN_DIR', '/tmp/concerto-oai_tokens');
 
 // The search order is the array order. I.e, if the IP of the harvester matches the
 // first entry, then that entry will be used and later ones ignored.
@@ -52,4 +52,4 @@ $config->addProperty('OAI_HARVESTER_CONFIG', $harvesterConfig);
 
 $harmoni = Harmoni::instance();
 $harmoni->attachData('OAI_CONFIG', $config);
-unset($config, $arg0, $arg1, $arg2, $arg3, $arg4, $harvesterConfig);
+unset($config, $harvesterConfig);
