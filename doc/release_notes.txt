@@ -3,6 +3,15 @@ Name: Concerto Release Notes
 (See the Concerto change log for more details)
 
 
+v. 2.5.2 (2007-11-01)
+----------------------------------------------------
+This release adds some new command line scripts for managing the OAI-PMH provider
+and its data. 
+
+It also includes bug fixes to Harmoni and Polyphony. See the corresponding Harmoni
+and Polyphony changelogs for details.
+
+
 v. 2.5.1 (2007-10-24)
 ----------------------------------------------------
 This release includes several bug fixes in the Polyphony libraries which impacted

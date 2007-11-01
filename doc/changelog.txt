@@ -4,6 +4,20 @@ Name: Concerto Change Log
 
 
 
+v. 2.5.2 (2007-11-01)
+----------------------------------------------------
+This release adds some new command line scripts for managing the OAI-PMH provider
+and its data. 
+
+It also includes bug fixes to Harmoni and Polyphony. See the corresponding Harmoni
+and Polyphony changelogs for details.
+		
+		
+	* Change: 
+		New command-line scripts for cleaning out OAI tokens and updating the OAI
+		source data.
+		(2007-11-01 - Adam Franco)
+	
 v. 2.5.1 (2007-10-24)
 ----------------------------------------------------
 This release includes several bug fixes in the Polyphony libraries which impacted
