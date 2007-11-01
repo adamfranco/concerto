@@ -17,6 +17,8 @@
 			
 			It also includes bug fixes to Harmoni and Polyphony. See the 
 			corresponding Harmoni and Polyphony changelogs for details.
+			
+			Concerto 2.5.2 includes Harmoni 0.13.2 and Polyphony 0.10.2.
 		</releaseNotes>
 		<change author='adam' date='2007-11-01'>
 			New command-line scripts for cleaning out OAI tokens and updating the
