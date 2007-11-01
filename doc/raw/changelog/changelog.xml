@@ -10,6 +10,17 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto">
+	<version number="2.5.2" date="The Future">
+		<releaseNotes>
+			This release includes bug fixes to Harmoni and Polyphony. 
+			
+			See the corresponding Harmoni and Polyphony changelogs for details.
+		</releaseNotes>
+		<change author='adam' date='2007-11-01'>
+			New command-line scripts for cleaning out OAI tokens and updating the
+			OAI source data.
+		</change>
+	</version>
 	<version number="2.5.1" date="2007-10-24">
 		<releaseNotes>
 			This release includes several bug fixes in the Polyphony libraries

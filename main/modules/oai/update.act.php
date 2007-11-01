@@ -42,8 +42,14 @@ class updateAction
 	 * @since 4/26/05
 	 */
 	function execute () {
+		if (RequestContext::value('help') || RequestContext::value('h') || RequestContext::value('?'))
+			throw new HelpRequestedException(
+"This is a command line script that will populate the OAI data tables from the 
+repositories in Concerto. It takes no arguments or parameters.
+");
+
 		$harmoni = Harmoni::instance();
-		$config =$harmoni->getAttachedData('OAI_CONFIG');
+		$config = $harmoni->getAttachedData('OAI_CONFIG');
 		
 		if (!defined('OAI_UPDATE_OUTPUT_HTML')) {
 			define("OAI_UPDATE_OUTPUT_HTML", TRUE);
@@ -81,9 +87,8 @@ class updateAction
 			if (OAI_UPDATE_OUTPUT_HTML)
 				print "\n<hr/><h2>".$tableMessage."</h2>";
 			else
-				print "
-
----------------------------------------------------
+				print 
+"---------------------------------------------------
 | $tableMessage
 ---------------------------------------------------
 ";
@@ -95,9 +100,9 @@ class updateAction
 				$configArray['auth_group_ids']);
 			
 			$i++;
+			
+			print "\n\n";
 		}
-		
-		exit;
 	}
 	
 	/**
