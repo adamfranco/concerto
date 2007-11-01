@@ -13,6 +13,19 @@ require_once(POLYPHONY."/main/library/Basket/Basket.class.php");
 require_once(DOMIT);
 require_once(POLYPHONY."/main/modules/tags/TagAction.abstract.php");
 
+require_once(HARMONI."GUIManager/Components/Header.class.php");
+require_once(HARMONI."GUIManager/Components/Menu.class.php");
+require_once(HARMONI."GUIManager/Components/MenuItemHeading.class.php");
+require_once(HARMONI."GUIManager/Components/MenuItemLink.class.php");
+require_once(HARMONI."GUIManager/Components/Heading.class.php");
+require_once(HARMONI."GUIManager/Components/Footer.class.php");
+require_once(HARMONI."GUIManager/Container.class.php");
+
+require_once(HARMONI."GUIManager/Layouts/XLayout.class.php");
+require_once(HARMONI."GUIManager/Layouts/YLayout.class.php");
+
+require_once(HARMONI."GUIManager/StyleProperties/FloatSP.class.php");
+
 /**
  * build the frame of the window
  * 
@@ -46,27 +59,6 @@ class displayAction
 	 * @since 4/25/05
 	 */
 	function execute () {
-		/**
-		 * @package concerto.display
-		 * 
-		 * @copyright Copyright &copy; 2005, Middlebury College
-		 * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License (GPL)
-		 *
-		 * @version $Id$
-		 */
-		 
-		require_once(HARMONI."GUIManager/Components/Header.class.php");
-		require_once(HARMONI."GUIManager/Components/Menu.class.php");
-		require_once(HARMONI."GUIManager/Components/MenuItemHeading.class.php");
-		require_once(HARMONI."GUIManager/Components/MenuItemLink.class.php");
-		require_once(HARMONI."GUIManager/Components/Heading.class.php");
-		require_once(HARMONI."GUIManager/Components/Footer.class.php");
-		require_once(HARMONI."GUIManager/Container.class.php");
-		
-		require_once(HARMONI."GUIManager/Layouts/XLayout.class.php");
-		require_once(HARMONI."GUIManager/Layouts/YLayout.class.php");
-		
-		require_once(HARMONI."GUIManager/StyleProperties/FloatSP.class.php");
 				
 		$xLayout = new XLayout();
 		$yLayout = new YLayout();
