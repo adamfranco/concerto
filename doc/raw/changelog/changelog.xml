@@ -10,6 +10,15 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto">
+	<version number="2.5.3" date="The Future">
+		<releaseNotes>
+			
+		</releaseNotes>
+		<change author='adam' date='2008-01-23' ref='1815898' reftype='harmoni_fr'>
+			Version checking now uses PHP5 DOM rather than the DOMIT libraries needed
+			under PHP 4.
+		</change>
+	</version>
 	<version number="2.5.2" date="2007-11-01">
 		<releaseNotes>
 			This release adds some new command line scripts for managing the OAI-PMH 
