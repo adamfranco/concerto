@@ -10,7 +10,6 @@
 
 require_once(POLYPHONY."/main/library/AbstractActions/Action.class.php");
 require_once(POLYPHONY."/main/library/Basket/Basket.class.php");
-require_once(DOMIT);
 require_once(POLYPHONY."/main/modules/tags/TagAction.abstract.php");
 
 require_once(HARMONI."GUIManager/Components/Header.class.php");
@@ -364,9 +363,9 @@ class displayAction
 		$footer->add(new UnstyledBlock($helpText), "50%", null, LEFT, BOTTOM);
 		
 		if (!isset($_SESSION['ConcertoVersion'])) {
-			$document = new DOMIT_Document();
+			$document = new DOMDocument();
 			// attempt to load (parse) the xml file
-			if ($document->loadXML(MYDIR."/doc/raw/changelog/changelog.xml")) {
+			if ($document->load(MYDIR."/doc/raw/changelog/changelog.xml")) {
 				$versionElems =$document->getElementsByTagName("version");
 				$latest =$versionElems->item(0);
 				$_SESSION['ConcertoVersion'] = $latest->getAttribute('number');
