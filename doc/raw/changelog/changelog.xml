@@ -14,6 +14,13 @@
 		<releaseNotes>
 			
 		</releaseNotes>
+		<change author='adam' date='2008-02-06'>
+			A number of small fixes to allow working with Harmoni 1.0.0's move to 
+			pure OSID interfaces.
+		</change>
+		<fix author='adam' date='2008-02-06'>
+			Agent: Adding misisng properties to the default config.
+		</fix>
 		<change author='adam' date='2008-01-23' ref='1815898' reftype='harmoni_fr'>
 			Version checking now uses PHP5 DOM rather than the DOMIT libraries needed
 			under PHP 4.

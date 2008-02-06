@@ -20,6 +20,8 @@
 	$agentHierarchyId = "edu.middlebury.authorization.hierarchy";
 	$configuration->addProperty('hierarchy_id', $agentHierarchyId);
 	$configuration->addProperty('defaultAgentFlavor', $agentFlavor);
+	$configuration->addProperty('database_index', $dbID);
+	$configuration->addProperty('database_name', $dbName);
 	Services::startManagerAsService("AgentManager", $context, $configuration);
 
 // :: Set up PropertyManager ::
