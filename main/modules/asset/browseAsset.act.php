@@ -135,7 +135,7 @@ class browseAssetAction
 		print  "\n\t\t<dt style='font-weight: bold;'>";
 		print _("Type");
 		print ":</dt>\n\t\t<dd >";
-		print Type::typeToString($asset->getAssetType());
+		print $asset->getAssetType()->asString();
 		print "</dd>";
 		
 		$date = $asset->getModificationDate();

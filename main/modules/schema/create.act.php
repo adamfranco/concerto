@@ -199,7 +199,7 @@ class createAction
 				$types =$tmpRecordStructure->getPartStructureTypes();
 				while ($types->hasNext()) {
 					$type =$types->next();
-					$typeString = Type::typeToString($type, " :: ");
+					$typeString = $type->asString(" :: ");
 					if (!array_key_exists($typeString, $orderedTypes))
 						$unorderedTypes[$typeString] = $typeString;
 				}

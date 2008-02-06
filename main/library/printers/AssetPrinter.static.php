@@ -100,9 +100,9 @@ abstract class AssetPrinter {
 			$selectedTypes = array();
 			while ($types->hasNext()) {
 				$type =$types->next();
-				if (RequestContext::value("type___".Type::typeToString($type)) == 'true')
-					$params[RequestContext::name("type___".Type::typeToString($type))] = 
-						RequestContext::value("type___".Type::typeToString($type));
+				if (RequestContext::value("type___".$type->asString()) == 'true')
+					$params[RequestContext::name("type___".$type->asString())] = 
+						RequestContext::value("type___".$type->asString());
 			}
 		}
 		

@@ -154,7 +154,7 @@ class addAction
 						"Assets of this type primarily serve as containers to hold other Assets, possibly for organizational purposes. Similar to a 'folder' or 'directory' on a filesystem.");
 						
 		foreach ($defaultTypes as $type) {
-			$typeString = Type::typeToString($type);
+			$typeString = $type->asString();
 			$typeKey = urlencode($typeString);
 			$selectProperty->addOption($typeKey, $typeString);
 		}
@@ -163,11 +163,11 @@ class addAction
 		$assetTypes =$repository->getAssetTypes();
 		while ($assetTypes->hasNext()) {
 			$assetType =$assetTypes->next();
-			$typeKey = urlencode(Type::typeToString($assetType));
-			$selectProperty->addOption($typeKey, Type::typeToString($assetType));
+			$typeKey = urlencode($assetType->asString());
+			$selectProperty->addOption($typeKey, $assetType->asString());
 		}
 		
-		$selectProperty->setValue(urlencode(Type::typeToString($defaultTypes[0])));
+		$selectProperty->setValue(urlencode($defaultTypes[0]->asString()));
 		
 		$newTypeProperty =$selectProperty->setNewComponent(new WComponentCollection);
 		$property =$newTypeProperty->addComponent("type_domain", new WTextField());

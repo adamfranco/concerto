@@ -13,6 +13,7 @@ require_once(POLYPHONY."/main/library/AbstractActions/MainWindowAction.class.php
 require_once(POLYPHONY."/main/library/Importer/XMLImporters/XMLRepositoryImporter.class.php");
 require_once(POLYPHONY."/main/library/RepositoryImporter/FilesOnlyRepositoryImporter.class.php");
 require_once(POLYPHONY."/main/library/RepositoryImporter/ExifRepositoryImporter.class.php");
+require_once(POLYPHONY."/main/library/RepositoryImporter/TabRepositoryImporter.class.php");
 
 
 /**

@@ -123,7 +123,7 @@ class viewAction
 		print _("Type");
 		print ":</dt>\n\t\t<dd >";
 		try {
-			print Type::typeToString($asset->getAssetType());
+			print $asset->getAssetType()->asString();
 		} catch (UnimplementedException $e) {
 			print "unknown";
 		}

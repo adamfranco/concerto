@@ -186,10 +186,10 @@ class browseAction
 			$types =$repository->getAssetTypes();
 			while ($types->hasNext()) {
 				$type =$types->next();
-				if (RequestContext::value("type___".Type::typeToString($type)) == 'true') {
-					$this->_state["selectedTypes"][Type::typeToString($type)] =$type;
+				if (RequestContext::value("type___".$type->asString()) == 'true') {
+					$this->_state["selectedTypes"][$type->asString()] =$type;
 				} else if (RequestContext::value('form_submitted')) {
-					unset($this->_state["selectedTypes"][Type::typeToString($type)]);
+					unset($this->_state["selectedTypes"][$type->asString()]);
 				}
 			}
 		}
@@ -269,7 +269,7 @@ class browseAction
 			$types =$repository->getSearchTypes();
 			while ($types->hasNext()) {
 				$type =$types->next();				
-				print "\n\t\t<option value='".Type::typeToString($type)."'";
+				print "\n\t\t<option value='".$type->asString()."'";
 				if ($this->_state['searchtype']->isEqual($type)) {
 					print " selected='selected'";
 				}
@@ -312,9 +312,9 @@ class browseAction
 				print "\n\t\t\t<td>";
 				$type =$types->next();
 				print "\n\t\t\t\t<input type='checkbox'";
-				print " name='".RequestContext::name("type___".Type::typeToString($type))."'";
+				print " name='".RequestContext::name("type___".$type->asString())."'";
 				print " value='true'";
-				if (array_key_exists(Type::typeToString($type), $this->_state["selectedTypes"]))
+				if (array_key_exists($type->asString(), $this->_state["selectedTypes"]))
 					print " checked='checked'";
 				print "/>".$type->getKeyword()."";
 				print "\n\t\t\t<td>";

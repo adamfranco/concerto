@@ -98,7 +98,7 @@ class typeListAction
 				print "\n\t\t\t<td>";
 				$type =$types->next();
 				print "\n\t\t\t\t<input type='checkbox'";
-				print " name='".RequestContext::name("type___".Type::typeToString($type))."'";
+				print " name='".RequestContext::name("type___".$type->asString())."'";
 				print " value='true'";
 				print "/>".$type->getKeyword()."";
 				print "\n\t\t\t<td>";
