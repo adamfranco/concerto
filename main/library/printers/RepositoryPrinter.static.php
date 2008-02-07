@@ -153,7 +153,7 @@ abstract class RepositoryPrinter {
 							RequestContext::name("searchtype") => RequestContext::value("searchtype"));			
 			if (RequestContext::value("searchtype")) {
 				$searchModuleManager = Services::getService("RepositorySearchModules");
-				foreach ($searchModuleManager->getCurrentValues(Type::fromString(RequestContext::value("searchtype"))) as $key => $value) {
+				foreach ($searchModuleManager->getCurrentValues(HarmoniType::fromString(RequestContext::value("searchtype"))) as $key => $value) {
 					$params[$key] = $value;
 				}
 			}		

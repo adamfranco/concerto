@@ -113,7 +113,7 @@ class browseAction
 			$criteria = NULL;
 			
 			$searchProperties = new HarmoniProperties(
-					Type::fromString("repository::harmoni::order"));
+				 HarmoniType::fromString("repository::harmoni::order"));
 			$searchProperties->addProperty("order", $arg = "DisplayName");
 			unset($arg);
 			$searchProperties->addProperty("direction", $arg = "ASC");

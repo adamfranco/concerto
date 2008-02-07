@@ -111,7 +111,7 @@ END;
 		// Get the assets to display
 		//***********************************
 		$searchProperties = new HarmoniProperties(
-					Type::fromString("repository::harmoni::order"));
+					HarmoniType::fromString("repository::harmoni::order"));
 		if (!($order = RequestContext::value("order")))
 			$order = 'DisplayName';
 		$searchProperties->addProperty("order", $order);
@@ -119,13 +119,13 @@ END;
 		switch (RequestContext::value("limit_by")) {
 			case 'type':
 				if (RequestContext::value("type")) {
-					$assets =$repository->getAssetsByType(Type::fromString(RequestContext::value("type")));
+					$assets =$repository->getAssetsByType(HarmoniType::fromString(RequestContext::value("type")));
 					break;
 				}
 				
 			case 'search':
 				$searchModuleManager = Services::getService("RepositorySearchModules");
-				$selectedSearchType = Type::fromString(RequestContext::value("searchtype"));
+				$selectedSearchType = HarmoniType::fromString(RequestContext::value("searchtype"));
 				
 				if (RequestContext::value("searchtype") 
 					&& $searchModuleManager->getSearchCriteria($repository, $selectedSearchType)) 

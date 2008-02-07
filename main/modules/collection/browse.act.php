@@ -156,7 +156,7 @@ class browseAction
 		
 		// Search type
 		if (RequestContext::value('searchtype'))
-			$this->_state['searchtype'] = Type::fromString(RequestContext::value('searchtype'));
+			$this->_state['searchtype'] = HarmoniType::fromString(RequestContext::value('searchtype'));
 		else if (!isset($this->_state['searchtype']))
 			$this->_state['searchtype'] = new Type(
 										"Repository",
@@ -537,7 +537,7 @@ END;
 		$searchModuleManager = Services::getService("RepositorySearchModules");		
 		
 		$searchProperties = new HarmoniProperties(
-					Type::fromString("repository::harmoni::order"));
+					HarmoniType::fromString("repository::harmoni::order"));
 		$searchProperties->addProperty("order", $_SESSION["asset_order"]);
 		$searchProperties->addProperty("direction", $_SESSION['asset_order_direction']);
 		

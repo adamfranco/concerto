@@ -309,7 +309,7 @@ class addAction
 		
 		$criteria = NULL;
 		$searchProperties = new HarmoniProperties(
-					Type::fromString("repository::harmoni::order"));
+					HarmoniType::fromString("repository::harmoni::order"));
 		$searchProperties->addProperty("order", $orderBy = 'DisplayName');
 		$searchProperties->addProperty("direction", $direction = 'ASC');
 		unset($orderBy, $direction);
@@ -403,7 +403,7 @@ class addAction
 			// Get the type from the select if one is specified
 			if (is_string($properties['typestep']['type'])) {
 				$typeString = urldecode($properties['typestep']['type']);
-				$assetType = Type::fromString($typeString);
+				$assetType = HarmoniType::fromString($typeString);
 			} 
 			// Otherwise, Generate the type from the specified fields
 			else if (is_array($properties['typestep']['type'])

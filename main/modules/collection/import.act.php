@@ -241,7 +241,7 @@ class importAction extends MainWindowAction {
 		
 		$criteria = NULL;
 		$searchProperties = new HarmoniProperties(
-					Type::fromString("repository::harmoni::order"));
+					HarmoniType::fromString("repository::harmoni::order"));
 		$searchProperties->addProperty("order", $orderBy = 'DisplayName');
 		$searchProperties->addProperty("direction", $direction = 'ASC');
 		unset($orderBy, $direction);

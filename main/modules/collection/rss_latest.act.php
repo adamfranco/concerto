@@ -104,7 +104,7 @@ class rss_latestAction
 		$searchModuleManager = Services::getService("RepositorySearchModules");		
 		
 		$searchProperties = new HarmoniProperties(
-					Type::fromString("repository::harmoni::order"));
+					HarmoniType::fromString("repository::harmoni::order"));
 		if (RequestContext::value('order') == 'modification')
 			$searchProperties->addProperty("order", $arg0 = 'ModificationDate');
 		else
