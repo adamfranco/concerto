@@ -207,6 +207,7 @@ class createAction
 			unlink($newName);
 			rmdir(dirname($newName));
 			
+			$centerPane = $this->getActionRows();
 			$centerPane->add(new Block($e->getMessage(), 1));
 			
 			return false;
