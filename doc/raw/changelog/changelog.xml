@@ -17,6 +17,7 @@
 			
 			Notable changes:
 			- SimpleTableRepository searches now respect character encoding settings.
+			- Tabbed-Delimited importing now works.
 		</releaseNotes>
 		<change author='adam' date='2008-02-06'>
 			A number of small fixes to allow working with Harmoni 1.0.0's move to 
@@ -38,6 +39,12 @@
 		<fix author='adam' date='2008-03-06' ref='1827147' reftype='bug'>
 			Asset Adding: Now there isn't an error when creating an asset from
 			multi-page PDF files.
+		</fix>
+		<fix author='adam' date='2008-02-06' ref='1887057' reftype='bug' reporter='mike_lynch'>
+			Importing: Now do not get a TabRepositoryImporter class-not-found error.
+		</fix>
+		<fix author='adam' date='2008-03-06'>
+			Export: Exporting now works.
 		</fix>
 	</version>
 	<version number="2.5.2" date="2007-11-01">
