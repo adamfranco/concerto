@@ -875,11 +875,11 @@ END;
 					print " value='true'";
 				else
 					print " value='false'";
-				print "/>";	
 			} catch (UnknownIdException $e) {
 				// allow non-harmoni Repositories.
 				print " value='true'";
 			}
+			print "/>";	
 			
 			print "\n<input type='hidden'";
 			print " name='".RequestContext::name("asset_can_delete_".$assetId->getIdString())."'";
