@@ -63,9 +63,11 @@
 	$configuration->addProperty('database_index', $dbID);
 	$configuration->addProperty('database_name', $dbName);
     $configuration->addProperty('default_theme', new SimpleThemeBlack);
-	$configuration->addProperty('character_set', $arg0 = 'utf-8');
-	$configuration->addProperty('document_type', $arg1 = 'text/html');
-	$configuration->addProperty('document_type_definition', $arg2 = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">');
+	$configuration->addProperty('character_set', 'utf-8');
+	$configuration->addProperty('document_type', 'text/html');
+	$configuration->addProperty('document_type_definition', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">');
+	$configuration->addProperty('xmlns', 'http://www.w3.org/1999/xhtml');
+
 	
 	
 	$arrayOfThemes[] = array("Generic Theme","GenericTheme");
@@ -76,5 +78,4 @@
 
 	$configuration->addProperty('array_of_default_themes', $arrayOfThemes);
 	
-	unset($arg0, $arg1, $arg2);
 	Services::startManagerAsService("GUIManager", $context, $configuration);
