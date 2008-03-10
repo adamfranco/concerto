@@ -4,6 +4,53 @@ Name: Concerto Change Log
 
 
 
+v. 2.5.3 (2008-03-10)
+----------------------------------------------------
+This release migrates Concerto to Harmoni 1.0 and includes a few bug fixes as well.
+
+Notable changes: - SimpleTableRepository searches now respect character encoding
+settings. - Tabbed-Delimited importing now works. - Exporting now works again. - Now
+uses Harmoni 1.0
+
+This release uses Harmoni 1.0.3 and Polyphony 1.0.2.
+		
+		
+	* Change: 
+		A number of small fixes to allow working with Harmoni 1.0.0's move to pure
+		OSID interfaces.
+		(2008-02-06 - Adam Franco)
+		
+	* Bug Fix: 
+		Agent: Adding missing properties to the default config.
+		(2008-02-06 - Adam Franco)
+		
+	* Change: #1815898 
+		Version checking now uses PHP5 DOM rather than the DOMIT libraries needed
+		under PHP 4.
+		(2008-01-23 - Adam Franco)
+		
+	* Bug Fix: 
+		Added xmlns value to the default GUI config.
+		(2008-03-06 - Adam Franco)
+		
+	* Bug Fix: 
+		Fixing HTML syntax errors.
+		(2008-03-06 - Adam Franco)
+		
+	* Bug Fix: #1827147 
+		Asset Adding: Now there isn't an error when creating an asset from
+		multi-page PDF files.
+		(2008-03-06 - Adam Franco)
+		
+	* Bug Fix: #1887057 
+		Importing: Now do not get a TabRepositoryImporter class-not-found error.
+		(2008-02-06 - Adam Franco)
+		(reported by Mike Lynch of Middlebury College)
+		
+	* Bug Fix: 
+		Export: Exporting now works.
+		(2008-03-06 - Adam Franco)
+	
 v. 2.5.2 (2007-11-01)
 ----------------------------------------------------
 This release adds some new command line scripts for managing the OAI-PMH provider

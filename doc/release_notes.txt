@@ -3,6 +3,17 @@ Name: Concerto Release Notes
 (See the Concerto change log for more details)
 
 
+v. 2.5.3 (2008-03-10)
+----------------------------------------------------
+This release migrates Concerto to Harmoni 1.0 and includes a few bug fixes as well.
+
+Notable changes: - SimpleTableRepository searches now respect character encoding
+settings. - Tabbed-Delimited importing now works. - Exporting now works again. - Now
+uses Harmoni 1.0
+
+This release uses Harmoni 1.0.3 and Polyphony 1.0.2.
+
+
 v. 2.5.2 (2007-11-01)
 ----------------------------------------------------
 This release adds some new command line scripts for managing the OAI-PMH provider

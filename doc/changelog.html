@@ -23,7 +23,36 @@
 </head>
 <body>
 <h1>Concerto Change Log</h1>
-<h2>Version 2.5.2</h2>
+<h2>Version 2.5.3</h2>
+<h3>2008-03-10</h3>
+<p>This release migrates Concerto to Harmoni 1.0 and includes a few bug fixes as well.
+<br>
+<br>Notable changes: - SimpleTableRepository searches now respect character encoding settings. - Tabbed-Delimited importing now works. - Exporting now works again. - Now uses Harmoni 1.0
+<br>
+<br>This release uses Harmoni 1.0.3 and Polyphony 1.0.2.</p>
+<ul>
+		
+		<li>
+<b>Change:</b> A number of small fixes to allow working with Harmoni 1.0.0's move to pure OSID interfaces. (<em>2008-02-06 - Adam Franco</em>)</li>
+		<li>
+<b>Bug Fix:</b> Agent: Adding missing properties to the default config. (<em>2008-02-06 - Adam Franco</em>)</li>
+		<li>
+<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1815898&amp;group_id=&amp;atid=">
+        			#1815898</a> Version checking now uses PHP5 DOM rather than the DOMIT libraries needed under PHP 4. (<em>2008-01-23 - Adam Franco</em>)</li>
+		<li>
+<b>Bug Fix:</b> Added xmlns value to the default GUI config. (<em>2008-03-06 - Adam Franco</em>)</li>
+		<li>
+<b>Bug Fix:</b> Fixing HTML syntax errors. (<em>2008-03-06 - Adam Franco</em>)</li>
+		<li>
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1827147&amp;group_id=&amp;atid=">
+        			#1827147</a> Asset Adding: Now there isn't an error when creating an asset from multi-page PDF files. (<em>2008-03-06 - Adam Franco</em>)</li>
+		<li>
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1887057&amp;group_id=&amp;atid=">
+        			#1887057</a> Importing: Now do not get a TabRepositoryImporter class-not-found error. (<em>2008-02-06 - Adam Franco</em>)<br> (<em>reported by Mike Lynch of Middlebury College</em>)</li>
+		<li>
+<b>Bug Fix:</b> Export: Exporting now works. (<em>2008-03-06 - Adam Franco</em>)</li>
+	</ul>
+<br><h2>Version 2.5.2</h2>
 <h3>2007-11-01</h3>
 <p>This release adds some new command line scripts for managing the OAI-PMH provider and its data. 
 <br>
