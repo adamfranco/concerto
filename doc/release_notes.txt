@@ -11,7 +11,7 @@ Notable changes: - SimpleTableRepository searches now respect character encoding
 settings. - Tabbed-Delimited importing now works. - Exporting now works again. - Now
 uses Harmoni 1.0
 
-This release uses Harmoni 1.0.3 and Polyphony 1.0.2.
+This release uses Harmoni 1.0.4 and Polyphony 1.0.3.
 
 
 v. 2.5.2 (2007-11-01)

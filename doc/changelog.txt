@@ -12,7 +12,7 @@ Notable changes: - SimpleTableRepository searches now respect character encoding
 settings. - Tabbed-Delimited importing now works. - Exporting now works again. - Now
 uses Harmoni 1.0
 
-This release uses Harmoni 1.0.3 and Polyphony 1.0.2.
+This release uses Harmoni 1.0.4 and Polyphony 1.0.3.
 		
 		
 	* Change: 
@@ -50,6 +50,11 @@ This release uses Harmoni 1.0.3 and Polyphony 1.0.2.
 	* Bug Fix: 
 		Export: Exporting now works.
 		(2008-03-06 - Adam Franco)
+		
+	* Bug Fix: #1912188 
+		Slideshow data: Normalized method names to enable record id specification
+		when printing Asset slides.
+		(2008-03-12 - Adam Franco)
 	
 v. 2.5.2 (2007-11-01)
 ----------------------------------------------------

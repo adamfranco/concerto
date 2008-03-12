@@ -21,7 +21,7 @@
 			- Exporting now works again.
 			- Now uses Harmoni 1.0
 			
-			This release uses Harmoni 1.0.3 and Polyphony 1.0.2.
+			This release uses Harmoni 1.0.4 and Polyphony 1.0.3.
 		</releaseNotes>
 		<change author='adam' date='2008-02-06'>
 			A number of small fixes to allow working with Harmoni 1.0.0's move to 
