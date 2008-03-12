@@ -50,6 +50,10 @@
 		<fix author='adam' date='2008-03-06'>
 			Export: Exporting now works.
 		</fix>
+		<fix author='adam' date='2008-03-12' ref='1912188' reftype='bug'>
+			Slideshow data: Normalized method names to enable record id specification
+			when printing Asset slides.
+		</fix>
 	</version>
 	<version number="2.5.2" date="2007-11-01">
 		<releaseNotes>

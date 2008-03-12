@@ -130,11 +130,12 @@ END;
 	 * Function for printing the asset block of the slideshow XML file
 	 * 
 	 * @param object Asset $asset
+	 * @param optional object Id $recordId
 	 * @return void
 	 * @access public
 	 * @since 10/14/05
 	 */
-	function printAssetXML( $asset) {
+	function printAssetXML( Asset $asset, Id $recordId = null) {
 		
 		$assetId =$asset->getId();
 		$repository =$asset->getRepository();
