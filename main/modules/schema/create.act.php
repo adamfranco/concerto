@@ -415,3 +415,16 @@ class createAction
 			array("wizardSkipToStep" => "schema"));
 	}
 }
+
+/**
+ * 
+ * 
+ * @param <##>
+ * @return <##>
+ * @access public
+ * @since 4/26/06
+ */
+function removeExcessWhitespace ($string) {
+	$string = trim($string);
+}
+
