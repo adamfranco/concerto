@@ -60,7 +60,6 @@ if (!isset($_SESSION['table_setup_complete'])) {
 		/*********************************************************
 		 * Create the needed database tables
 		 *********************************************************/
-		$dbHandler->beginTransaction($dbID);
 		switch ($dbHandler->getDatabaseType($dbID)) {
 			case MYSQL:
 				SQLUtils::runSQLdir(HARMONI_BASE."/SQL/MySQL", $dbID);
