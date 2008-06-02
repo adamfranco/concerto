@@ -10,6 +10,14 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto">
+	<version number="2.5.4" date="The Future">
+		<releaseNotes>
+			
+		</releaseNotes>
+		<fix author='adam' date='2008-06-02' ref='' reftype='bug'>
+			Exporting: Now includes the export config.
+		</fix>
+	</version>
 	<version number="2.5.3" date="2008-03-10">
 		<releaseNotes>
 			This release migrates Concerto to Harmoni 1.0 and includes a few bug

@@ -73,6 +73,7 @@ $configs = array(
 					'language',
 					'help',
 					'sets',
+					'export',
 					'mime',
 					'imageprocessor',
 					'hierarchy',
