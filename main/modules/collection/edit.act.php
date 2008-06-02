@@ -387,7 +387,7 @@ class editAction
 				
 				// If the box is checked, make sure that the ID is in the set
 				$fieldName = "schema_".str_replace(".","__",$recordStructureId->getIdString());
-				if ($properties['schema'][$fieldName]) {
+				if (isset($properties['schema'][$fieldName]) && $properties['schema'][$fieldName]) {
 					if (!$set->isInSet($recordStructureId))
 						$set->addItem($recordStructureId);
 					if ($position = $properties['schema'][$fieldName."_position"])
@@ -456,7 +456,8 @@ class editAction
 			while ($recordStructures->hasNext()) {
 				$recordStructure =$recordStructures->next();
 				$recordStructureId =$recordStructure->getId();
-				if ($properties['schema']['_delete_schema__'.str_replace('.', '_', $recordStructureId->getIdString())]) {
+				$field = '_delete_schema__'.str_replace('.', '_', $recordStructureId->getIdString());
+				if (isset($properties['schema'][$field]) && $properties['schema'][$field]) {
 					$this->closeWizard($cacheName);
 					$harmoni = Harmoni::instance();
 					RequestContext::locationHeader($harmoni->request->quickURL(
@@ -465,7 +466,8 @@ class editAction
 							"recordstructure_id" => $recordStructureId->getIdString())));
 					exit(0);
 				}
-				if ($properties['schema']['duplicate_schema__'.str_replace('.', '_', $recordStructureId->getIdString())]) {
+				$field = 'duplicate_schema__'.str_replace('.', '_', $recordStructureId->getIdString());
+				if (isset($properties['schema'][$field]) && $properties['schema'][$field]) {
 					$this->closeWizard($cacheName);
 					$harmoni = Harmoni::instance();
 					RequestContext::locationHeader($harmoni->request->quickURL(
@@ -475,7 +477,8 @@ class editAction
 							"copy_records" => 'false')));
 					exit(0);
 				}
-				if ($properties['schema']['duplicate_copy_records__'.str_replace('.', '_', $recordStructureId->getIdString())]) {
+				$field = 'duplicate_copy_records__'.str_replace('.', '_', $recordStructureId->getIdString());
+				if (isset($properties['schema'][$field]) && $properties['schema'][$field]) {
 					$this->closeWizard($cacheName);
 					$harmoni = Harmoni::instance();
 					RequestContext::locationHeader($harmoni->request->quickURL(
