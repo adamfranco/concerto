@@ -395,8 +395,9 @@ class importAction extends MainWindowAction {
 		
 		// Unlink the directory
 		if (isset($directory) && $directory)
-			shell_exec(' rm -R '.$directory);
-		unlink($newName);
+			$this->deleteRecursive($directory);
+		if (file_exists($newName))
+			unlink($newName);
 		
 		if ($this->_hasErrors) {	
 			$centerPane->add(new Block(ob_get_contents(), 1));
@@ -522,6 +523,28 @@ class importAction extends MainWindowAction {
 			}
 		}
 		closedir($dir);
+	}
+	
+	/**
+	 * Recursively delete a directory
+	 * 
+	 * @param string $path
+	 * @return void
+	 * @access protected
+	 * @since 1/18/08
+	 */
+	protected function deleteRecursive ($path) {
+		if (is_dir($path)) {
+			$entries = scandir($path);
+			foreach ($entries as $entry) {
+				if ($entry != '.' && $entry != '..') {
+					$this->deleteRecursive($path.DIRECTORY_SEPARATOR.$entry);
+				}
+			}
+			rmdir($path);
+		} else {
+			unlink($path);
+		}
 	}
 	
 }
