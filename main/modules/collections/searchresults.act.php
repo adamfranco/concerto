@@ -87,7 +87,7 @@ class searchresultsAction
 		$repositories =$repositoryManager->getRepositories();
 		while ($repositories->hasNext()) {
 			$repository =$repositories->next();
-			$assets =$repository->getAssetsBySearch($searchCriteria, $searchType, $searchProperties = NULL);
+			$assets =$repository->getAssetsBySearch($searchCriteria, $searchType, new HarmoniProperties(new Type('Repository', 'edu.middlebury', 'null')));
 			
 			// add the results to our total results
 			while ($assets->hasNext()) {

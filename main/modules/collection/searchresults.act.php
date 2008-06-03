@@ -106,7 +106,7 @@ class searchresultsAction
 		//***********************************
 		// Get the assets to display
 		//***********************************
-		$assets =$repository->getAssetsBySearch($searchCriteria, $searchType, $searchProperties = NULL);
+		$assets =$repository->getAssetsBySearch($searchCriteria, $searchType, new HarmoniProperties(new Type('Repository', 'edu.middlebury', 'null')));
 		
 		//***********************************
 		// print the results
