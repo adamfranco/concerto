@@ -1,6 +1,34 @@
 
+Concerto Change Log
 
-Name: Concerto Change Log
+
+v. 2.5.4 (2008-06-03)
+----------------------------------------------------
+This release fixes a number of issues with importing and exporting features that in
+particular, were broken when SafeMode is turned on. Both Tab-Delimited and XML
+importing are now working with or without safe-mode.
+
+This release uses Harmoni 1.3.4 and Polyphony 1.2.3.
+		
+		
+	* Change: # 
+		Importing: Better error reporting in tab-delimited mode.
+		(2008-06-03 - Adam Franco)
+		
+	* Bug Fix: #1912951 
+		Browsing: 'starting_number' text is no longer appearing in
+		collection-browse. 
+		(2008-06-03 - Adam Franco)
+		
+	* Bug Fix: # 
+		Exporting: Now includes the export config.
+		(2008-06-02 - Adam Franco)
+		
+	* Bug Fix: #1912944 
+		Importing: XML Import no longer uses shell_exec() to avoid Safe-Mode
+		restriction errors.
+		(2008-06-03 - Adam Franco)
+	
 
 
 
@@ -56,6 +84,9 @@ This release uses Harmoni 1.0.4 and Polyphony 1.0.3.
 		when printing Asset slides.
 		(2008-03-12 - Adam Franco)
 	
+
+
+
 v. 2.5.2 (2007-11-01)
 ----------------------------------------------------
 This release adds some new command line scripts for managing the OAI-PMH provider
@@ -72,6 +103,9 @@ Concerto 2.5.2 includes Harmoni 0.13.2 and Polyphony 0.10.2.
 		source data.
 		(2007-11-01 - Adam Franco)
 	
+
+
+
 v. 2.5.1 (2007-10-24)
 ----------------------------------------------------
 This release includes several bug fixes in the Polyphony libraries which impacted
@@ -86,6 +120,9 @@ streamline the process and prevent confusion.
 		easier creation of assets from files.
 		(2007-10-24 - Adam Franco)
 	
+
+
+
 v. 2.5.0 (2007-10-22)
 ----------------------------------------------------
 As of this release, Concerto no longer supports PHP4. Please use PHP 5.2 or later.
@@ -107,7 +144,7 @@ concerto/main/harmoni/core/DBHandler/db_updater.php
 	* Change: 
 		Removing ampersands for compatability with other PHP5 code. The BBEdit-grep
 		string used for the find and replace was: (function
-		)&amp;|(=\s?)&amp;([^a-z#])|([^&amp;])&amp;\s?(\$) replaced with \1\2\3\4\5
+		)&|(=\s?)&([^a-z#])|([^&])&\s?(\$) replaced with \1\2\3\4\5
 		(Adam Franco)
 		
 	* Bug Fix: #1708395 
@@ -120,7 +157,7 @@ concerto/main/harmoni/core/DBHandler/db_updater.php
 		(Adam Franco)
 		
 	* Bug Fix: 
-		Converting all short tags (&lt;?) to the full tags (&lt;?php) for compatibility
+		Converting all short tags (<?) to the full tags (<?php) for compatibility
 		with more PHP configurations.
 		(Adam Franco)
 		
@@ -212,6 +249,9 @@ concerto/main/harmoni/core/DBHandler/db_updater.php
 		(2007-10-18 - Adam Franco)
 		(reported by Andy Wentink of Middlebury College)
 	
+
+
+
 v. 2.4.1 (2007-04-10)
 ----------------------------------------------------
 
@@ -220,6 +260,9 @@ v. 2.4.1 (2007-04-10)
 		Fixed a few bugs that prevented Concerto from running in PHP 5.
 		(Adam Franco)
 	
+
+
+
 v. 2.4.0 (2007-04-05)
 ----------------------------------------------------
 
@@ -283,6 +326,9 @@ v. 2.4.0 (2007-04-05)
 		time (from browsing an asset).
 		(Adam Franco)
 	
+
+
+
 v. 2.3.0 (2006-12-13)
 ----------------------------------------------------
 
@@ -340,6 +386,9 @@ v. 2.3.0 (2006-12-13)
 		metadata. 
 		(Adam Franco)
 	
+
+
+
 v. 2.2.0 (2006-12-01)
 ----------------------------------------------------
 
@@ -359,6 +408,9 @@ v. 2.2.0 (2006-12-01)
 		Admin interface for managing courses.
 		(John Lee)
 	
+
+
+
 v. 2.1.13 (2006-11-30)
 ----------------------------------------------------
 
@@ -376,6 +428,9 @@ v. 2.1.13 (2006-11-30)
 		Tagging: Fixed IE javascript errors.
 		(Adam Franco)
 	
+
+
+
 v. 2.1.12 (2006-11-28)
 ----------------------------------------------------
 
@@ -397,6 +452,9 @@ v. 2.1.12 (2006-11-28)
 		Collections: Now checks authZ before showing collections in the list.
 		(Adam Franco)
 	
+
+
+
 v. 2.1.11 (2006-10-25)
 ----------------------------------------------------
 
@@ -416,6 +474,9 @@ v. 2.1.11 (2006-10-25)
 		installation outside of a web-accessible directory.
 		(Adam Franco)
 	
+
+
+
 v. 2.1.10 (2006-08-28)
 ----------------------------------------------------
 
@@ -435,6 +496,9 @@ v. 2.1.10 (2006-08-28)
 		icon will be used instead.
 		(Adam Franco)
 	
+
+
+
 v. 2.1.9 (2006-08-16)
 ----------------------------------------------------
 
@@ -458,6 +522,9 @@ v. 2.1.9 (2006-08-16)
 		are now specified in a config.
 		(Adam Franco)
 	
+
+
+
 v. 2.1.8 (2006-08-15)
 ----------------------------------------------------
 
@@ -480,6 +547,9 @@ v. 2.1.8 (2006-08-15)
 		missing. 
 		(Adam Franco)
 	
+
+
+
 v. 2.1.7 (2006-08-11)
 ----------------------------------------------------
 
@@ -515,6 +585,9 @@ v. 2.1.7 (2006-08-11)
 		Fixes in Harmoni and Polyphony. See their changelogs for more details.
 		(Adam Franco)
 	
+
+
+
 v. 2.1.6 (2006-08-04)
 ----------------------------------------------------
 
@@ -538,6 +611,9 @@ v. 2.1.6 (2006-08-04)
 		return null rather than a valid primitive object.
 		(Adam Franco)
 	
+
+
+
 v. 2.1.5 (2006-08-02)
 ----------------------------------------------------
 
@@ -562,6 +638,9 @@ v. 2.1.5 (2006-08-02)
 		details. 
 		(Adam Franco)
 	
+
+
+
 v. 2.1.4 (2006-07-21)
 ----------------------------------------------------
 
@@ -591,6 +670,9 @@ v. 2.1.4 (2006-07-21)
 		UI flow: Now returns to browsing when checked assets are delete/edited.
 		(Adam Franco)
 	
+
+
+
 v. 2.1.3 (2006-06-30)
 ----------------------------------------------------
 
@@ -599,6 +681,9 @@ v. 2.1.3 (2006-06-30)
 		Importing: Fixed cacheName problem when authenticated via LDAP.
 		(Adam Franco)
 	
+
+
+
 v. 2.1.2 (2006-06-26)
 ----------------------------------------------------
 
@@ -622,6 +707,9 @@ v. 2.1.2 (2006-06-26)
 		added properly in the multi-edit wizard, causing a fatal error.
 		(Adam Franco)
 	
+
+
+
 v. 2.1.1 (2006-06-20)
 ----------------------------------------------------
 
@@ -631,6 +719,9 @@ v. 2.1.1 (2006-06-20)
 		schemas. 
 		(Adam Franco)
 	
+
+
+
 v. 2.1.0 (2006-06-16)
 ----------------------------------------------------
 
@@ -791,6 +882,9 @@ v. 2.1.0 (2006-06-16)
 		changelog. 
 		(Adam Franco)
 	
+
+
+
 v. 2.0.0 (2006-05-26)
 ----------------------------------------------------
 
@@ -833,6 +927,9 @@ v. 2.0.0 (2006-05-26)
 		CollectionBrowse now returns unauthorized if a collection id isn't passed.
 		(Adam Franco)
 	
+
+
+
 v. 2.0-beta 4 (2006-05-19)
 ----------------------------------------------------
 
@@ -866,6 +963,9 @@ v. 2.0-beta 4 (2006-05-19)
 		The full hierarchy of ancestor assets is now desplayed in the menu.
 		(Adam Franco)
 	
+
+
+
 v. 2.0-beta 3 (2006-05-05)
 ----------------------------------------------------
 
@@ -919,6 +1019,9 @@ v. 2.0-beta 3 (2006-05-05)
 		Added StatusStars Status Bar to all importer actions.
 		(Christopher Shubert)
 	
+
+
+
 v. 2.0-beta 2 (2006-02-09)
 ----------------------------------------------------
 
@@ -988,6 +1091,9 @@ v. 2.0-beta 2 (2006-02-09)
 		Lots of speed optimizations.
 		(Adam Franco)
 	
+
+
+
 v. 0.2.0 (2005-10-12)
 ----------------------------------------------------
 
@@ -1027,6 +1133,9 @@ v. 0.2.0 (2005-10-12)
 		Can now add Assets as children of other Assets.
 		(Adam Franco)
 	
+
+
+
 v. 0.1.2 (2005-04-14)
 ----------------------------------------------------
 
@@ -1045,6 +1154,9 @@ v. 0.1.2 (2005-04-14)
 		POSIX systems.
 		(Adam Franco)
 	
+
+
+
 v. 0.1.1 (2005-04-11)
 ----------------------------------------------------
 
@@ -1054,6 +1166,9 @@ v. 0.1.1 (2005-04-11)
 		around during the authentication sequence.
 		(Adam Franco)
 	
+
+
+
 v. 0.1.0 (2005-04-07)
 ----------------------------------------------------
 
@@ -1066,3 +1181,7 @@ v. 0.1.0 (2005-04-07)
 		Everything.
 		(Adam Franco)
 	
+
+
+
+

@@ -10,10 +10,17 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto">
-	<version number="2.5.4" date="The Future">
+	<version number="2.5.4" date="2008-06-03">
 		<releaseNotes>
+			This release fixes a number of issues with importing and exporting features
+			that in particular, were broken when SafeMode is turned on. Both Tab-Delimited
+			and XML importing are now working with or without safe-mode.
 			
+			This release uses Harmoni 1.3.4 and Polyphony 1.2.3.
 		</releaseNotes>
+		<change author='adam' date='2008-06-03' ref='' reftype='fr'>
+			Importing: Better error reporting in tab-delimited mode.
+		</change>
 		<fix author='adam' date='2008-06-03' ref='1912951' reftype='bug'>
 			Browsing: 'starting_number' text is no longer appearing in collection-browse.
 		</fix>
@@ -835,6 +842,38 @@
 			Everything.
 		</new>
 	</version>
+	
+	<about>
+		Concerto is a digital assets management tool written in PHP and built on top of the 
+		Harmoni Application Framework. Concerto uses Harmoni's implementation of the Open
+		Knowledge Initiative Open Service Interface Definitions for its repository back-end.
+	</about>
+	
+	<info>
+		<title>Downloads</title>
+		<description>For the latest and archived versions, please download from SourceForge.</description>
+		<url>http://sourceforge.net/project/showfiles.php?group_id=88266&amp;package_id=149343</url>
+	</info>
+	<info>
+		<title>Documentation</title>
+		<description>
+			Concerto includes contextual help for users. Additional documentation can
+			be found online at:
+		</description>
+		<url>http://harmoni.sourceforge.net/wiki/index.php/Concerto</url>
+	</info>
+	<info>
+		<title>Installation</title>
+		<description>
+			See the INSTALL.txt file in the Concerto root directory for installation instructions
+			or read on the web at:
+		</description>
+		<url>http://sourceforge.net/project/showfiles.php?group_id=88266&amp;package_id=149343</url>
+	</info>
+	<info>
+		<title>Bug Tracker</title>
+		<url>http://sourceforge.net/tracker/?group_id=88266&amp;atid=586057</url>
+	</info>
 	
 	<authors>
 		<name short="adam">Adam Franco</name>

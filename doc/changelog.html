@@ -23,7 +23,27 @@
 </head>
 <body>
 <h1>Concerto Change Log</h1>
-<h2>Version 2.5.3</h2>
+<h2>Version 2.5.4</h2>
+<h3>2008-06-03</h3>
+<p>This release fixes a number of issues with importing and exporting features that in particular, were broken when SafeMode is turned on. Both Tab-Delimited and XML importing are now working with or without safe-mode.
+<br>
+<br>This release uses Harmoni 1.3.4 and Polyphony 1.2.3.</p>
+<ul>
+		
+		<li>
+<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=&amp;group_id=88266&amp;atid=586057">
+        			#</a> Importing: Better error reporting in tab-delimited mode. (<em>2008-06-03 - Adam Franco</em>)</li>
+		<li>
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1912951&amp;group_id=88266&amp;atid=586054">
+        			#1912951</a> Browsing: 'starting_number' text is no longer appearing in collection-browse. (<em>2008-06-03 - Adam Franco</em>)</li>
+		<li>
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=&amp;group_id=88266&amp;atid=586054">
+        			#</a> Exporting: Now includes the export config. (<em>2008-06-02 - Adam Franco</em>)</li>
+		<li>
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1912944&amp;group_id=88266&amp;atid=586054">
+        			#1912944</a> Importing: XML Import no longer uses shell_exec() to avoid Safe-Mode restriction errors. (<em>2008-06-03 - Adam Franco</em>)</li>
+	</ul>
+<br><h2>Version 2.5.3</h2>
 <h3>2008-03-10</h3>
 <p>This release migrates Concerto to Harmoni 1.0 and includes a few bug fixes as well.
 <br>
@@ -37,22 +57,22 @@
 		<li>
 <b>Bug Fix:</b> Agent: Adding missing properties to the default config. (<em>2008-02-06 - Adam Franco</em>)</li>
 		<li>
-<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1815898&amp;group_id=&amp;atid=">
+<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1815898&amp;group_id=82873&amp;atid=567476">
         			#1815898</a> Version checking now uses PHP5 DOM rather than the DOMIT libraries needed under PHP 4. (<em>2008-01-23 - Adam Franco</em>)</li>
 		<li>
 <b>Bug Fix:</b> Added xmlns value to the default GUI config. (<em>2008-03-06 - Adam Franco</em>)</li>
 		<li>
 <b>Bug Fix:</b> Fixing HTML syntax errors. (<em>2008-03-06 - Adam Franco</em>)</li>
 		<li>
-<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1827147&amp;group_id=&amp;atid=">
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1827147&amp;group_id=88266&amp;atid=586054">
         			#1827147</a> Asset Adding: Now there isn't an error when creating an asset from multi-page PDF files. (<em>2008-03-06 - Adam Franco</em>)</li>
 		<li>
-<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1887057&amp;group_id=&amp;atid=">
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1887057&amp;group_id=88266&amp;atid=586054">
         			#1887057</a> Importing: Now do not get a TabRepositoryImporter class-not-found error. (<em>2008-02-06 - Adam Franco</em>)<br> (<em>reported by Mike Lynch of Middlebury College</em>)</li>
 		<li>
 <b>Bug Fix:</b> Export: Exporting now works. (<em>2008-03-06 - Adam Franco</em>)</li>
 		<li>
-<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1912188&amp;group_id=&amp;atid=">
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1912188&amp;group_id=88266&amp;atid=586054">
         			#1912188</a> Slideshow data: Normalized method names to enable record id specification when printing Asset slides. (<em>2008-03-12 - Adam Franco</em>)</li>
 	</ul>
 <br><h2>Version 2.5.2</h2>
@@ -75,7 +95,7 @@
 <ul>
 		
 		<li>
-<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1812313&amp;group_id=&amp;atid=">
+<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1812313&amp;group_id=88266&amp;atid=586057">
         			#1812313</a> AssetCreation: The asset creation process has been streamlined to allow easier creation of assets from files. (<em>2007-10-24 - Adam Franco</em>)</li>
 	</ul>
 <br><h2>Version 2.5.0</h2>
@@ -92,7 +112,7 @@
 		<li>
 <b>Change:</b> Removing ampersands for compatability with other PHP5 code. The BBEdit-grep string used for the find and replace was: (function )&amp;|(=\s?)&amp;([^a-z#])|([^&amp;])&amp;\s?(\$) replaced with \1\2\3\4\5 (<em>Adam Franco</em>)</li>
 		<li>
-<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1708395&amp;group_id=&amp;atid=">
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1708395&amp;group_id=88266&amp;atid=586054">
         			#1708395</a> Now using an empty default cookie domain to better work out of the box. (<em>2007-10-09 - Adam Franco</em>)<br> (<em>reported by Pablo Casado of Open University of Catalonia, Chris Newton</em>)</li>
 		<li>
 <b>Bug Fix:</b> Periods in schema ids were breaking schema selection form fields. (<em>Adam Franco</em>)</li>
@@ -113,41 +133,41 @@
 		<li>
 <b>Bug Fix:</b> OAI: Now supports the new SimpleTableRepository. (<em>2007-10-12 - Adam Franco</em>)</li>
 		<li>
-<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1812422&amp;group_id=&amp;atid=">
+<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1812422&amp;group_id=88266&amp;atid=586054">
         			#1812422</a> Documented PEAR::DB dependency in OAI provider. (<em>2007-10-15 - Adam Franco</em>)</li>
 		<li>
-<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1812286&amp;group_id=&amp;atid=">
+<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1812286&amp;group_id=88266&amp;atid=586054">
         			#1812286</a> Documented PEAR::Archive_Tar dependency. (<em>2007-10-15 - Adam Franco</em>)<br> (<em>reported by Chris Newton</em>)</li>
 		<li>
-<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1812287&amp;group_id=&amp;atid=">
+<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1812287&amp;group_id=88266&amp;atid=586054">
         			#1812287</a> Documented ImageMagick dependency. (<em>2007-10-15 - Adam Franco</em>)<br> (<em>reported by Chris Newton</em>)</li>
 		<li>
-<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1811204&amp;group_id=&amp;atid=">
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1811204&amp;group_id=88266&amp;atid=586054">
         			#1811204</a> Wizard links are now working in the Edit Slideshow Wizard. (<em>2007-10-16 - Adam Franco</em>)</li>
 		<li>
-<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1811216&amp;group_id=&amp;atid=">
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1811216&amp;group_id=88266&amp;atid=586054">
         			#1811216</a> Wizard links now do not bypass PHP field validation. (<em>2007-10-16 - Adam Franco</em>)</li>
 		<li>
-<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1812284&amp;group_id=&amp;atid=">
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1812284&amp;group_id=88266&amp;atid=586054">
         			#1812284</a> Asset Editing UI now returns to the previous page on save or cancel. (<em>2007-10-16 - Adam Franco</em>)</li>
 		<li>
-<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1814540&amp;group_id=&amp;atid=">
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1814540&amp;group_id=88266&amp;atid=586054">
         			#1814540</a> Asset parents now showing in sidebar hierarchy.
 <br>
 <br>ConcertoMenugenerator::addFirstParents() was missing an ampersand that forces passing of the array parameter by reference. (<em>2007-10-16 - Adam Franco</em>)</li>
 		<li>
-<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1812418&amp;group_id=&amp;atid=">
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1812418&amp;group_id=88266&amp;atid=586054">
         			#1812418</a> Slideshows: Now when browsing child assets, clicking on the thumbnail loads the same viewer URL as the 'view' button.
 <br>
 <br>Unified printing of asset-browsing slideshow URLs. (<em>2007-10-16 - Adam Franco</em>)</li>
 		<li>
-<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1814133&amp;group_id=&amp;atid=">
+<b>Change:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1814133&amp;group_id=88266&amp;atid=586057">
         			#1814133</a> Moving installer scripts into concerto/main/install (<em>2007-10-16 - Adam Franco</em>)</li>
 		<li>
-<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1810360&amp;group_id=&amp;atid=">
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1810360&amp;group_id=88266&amp;atid=586054">
         			#1810360</a> Asset and Slideshow options panels now work in IE. Need to explicitly add tbody elements to tables. (<em>2007-10-18 - Adam Franco</em>)</li>
 		<li>
-<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1815787&amp;group_id=&amp;atid=">
+<b>Bug Fix:</b><a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1815787&amp;group_id=88266&amp;atid=586054">
         			#1815787</a> Slideshows: Spaces in the window-name parameter to the window.open() function were preventing some slideshow windows from opening when clicked on. (<em>2007-10-18 - Adam Franco</em>)<br> (<em>reported by Andy Wentink of Middlebury College</em>)</li>
 	</ul>
 <br><h2>Version 2.4.1</h2>
