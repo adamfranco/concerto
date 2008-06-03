@@ -245,7 +245,7 @@ class importAction extends MainWindowAction {
 					}
 					closedir($dir);
 					// Unlink the directory
-					shell_exec(' rm -R '.$directory);
+					$this->deleteRecursive($directory);
 			}
 			else {// not compressed, only one xml file
 				$importer = XMLRepositoryImporter::withFile($array, $newName,
@@ -284,5 +284,27 @@ class importAction extends MainWindowAction {
 		$harmoni = Harmoni::instance();		
 		return $harmoni->request->quickURL("collections", "namebrowse");
 	}	
+	
+	/**
+	 * Recursively delete a directory
+	 * 
+	 * @param string $path
+	 * @return void
+	 * @access protected
+	 * @since 1/18/08
+	 */
+	protected function deleteRecursive ($path) {
+		if (is_dir($path)) {
+			$entries = scandir($path);
+			foreach ($entries as $entry) {
+				if ($entry != '.' && $entry != '..') {
+					$this->deleteRecursive($path.DIRECTORY_SEPARATOR.$entry);
+				}
+			}
+			rmdir($path);
+		} else {
+			unlink($path);
+		}
+	}
 }
 ?>
