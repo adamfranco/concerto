@@ -259,7 +259,8 @@ class importAction extends MainWindowAction {
 			}
 			
 		}
-		unlink($newName);
+		if (file_exists($newName))
+			unlink($newName);
 		
 		if ($hasErrors) {	
 			$centerPane->add(new Block(ob_get_contents(), 1));
