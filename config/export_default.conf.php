@@ -11,3 +11,11 @@
  
 if (!defined('XML_EXPORT_TMP_DIR'))
 	define('XML_EXPORT_TMP_DIR', '/tmp');
+	
+/*********************************************************
+ * If Safe-Mode is on, then execution of shell commands is
+ * restricted to those in a certain directory, make a symbolic 
+ * link to 'tar' there and set the following option.
+ *********************************************************/
+// if (!defined('XML_EXPORT_EXEC_PATH'))
+// 	define('XML_EXPORT_EXEC_PATH', '/usr/local/bin');
