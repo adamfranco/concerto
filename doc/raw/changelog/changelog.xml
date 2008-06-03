@@ -14,6 +14,9 @@
 		<releaseNotes>
 			
 		</releaseNotes>
+		<fix author='adam' date='2008-06-03' ref='1912951' reftype='bug'>
+			Browsing: 'starting_number' text is no longer appearing in collection-browse.
+		</fix>
 		<fix author='adam' date='2008-06-02' ref='' reftype='bug'>
 			Exporting: Now includes the export config.
 		</fix>

@@ -200,7 +200,10 @@ class browseAction
 			|| !isset($this->_state['numPerPage'])
 			|| ($this->_state['numPerPage'] != $_SESSION['assets_per_page']))
 		{
-			$this->_state['startingNumber'] = ResultPrinter::startingNumberParam();
+			if (isset($_REQUEST[ResultPrinter::startingNumberParam()]))
+				$this->_state['startingNumber'] = $_REQUEST[ResultPrinter::startingNumberParam()];
+			else
+				$this->_state['startingNumber'] = 1;
 			$this->_state['numPerPage'] = $_SESSION['assets_per_page'];
 		} else if (!isset($this->_state['startingNumber'])) {
 			$this->_state['startingNumber'] = 1;
