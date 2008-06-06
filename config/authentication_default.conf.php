@@ -50,8 +50,6 @@
 		
 	$configuration->addProperty($dbAuthType, $dbAuthNMethod);
 	
-	$GLOBALS["NewUserAuthNType"] =$dbAuthType;
-
 		// set up LDAPAuthentication Method
 //  		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/LDAPAuthNMethod.class.php");
 //  		require_once(HARMONI."/oki2/agentmanagement/AuthNMethods/LDAPAuthNTokens.class.php");	
