@@ -10,6 +10,18 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto">
+	<version number="2.5.5" date="2008-07-17">
+		<releaseNotes>
+			This release fixes a bug in the slide-show creation wizard that was
+			preventing creation of slides from the selection.
+			
+			This release uses Harmoni 1.4.2 and Polyphony 1.2.9.
+		</releaseNotes>
+		<fix author='adam' date='2008-07-17' ref='2018193' reftype='bug'>
+			SlideShows: Fixed reference error in slideshow wizard that was preventing
+			creation of slides from the selection.
+		</fix>
+	</version>
 	<version number="2.5.4" date="2008-06-03">
 		<releaseNotes>
 			This release fixes a number of issues with importing and exporting features
