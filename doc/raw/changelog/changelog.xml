@@ -15,6 +15,9 @@
 			This release fixes a bug in the slide-show creation wizard that was
 			preventing creation of slides from the selection.
 			
+			As well, this release also fixes errors in the 'selection' that prevented
+			clearing and exporting from working properly.
+			
 			This release uses Harmoni 1.4.2 and Polyphony 1.2.9.
 		</releaseNotes>
 		<fix author='adam' date='2008-07-17' ref='2018193' reftype='bug'>

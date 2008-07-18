@@ -1,5 +1,5 @@
 
-Concerto v. 2.5.4 (2008-06-03)
+Concerto v. 2.5.5 (2008-07-17)
 =================================
 
 What is Concerto?
@@ -11,11 +11,13 @@ Knowledge Initiative Open Service Interface Definitions for its repository back-
 
 Current Version Notes
 ---------------------
-This release fixes a number of issues with importing and exporting features that in
-particular, were broken when SafeMode is turned on. Both Tab-Delimited and XML
-importing are now working with or without safe-mode.
+This release fixes a bug in the slide-show creation wizard that was preventing
+creation of slides from the selection.
 
-This release uses Harmoni 1.3.4 and Polyphony 1.2.3.
+As well, this release also fixes errors in the 'selection' that prevented clearing
+and exporting from working properly.
+
+This release uses Harmoni 1.4.2 and Polyphony 1.2.9.
 
 
 Downloads
@@ -55,6 +57,18 @@ http://sourceforge.net/tracker/?group_id=88266&atid=586057
 | Prior Concerto Release Notes
 | (See the Concerto change log for more details)
 ===================================================================
+
+
+v. 2.5.5 (2008-07-17)
+----------------------------------------------------
+This release fixes a bug in the slide-show creation wizard that was preventing
+creation of slides from the selection.
+
+As well, this release also fixes errors in the 'selection' that prevented clearing
+and exporting from working properly.
+
+This release uses Harmoni 1.4.2 and Polyphony 1.2.9.
+
 
 
 v. 2.5.4 (2008-06-03)

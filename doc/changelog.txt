@@ -2,6 +2,25 @@
 Concerto Change Log
 
 
+v. 2.5.5 (2008-07-17)
+----------------------------------------------------
+This release fixes a bug in the slide-show creation wizard that was preventing
+creation of slides from the selection.
+
+As well, this release also fixes errors in the 'selection' that prevented clearing
+and exporting from working properly.
+
+This release uses Harmoni 1.4.2 and Polyphony 1.2.9.
+		
+		
+	* Bug Fix: #2018193 
+		SlideShows: Fixed reference error in slideshow wizard that was preventing
+		creation of slides from the selection.
+		(2008-07-17 - Adam Franco)
+	
+
+
+
 v. 2.5.4 (2008-06-03)
 ----------------------------------------------------
 This release fixes a number of issues with importing and exporting features that in
