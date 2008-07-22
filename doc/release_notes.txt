@@ -1,5 +1,5 @@
 
-Concerto v. 2.5.5 (2008-07-17)
+Concerto v. 2.5.6 (2008-07-22)
 =================================
 
 What is Concerto?
@@ -11,13 +11,12 @@ Knowledge Initiative Open Service Interface Definitions for its repository back-
 
 Current Version Notes
 ---------------------
-This release fixes a bug in the slide-show creation wizard that was preventing
-creation of slides from the selection.
+This release fixes a Polyphony issue in which null dates were preventing the loading
+of some asset-editing screens. As well, this release updates the controller
+index.php script to better handle otherwise uncaught exceptions and print pretty
+error messages.
 
-As well, this release also fixes errors in the 'selection' that prevented clearing
-and exporting from working properly.
-
-This release uses Harmoni 1.4.2 and Polyphony 1.2.9.
+This release uses Harmoni 1.4.4 and Polyphony 1.2.12.
 
 
 Downloads
@@ -57,6 +56,17 @@ http://sourceforge.net/tracker/?group_id=88266&atid=586057
 | Prior Concerto Release Notes
 | (See the Concerto change log for more details)
 ===================================================================
+
+
+v. 2.5.6 (2008-07-22)
+----------------------------------------------------
+This release fixes a Polyphony issue in which null dates were preventing the loading
+of some asset-editing screens. As well, this release updates the controller
+index.php script to better handle otherwise uncaught exceptions and print pretty
+error messages.
+
+This release uses Harmoni 1.4.4 and Polyphony 1.2.12.
+
 
 
 v. 2.5.5 (2008-07-17)

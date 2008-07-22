@@ -2,6 +2,24 @@
 Concerto Change Log
 
 
+v. 2.5.6 (2008-07-22)
+----------------------------------------------------
+This release fixes a Polyphony issue in which null dates were preventing the loading
+of some asset-editing screens. As well, this release updates the controller
+index.php script to better handle otherwise uncaught exceptions and print pretty
+error messages.
+
+This release uses Harmoni 1.4.4 and Polyphony 1.2.12.
+		
+		
+	* Change: 
+		Controller: Updated index.php controller to catch exceptions, print a pretty
+		error message, and log the exception rather than dying.
+		(2008-07-22 - Adam Franco)
+	
+
+
+
 v. 2.5.5 (2008-07-17)
 ----------------------------------------------------
 This release fixes a bug in the slide-show creation wizard that was preventing
