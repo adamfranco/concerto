@@ -40,6 +40,7 @@ require_once (POLYPHONY_DIR."/polyphony.inc.php");
 /******************************************************************************
  * Include our libraries
  ******************************************************************************/
+require_once(MYDIR."/main/library/ConcertoErrorPrinter.class.php");
 require_once(MYDIR."/main/library/ConcertoMenuGenerator.class.php");
 require_once(MYDIR."/main/library/printers/AssetPrinter.static.php");
 require_once(MYDIR."/main/library/printers/RepositoryPrinter.static.php");

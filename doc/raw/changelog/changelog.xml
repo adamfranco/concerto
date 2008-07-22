@@ -10,6 +10,15 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto">
+	<version number="2.5.6" date="The Future">
+		<releaseNotes>
+			
+		</releaseNotes>
+		<change author='adam' date='2008-07-22'>
+			Controller: Updated index.php controller to catch exceptions, print a
+			pretty error message, and log the exception rather than dying.
+		</change>
+	</version>
 	<version number="2.5.5" date="2008-07-17">
 		<releaseNotes>
 			This release fixes a bug in the slide-show creation wizard that was
