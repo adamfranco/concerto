@@ -10,6 +10,14 @@
 <!DOCTYPE changelog SYSTEM "../dtds/changelog.dtd">
 
 <changelog name="Concerto">
+	<version number="2.5.7" date="The Future">
+		<releaseNotes>
+			
+		</releaseNotes>
+		<fix author='adam' date='2008-08-06' ref='2040277' reftype='segue_security'>
+			Security: Fixed reflective cross-site scripting vulnerability in error printer.
+		</fix>
+	</version>
 	<version number="2.5.6" date="2008-07-22">
 		<releaseNotes>
 			This release fixes a Polyphony issue in which null dates were preventing the
@@ -945,5 +953,6 @@
 		<reftype name="segue_bug" group="82171" tracker='565234'/>
 		<reftype name="segue_fr" group="82171" tracker='565237'/>
 		<reftype name="segue_patch" group="82171" tracker='565236'/>
+		<reftype name="segue_security" group="82171" tracker='1098812'/>
 	</reftypes>
 </changelog>
