@@ -1,0 +1,15 @@
+[submodule "main/harmoni"]
+	path = main/harmoni
+	url = git://github.com/adamfranco/harmoni.git
+[submodule "main/polyphony"]
+	path = main/polyphony
+	url = git://github.com/adamfranco/polyphony.git
+[submodule "main/domit"]
+	path = main/domit
+	url = http://community.middlebury.edu/~afranco/git/external/domit.git/
+[submodule "viewer"]
+	path = viewer
+	url = git://github.com/adamfranco/viewer.git
+[submodule "main/PHP_JPEG_Metadata_Toolkit_1.11"]
+	path = main/PHP_JPEG_Metadata_Toolkit_1.11
+	url = http://community.middlebury.edu/~afranco/git/external/PHP_JPEG_Metadata_Toolkit.git
