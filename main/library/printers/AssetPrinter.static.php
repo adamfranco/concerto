@@ -220,7 +220,7 @@ abstract class AssetPrinter {
 			if ($isAuthorized) {
 				// If we are viewing the asset and we delete it, we can't return
 				// to viewing it.
-				if (ereg("^asset\..*$", $actionString) && 
+				if (preg_match("/^asset\..*$/", $actionString) && 
 						$harmoni->request->get("asset_id") == 
 						$assetId->getIdString())
 				{
@@ -264,7 +264,7 @@ abstract class AssetPrinter {
 // 			} else
 // 				$links[] = _("Details");
 		//===== Export Link =====//
-// 			if (ereg("^asset\..*$", $actionString) && 
+// 			if (preg_match("/^asset\..*$/", $actionString) && 
 // 					$harmoni->request->get("asset_id") == 
 // 					$assetId->getIdString()) {
 // 				$harmoni->request->startNamespace('export');
@@ -326,7 +326,7 @@ abstract class AssetPrinter {
 // 			{
 // 				// If we are viewing the asset and we delete it, we can't return
 // 				// to viewing it.
-// 				if (ereg("^asset\..*$", $actionString) && 
+// 				if (preg_match("/^asset\..*$/", $actionString) && 
 // 						$harmoni->request->get("asset_id") == 
 // 						$assetId->getIdString())
 // 				{
@@ -363,7 +363,7 @@ abstract class AssetPrinter {
 // 			if ($authZ->isUserAuthorized(
 // 					$idManager->getId("edu.middlebury.authorization.add_children"),
 // 					$assetId)) {
-// 				if (ereg("^asset\..*$", $actionString) && 
+// 				if (preg_match("/^asset\..*$/", $actionString) && 
 // 						$harmoni->request->get("asset_id") == 
 // 						$assetId->getIdString()) {
 // 					$links[] = "<a href='".$harmoni->request->quickURL(

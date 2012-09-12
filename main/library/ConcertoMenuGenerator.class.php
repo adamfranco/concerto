@@ -59,9 +59,9 @@ class ConcertoMenuGenerator
 		
 		// Collection browse links.
 		// Just show if we are not in a particular collection.
-		if (ereg("collection(s)?|asset|basket|tags|exhibitions", $module)) {			
+		if (preg_match("/collection(s)?|asset|basket|tags|exhibitions/", $module)) {			
 			// Collection root
-			if (ereg("^(collection|asset|basket|tags|exhibitions)$", $module)
+			if (preg_match("/^(collection|asset|basket|tags|exhibitions)$/", $module)
 				&& ($harmoni->request->get('collection_id') ||
 					$harmoni->request->get('asset_id'))) 
 			{
@@ -140,7 +140,7 @@ class ConcertoMenuGenerator
 		$harmoni->request->passthrough('asset_id');
 		$slideShowHeading = new MenuItem(_("Open Slideshows"), 1);
 		foreach (array_keys($_SESSION) as $key) {
-			if (ereg("^add_slideshow_wizard_(.+)", $key, $matches)) {
+			if (preg_match("/^add_slideshow_wizard_(.+)/", $key, $matches)) {
 				if (isset($slideShowHeading)) {
 					$mainMenu->add($slideShowHeading, "100%", null, LEFT, CENTER);
 					unset($slideShowHeading);
@@ -154,7 +154,7 @@ class ConcertoMenuGenerator
 						($module == "exhibitions" && $action == "add_slideshow" && RequestContext::value("exhibition_id") == $exhibitionAssetId->getIdString())?TRUE:FALSE, 4
 				);
 				$mainMenu->add($item, "100%", null, LEFT, CENTER);
-			} else if (ereg("^modify_slideshow_wizard_(.+)", $key, $matches)) {
+			} else if (preg_match("/^modify_slideshow_wizard_(.+)/", $key, $matches)) {
 				if (isset($slideShowHeading)) {
 					$mainMenu->add($slideShowHeading, "100%", null, LEFT, CENTER);
 					unset($slideShowHeading);

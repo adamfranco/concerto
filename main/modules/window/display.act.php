@@ -205,7 +205,7 @@ class displayAction
 		
 		// RSS Links
 		$outputHandler =$harmoni->getOutputHandler();
-		if (ereg("^(collection|asset)\.browse(Asset)?$", $harmoni->getCurrentAction()) 	
+		if (preg_match("/^(collection|asset)\.browse(Asset)?$/", $harmoni->getCurrentAction()) 	
 			&& RequestContext::value('collection_id'))
 		{
 			ob_start();
@@ -239,7 +239,7 @@ class displayAction
 			print "\n</div>";
 			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
 		}
-/*		if (ereg("^collections\..+$", $harmoni->getCurrentAction())) {
+/*		if (preg_match("/^collections\..+$/", $harmoni->getCurrentAction())) {
 			ob_start();
 			print "<div style='font-size: small; padding-left: 5px;'>";
 			
@@ -269,7 +269,7 @@ class displayAction
 			print "\n</div>";
 			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
 		}
-*/		if (ereg("^exhibitions\.browse_exhibition$", $harmoni->getCurrentAction())
+*/		if (preg_match("/^exhibitions\.browse_exhibition$/", $harmoni->getCurrentAction())
 			&& RequestContext::value('exhibition_id')) 
 		{
 			ob_start();
@@ -302,7 +302,7 @@ class displayAction
 			print "\n</div>";
 			$menuColumn->add(new Block(ob_get_clean(), HIGHLIT_BLOCK), "100%", null, LEFT, TOP);
 		}
-/*		if (ereg("^exhibitions\.browse$", $harmoni->getCurrentAction())) {
+/*		if (preg_match("/^exhibitions\.browse$/", $harmoni->getCurrentAction())) {
 			ob_start();
 			print "<div style='font-size: small; padding-left: 5px;'>";
 			
@@ -334,12 +334,12 @@ class displayAction
 */		
 		// Basket
 		$basket = Basket::instance();
-		if (ereg("^(collection|asset)\.browse(Asset)?$", $harmoni->getCurrentAction()))
+		if (preg_match("/^(collection|asset)\.browse(Asset)?$/", $harmoni->getCurrentAction()))
 			$menuColumn->add(AssetPrinter::getMultiEditOptionsBlock(), "100%", null, LEFT, TOP);
 		$menuColumn->add($basket->getSmallBasketBlock(EMPHASIZED_BLOCK), "100%", null, LEFT, TOP);
 		
 		// Collection Tags
-		if (ereg("^(collection|asset|tags)\.", $harmoni->getCurrentAction())
+		if (preg_match("/^(collection|asset|tags)\./", $harmoni->getCurrentAction())
 			&& $this->getCurrentRepository()) 
 		{
 			$harmoni->request->passthrough("collection_id");

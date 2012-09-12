@@ -860,7 +860,7 @@ class editAction
 		// if the "use custom" box was checked store the height.
 		if (isset($results['height']['checked']) && $results['height']['checked'] == '1') {
 			$dimArray = $parts['DIMENSIONS']->getValue();
-			if (ereg("^([0-9]+)px$", $results['height']['value'], $matches))
+			if (preg_match("/^([0-9]+)px$/", $results['height']['value'], $matches))
 				$dimArray[1] = $matches[1];
 			else
 				$dimArray[1] = 0;
@@ -872,7 +872,7 @@ class editAction
 		// if the "use custom" box was checked store the width.
 		if (isset($results['width']['checked']) && $results['width']['checked'] == '1') {
 			$dimArray = $parts['DIMENSIONS']->getValue();
-			if (ereg("^([0-9]+)px$", $results['width']['value'], $matches))
+			if (preg_match("/^([0-9]+)px$/", $results['width']['value'], $matches))
 				$dimArray[0] = $matches[1];
 			else
 				$dimArray[0] = 0;
@@ -883,7 +883,7 @@ class editAction
 		
 		// if the "use custom" box was checked store the height.
 		if (isset($results['thumbnail_height']['checked']) && $results['thumbnail_height']['checked'] == '1'
-			&& ereg("^([0-9]+)px$", $results['thumbnail_height']['value'], $matches)) 
+			&& preg_match("/^([0-9]+)px$/", $results['thumbnail_height']['value'], $matches)) 
 		{
 			$dimArray = $parts['THUMBNAIL_DIMENSIONS']->getValue();
 			$dimArray[1] = $matches[1];
@@ -894,7 +894,7 @@ class editAction
 		
 		// if the "use custom" box was checked store the width.
 		if (isset($results['thumbnail_width']['checked']) && $results['thumbnail_width']['checked'] == '1'
-			&& ereg("^([0-9]+)px$", $results['thumbnail_width']['value'], $matches)) 
+			&& preg_match("/^([0-9]+)px$/", $results['thumbnail_width']['value'], $matches)) 
 		{
 			$dimArray = $parts['THUMBNAIL_DIMENSIONS']->getValue();
 			$dimArray[0] = $matches[1];

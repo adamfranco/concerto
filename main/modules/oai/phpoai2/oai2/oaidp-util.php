@@ -326,11 +326,11 @@ function checkDateFormat($date) {
 	global $message;
 
     if ($granularity == 'YYYY-MM-DDThh:mm:ssZ') {
-		$checkstr = '([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})T([0-9]{2}):([0-9]{2}):([0-9]{2})Z$';
+		$checkstr = '/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})T([0-9]{2}):([0-9]{2}):([0-9]{2})Z$/';
 	} else {
-		$checkstr = '([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}$)';
+		$checkstr = '/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}$)/';
 	}
-	if (ereg($checkstr, $date, $regs)) {
+	if (preg_match($checkstr, $date, $regs)) {
 		if (checkdate($regs[2], $regs[3], $regs[1])) {	
 			return 1;
 		}

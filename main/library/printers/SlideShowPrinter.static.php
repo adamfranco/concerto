@@ -126,7 +126,7 @@ abstract class SlideShowPrinter {
 				
 				// If we are viewing the asset and we delete it, we can't return
 				// to viewing it.
-				if (ereg("^slideshow\..*$", $actionString) && 
+				if (preg_match("/^slideshow\..*$/", $actionString) && 
 						$harmoni->request->get("slideshow_id") == 
 						$assetId->getIdString())
 				{
