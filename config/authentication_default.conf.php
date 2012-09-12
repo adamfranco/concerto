@@ -22,6 +22,9 @@
 // 			=> new FormActionNamePassTokenCollector($harmoni->request->quickURL("auth","username_password_form")),
 	);
 	$configuration->addProperty('token_collectors', $tokenCollectors);
+	$configuration->addProperty('jquery_src', POLYPHONY_PATH."/javascript/jquery.min.js");
+	$configuration->addProperty('jquery_autocomplete_src', POLYPHONY_PATH."/javascript/jquery.autocomplete.min.js");
+	$configuration->addProperty('jquery_autocomplete_css', POLYPHONY_PATH."/javascript/jquery.autocomplete.css");
 	Services::startManagerAsService("AuthenticationManager", $context, $configuration);
 
 
