@@ -40,7 +40,7 @@ class SlideOrderedRepeatableComponentCollection
 	 * @access private
 	 * @return void
 	 */
-	function &_addElement () {
+	function &_addElement ($removable = true) {
 		$newArray =& parent::_addElement();
 		
 		$newArray['_assetId'] = new AssetComponent;
