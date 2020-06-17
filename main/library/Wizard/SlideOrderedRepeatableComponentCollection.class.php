@@ -28,8 +28,8 @@ class SlideOrderedRepeatableComponentCollection
 	extends WOrderedRepeatableComponentCollection 
 {
     
-    function SlideOrderedRepeatableComponentCollection() {
-    	parent::WOrderedRepeatableComponentCollection();
+	function __construct() {
+		parent::__construct();
     	$this->_addButton->setLabel(_("Add a Text-Slide"));
     	$this->_addFromBasketButton = WEventButton::withLabel(dgettext("polyphony", "Create Slides from Selection"));
     	$this->_addFromBasketButton->setParent($this);
