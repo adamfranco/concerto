@@ -342,9 +342,9 @@ class add_slideshowAction
 					$caption = '';
 				
 				if (isset($slideProperties['text_position']))
-					$textPosition = String::withValue($slideProperties['text_position']);
+					$textPosition = HarmoniString::withValue($slideProperties['text_position']);
 				else
-					$textPosition = String::withValue('');
+					$textPosition = HarmoniString::withValue('');
 				
 				if (isset($slideProperties['show_target_metadata']))
 					$displayMetadata = Boolean::withValue($slideProperties['show_target_metadata']);
@@ -352,9 +352,9 @@ class add_slideshowAction
 					$displayMetadata = Boolean::false();
 				
 				if (isset($slideProperties['_assetId']))
-					$targetId = String::withValue($slideProperties['_assetId']->getIdString());
+					$targetId = HarmoniString::withValue($slideProperties['_assetId']->getIdString());
 				else
-					$targetId = String::withValue('');
+					$targetId = HarmoniString::withValue('');
 
 				
 				// ---- Create the asset ----
