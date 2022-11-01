@@ -31,7 +31,7 @@ class multieditAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function multieditAction () {
+	function __construct () {
 		$this->_init();
 				
 		$this->_recStructsToIgnore[] = 'FILE';

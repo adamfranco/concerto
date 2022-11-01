@@ -30,7 +30,7 @@ class editAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function editAction () {
+	function __construct () {
 		$this->_init();
 		
 // 		$this->_recStructsToIgnore[] = 'FILE';
@@ -452,9 +452,9 @@ class editAction
 			$collection['thumbnail_mime_type'] = $parts['THUMBNAIL_MIME_TYPE']->getValue();
 	
 			$thumDim = $parts['THUMBNAIL_DIMENSIONS']->getValue();
-			if ($thumDim[1])
+			if (!empty($thumDim[1]))
 				$collection['thumbnail_height'] = $thumDim[1].'px';
-			if ($thumDim[0])
+			if (!empty($thumDim[0]))
 				$collection['thumbnail_width'] = $thumDim[0].'px';
 			
 			$repeatableComponent->addValueCollection($collection);
