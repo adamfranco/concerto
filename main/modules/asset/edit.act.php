@@ -30,7 +30,7 @@ class editAction
 	 * @access public
 	 * @since 10/26/05
 	 */
-	function editAction () {
+	function __construct () {
 		$this->_init();
 		
 // 		$this->_recStructsToIgnore[] = 'FILE';
